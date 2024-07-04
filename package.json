@@ -8,6 +8,7 @@
   },
   "author": "BunnyNabbit",
   "license": "MIT",
+  "repository": "github:BunnyNabbit/voxel-telephone",
   "dependencies": {
     "axios": "^0.28.1",
     "classicborne-server-protocol": "^0.0.0",
