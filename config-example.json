@@ -1,0 +1,16 @@
+{
+   "replacementMessages": [
+      "*"
+   ],
+   "hubEditors": [
+      "not a username. if this array is empty. anyone can edit the hub level."
+   ],
+   "moderators": [],
+   "listOperators": [],
+   "texturePackUrl": "https://bunnynabbit.com/classicube/palette-tex.png",
+   "serverName": "Voxel Telephone",
+   "port": 25565,
+   "dbName": "voxeltelephone",
+   "hubName": "hub",
+   "postToMainServer": false
+}
