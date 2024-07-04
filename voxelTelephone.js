@@ -1,4 +1,4 @@
-const Server = require("../classicborne-server-protocol")
+const Server = require("classicborne-server-protocol")
 const serverConfiguration = require("./config.json")
 console.log(serverConfiguration)
 const server = new Server(serverConfiguration.port)
