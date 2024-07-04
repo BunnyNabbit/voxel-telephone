@@ -1,0 +1,19 @@
+{
+  "name": "voxel-telephone",
+  "version": "1.0.0",
+  "description": "Server for CPE clients. Telephone game about describing and building repeatedly.",
+  "main": "voxelTelephone.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "BunnyNabbit",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.28.1",
+    "mongojs": "^3.1.0",
+    "nbt": "^0.8.1",
+    "qs": "^6.12.1",
+    "smart-buffer": "^4.2.0",
+    "trash": "^8.1.1"
+  }
+}
