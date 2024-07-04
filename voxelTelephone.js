@@ -462,7 +462,7 @@ server.on("clientConnected", async (client, authInfo) => {
 	if (server.clients.some(otherClient => otherClient.authInfo.username == authInfo.username)) {
 		return client.disconnect("Another client already has that name")
 	}
-	if (crypto.createHash("md5").update(salt + authInfo.username).digest("hex") !== authInfo.key) {
+	if (serverConfiguration.verifyUsernames && crypto.createHash("md5").update(salt + authInfo.username).digest("hex") !== authInfo.key) {
 		console.log("Connection failed")
 		client.message("It appears that authorization failed. Are you connecting via the Classicube server list? Try refreshing it.", 0)
 		client.message(`You will be disconnected in 10 seconds.`, 0)

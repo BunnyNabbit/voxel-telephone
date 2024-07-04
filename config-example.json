@@ -12,5 +12,6 @@
    "port": 25565,
    "dbName": "voxeltelephone",
    "hubName": "hub",
-   "postToMainServer": false
+   "postToMainServer": false,
+   "verifyUsernames": true
 }
