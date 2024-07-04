@@ -10,6 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.28.1",
+    "classicborne-server-protocol": "^0.0.0",
     "mongojs": "^3.1.0",
     "nbt": "^0.8.1",
     "qs": "^6.12.1",
