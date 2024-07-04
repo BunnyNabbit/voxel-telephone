@@ -455,6 +455,209 @@ function gotoHub(client) {
 
 const canCreateCooldown = new Set()
 
+const GlobalCommandRegistry = require("./GlobalCommandRegistry.js")
+const commandRegistry = new GlobalCommandRegistry()
+commandRegistry.registerCommand(["/rules"], (client) => {
+	client.message("== Rules", 0)
+	client.message("The point of the game is to see how builds transform when users take turn describing and building.", 0)
+	client.message("1. Do not intentionally derail the games. Build and describe as you genuinely see it.", 0)
+	client.message("2. Builds and prompts must not be inappropriate.", 0)
+})
+function reasonVcr(matchValue, message) {
+	return function (client) {
+		if (client.space.inVcr == matchValue) {
+			if (message) client.message(message, 0)
+			return false
+		}
+		return true
+	}
+}
+function reasonHasPermission(matchValue, message) {
+	return function (client) {
+		if (client.space.userHasPermission(client.authInfo.username) == matchValue) {
+			if (message) client.message(message, 0)
+			return false
+		}
+		return true
+	}
+}
+function reasonVcrDraining(matchValue, message) {
+	return function (client) {
+		if (client.space.changeRecord.draining == matchValue) {
+			if (message) client.message(message, 0)
+			return false
+		}
+		return true
+	}
+}
+function makeMultiValidator(reasons = []) {
+	return function (client, str) {
+		for (const reason of reasons) {
+			if (reason(client, str)) return false
+		}
+		return true
+	}
+}
+commandRegistry.registerCommand(["/commit"], async (client) => {
+	client.space.loading = true
+	await client.space.changeRecord.commit(client.space.changeRecord.actionCount)
+	client.space.loading = false
+	client.space.inVcr = false
+	client.message("Changes commited. VCR mode off", 0)
+}, reasonVcr(false, "Level isn't in VCR mode. /vcr"))
+commandRegistry.registerCommand(["/finish"], async (client) => {
+	if (client.space && client.space.game && !client.space.changeRecord.draining) {
+		const gameType = invertPromptType(client.space.game.promptType)
+		console.log(gameType)
+		if (gameType == "build") {
+			if (client.space.changeRecord.actionCount == 0) {
+				client.message("There is nothing. Build the prompt you are given!")
+				return
+			}
+			server.clients.forEach(otherClient => otherClient.message(`${client.authInfo.username} finished a turn (Build)`, 0))
+			continueGame(client.space.game, client.space.game.next, gameType)
+			if (client.space.changeRecord.dirty) await client.space.changeRecord.flushChanges()
+			addInteraction(client.authInfo.username, client.space.game.next, "built")
+		} else { // describe
+			if (!client.currentDescription) {
+				client.message("You currently have no description for this build. Write something in chat first!")
+				return
+			}
+			addInteraction(client.authInfo.username, client.space.game._id, "described")
+			server.clients.forEach(otherClient => otherClient.message(`${client.authInfo.username} finished a turn (Describe)`, 0))
+			await continueGame(client.space.game, client.space.game.next, gameType, client.currentDescription)
+			client.currentDescription = null
+		}
+		addInteraction(client.authInfo.username, client.space.game.root, "complete")
+		client.space.doNotReserve = true
+		client.space.removeClient(client)
+		await gotoHub(client)
+	}
+})
+commandRegistry.registerCommand(["/report"], async (client, message) => {
+	if (client.space && client.space.name !== hubName) {
+		let reason = message
+		if (reason.length == 0) reason = "[ Empty report ]"
+		addInteraction(client.authInfo.username, client.space.game._id, "skip")
+		addInteraction(client.authInfo.username, client.space.game._id, "report")
+		await deactivateGame(client.space.game._id)
+		await addReport(client.authInfo.username, client.space.game._id, reason)
+		console.log(`Game reported with reason: "${reason}"`)
+		client.message(`Game reported with reason: "${reason}"`, 0)
+		client.space.doNotReserve = true
+		client.space.removeClient(client);
+		await gotoHub(client)
+	}
+})
+commandRegistry.registerCommand(["/abort"], async (client) => {
+	if (client.space.loading) return client.message("Please wait", 0)
+	if (client.space.inVcr) {
+		client.space.blocks = client.space.template(client.space.bounds)
+		await client.space.changeRecord.restoreBlockChangesToLevel(client.space)
+		client.space.reload()
+		client.space.inVcr = false
+		client.message("Aborted. VCR mode off", 0)
+	} else {
+		if (client.space.currentCommand) {
+			client.space.blocking = false
+			client.space.currentCommand = null
+			client.message("Command aborted", 0)
+		} else {
+			client.message("Nothing happened", 0)
+		}
+	}
+}, reasonHasPermission(false, "You don't have permission to build in this level!"))
+commandRegistry.registerCommand(["/mark"], async (client) => {
+	if (!client.space.blocking) {
+		client.message("There are no current commands being run on the level", 0)
+		return
+	}
+	client.space.inferCurrentCommand(client.position.map(value => Math.min(Math.max(Math.floor(value), 0), 63)))
+}, reasonHasPermission(false, "You don't have permission to build in this level!"))
+commandRegistry.registerCommand(["/paint"], async (client) => {
+	client.paintMode = !client.paintMode
+	if (client.paintMode) {
+		client.message("Paint mode on", 0)
+	} else {
+		client.message("Paint mode off", 0)
+	}
+})
+commandRegistry.registerCommand(["/help"], async (client) => { // TODO: this should be replaced by a different system
+	client.message("/cuboid", 0)
+	client.message("/place", 0)
+	client.message("/mark", 0)
+	client.message("/vcr - rewind mistakes", 0)
+	client.message("/paint - toggles paint mode", 0)
+	client.message("/abort - abort interactive operations", 0)
+})
+commandRegistry.registerCommand(["/skip"], async (client,) => {
+	if (client.space && client.space.name !== hubName) {
+		addInteraction(client.authInfo.username, client.space.game._id, "skip")
+		client.space.doNotReserve = true
+		client.space.removeClient(client);
+		await gotoHub(client)
+	}
+})
+commandRegistry.registerCommand(["/pl", "/place"], async (client) => {
+	if (client.space.inVcr) return client.message("Unable to place block. Level is in VCR mode", 0)
+	if (client.space.blocking) return client.message("Unable to place block. Command in level is expecting additional arguments", 0)
+	if (client.watchdog.rateOperation(1)) return
+	const operationPosition = [0, -1, 0].map((offset, index) => client.position[index] + offset).map(value => Math.min(Math.max(Math.floor(value), 0), 63))
+	let block = client.heldBlock
+	if (operationPosition.some(value => value > 63)) {
+		return
+	}
+	client.space.setBlock(operationPosition, block)
+}, reasonHasPermission(false, "You don't have permission to build in this level!"))
+commandRegistry.registerCommand(["/clients"], async (client) => {
+	client.message("&ePlayers using:", 0)
+	server.clients.forEach(otherClient => {
+		client.message(`&e  ${otherClient.socket.appName}: &f${otherClient.authInfo.username}`, 0, "> ")
+	})
+})
+commandRegistry.registerCommand(["/vcr"], async (client) => {
+	if (client.space.changeRecord.draining) return client.message(`VCR is busy. Try again later?`, 0)
+	if (client.space.changeRecord.dirty) await client.space.changeRecord.flushChanges()
+	if (!client.space.inVcr) {
+		client.space.changeRecord.maxActions = client.space.changeRecord.actionCount
+		client.space.toggleVcr()
+		client.message(`VCR has ${client.space.changeRecord.actionCount} actions. VCR Controls`, 0)
+		client.message(`/rewind (actions) - undos actions`, 0)
+		// client.message(`/keyframe (keyframe number) - VCR brings to keyframe`)
+		client.message(`/fastforward (actions) - redos rewinded actions`, 0)
+		client.message(`/commit - loads current state seen in the VCR preview. will override change record.`, 0)
+		client.message(`/abort - aborts VCR preview, loading state as it was before enabling VCR.`, 0)
+		client.space.reload()
+	} else {
+		client.message(`The level is already in VCR mode`, 0)
+	}
+}, reasonHasPermission(false, "You don't have permission to build in this level!"))
+commandRegistry.registerCommand(["/create"], async (client) => {
+	if (client.canCreate && client.space?.name == hubName) {
+		client.creating = true
+		client.message("Enter a description in chat. It can be mundane or imaginative.", 0)
+	}
+})
+commandRegistry.registerCommand(["/rewind", "/rw", "/undo"], async (client, message) => {
+	if (!client.space.inVcr) return client.message("Level isn't in VCR mode. /vcr", 0)
+	const count = Math.max(parseInt(message), 0) || 1
+	if (client.space.loading) return client.message("Level is busy seeking. Try again later", 0)
+	client.space.blocks = client.space.template(client.space.bounds)
+	await client.space.changeRecord.restoreBlockChangesToLevel(client.space, Math.max(client.space.changeRecord.actionCount - count, 1))
+	client.space.reload()
+	client.message(`Rewinded. Current actions: ${client.space.changeRecord.actionCount}/${client.space.changeRecord.maxActions}`, 0)
+	client.message(`To commit this state use /commit. use /abort to exit VCR`, 0)
+})
+commandRegistry.registerCommand(["/fastforward", "/ff", "/redo"], async (client, message) => {
+	if (!client.space.inVcr) return client.message("Level isn't in VCR mode. /vcr", 0)
+	const count = Math.max(parseInt(message), 0) || 1
+	if (client.space.loading) return client.message("Level is busy seeking. Try again later", 0)
+	client.space.blocks = client.space.template(client.space.bounds)
+	await client.space.changeRecord.restoreBlockChangesToLevel(client.space, Math.min(client.space.changeRecord.actionCount + count, client.space.changeRecord.maxActions))
+	client.space.reload()
+	client.message(`Fast-forwarded. Current actions: ${client.space.changeRecord.actionCount}/${client.space.changeRecord.maxActions}`, 0)
+	client.message(`To commit this state use /commit. Use /abort to exit VCR`, 0)
+})
 server.on("clientConnected", async (client, authInfo) => {
 	if (server.clients.some(otherClient => otherClient.socket.remoteAddress == client.socket.remoteAddress)) {
 		return client.disconnect("Too many connections!")
@@ -476,10 +679,7 @@ server.on("clientConnected", async (client, authInfo) => {
 	client.customBlockSupport(1)
 	client.authInfo = authInfo
 	client.message("Welcome to Voxel Telephone. A silly game of telephone where you take turns describing and building.", 0)
-	client.message("== Rules", 0)
-	client.message("The point of the game is to see how builds transform when users take turn describing and building.", 0)
-	client.message("1. Do not intentionally derail the games. Build and describe as you genuinely see it.", 0)
-	client.message("2. Builds and prompts must not be inappropriate.", 0)
+	commandRegistry.attemptCall(client, "/rules")
 	if (listOperators.includes(authInfo.username)) {
 		client.message("* You are considered a list operator.", 0)
 		client.message("* To force the heartbeat to post zero players, use /forcezero", 0)
@@ -526,194 +726,13 @@ server.on("clientConnected", async (client, authInfo) => {
 	client.on("message", async (message) => {
 		if (client.watchdog.rateOperation(10)) return
 		console.log(client.authInfo.username, message)
+		if (commandRegistry.attemptCall(client, message)) return
 		// a few hardcoded commands
 		if (message == "/forcezero" && listOperators.includes(client.authInfo.username)) {
 			forceZero = true
 			console.log(`! ${client.authInfo.username} forced heartbeat players to zero`)
 			server.clients.forEach(otherClient => otherClient.message(`! ${client.authInfo.username} forced heartbeat players to zero`, 0))
 			return
-		}
-		if (message.startsWith("/create")) {
-			if (client.canCreate && client.space?.name == hubName) {
-				client.creating = true
-				client.message("Enter a description in chat. It can be mundane or imaginative.", 0)
-			}
-			return
-		}
-		if (message == "/clients") {
-			client.message("&ePlayers using:", 0)
-			server.clients.forEach(otherClient => {
-				client.message(`&e  ${otherClient.socket.appName}: &f${otherClient.authInfo.username}`, 0, "> ")
-			})
-			return
-		}
-		if (message == "/help") {
-			client.message("/cuboid", 0)
-			client.message("/place", 0)
-			client.message("/mark", 0)
-			client.message("/vcr - rewind mistakes", 0)
-			client.message("/paint - toggles paint mode", 0)
-			client.message("/abort - abort interactive operations", 0)
-			return
-		}
-		if (message.startsWith("/report")) {
-			if (client.space && client.space.name !== hubName) {
-				const segments = message.split(" ")
-				segments.shift()
-				let reason = segments.join(" ")
-				if (segments.length == 0) reason = "[ Empty report ]"
-				addInteraction(client.authInfo.username, client.space.game._id, "skip")
-				addInteraction(client.authInfo.username, client.space.game._id, "report")
-				await deactivateGame(client.space.game._id)
-				await addReport(client.authInfo.username, client.space.game._id, reason)
-				console.log(`Game reported with reason: "${reason}"`)
-				client.message(`Game reported with reason: "${reason}"`, 0)
-				client.space.doNotReserve = true
-				client.space.removeClient(client);
-				await gotoHub(client)
-			}
-			return
-		}
-		if (message == "/skip") {
-			if (client.space && client.space.name !== hubName) {
-				addInteraction(client.authInfo.username, client.space.game._id, "skip")
-				client.space.doNotReserve = true
-				client.space.removeClient(client);
-				await gotoHub(client)
-			}
-			return
-		}
-		if (message == "/finish") {
-			// message.client.map.index.class.indexOf.BlockArray.active
-			if (client.space && client.space.game && !client.space.changeRecord.draining) {
-				const gameType = invertPromptType(client.space.game.promptType)
-				console.log(gameType)
-				if (gameType == "build") {
-					if (client.space.changeRecord.actionCount == 0) {
-						client.message("There is nothing. Build the prompt you are given!")
-						return
-					}
-					server.clients.forEach(otherClient => otherClient.message(`${client.authInfo.username} finished a turn (Build)`, 0))
-					continueGame(client.space.game, client.space.game.next, gameType)
-					if (client.space.changeRecord.dirty) await client.space.changeRecord.flushChanges()
-					addInteraction(client.authInfo.username, client.space.game.next, "built")
-				} else { // describe
-					if (!client.currentDescription) {
-						client.message("You currently have no description for this build. Write something in chat first!")
-						return
-					}
-					addInteraction(client.authInfo.username, client.space.game._id, "described")
-					server.clients.forEach(otherClient => otherClient.message(`${client.authInfo.username} finished a turn (Describe)`, 0))
-					await continueGame(client.space.game, client.space.game.next, gameType, client.currentDescription)
-					client.currentDescription = null
-				}
-				addInteraction(client.authInfo.username, client.space.game.root, "complete")
-				client.space.doNotReserve = true
-				client.space.removeClient(client)
-				await gotoHub(client)
-			}
-			return
-		}
-		if (message == "/pl" || message == "/place") {
-			if (!client.space.userHasPermission(client.authInfo.username)) return client.message("You don't have permission to build in this level", 0)
-			if (client.space.inVcr) return client.message("Unable to place block. Level is in VCR mode", 0)
-			if (client.space.blocking) return client.message("Unable to place block. Command in level is expecting additional arguments", 0)
-			if (client.watchdog.rateOperation(1)) return
-			const operationPosition = [0, -1, 0].map((offset, index) => client.position[index] + offset).map(value => Math.min(Math.max(Math.floor(value), 0), 63))
-			let block = client.heldBlock
-			if (operationPosition.some(value => value > 63)) {
-				return
-			}
-			client.space.setBlock(operationPosition, block)
-			return
-		}
-		if (message == "/mark") {
-			if (!client.space.userHasPermission(client.authInfo.username)) return client.message("You don't have permission to build in this level", 0)
-			if (client.watchdog.rateOperation(1)) return
-			if (!client.space.blocking) {
-				client.message("There are no current commands being run on the level", 0)
-				return
-			}
-			client.space.inferCurrentCommand(client.position.map(value => Math.min(Math.max(Math.floor(value), 0), 63)))
-			return
-		}
-		if (message == "/paint") {
-			client.paintMode = !client.paintMode
-			if (client.paintMode) {
-				client.message("Paint mode on", 0)
-			} else {
-				client.message("Paint mode off", 0)
-			}
-			return
-		}
-		if (message == "/vcr") {
-			if (!client.space.userHasPermission(client.authInfo.username)) return client.message("You don't have permission to build in this level", 0)
-			if (client.space.changeRecord.draining) return client.message(`VCR is busy. Try again later?`, 0)
-			if (client.space.changeRecord.dirty) await client.space.changeRecord.flushChanges()
-			if (!client.space.inVcr) {
-				client.space.changeRecord.maxActions = client.space.changeRecord.actionCount
-				client.space.toggleVcr()
-				client.message(`VCR has ${client.space.changeRecord.actionCount} actions. VCR Controls`, 0)
-				client.message(`/rewind (actions) - undos actions`, 0)
-				// client.message(`/keyframe (keyframe number) - VCR brings to keyframe`)
-				client.message(`/fastforward (actions) - redos rewinded actions`, 0)
-				client.message(`/commit - loads current state seen in the VCR preview. will override change record.`, 0)
-				client.message(`/abort - aborts VCR preview, loading state as it was before enabling VCR.`, 0)
-				client.space.reload()
-			} else {
-				client.message(`The level is already in VCR mode`, 0)
-			}
-		}
-		if (message == "/commit") {
-			if (!client.space.inVcr) return client.message("Level isn't in VCR mode. /vcr", 0)
-			client.space.loading = true
-			await client.space.changeRecord.commit(client.space.changeRecord.actionCount)
-			client.space.loading = false
-			client.space.inVcr = false
-			client.message("Changes commited. VCR mode off", 0)
-			return
-		}
-		if (message == "/abort") {
-			if (!client.space.userHasPermission(client.authInfo.username)) return client.message("You don't have permission to build in this level", 0)
-			if (client.space.loading) return client.message("Please wait", 0)
-			if (client.space.inVcr) {
-				client.space.blocks = client.space.template(client.space.bounds)
-				await client.space.changeRecord.restoreBlockChangesToLevel(client.space)
-				client.space.reload()
-				client.space.inVcr = false
-				client.message("Aborted. VCR mode off", 0)
-			} else {
-				if (client.space.currentCommand) {
-					client.space.blocking = false
-					client.space.currentCommand = null
-					client.message("Command aborted", 0)
-				} else {
-					client.message("Nothing happened", 0)
-				}
-			}
-			return
-		}
-		if (message.startsWith("/rewind") || message.startsWith("/rw") || message.startsWith("/undo")) {
-			if (!client.space.inVcr) return client.message("Level isn't in VCR mode. /vcr", 0)
-			const segments = message.split(" ")
-			const count = Math.max(parseInt(segments[1]), 0) || 1
-			if (client.space.loading) return client.message("Level is busy seeking. Try again later", 0)
-			client.space.blocks = client.space.template(client.space.bounds)
-			await client.space.changeRecord.restoreBlockChangesToLevel(client.space, Math.max(client.space.changeRecord.actionCount - count, 1))
-			client.space.reload()
-			client.message(`Rewinded. Current actions: ${client.space.changeRecord.actionCount}/${client.space.changeRecord.maxActions}`, 0)
-			client.message(`To commit this state use /commit. use /abort to exit VCR`, 0)
-		}
-		if (message.startsWith("/fastforward") || message.startsWith("/ff") || message.startsWith("/redo")) {
-			if (!client.space.inVcr) return client.message("Level isn't in VCR mode. /vcr", 0)
-			const segments = message.split(" ")
-			const count = Math.max(parseInt(segments[1]), 0) || 1
-			if (client.space.loading) return client.message("Level is busy seeking. Try again later", 0)
-			client.space.blocks = client.space.template(client.space.bounds)
-			await client.space.changeRecord.restoreBlockChangesToLevel(client.space, Math.min(client.space.changeRecord.actionCount + count, client.space.changeRecord.maxActions))
-			client.space.reload()
-			client.message(`Fast-forwarded. Current actions: ${client.space.changeRecord.actionCount}/${client.space.changeRecord.maxActions}`, 0)
-			client.message(`To commit this state use /commit. Use /abort to exit VCR`, 0)
 		}
 		if (client.watchdog.rateOperation(20)) return
 		// pass this to the level
