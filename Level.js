@@ -102,6 +102,7 @@ class Level extends require("events") {
 		this.loading = false
 		this.inVcr = false
 		this.allowList = []
+		this.portals = []
 	}
 	messageAll(message) {
 		this.clients.forEach(client => {
