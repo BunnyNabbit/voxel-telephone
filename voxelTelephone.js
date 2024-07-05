@@ -12,6 +12,7 @@ const mongojs = require("mongojs")
 const gameCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephone")
 const reportCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephoneReports")
 const interactionCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephoneInteractions")
+const portalCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephonePortals")
 const fs = require("fs")
 const qs = require("qs")
 const salt = crypto.randomBytes(82).toString("hex")
@@ -155,7 +156,7 @@ const describeDefaults = {
 	allowList: []
 }
 const hubName = serverConfiguration.hubName;
-loadLevel(hubName, hubDefaults).then(level => {
+loadLevel(hubName, hubDefaults).then(async level => {
 	level.on("clientRemoved", async () => {
 		if (level.clients.length == 0 && !level.changeRecord.draining && level.changeRecord.dirty) {
 			console.log("Saving", level.name)
@@ -166,6 +167,7 @@ loadLevel(hubName, hubDefaults).then(level => {
 	level.on("clientAdded", () => {
 
 	})
+	level.portals = await getPortals(level.name)
 })
 
 const listOperators = serverConfiguration.listOperators
@@ -333,6 +335,26 @@ function findActiveGames(username) {
 	})
 }
 
+async function getPortals(name) {
+	return new Promise(resolve => {
+		portalCollection.findOne({ _id: name }, (err, doc) => {
+			if (err) return resolve([])
+			const zones = doc.portals.map(zone => Zone.deserialize(zone))
+			resolve(zones)
+		})
+	})
+}
+
+function saveLevelPortals(level) {
+	return new Promise(resolve => {
+		const portals = level.portals.map(portal => portal.serialize())
+		portalCollection.replaceOne({ _id: level.name }, { _id: level.name, portals }, { upsert: true }, (err,) => {
+			if (err) console.log(err)
+			resolve()
+		})
+	})
+}
+
 async function startGame(client) {
 	if (client.teleporting == true) return
 	client.teleporting = true
@@ -424,24 +446,6 @@ async function startGame(client) {
 	}
 }
 
-const portals = [
-	{ // play
-		coords: [[31, 1, 10], [34, 7, 16]],
-		function: async (client) => {
-			startGame(client)
-		}
-	},
-	// 46 1 22 / 52 4 23 / view
-	{ // view
-		coords: [[45, 1, 21], [52, 4, 23]],
-		function: async (client) => {
-			if (client.warned) return
-			client.warned = true
-			client.message("View mode has not been developed. Check back later! I am still collecting games.", 0)
-		}
-	},
-]
-
 function gotoHub(client) {
 	const promise = loadLevel(hubName)
 	client.message("Hub", 1)
@@ -456,6 +460,7 @@ function gotoHub(client) {
 const canCreateCooldown = new Set()
 
 const GlobalCommandRegistry = require("./GlobalCommandRegistry.js")
+const Zone = require("./Zone.js")
 const commandRegistry = new GlobalCommandRegistry()
 commandRegistry.registerCommand(["/rules"], (client) => {
 	client.message("== Rules", 0)
@@ -658,6 +663,31 @@ commandRegistry.registerCommand(["/fastforward", "/ff", "/redo"], async (client,
 	client.message(`Fast-forwarded. Current actions: ${client.space.changeRecord.actionCount}/${client.space.changeRecord.maxActions}`, 0)
 	client.message(`To commit this state use /commit. Use /abort to exit VCR`, 0)
 })
+commandRegistry.registerCommand(["/addzone"], async (client, message) => {
+	if (!serverConfiguration.hubEditors.includes(client.authInfo.username) || client.space.name.startsWith("game-")) return
+	const values = message.split(" ").map(value => parseInt(value)).filter(value => !isNaN(value))
+	const command = message.split(" ").slice(6).join(" ")
+	if (values.length < 6 || !command) return client.message("Invalid arguments", 0)
+	const zone = new Zone(values.slice(0, 3), values.slice(3, 6))
+	zone.globalCommand = command
+	client.space.portals.push(zone)
+	await saveLevelPortals(client.space)
+	client.message("Zone added", 0)
+})
+commandRegistry.registerCommand(["/removeallzones"], async (client, message) => {
+	if (!serverConfiguration.hubEditors.includes(client.authInfo.username) || client.space.name.startsWith("game-")) return
+	client.space.portals = []
+	await saveLevelPortals(client.space)
+	client.message("Zones removed", 0)
+})
+commandRegistry.registerCommand(["/play"], async (client, message) => {
+	startGame(client)
+})
+commandRegistry.registerCommand(["/view"], async (client, message) => {
+	if (client.warned) return
+	client.warned = true
+	client.message("View mode has not been developed. Check back later! I am still collecting games.", 0)
+})
 server.on("clientConnected", async (client, authInfo) => {
 	if (server.clients.some(otherClient => otherClient.socket.remoteAddress == client.socket.remoteAddress)) {
 		return client.disconnect("Too many connections!")
@@ -787,15 +817,13 @@ server.on("clientConnected", async (client, authInfo) => {
 		client.position = [position.x, position.y, position.z]
 		client.heldBlock = heldBlock
 		client.orientation = [orientation.yaw, orientation.pitch]
-		if (!client.creating && client.space && client.space.name == hubName) {
+		if (client.space) {
 			// portal detection
-			portals.forEach(portal => {
-				const min = portal.coords[0]
-				const max = portal.coords[1]
-				if (client.position.some((value, index) => (min[index] <= value && max[index] >= value) == false)) {
-
-				} else {
-					portal.function(client)
+			client.space.portals.forEach(portal => {
+				if (portal.intersects(client.position)) {
+					if (portal.globalCommand) {
+						commandRegistry.attemptCall(client, portal.globalCommand)
+					}
 				}
 			})
 		}
