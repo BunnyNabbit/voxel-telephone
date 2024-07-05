@@ -7,12 +7,8 @@ server.extensions.push({
 	name: "MessageTypes",
 	version: 1
 })
+const db = require("./db.js")
 const crypto = require("crypto")
-const mongojs = require("mongojs")
-const gameCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephone")
-const reportCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephoneReports")
-const interactionCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephoneInteractions")
-const portalCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephonePortals")
 const fs = require("fs")
 const qs = require("qs")
 const salt = crypto.randomBytes(82).toString("hex")
@@ -122,7 +118,7 @@ const Level = require("./Level.js")
 const defaultBlockset = JSON.parse(fs.readFileSync("./6-8-5-rgb.json").toString())
 
 const levels = new Map()
-const playerReserved = new Map()
+const playerReserved = db.playerReserved
 function loadLevel(spaceName, defaults = {}) {
 	const cached = levels.get(spaceName)
 	if (cached) return cached
@@ -167,7 +163,7 @@ loadLevel(hubName, hubDefaults).then(async level => {
 	level.on("clientAdded", () => {
 
 	})
-	level.portals = await getPortals(level.name)
+	level.portals = await db.getPortals(level.name)
 })
 
 const listOperators = serverConfiguration.listOperators
@@ -199,167 +195,27 @@ function randomIntFromInterval(min, max) {
 	return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
-function createNewGame(startingSentence, username) {
-	return new Promise(resolve => {
-		const gameId = new mongojs.ObjectID()
-		const gameNextId = new mongojs.ObjectID()
-		const document = {
-			_id: gameId,
-			root: gameId,
-			active: true,
-			creators: [username],
-			prompt: startingSentence,
-			promptType: "description",
-			next: gameNextId,
-			parent: "self",
-			depth: 0
-		}
-		gameCollection.insert(document, (err) => {
-			resolve(document)
-		})
-	})
-}
-
-function addCreator() {
-
-}
-
 function invertPromptType(promptType) {
 	if (promptType == "description") return "build"
 	return "description"
-}
-
-function getInteraction(username, id, type) {
-	return new Promise(resolve => {
-		interactionCollection.find({ username, forId: id, type }, (err, docs) => {
-			if (err) return resolve(null)
-			resolve(docs[0])
-		})
-	})
-}
-
-function addReport(username, id, reason) {
-	return new Promise(resolve => {
-		reportCollection.insert({
-			username, forId: id, reason, unresolved: true
-		}, (err) => {
-			resolve()
-		})
-	})
-}
-
-function addInteraction(username, id, type) {
-	return new Promise(resolve => {
-		interactionCollection.insert({
-			username, forId: id, type
-		}, (err) => {
-			resolve()
-		})
-	})
-}
-
-function deactivateGame(gameId) {
-	return new Promise(resolve => {
-		gameCollection.update({ _id: gameId }, { $set: { active: false } }, (err) => {
-			resolve()
-		})
-	})
-}
-
-function continueGame(originalDocument, newGameId, promptType, description) {
-	return new Promise(resolve => {
-		gameCollection.update({ _id: originalDocument._id }, { $set: { active: false } }, (err) => {
-			const gameNextId = new mongojs.ObjectID()
-			const document = {
-				_id: newGameId,
-				root: originalDocument.root,
-				active: true,
-				creators: [],
-				next: gameNextId,
-				parent: originalDocument._id,
-				depth: originalDocument.depth + 1
-			}
-			if (document.depth == 15) {
-				document.active = false
-			}
-			if (promptType == "description") {
-				document.prompt = description
-				document.promptType = "description"
-			} else {
-				document.promptType = "build"
-			}
-			gameCollection.insert(document, (err) => {
-				if (!document.active) {
-					server.clients.forEach(otherClient => otherClient.message(`A game has been completed`, 0))
-				}
-				resolve(document)
-			})
-		})
-	})
 }
 
 async function main(params) {
 	// console.log(new mongojs.ObjectID().getTimestamp())
 	return
 	console.log("Start")
-	const games = await findActiveGames()
+	const games = await db.findActiveGames()
 	console.log(games)
 	if (games.length)
-		continueGame(games[0], games[0].next, "build")
+		db.continueGame(games[0], games[0].next, "build")
 }
 main()
-
-function findActiveGames(username) {
-	return new Promise(resolve => {
-		const games = []
-		// find reserved game if it exists
-		const reserved = playerReserved.get(username)
-		if (reserved) return resolve([reserved])
-		gameCollection.find({ active: true }, async (err, docs) => {
-			if (err) return resolve([])
-			for (let i = 0; i < docs.length; i++) {
-				const game = docs[i]
-				// check if game id is already active as a level
-				console.log(levels.keys())
-				console.log(levels.has(`game-${game.next}`))
-				if (levels.has(`game-${game.next}`) || levels.has(`game-${game._id}`)) continue
-				// check if user has skipped the current ID, or already completed the root ID.
-				const completeInteraction = await getInteraction(username, game.root, "complete")
-				if (completeInteraction) continue
-				const skipInteraction = await getInteraction(username, game._id, "skip")
-				if (skipInteraction) continue
-				games.push(game)
-			}
-			resolve(games)
-		})
-	})
-}
-
-async function getPortals(name) {
-	return new Promise(resolve => {
-		portalCollection.findOne({ _id: name }, (err, doc) => {
-			if (err) return resolve([])
-			const zones = doc.portals.map(zone => Zone.deserialize(zone))
-			resolve(zones)
-		})
-	})
-}
-
-function saveLevelPortals(level) {
-	return new Promise(resolve => {
-		const portals = level.portals.map(portal => portal.serialize())
-		portalCollection.replaceOne({ _id: level.name }, { _id: level.name, portals }, { upsert: true }, (err,) => {
-			if (err) console.log(err)
-			resolve()
-		})
-	})
-}
 
 async function startGame(client) {
 	if (client.teleporting == true) return
 	client.teleporting = true
 	client.message("teleport", 0)
-	const games = await findActiveGames(client.authInfo.username)
+	const games = await db.findActiveGames(client.authInfo.username, levels)
 	client.space.removeClient(client)
 	if (games.length) {
 		const game = games[randomIntFromInterval(0, games.length - 1)]
@@ -383,7 +239,7 @@ async function startGame(client) {
 						levels.delete(level.name)
 						return
 					}
-					addInteraction(client.authInfo.username, game.next, "built")
+					db.addInteraction(client.authInfo.username, game.next, "built")
 					if (level.doNotReserve) return
 					// reserve game for player
 					playerReserved.set(client.authInfo.username, level.game)
@@ -520,20 +376,20 @@ commandRegistry.registerCommand(["/finish"], async (client) => {
 				return
 			}
 			server.clients.forEach(otherClient => otherClient.message(`${client.authInfo.username} finished a turn (Build)`, 0))
-			continueGame(client.space.game, client.space.game.next, gameType)
+			db.continueGame(client.space.game, client.space.game.next, gameType)
 			if (client.space.changeRecord.dirty) await client.space.changeRecord.flushChanges()
-			addInteraction(client.authInfo.username, client.space.game.next, "built")
+			db.addInteraction(client.authInfo.username, client.space.game.next, "built")
 		} else { // describe
 			if (!client.currentDescription) {
 				client.message("You currently have no description for this build. Write something in chat first!")
 				return
 			}
-			addInteraction(client.authInfo.username, client.space.game._id, "described")
+			db.addInteraction(client.authInfo.username, client.space.game._id, "described")
 			server.clients.forEach(otherClient => otherClient.message(`${client.authInfo.username} finished a turn (Describe)`, 0))
-			await continueGame(client.space.game, client.space.game.next, gameType, client.currentDescription)
+			await db.continueGame(client.space.game, client.space.game.next, gameType, client.currentDescription)
 			client.currentDescription = null
 		}
-		addInteraction(client.authInfo.username, client.space.game.root, "complete")
+		db.addInteraction(client.authInfo.username, client.space.game.root, "complete")
 		client.space.doNotReserve = true
 		client.space.removeClient(client)
 		await gotoHub(client)
@@ -543,10 +399,10 @@ commandRegistry.registerCommand(["/report"], async (client, message) => {
 	if (client.space && client.space.name !== hubName) {
 		let reason = message
 		if (reason.length == 0) reason = "[ Empty report ]"
-		addInteraction(client.authInfo.username, client.space.game._id, "skip")
-		addInteraction(client.authInfo.username, client.space.game._id, "report")
-		await deactivateGame(client.space.game._id)
-		await addReport(client.authInfo.username, client.space.game._id, reason)
+		db.addInteraction(client.authInfo.username, client.space.game._id, "skip")
+		db.addInteraction(client.authInfo.username, client.space.game._id, "report")
+		await db.deactivateGame(client.space.game._id)
+		await db.addReport(client.authInfo.username, client.space.game._id, reason)
 		console.log(`Game reported with reason: "${reason}"`)
 		client.message(`Game reported with reason: "${reason}"`, 0)
 		client.space.doNotReserve = true
@@ -597,7 +453,7 @@ commandRegistry.registerCommand(["/help"], async (client) => { // TODO: this sho
 })
 commandRegistry.registerCommand(["/skip"], async (client,) => {
 	if (client.space && client.space.name !== hubName) {
-		addInteraction(client.authInfo.username, client.space.game._id, "skip")
+		db.addInteraction(client.authInfo.username, client.space.game._id, "skip")
 		client.space.doNotReserve = true
 		client.space.removeClient(client);
 		await gotoHub(client)
@@ -671,13 +527,13 @@ commandRegistry.registerCommand(["/addzone"], async (client, message) => {
 	const zone = new Zone(values.slice(0, 3), values.slice(3, 6))
 	zone.globalCommand = command
 	client.space.portals.push(zone)
-	await saveLevelPortals(client.space)
+	await db.saveLevelPortals(client.space)
 	client.message("Zone added", 0)
 })
 commandRegistry.registerCommand(["/removeallzones"], async (client, message) => {
 	if (!serverConfiguration.hubEditors.includes(client.authInfo.username) || client.space.name.startsWith("game-")) return
 	client.space.portals = []
-	await saveLevelPortals(client.space)
+	await db.saveLevelPortals(client.space)
 	client.message("Zones removed", 0)
 })
 commandRegistry.registerCommand(["/play"], async (client, message) => {
@@ -790,9 +646,9 @@ server.on("clientConnected", async (client, authInfo) => {
 				client.canCreate = false
 				canCreateCooldown.add(client.authInfo.username)
 				client.message("Your description has been submitted!", 0)
-				const game = await createNewGame(message, client.authInfo.username)
+				const game = await db.createNewGame(message, client.authInfo.username)
 				// addInteraction(client.authInfo.username, game._id, "complete")
-				addInteraction(client.authInfo.username, game._id, "skip")
+				db.addInteraction(client.authInfo.username, game._id, "skip")
 				setTimeout(() => {
 					canCreateCooldown.delete(client.authInfo.username)
 				}, 3600000) // one hour
