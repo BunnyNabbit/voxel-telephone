@@ -37,7 +37,7 @@ function findActiveGames(username, levels) {
 async function getPortals(name) {
    return new Promise(resolve => {
       portalCollection.findOne({ _id: name }, (err, doc) => {
-         if (err) return resolve([])
+         if (err || !doc) return resolve([])
          const zones = doc.portals.map(zone => Zone.deserialize(zone))
          resolve(zones)
       })
