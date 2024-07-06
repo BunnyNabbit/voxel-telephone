@@ -15,6 +15,7 @@ const salt = crypto.randomBytes(82).toString("hex")
 const filter = require("./filter.js")
 const filterMessages = serverConfiguration.replacementMessages
 const axios = require("axios")
+const exportLevelAsVox = require("./exportVox.js")
 
 let forceZero = false
 let pinged = false
@@ -240,6 +241,7 @@ async function startGame(client) {
 						return
 					}
 					db.addInteraction(client.authInfo.username, game.next, "built")
+					exportLevelAsVox(level)
 					if (level.doNotReserve) return
 					// reserve game for player
 					playerReserved.set(client.authInfo.username, level.game)
@@ -379,6 +381,7 @@ commandRegistry.registerCommand(["/finish"], async (client) => {
 			db.continueGame(client.space.game, client.space.game.next, gameType)
 			if (client.space.changeRecord.dirty) await client.space.changeRecord.flushChanges()
 			db.addInteraction(client.authInfo.username, client.space.game.next, "built")
+			exportLevelAsVox(client.space)
 		} else { // describe
 			if (!client.currentDescription) {
 				client.message("You currently have no description for this build. Write something in chat first!")
