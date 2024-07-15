@@ -656,7 +656,7 @@ server.on("clientConnected", async (client, authInfo) => {
 					canCreateCooldown.delete(client.authInfo.username)
 				}, 3600000) // one hour
 			} else {
-				server.clients.forEach(otherClient => otherClient.message(`&7${client.authInfo.username}: &f${message}`, 0))
+				server.clients.forEach(otherClient => otherClient.message(`&7${client.authInfo.username}: &f${message}`, 0, "> "))
 			}
 		}
 	})
