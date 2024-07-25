@@ -378,7 +378,7 @@ commandRegistry.registerCommand(["/finish"], async (client) => {
 				return
 			}
 			server.clients.forEach(otherClient => otherClient.message(`${client.authInfo.username} finished a turn (Build)`, 0))
-			db.continueGame(client.space.game, client.space.game.next, gameType)
+			db.continueGame(client.space.game, client.space.game.next, gameType, client.authInfo.username)
 			if (client.space.changeRecord.dirty) await client.space.changeRecord.flushChanges()
 			db.addInteraction(client.authInfo.username, client.space.game.next, "built")
 			exportLevelAsVox(client.space)
@@ -389,7 +389,7 @@ commandRegistry.registerCommand(["/finish"], async (client) => {
 			}
 			db.addInteraction(client.authInfo.username, client.space.game._id, "described")
 			server.clients.forEach(otherClient => otherClient.message(`${client.authInfo.username} finished a turn (Describe)`, 0))
-			await db.continueGame(client.space.game, client.space.game.next, gameType, client.currentDescription)
+			await db.continueGame(client.space.game, client.space.game.next, gameType, client.authInfo.username, client.currentDescription)
 			client.currentDescription = null
 		}
 		db.addInteraction(client.authInfo.username, client.space.game.root, "complete")

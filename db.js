@@ -112,7 +112,7 @@ function deactivateGame(gameId) {
    })
 }
 
-function continueGame(originalDocument, newGameId, promptType, description) {
+function continueGame(originalDocument, newGameId, promptType, username, description) {
    return new Promise(resolve => {
       gameCollection.update({ _id: originalDocument._id }, { $set: { active: false } }, (err) => {
          const gameNextId = new mongojs.ObjectID()
@@ -125,6 +125,9 @@ function continueGame(originalDocument, newGameId, promptType, description) {
             parent: originalDocument._id,
             depth: originalDocument.depth + 1
          }
+         if (username) {
+            document.creators.push(username)
+         }
          if (document.depth == 15) {
             document.active = false
          }
@@ -136,9 +139,9 @@ function continueGame(originalDocument, newGameId, promptType, description) {
          }
          gameCollection.insert(document, (err) => {
             if (!document.active) {
-               resolve({document, status: 1})
+               resolve({ document, status: 1 })
             }
-            resolve({document, status: 0})
+            resolve({ document, status: 0 })
          })
       })
    })
