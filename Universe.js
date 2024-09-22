@@ -97,8 +97,11 @@ class Universe {
 						client.addPlayerName(otherClient.netId, otherClient.authInfo.username, `&7${otherClient.authInfo.username}`)
 					})
 					this.server.clients.push(client)
+					client.addPlayerName(0xff, client.authInfo.username, `&7${client.authInfo.username}`)
 					this.server.clients.forEach(anyClient => {
-						anyClient.addPlayerName(i, client.authInfo.username, `&7${client.authInfo.username}`)
+						if (anyClient != client) {
+							anyClient.addPlayerName(i, client.authInfo.username, `&7${client.authInfo.username}`)
+						}
 					})
 					return
 				}
