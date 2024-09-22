@@ -11,6 +11,7 @@ const fs = require("fs")
 const nbt = require("nbt")
 const Database = require("./class/Database.js")
 const Heartbeat = require("./class/Heartbeat.js")
+const Watchdog = require("./class/Watchdog.js")
 
 let builderTemplate = null
 nbt.parse(fs.readFileSync(`./voxel-telephone-64.cw`), async (error, data) => {
@@ -51,7 +52,6 @@ function sleep(ms) {
 
 class Universe {
 	constructor(serverConfiguration) {
-		const that = this // hack
 		console.log({ serverConfiguration })
 		this.serverConfiguration = serverConfiguration
 		this.server = new Server(serverConfiguration.port)
@@ -63,31 +63,10 @@ class Universe {
 		})
 		this.db = new Database(this.serverConfiguration)
 		const filterMessages = this.serverConfiguration.replacementMessages
+		const listOperators = this.serverConfiguration.listOperators
 
 		if (this.serverConfiguration.postToMainServer) {
 			this.heartbeat = new Heartbeat(`https://www.classicube.net/server/heartbeat/`)
-		}
-
-		class Watchdog {
-			constructor(client) {
-				this.interval = setInterval(() => {
-					this.currentRate = 0
-				}, 1000)
-				this.currentRate = 0
-				this.limit = 382
-				this.client = client
-			}
-			rateOperation(amount = 1) {
-				this.currentRate += amount
-				if (this.currentRate > this.limit) {
-					this.client.disconnect("Sanctioned: Watchdog triggered")
-					return true
-				}
-				return false
-			}
-			destroy() {
-				clearInterval(this.interval)
-			}
 		}
 
 		this.levels = new Map()
@@ -110,7 +89,6 @@ class Universe {
 			level.portals = await this.db.getPortals(level.name)
 		})
 
-		const listOperators = this.serverConfiguration.listOperators
 		this.server.addClient = (client) => {
 			for (let i = 0; i < 127; i++) {
 				if (!this.server.clients.some(client => client.netId == i)) {
@@ -138,8 +116,8 @@ class Universe {
 
 		this.canCreateCooldown = new Set()
 
-		const commandRegistry = new GlobalCommandRegistry()
-		commandRegistry.registerCommand(["/rules"], (client) => {
+		this.commandRegistry = new GlobalCommandRegistry()
+		this.commandRegistry.registerCommand(["/rules"], (client) => {
 			client.message("== Rules", 0)
 			client.message("The point of the game is to see how builds transform when users take turn describing and building.", 0)
 			client.message("1. Do not intentionally derail the games. Build and describe as you genuinely see it.", 0)
@@ -180,14 +158,14 @@ class Universe {
 				return true
 			}
 		}
-		commandRegistry.registerCommand(["/commit"], async (client) => {
+		this.commandRegistry.registerCommand(["/commit"], async (client) => {
 			client.space.loading = true
 			await client.space.changeRecord.commit(client.space.changeRecord.actionCount)
 			client.space.loading = false
 			client.space.inVcr = false
 			client.message("Changes commited. VCR mode off", 0)
 		}, reasonVcr(false, "Level isn't in VCR mode. /vcr"))
-		commandRegistry.registerCommand(["/finish"], async (client) => {
+		this.commandRegistry.registerCommand(["/finish"], async (client) => {
 			if (client.space && client.space.game && !client.space.changeRecord.draining) {
 				const gameType = invertPromptType(client.space.game.promptType)
 				console.log(gameType)
@@ -217,7 +195,7 @@ class Universe {
 				await this.gotoHub(client)
 			}
 		})
-		commandRegistry.registerCommand(["/report"], async (client, message) => {
+		this.commandRegistry.registerCommand(["/report"], async (client, message) => {
 			if (client.space && client.space.name !== this.serverConfiguration.hubName) {
 				let reason = message
 				if (reason.length == 0) reason = "[ Empty report ]"
@@ -232,7 +210,7 @@ class Universe {
 				await gotoHub(client)
 			}
 		})
-		commandRegistry.registerCommand(["/abort"], async (client) => {
+		this.commandRegistry.registerCommand(["/abort"], async (client) => {
 			if (client.space.loading) return client.message("Please wait", 0)
 			if (client.space.inVcr) {
 				client.space.blocks = client.space.template(client.space.bounds)
@@ -250,14 +228,14 @@ class Universe {
 				}
 			}
 		}, reasonHasPermission(false, "You don't have permission to build in this level!"))
-		commandRegistry.registerCommand(["/mark"], async (client) => {
+		this.commandRegistry.registerCommand(["/mark"], async (client) => {
 			if (!client.space.blocking) {
 				client.message("There are no current commands being run on the level", 0)
 				return
 			}
 			client.space.inferCurrentCommand(client.position.map(value => Math.min(Math.max(Math.floor(value), 0), 63)))
 		}, reasonHasPermission(false, "You don't have permission to build in this level!"))
-		commandRegistry.registerCommand(["/paint"], async (client) => {
+		this.commandRegistry.registerCommand(["/paint"], async (client) => {
 			client.paintMode = !client.paintMode
 			if (client.paintMode) {
 				client.message("Paint mode on", 0)
@@ -265,7 +243,7 @@ class Universe {
 				client.message("Paint mode off", 0)
 			}
 		})
-		commandRegistry.registerCommand(["/help"], async (client) => { // TODO: this should be replaced by a different system
+		this.commandRegistry.registerCommand(["/help"], async (client) => { // TODO: this should be replaced by a different system
 			client.message("/cuboid", 0)
 			client.message("/place", 0)
 			client.message("/mark", 0)
@@ -273,7 +251,7 @@ class Universe {
 			client.message("/paint - toggles paint mode", 0)
 			client.message("/abort - abort interactive operations", 0)
 		})
-		commandRegistry.registerCommand(["/skip"], async (client,) => {
+		this.commandRegistry.registerCommand(["/skip"], async (client,) => {
 			if (client.space && client.space.name !== this.serverConfiguration.hubName) {
 				this.db.addInteraction(client.authInfo.username, client.space.game._id, "skip")
 				client.space.doNotReserve = true
@@ -281,7 +259,7 @@ class Universe {
 				await this.gotoHub(client)
 			}
 		})
-		commandRegistry.registerCommand(["/pl", "/place"], async (client) => {
+		this.commandRegistry.registerCommand(["/pl", "/place"], async (client) => {
 			if (client.space.inVcr) return client.message("Unable to place block. Level is in VCR mode", 0)
 			if (client.space.blocking) return client.message("Unable to place block. Command in level is expecting additional arguments", 0)
 			if (client.watchdog.rateOperation(1)) return
@@ -292,13 +270,13 @@ class Universe {
 			}
 			client.space.setBlock(operationPosition, block)
 		}, reasonHasPermission(false, "You don't have permission to build in this level!"))
-		commandRegistry.registerCommand(["/clients"], async (client) => {
+		this.commandRegistry.registerCommand(["/clients"], async (client) => {
 			client.message("&ePlayers using:", 0)
 			this.server.clients.forEach(otherClient => {
 				client.message(`&e  ${otherClient.socket.appName}: &f${otherClient.authInfo.username}`, 0, "> ")
 			})
 		})
-		commandRegistry.registerCommand(["/vcr"], async (client) => {
+		this.commandRegistry.registerCommand(["/vcr"], async (client) => {
 			if (client.space.changeRecord.draining) return client.message(`VCR is busy. Try again later?`, 0)
 			if (client.space.changeRecord.dirty) await client.space.changeRecord.flushChanges()
 			if (!client.space.inVcr) {
@@ -315,13 +293,13 @@ class Universe {
 				client.message(`The level is already in VCR mode`, 0)
 			}
 		}, reasonHasPermission(false, "You don't have permission to build in this level!"))
-		commandRegistry.registerCommand(["/create"], async (client) => {
+		this.commandRegistry.registerCommand(["/create"], async (client) => {
 			if (client.canCreate && client.space?.name == this.serverConfiguration.hubName) {
 				client.creating = true
 				client.message("Enter a description in chat. It can be mundane or imaginative.", 0)
 			}
 		})
-		commandRegistry.registerCommand(["/rewind", "/rw", "/undo"], async (client, message) => {
+		this.commandRegistry.registerCommand(["/rewind", "/rw", "/undo"], async (client, message) => {
 			if (!client.space.inVcr) return client.message("Level isn't in VCR mode. /vcr", 0)
 			const count = Math.max(parseInt(message), 0) || 1
 			if (client.space.loading) return client.message("Level is busy seeking. Try again later", 0)
@@ -331,7 +309,7 @@ class Universe {
 			client.message(`Rewinded. Current actions: ${client.space.changeRecord.actionCount}/${client.space.changeRecord.maxActions}`, 0)
 			client.message(`To commit this state use /commit. use /abort to exit VCR`, 0)
 		})
-		commandRegistry.registerCommand(["/fastforward", "/ff", "/redo"], async (client, message) => {
+		this.commandRegistry.registerCommand(["/fastforward", "/ff", "/redo"], async (client, message) => {
 			if (!client.space.inVcr) return client.message("Level isn't in VCR mode. /vcr", 0)
 			const count = Math.max(parseInt(message), 0) || 1
 			if (client.space.loading) return client.message("Level is busy seeking. Try again later", 0)
@@ -341,7 +319,7 @@ class Universe {
 			client.message(`Fast-forwarded. Current actions: ${client.space.changeRecord.actionCount}/${client.space.changeRecord.maxActions}`, 0)
 			client.message(`To commit this state use /commit. Use /abort to exit VCR`, 0)
 		})
-		commandRegistry.registerCommand(["/addzone"], async (client, message) => {
+		this.commandRegistry.registerCommand(["/addzone"], async (client, message) => {
 			if (!this.serverConfiguration.hubEditors.includes(client.authInfo.username) || client.space.name.startsWith("game-")) return
 			const values = message.split(" ").map(value => parseInt(value)).filter(value => !isNaN(value))
 			const command = message.split(" ").slice(6).join(" ")
@@ -352,16 +330,16 @@ class Universe {
 			await this.db.saveLevelPortals(client.space)
 			client.message("Zone added", 0)
 		})
-		commandRegistry.registerCommand(["/removeallzones"], async (client, message) => {
+		this.commandRegistry.registerCommand(["/removeallzones"], async (client, message) => {
 			if (!this.serverConfiguration.hubEditors.includes(client.authInfo.username) || client.space.name.startsWith("game-")) return
 			client.space.portals = []
 			await this.db.saveLevelPortals(client.space)
 			client.message("Zones removed", 0)
 		})
-		commandRegistry.registerCommand(["/play"], async (client, message) => {
+		this.commandRegistry.registerCommand(["/play"], async (client, message) => {
 			this.startGame(client)
 		})
-		commandRegistry.registerCommand(["/view"], async (client, message) => {
+		this.commandRegistry.registerCommand(["/view"], async (client, message) => {
 			if (client.warned) return
 			client.warned = true
 			client.message("View mode has not been developed. Check back later! I am still collecting games.", 0)
@@ -388,7 +366,7 @@ class Universe {
 			client.customBlockSupport(1)
 			client.authInfo = authInfo
 			client.message("Welcome to Voxel Telephone. A silly game of telephone where you take turns describing and building.", 0)
-			commandRegistry.attemptCall(client, "/rules")
+			this.commandRegistry.attemptCall(client, "/rules")
 			if (listOperators.includes(authInfo.username)) {
 				client.message("* You are considered a list operator.", 0)
 				client.message("* To force the heartbeat to post zero players, use /forcezero", 0)
@@ -434,7 +412,7 @@ class Universe {
 			client.on("message", async (message) => {
 				if (client.watchdog.rateOperation(10)) return
 				console.log(client.authInfo.username, message)
-				if (commandRegistry.attemptCall(client, message)) return
+				if (this.commandRegistry.attemptCall(client, message)) return
 				// a few hardcoded commands
 				if (message == "/forcezero" && listOperators.includes(client.authInfo.username) && this.heartbeat) {
 					this.heartbeat.forceZero = true
@@ -500,7 +478,7 @@ class Universe {
 					client.space.portals.forEach(portal => {
 						if (portal.intersects(client.position)) {
 							if (portal.globalCommand) {
-								commandRegistry.attemptCall(client, portal.globalCommand)
+								this.commandRegistry.attemptCall(client, portal.globalCommand)
 							}
 						}
 					})
