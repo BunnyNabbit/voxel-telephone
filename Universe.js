@@ -12,6 +12,7 @@ const nbt = require("nbt")
 const Database = require("./class/Database.js")
 const Heartbeat = require("./class/Heartbeat.js")
 const Watchdog = require("./class/Watchdog.js")
+const DroneTransmitter = require("./class/DroneTransmitter.js")
 
 let builderTemplate = null
 nbt.parse(fs.readFileSync(`./voxel-telephone-64.cw`), async (error, data) => {
@@ -375,6 +376,7 @@ class Universe {
 				client.message("* To force the heartbeat to post zero players, use /forcezero", 0)
 			}
 			this.server.addClient(client)
+			client.droneTransmitter = new DroneTransmitter(client)
 			this.server.clients.forEach(otherClient => otherClient.message(`+ ${client.authInfo.username} connected`, 0))
 			client.serverIdentification("Voxel Telephone", "a silly game", 0x64)
 			client.watchdog = new Watchdog(client);
@@ -477,6 +479,10 @@ class Universe {
 				client.heldBlock = heldBlock
 				client.orientation = [orientation.yaw, orientation.pitch]
 				if (client.space) {
+					const controlledDrone = client.space.clientDrones.get(client)
+					if (controlledDrone) {
+						controlledDrone.setPosition(position, orientation)
+					}
 					// portal detection
 					client.space.portals.forEach(portal => {
 						if (portal.intersects(client.position)) {

@@ -92,6 +92,7 @@ class Cuboid extends Command {
 }
 
 const commands = [Cuboid]
+const Drone = require("./Drone.js")
 
 class Level extends require("events") {
 	constructor(bounds, blocks) {
@@ -103,16 +104,17 @@ class Level extends require("events") {
 		this.inVcr = false
 		this.allowList = []
 		this.portals = []
+		this.drones = new Set()
+		this.clientDrones = new Map()
 	}
 	messageAll(message) {
 		this.clients.forEach(client => {
 			client.message(message, 0)
 		})
 	}
-	sendClients(client) {
-		return
-		this.clients.forEach(otherClient => {
-			client.configureSpawnExt(otherClient.netId, otherClient.authInfo.username, 128, 256, 128, 0, 0)
+	sendDrones(client) {
+		this.drones.forEach(drone => {
+			client.droneTransmitter.addDrone(drone)
 		})
 	}
 	removeClient(client) {
@@ -120,15 +122,24 @@ class Level extends require("events") {
 		const index = this.clients.indexOf(client)
 		if (index) this.clients.splice(index, 1)
 		if (index !== -1) this.clients.splice(index, 1)
-		this.clients.forEach(otherClient => {
-			otherClient.despawnPlayer(client.netId)
-		})
+		const drone = this.clientDrones.get(client)
+		this.clientDrones.delete(client)
+		drone.destroy()
+		this.drones.delete(drone)
+		client.droneTransmitter.clearDrones()
 		this.emit("clientRemoved", client)
 	}
 	addClient(client, position = [0, 0, 0], orientation = [0, 0]) {
 		this.emit("clientAdded", client)
 		client.space = this
 		this.loadClient(client, position, orientation)
+		this.sendDrones(client)
+		const drone = new Drone({ name: "&7" + client.authInfo.username })
+		this.drones.add(drone)
+		this.clientDrones.set(client, drone)
+		this.clients.forEach(otherClient => {
+			otherClient.droneTransmitter.addDrone(drone)
+		})
 		this.clients.push(client)
 	}
 	loadClient(client, position = [0, 0, 0], orientation = [0, 0]) {
