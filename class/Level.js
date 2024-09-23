@@ -124,10 +124,19 @@ class Level extends require("events") {
 		if (index !== -1) this.clients.splice(index, 1)
 		const drone = this.clientDrones.get(client)
 		this.clientDrones.delete(client)
-		drone.destroy()
-		this.drones.delete(drone)
+		this.removeDrone(drone)
 		client.droneTransmitter.clearDrones()
 		this.emit("clientRemoved", client)
+	}
+	removeDrone(drone) {
+		drone.destroy()
+		this.drones.delete(drone)
+	}
+	addDrone(drone) {
+		this.clients.forEach(otherClient => {
+			otherClient.droneTransmitter.addDrone(drone)
+		})
+		this.drones.add(drone)
 	}
 	addClient(client, position = [0, 0, 0], orientation = [0, 0]) {
 		this.emit("clientAdded", client)
@@ -135,11 +144,8 @@ class Level extends require("events") {
 		this.loadClient(client, position, orientation)
 		this.sendDrones(client)
 		const drone = new Drone({ name: "&7" + client.authInfo.username })
-		this.drones.add(drone)
 		this.clientDrones.set(client, drone)
-		this.clients.forEach(otherClient => {
-			otherClient.droneTransmitter.addDrone(drone)
-		})
+		this.addDrone(drone)
 		this.clients.push(client)
 	}
 	loadClient(client, position = [0, 0, 0], orientation = [0, 0]) {
