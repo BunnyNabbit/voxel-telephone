@@ -13,5 +13,6 @@
    "dbName": "voxeltelephone",
    "hubName": "hub",
    "postToMainServer": false,
-   "verifyUsernames": true
+   "verifyUsernames": true,
+   "maxIpConnections": 3
 }
