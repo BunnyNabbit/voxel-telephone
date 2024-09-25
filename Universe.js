@@ -3,6 +3,7 @@ const Level = require("./class/Level.js")
 const GlobalCommandRegistry = require("./class/GlobalCommandRegistry.js")
 const Zone = require("./class/Zone.js")
 const ChangeRecord = require("./class/ChangeRecord.js")
+const NullChangeRecord = require("./class/NullChangeRecord.js")
 const exportLevelAsVox = require("./exportVox.js")
 const filter = require("./filter.js")
 const defaultBlockset = require("./6-8-5-rgb.json")
@@ -19,9 +20,18 @@ nbt.parse(fs.readFileSync(`./voxel-telephone-64.cw`), async (error, data) => {
 	if (error) throw error
 	builderTemplate = data.value.BlockArray.value
 })
+let viewTemplate = null
+nbt.parse(fs.readFileSync(`./view.cw`), async (error, data) => {
+	if (error) throw error
+	viewTemplate = data.value.BlockArray.value
+})
 function createBuilder() {
 	if (!builderTemplate) throw "Builder template not found"
 	return Buffer.from(builderTemplate)
+}
+function createView() {
+	if (!viewTemplate) throw "View template not found"
+	return Buffer.from(viewTemplate)
 }
 
 const builderDefaults = {
@@ -344,9 +354,7 @@ class Universe {
 			this.startGame(client)
 		})
 		this.commandRegistry.registerCommand(["/view"], async (client, message) => {
-			if (client.warned) return
-			client.warned = true
-			client.message("View mode has not been developed. Check back later! I am still collecting games.", 0)
+			this.enterView(client)
 		})
 		const verifyUsernames = (this.serverConfiguration.verifyUsernames && this.heartbeat)
 		this.server.on("clientConnected", async (client, authInfo) => {
@@ -523,13 +531,34 @@ class Universe {
 			}
 			level.texturePackUrl = defaults.texturePackUrl ?? this.serverConfiguration.texturePackUrl
 			level.allowList = defaults.allowList ?? []
-			level.changeRecord = new ChangeRecord(`./blockRecords/${spaceName}/`, null, async () => {
+			let changeRecordClass = ChangeRecord
+			if (defaults.useNullChangeRecord) {
+				changeRecordClass = NullChangeRecord
+			}
+			level.changeRecord = new changeRecordClass(`./blockRecords/${spaceName}/`, null, async () => {
 				await level.changeRecord.restoreBlockChangesToLevel(level)
 				resolve(level)
 			})
 		})
 		this.levels.set(spaceName, promise)
 		return promise
+	}
+	async enterView(client, state) {
+		if (client.teleporting == true) return
+		client.teleporting = true
+		client.space.removeClient(client)
+		const promise = this.loadLevel("game-view", {
+			useNullChangeRecord: true,
+			bounds: [576, 64, 512],
+			allowList: ["not a name"],
+			template: createView
+		})
+		client.message("View", 1)
+		client.message(" ", 2)
+		client.message(" ", 3)
+		promise.then(level => {
+			level.addClient(client, [60, 8, 4], [162, 254])
+		})
 	}
 	async startGame(client) {
 		if (client.teleporting == true) return
