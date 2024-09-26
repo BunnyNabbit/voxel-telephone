@@ -14,5 +14,6 @@
    "hubName": "hub",
    "postToMainServer": false,
    "verifyUsernames": true,
-   "maxIpConnections": 3
+   "maxIpConnections": 3,
+   "inspirationFeeds": ["https://www.bing.com/images/feed", "https://mix.com"]
 }
