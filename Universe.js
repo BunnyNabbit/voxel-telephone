@@ -611,7 +611,9 @@ class Universe {
 			if (this.canCreateCooldown.has(client.authInfo.username) == false) {
 				client.message("Whoops. Looks like we ran out of games! How about this, you can create a new prompt from nothing. Go ahead, use /create to start the process of making a prompt.", 0)
 				client.message("Think of something mundane or imaginative. It is entirely up to you.", 0)
-				client.message("Not inspired? https://www.bing.com/images/feed", 0)
+				const inspirationFeeds = this.serverConfiguration.inspirationFeeds
+				const pickedFeed = inspirationFeeds[randomIntFromInterval(0, inspirationFeeds.length - 1)]
+				client.message(`Not inspired? ${pickedFeed}`, 0)
 				client.canCreate = true
 			} else {
 				client.message("Voxel Telephone is out of games. Come back later!", 0)
