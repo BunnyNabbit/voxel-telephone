@@ -9,44 +9,22 @@ const filter = require("./filter.js")
 const defaultBlockset = require("./6-8-5-rgb.json")
 const crypto = require("crypto")
 const fs = require("fs")
-const nbt = require("nbt")
 const Database = require("./class/Database.js")
 const Heartbeat = require("./class/Heartbeat.js")
 const Watchdog = require("./class/Watchdog.js")
 const DroneTransmitter = require("./class/DroneTransmitter.js")
-
-let builderTemplate = null
-nbt.parse(fs.readFileSync(`./voxel-telephone-64.cw`), async (error, data) => {
-	if (error) throw error
-	builderTemplate = data.value.BlockArray.value
-})
-let viewTemplate = null
-nbt.parse(fs.readFileSync(`./view.cw`), async (error, data) => {
-	if (error) throw error
-	viewTemplate = data.value.BlockArray.value
-})
-function createBuilder() {
-	if (!builderTemplate) throw "Builder template not found"
-	return Buffer.from(builderTemplate)
-}
-function createView() {
-	if (!viewTemplate) throw "View template not found"
-	return Buffer.from(viewTemplate)
-}
+const templates = require("./templates.js")
 
 const builderDefaults = {
-	template: createBuilder
+	template: templates.builder
 }
 const describeDefaults = {
-	template: createEmpty,
+	template: templates.empty,
 	allowList: []
 }
 
 function clamp(number, min, max) {
 	return Math.min(Math.max(number, min), max)
-}
-function createEmpty(bounds) {
-	return Buffer.alloc(bounds[0] * bounds[1] * bounds[2])
 }
 function randomIntFromInterval(min, max) {
 	return Math.floor(Math.random() * (max - min + 1) + min)
@@ -83,7 +61,7 @@ class Universe {
 		this.levels = new Map()
 		this.playerReserved = this.db.playerReserved
 		const hubDefaults = {
-			template: createEmpty,
+			template: templates.empty,
 			allowList: this.serverConfiguration.hubEditors
 		}
 		this.loadLevel(this.serverConfiguration.hubName, hubDefaults).then(async level => {
@@ -519,7 +497,7 @@ class Universe {
 		if (cached) return cached
 		const promise = new Promise(async resolve => {
 			const bounds = defaults.bounds ?? [64, 64, 64]
-			const template = defaults.template ?? createEmpty
+			const template = defaults.template ?? templates.empty
 			const level = new Level(bounds, template(bounds))
 			level.template = template
 			level.name = spaceName
@@ -551,7 +529,7 @@ class Universe {
 			useNullChangeRecord: true,
 			bounds: [576, 64, 512],
 			allowList: ["not a name"],
-			template: createView
+			template: templates.view.level
 		})
 		client.message("View", 1)
 		client.message(" ", 2)
