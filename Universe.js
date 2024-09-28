@@ -55,7 +55,7 @@ class Universe {
 		const listOperators = this.serverConfiguration.listOperators
 
 		if (this.serverConfiguration.postToMainServer) {
-			this.heartbeat = new Heartbeat(`https://www.classicube.net/server/heartbeat/`)
+			this.heartbeat = new Heartbeat(`https://www.classicube.net/server/heartbeat/`, this)
 		}
 
 		this.levels = new Map()
