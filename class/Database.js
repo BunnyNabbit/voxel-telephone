@@ -37,6 +37,32 @@ class Database {
 		})
 	}
 
+	getGame(gameRootId) {
+		return new Promise(async resolve => {
+			gameCollection.find({ root: gameRootId }).sort({depth: -1}, (err, games) => {
+				resolve(games)
+			})
+		})
+	}
+
+	getGames(cursor, limit = 8) {
+		return new Promise(resolve => {
+			const findDocument = {
+				depth: 0
+			}
+			if (cursor) {
+				findDocument._id = { $lt: cursor }
+			}
+			gameCollection.find({ depth: 0 }).sort({ _id: 1 }).limit(8, async (err, games) => {
+				let promises = []
+				games.forEach(game => {
+					promises.push(this.getGame(game._id))
+				})
+				resolve(await Promise.all(promises))
+			})
+		})
+	}
+
 	async getPortals(name) {
 		return new Promise(resolve => {
 			portalCollection.findOne({ _id: name }, (err, doc) => {
