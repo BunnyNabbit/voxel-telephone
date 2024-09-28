@@ -369,6 +369,7 @@ class Universe {
 			await this.gotoHub(client)
 			client.on("setBlock", operation => {
 				if (client.watchdog.rateOperation()) return
+				if (!client.space) return
 				const operationPosition = [operation.x, operation.y, operation.z]
 				let block = operation.type
 				if (!client.space.userHasPermission(client.authInfo.username)) {
@@ -414,6 +415,7 @@ class Universe {
 				if (client.watchdog.rateOperation(20)) return
 				// pass this to the level
 				if (message.startsWith("/")) {
+					if (!client.space) return
 					if (!client.space.userHasPermission(client.authInfo.username)) return client.message("You don't have permission to build in this level", 0)
 					if (client.space.inVcr) {
 						client.message("Unable to use commands. Level is in VCR mode", 0)
@@ -534,8 +536,47 @@ class Universe {
 		client.message("View", 1)
 		client.message(" ", 2)
 		client.message(" ", 3)
-		promise.then(level => {
+		promise.then(async level => {
+			const games = await this.db.getGames()
+			console.log(games)
+			games.forEach((game, gameIndex) => {
+				game.forEach((turn, turnIndex) => {
+					function addIcon(template) {
+						const voxels = template([64, 64, 64])
+						const zBlockOffset = gameIndex * 64
+						const xBlockOffset = (turnIndex + 1) * 64
+						let voxelIndex = 0
+						for (let y = 0; y < 64; y++) {
+							for (let z = 0; z < 64; z++) {
+								for (let x = 0; x < 64; x++) {
+									const voxel = voxels[voxelIndex]
+									if (voxel) level.rawSetBlock([x + xBlockOffset, y, z + zBlockOffset], voxel)
+									voxelIndex++
+								}
+							}
+						}
+					}
+					if (turn.promptType.build) return
+					const previewLevel = game.length == 16 || level.moderationView
+					const isOnlyDescription = (!game[turnIndex + 1] && true) || false
+					if (previewLevel && !isOnlyDescription) {
+						// todo
+					} else {
+						// create an icon describing zhe turn's current state
+						const isBeingPlayed = this.levels.get(`game-${turn.next}`)
+						if (isBeingPlayed) return addIcon(templates.view.player)
+						if (isOnlyDescription) return addIcon(templates.view.description)
+						if (!isOnlyDescription) return addIcon(templates.view.built)
+						// other icons/todo
+						// orphaned: a player had left and zhe game is still reserved for zhem
+						// patrol: unreviewed turn if triage/moderation is online
+						// report: turn reported by player
+						// scyzhe: turn being reviewed by triage/moderation
+					}
+				})
+			})
 			level.addClient(client, [60, 8, 4], [162, 254])
+			client.teleporting = false
 		})
 	}
 	async startGame(client) {

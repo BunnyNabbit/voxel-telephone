@@ -169,7 +169,7 @@ class Level extends require("events") {
 		})
 	}
 	setBlock(position, block, excludeClients = [], saveToRecord = true) {
-		this.blocks.writeUInt8(block, position[0] + this.bounds[2] * (position[2] + this.bounds[0] * position[1]))
+		this.blocks.writeUInt8(block, position[0] + this.bounds[0] * (position[2] + this.bounds[2] * position[1]))
 		// callback(block, position[0], position[1], position[2])
 		this.clients.forEach(client => {
 			if (!excludeClients.includes(client)) {
@@ -186,10 +186,10 @@ class Level extends require("events") {
 		}
 	}
 	rawSetBlock(position, block) {
-		this.blocks.writeUInt8(block, position[0] + this.bounds[2] * (position[2] + this.bounds[0] * position[1]))
+		this.blocks.writeUInt8(block, position[0] + this.bounds[0] * (position[2] + this.bounds[2] * position[1]))
 	}
 	getBlock(position) {
-		return this.blocks.readUInt8(position[0] + this.bounds[2] * (position[2] + this.bounds[0] * position[1]))
+		return  this.blocks.readUInt8(position[0] + this.bounds[0] * (position[2] + this.bounds[2] * position[1]))
 	}
 	interpretCommand(command = "cuboid 1", client = null, actionBytes = []) { // i.e: cuboid 1
 		// consider: if the blockset has names, user could refer to blocks by name and not just id.
