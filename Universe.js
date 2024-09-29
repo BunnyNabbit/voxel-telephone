@@ -1,34 +1,26 @@
 const Server = require("classicborne-server-protocol")
 const Level = require("./class/Level.js")
+const ViewLevel = require("./class/ViewLevel.js")
 const GlobalCommandRegistry = require("./class/GlobalCommandRegistry.js")
 const Zone = require("./class/Zone.js")
 const ChangeRecord = require("./class/ChangeRecord.js")
+const NullChangeRecord = require("./class/NullChangeRecord.js")
 const exportLevelAsVox = require("./exportVox.js")
 const filter = require("./filter.js")
 const defaultBlockset = require("./6-8-5-rgb.json")
 const crypto = require("crypto")
 const fs = require("fs")
-const nbt = require("nbt")
 const Database = require("./class/Database.js")
 const Heartbeat = require("./class/Heartbeat.js")
 const Watchdog = require("./class/Watchdog.js")
 const DroneTransmitter = require("./class/DroneTransmitter.js")
-
-let builderTemplate = null
-nbt.parse(fs.readFileSync(`./voxel-telephone-64.cw`), async (error, data) => {
-	if (error) throw error
-	builderTemplate = data.value.BlockArray.value
-})
-function createBuilder() {
-	if (!builderTemplate) throw "Builder template not found"
-	return Buffer.from(builderTemplate)
-}
+const templates = require("./templates.js")
 
 const builderDefaults = {
-	template: createBuilder
+	template: templates.builder
 }
 const describeDefaults = {
-	template: createEmpty,
+	template: templates.empty,
 	allowList: ["not a name"]
 }
 
@@ -38,6 +30,7 @@ function clamp(number, min, max) {
 function createEmpty(bounds) {
 	return Buffer.alloc(bounds[0] * bounds[1] * bounds[2])
 }
+
 function randomIntFromInterval(min, max) {
 	return Math.floor(Math.random() * (max - min + 1) + min)
 }
@@ -67,13 +60,13 @@ class Universe {
 		const listOperators = this.serverConfiguration.listOperators
 
 		if (this.serverConfiguration.postToMainServer) {
-			this.heartbeat = new Heartbeat(`https://www.classicube.net/server/heartbeat/`)
+			this.heartbeat = new Heartbeat(`https://www.classicube.net/server/heartbeat/`, this)
 		}
 
 		this.levels = new Map()
 		this.playerReserved = this.db.playerReserved
 		const hubDefaults = {
-			template: createEmpty,
+			template: templates.empty,
 			allowList: this.serverConfiguration.hubEditors
 		}
 		this.loadLevel(this.serverConfiguration.hubName, hubDefaults).then(async level => {
@@ -344,9 +337,8 @@ class Universe {
 			this.startGame(client)
 		})
 		this.commandRegistry.registerCommand(["/view"], async (client, message) => {
-			if (client.warned) return
-			client.warned = true
-			client.message("View mode has not been developed. Check back later! I am still collecting games.", 0)
+			const isModerationView = message == "mod" && this.serverConfiguration.moderators.includes(client.authInfo.username)
+			this.enterView(client, isModerationView)
 		})
 		const verifyUsernames = (this.serverConfiguration.verifyUsernames && this.heartbeat)
 		this.server.on("clientConnected", async (client, authInfo) => {
@@ -383,6 +375,7 @@ class Universe {
 			await this.gotoHub(client)
 			client.on("setBlock", operation => {
 				if (client.watchdog.rateOperation()) return
+				if (!client.space) return
 				const operationPosition = [operation.x, operation.y, operation.z]
 				let block = operation.type
 				if (!client.space.userHasPermission(client.authInfo.username)) {
@@ -428,6 +421,7 @@ class Universe {
 				if (client.watchdog.rateOperation(20)) return
 				// pass this to the level
 				if (message.startsWith("/")) {
+					if (!client.space) return
 					if (!client.space.userHasPermission(client.authInfo.username)) return client.message("You don't have permission to build in this level", 0)
 					if (client.space.inVcr) {
 						client.message("Unable to use commands. Level is in VCR mode", 0)
@@ -511,8 +505,9 @@ class Universe {
 		if (cached) return cached
 		const promise = new Promise(async resolve => {
 			const bounds = defaults.bounds ?? [64, 64, 64]
-			const template = defaults.template ?? createEmpty
-			const level = new Level(bounds, template(bounds))
+			const template = defaults.template ?? templates.empty
+			const levelClass = defaults.levelClass ?? Level
+			const level = new levelClass(bounds, template(bounds), ...(defaults.arguments ?? []))
 			level.template = template
 			level.name = spaceName
 			level.blockset = defaults.blockset ?? defaultBlockset
@@ -523,13 +518,42 @@ class Universe {
 			}
 			level.texturePackUrl = defaults.texturePackUrl ?? this.serverConfiguration.texturePackUrl
 			level.allowList = defaults.allowList ?? []
-			level.changeRecord = new ChangeRecord(`./blockRecords/${spaceName}/`, null, async () => {
+			level.universe = this
+			let changeRecordClass = ChangeRecord
+			if (defaults.useNullChangeRecord) {
+				changeRecordClass = NullChangeRecord
+			}
+			level.changeRecord = new changeRecordClass(`./blockRecords/${spaceName}/`, null, async () => {
 				await level.changeRecord.restoreBlockChangesToLevel(level)
 				resolve(level)
 			})
 		})
 		this.levels.set(spaceName, promise)
 		return promise
+	}
+	async enterView(client, moderationView = false, cursor) {
+		if (client.teleporting == true) return
+		client.teleporting = true
+		client.space.removeClient(client)
+		let spaceName = "game-view"
+		if (moderationView) spaceName += "-mod"
+		if (cursor) spaceName += cursor
+		const promise = this.loadLevel(spaceName, {
+			useNullChangeRecord: true,
+			levelClass: ViewLevel,
+			arguments: [moderationView, cursor],
+			bounds: [576, 64, 512],
+			allowList: ["not a name"],
+			template: templates.view.level
+		})
+		client.message("View", 1)
+		client.message(" ", 2)
+		client.message(" ", 3)
+		promise.then(async level => {
+			await level.reloadView(templates.view.level)
+			level.addClient(client, [60, 8, 4], [162, 254])
+			client.teleporting = false
+		})
 	}
 	async startGame(client) {
 		if (client.teleporting == true) return
