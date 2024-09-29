@@ -135,3 +135,5 @@ dist
 filterWords.json
 # server config
 config.json
+# ClassiCube client files (.cw shortcut)
+/texturecache
