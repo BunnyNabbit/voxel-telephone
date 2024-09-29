@@ -1,5 +1,6 @@
 const Server = require("classicborne-server-protocol")
 const Level = require("./class/Level.js")
+const ViewLevel = require("./class/ViewLevel.js")
 const GlobalCommandRegistry = require("./class/GlobalCommandRegistry.js")
 const Zone = require("./class/Zone.js")
 const ChangeRecord = require("./class/ChangeRecord.js")
@@ -501,7 +502,8 @@ class Universe {
 		const promise = new Promise(async resolve => {
 			const bounds = defaults.bounds ?? [64, 64, 64]
 			const template = defaults.template ?? templates.empty
-			const level = new Level(bounds, template(bounds))
+			const levelClass = defaults.levelClass ?? Level
+			const level = new levelClass(bounds, template(bounds), ...(defaults.arguments ?? []))
 			level.template = template
 			level.name = spaceName
 			level.blockset = defaults.blockset ?? defaultBlockset
@@ -512,6 +514,7 @@ class Universe {
 			}
 			level.texturePackUrl = defaults.texturePackUrl ?? this.serverConfiguration.texturePackUrl
 			level.allowList = defaults.allowList ?? []
+			level.universe = this
 			let changeRecordClass = ChangeRecord
 			if (defaults.useNullChangeRecord) {
 				changeRecordClass = NullChangeRecord
@@ -532,6 +535,8 @@ class Universe {
 		if (moderationView) spaceName += "-mod"
 		const promise = this.loadLevel(spaceName, {
 			useNullChangeRecord: true,
+			levelClass: ViewLevel,
+			arguments: [moderationView, cursor],
 			bounds: [576, 64, 512],
 			allowList: ["not a name"],
 			template: templates.view.level
@@ -540,82 +545,7 @@ class Universe {
 		client.message(" ", 2)
 		client.message(" ", 3)
 		promise.then(async level => {
-			level.on("clientRemoved", async (client) => {
-				if (!level.clients.length) {
-					this.levels.delete(level.name)
-					await level.dispose()
-				}
-			})
-			level.moderationView = moderationView
-			const games = await this.db.getGames()
-			for (let gameIndex = 0; gameIndex < games.length; gameIndex++) {
-				const game = games[gameIndex]
-				let iconPosition = 1
-				for (let turnIndex = 0; turnIndex < game.length; turnIndex++) {
-					const turn = game[turnIndex]
-					if (turn.promptType == "build") continue
-					function addIcon(template) {
-						let voxels = null
-						if (Buffer.isBuffer(template)) {
-							voxels = template
-						} else {
-							voxels = template([64, 64, 64])
-						}
-						const zBlockOffset = gameIndex * 64
-						const xBlockOffset = iconPosition * 64
-						let voxelIndex = 0
-						for (let y = 0; y < 64; y++) {
-							for (let z = 0; z < 64; z++) {
-								for (let x = 0; x < 64; x++) {
-									const voxel = voxels[voxelIndex]
-									if (voxel) level.rawSetBlock([x + xBlockOffset, y, z + zBlockOffset], voxel)
-									voxelIndex++
-								}
-							}
-						}
-						iconPosition++
-					}
-					const previewLevel = game.length == 16 || level.moderationView
-					const isOnlyDescription = !game[turnIndex + 1]
-					if (previewLevel && !isOnlyDescription) {
-						// todo
-						let previewLevel = new Level([64, 64, 64], templates.empty([64, 64, 64]))
-						let changeRecordPromise = new Promise(resolve => {
-							previewLevel.changeRecord = new ChangeRecord(`./blockRecords/game-${turn.next}/`, null, async () => {
-								await previewLevel.changeRecord.restoreBlockChangesToLevel(previewLevel)
-								previewLevel.dispose()
-								resolve(previewLevel.blocks)
-							})
-						})
-						addIcon(await changeRecordPromise)
-					} else {
-						// create an icon describing zhe turn's current state
-						let loadedLevel = this.levels.get(`game-${turn.next}`)
-						if (loadedLevel) {
-							loadedLevel = await loadedLevel
-							if (loadedLevel.clients.length) {
-								addIcon(templates.view.player)
-							} else {
-								addIcon(templates.view.orphaned)
-							}
-							continue
-						}
-						if (isOnlyDescription) {
-							console.log(turn, turnIndex)
-							addIcon(templates.view.description)
-							continue
-						}
-						if (!isOnlyDescription) {
-							addIcon(templates.view.built)
-							continue
-						}
-						// other icons/todo
-						// patrol: unreviewed turn if triage/moderation is online
-						// report: turn reported by player
-						// scyzhe: turn being reviewed by triage/moderation
-					}
-				}
-			}
+			await level.reloadView(templates.view.level)
 			level.addClient(client, [60, 8, 4], [162, 254])
 			client.teleporting = false
 		})

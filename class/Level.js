@@ -285,6 +285,8 @@ class Level extends require("events") {
 			await this.changeRecord.flushChanges()
 		}
 		await this.changeRecord.dispose()
+		this.emit("unloaded")
+		this.removeAllListeners()
 	}
 }
 module.exports = Level
