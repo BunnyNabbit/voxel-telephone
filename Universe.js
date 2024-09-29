@@ -24,9 +24,6 @@ const describeDefaults = {
 	allowList: []
 }
 
-function clamp(number, min, max) {
-	return Math.min(Math.max(number, min), max)
-}
 function randomIntFromInterval(min, max) {
 	return Math.floor(Math.random() * (max - min + 1) + min)
 }
@@ -533,6 +530,7 @@ class Universe {
 		client.space.removeClient(client)
 		let spaceName = "game-view"
 		if (moderationView) spaceName += "-mod"
+		if (cursor) spaceName += cursor
 		const promise = this.loadLevel(spaceName, {
 			useNullChangeRecord: true,
 			levelClass: ViewLevel,

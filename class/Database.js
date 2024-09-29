@@ -45,7 +45,7 @@ class Database {
 		})
 	}
 
-	getGames(cursor, limit = 8) {
+	getGames(cursor, limit = 9) {
 		return new Promise(resolve => {
 			const findDocument = {
 				depth: 0
@@ -53,7 +53,7 @@ class Database {
 			if (cursor) {
 				findDocument._id = { $lt: cursor }
 			}
-			gameCollection.find({ depth: 0 }).sort({ _id: -1 }).limit(8, async (err, games) => {
+			gameCollection.find(findDocument).sort({ _id: -1 }).limit(limit, async (err, games) => {
 				let promises = []
 				games.forEach(game => {
 					promises.push(this.getGame(game._id))
