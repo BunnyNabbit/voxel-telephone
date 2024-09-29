@@ -4,8 +4,6 @@ const gameCollection = mongojs(serverConfiguration.dbName).collection("voxelTele
 const reportCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephoneReports")
 const interactionCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephoneInteractions")
 const portalCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephonePortals")
-const userCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephoneUsers")
-const sactionCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephoneSanctions")
 
 const playerReserved = new Map()
 const Zone = require("./Zone.js")
@@ -149,61 +147,4 @@ function continueGame(originalDocument, newGameId, promptType, username, descrip
    })
 }
 
-function getUserRecordDocument(username) {
-   return new Promise((resolve, reject) => {
-      userCollection.findOne({ _id: username }, (err, document) => {
-         if (err) return reject(err)
-         if (document) {
-            resolve(document)
-         } else {
-            this.new = true
-            resolve(UserRecord.getDefaultRecord(username))
-         }
-      })
-   })
-}
-
-class UserRecord {
-   constructor(client) {
-      this.client = client
-      this.username = client.authInfo.username
-      this.draining = false
-      this.new = false
-      this.data = getUserRecordDocument()
-      client.on("close", () => {
-         this.save()
-      })
-   }
-   getDefaultRecord(username) {
-      return {
-         _id: this.username,
-         dataVersion: 1,
-         permissions: {
-            mature: false,
-            listOperator: false,
-            moderator: false,
-            hubBuilder: false,
-            triage: false,
-         },
-         stats: {
-            buildCommandsIssued: 0,
-            blocksModifiedSingle: 0,
-            messagesSent: 0
-         },
-         lastJoin: new Date(),
-         firstJoin: new Date()
-      }
-   }
-   save() {
-      return new Promise(async resolve => {
-         await this.data
-         this.draining = true
-         userCollection.replaceOne({ _id: this.username }, this.data, { upsert: true }, (err,) => {
-            this.draining = false
-            if (err) console.log(err)
-         })
-      })
-   }
-}
-
-module.exports = { continueGame, deactivateGame, addInteraction, addReport, getInteraction, createNewGame, saveLevelPortals, getPortals, findActiveGames, playerReserved, getUserRecordDocument }
+module.exports = { continueGame, deactivateGame, addInteraction, addReport, getInteraction, createNewGame, saveLevelPortals, getPortals, findActiveGames, playerReserved }
