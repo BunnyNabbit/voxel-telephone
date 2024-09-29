@@ -193,7 +193,7 @@ class Universe {
 			}
 		})
 		this.commandRegistry.registerCommand(["/report"], async (client, message) => {
-			if (client.space && client.space.name !== this.serverConfiguration.hubName) {
+			if (client.space && client.space.game) {
 				let reason = message
 				if (reason.length == 0) reason = "[ Empty report ]"
 				this.db.addInteraction(client.authInfo.username, client.space.game._id, "skip")
@@ -249,7 +249,7 @@ class Universe {
 			client.message("/abort - abort interactive operations", 0)
 		})
 		this.commandRegistry.registerCommand(["/skip"], async (client,) => {
-			if (client.space && client.space.name !== this.serverConfiguration.hubName) {
+			if (client.space && client.space.game) {
 				this.db.addInteraction(client.authInfo.username, client.space.game._id, "skip")
 				client.space.doNotReserve = true
 				client.space.removeClient(client);
