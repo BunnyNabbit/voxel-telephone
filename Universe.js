@@ -332,7 +332,8 @@ class Universe {
 			this.startGame(client)
 		})
 		this.commandRegistry.registerCommand(["/view"], async (client, message) => {
-			this.enterView(client)
+			const isModerationView = message == "mod" && this.serverConfiguration.moderators.includes(client.authInfo.username)
+			this.enterView(client, isModerationView)
 		})
 		const verifyUsernames = (this.serverConfiguration.verifyUsernames && this.heartbeat)
 		this.server.on("clientConnected", async (client, authInfo) => {
@@ -523,11 +524,13 @@ class Universe {
 		this.levels.set(spaceName, promise)
 		return promise
 	}
-	async enterView(client, state) {
+	async enterView(client, moderationView = false, cursor) {
 		if (client.teleporting == true) return
 		client.teleporting = true
 		client.space.removeClient(client)
-		const promise = this.loadLevel("game-view", {
+		let spaceName = "game-view"
+		if (moderationView) spaceName += "-mod"
+		const promise = this.loadLevel(spaceName, {
 			useNullChangeRecord: true,
 			bounds: [576, 64, 512],
 			allowList: ["not a name"],
@@ -537,14 +540,29 @@ class Universe {
 		client.message(" ", 2)
 		client.message(" ", 3)
 		promise.then(async level => {
+			level.on("clientRemoved", async (client) => {
+				if (!level.clients.length) {
+					this.levels.delete(level.name)
+					await level.dispose()
+				}
+			})
+			level.moderationView = moderationView
 			const games = await this.db.getGames()
-			console.log(games)
-			games.forEach((game, gameIndex) => {
-				game.forEach((turn, turnIndex) => {
+			for (let gameIndex = 0; gameIndex < games.length; gameIndex++) {
+				const game = games[gameIndex]
+				let iconPosition = 1
+				for (let turnIndex = 0; turnIndex < game.length; turnIndex++) {
+					const turn = game[turnIndex]
+					if (turn.promptType == "build") continue
 					function addIcon(template) {
-						const voxels = template([64, 64, 64])
+						let voxels = null
+						if (Buffer.isBuffer(template)) {
+							voxels = template
+						} else {
+							voxels = template([64, 64, 64])
+						}
 						const zBlockOffset = gameIndex * 64
-						const xBlockOffset = (turnIndex + 1) * 64
+						const xBlockOffset = iconPosition * 64
 						let voxelIndex = 0
 						for (let y = 0; y < 64; y++) {
 							for (let z = 0; z < 64; z++) {
@@ -555,26 +573,49 @@ class Universe {
 								}
 							}
 						}
+						iconPosition++
 					}
-					if (turn.promptType.build) return
 					const previewLevel = game.length == 16 || level.moderationView
-					const isOnlyDescription = (!game[turnIndex + 1] && true) || false
+					const isOnlyDescription = !game[turnIndex + 1]
 					if (previewLevel && !isOnlyDescription) {
 						// todo
+						let previewLevel = new Level([64, 64, 64], templates.empty([64, 64, 64]))
+						let changeRecordPromise = new Promise(resolve => {
+							previewLevel.changeRecord = new ChangeRecord(`./blockRecords/game-${turn.next}/`, null, async () => {
+								await previewLevel.changeRecord.restoreBlockChangesToLevel(previewLevel)
+								previewLevel.dispose()
+								resolve(previewLevel.blocks)
+							})
+						})
+						addIcon(await changeRecordPromise)
 					} else {
 						// create an icon describing zhe turn's current state
-						const isBeingPlayed = this.levels.get(`game-${turn.next}`)
-						if (isBeingPlayed) return addIcon(templates.view.player)
-						if (isOnlyDescription) return addIcon(templates.view.description)
-						if (!isOnlyDescription) return addIcon(templates.view.built)
+						let loadedLevel = this.levels.get(`game-${turn.next}`)
+						if (loadedLevel) {
+							loadedLevel = await loadedLevel
+							if (loadedLevel.clients.length) {
+								addIcon(templates.view.player)
+							} else {
+								addIcon(templates.view.orphaned)
+							}
+							continue
+						}
+						if (isOnlyDescription) {
+							console.log(turn, turnIndex)
+							addIcon(templates.view.description)
+							continue
+						}
+						if (!isOnlyDescription) {
+							addIcon(templates.view.built)
+							continue
+						}
 						// other icons/todo
-						// orphaned: a player had left and zhe game is still reserved for zhem
 						// patrol: unreviewed turn if triage/moderation is online
 						// report: turn reported by player
 						// scyzhe: turn being reviewed by triage/moderation
 					}
-				})
-			})
+				}
+			}
 			level.addClient(client, [60, 8, 4], [162, 254])
 			client.teleporting = false
 		})

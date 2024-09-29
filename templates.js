@@ -10,7 +10,7 @@ function createVoxelBufferTemplate(fileName) {
    })
    return function (bounds) {
       if (!template) throw "Builder template not found"
-      return template
+      return Buffer.from(template)
    }
 }
 
