@@ -29,7 +29,7 @@ const builderDefaults = {
 }
 const describeDefaults = {
 	template: createEmpty,
-	allowList: []
+	allowList: ["not a name"]
 }
 
 function clamp(number, min, max) {
