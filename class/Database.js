@@ -4,8 +4,13 @@ const gameCollection = mongojs(serverConfiguration.dbName).collection("voxelTele
 const reportCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephoneReports")
 const interactionCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephoneInteractions")
 const portalCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephonePortals")
+const userCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephoneUsers")
+const banCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephoneBans")
+const ledgerCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephoneLedger")
+const purgedCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephonePurged")
 
 const Zone = require("./Zone.js")
+const UserRecord = require("./UserRecord.js")
 
 class Database {
 	constructor(serverConfiguration) {
@@ -39,7 +44,7 @@ class Database {
 
 	getGame(gameRootId) {
 		return new Promise(async resolve => {
-			gameCollection.find({ root: gameRootId }).sort({depth: 1}, (err, games) => {
+			gameCollection.find({ root: gameRootId }).sort({ depth: 1 }, (err, games) => {
 				resolve(games)
 			})
 		})
@@ -123,6 +128,22 @@ class Database {
 		})
 	}
 
+	updateReportStatus(reportId, status) {
+		return new Promise(resolve => {
+			reportCollection.update({ _id: reportId }, { $set: { unresolved: status } }, (err) => {
+				resolve()
+			})
+		})
+	}
+
+	getReports(gameIds) {
+		return new Promise(resolve => {
+			reportCollection.find({ _id: { $in: gameIds } }, (err, reports) => {
+				resolve(reports)
+			})
+		})
+	}
+
 	addInteraction(username, id, type) {
 		return new Promise(resolve => {
 			interactionCollection.insert({
@@ -174,6 +195,114 @@ class Database {
 				})
 			})
 		})
+	}
+
+	getUserRecordDocument(username) {
+		return new Promise((resolve, reject) => {
+			userCollection.findOne({ _id: username }, (err, document) => {
+				if (err) return reject(err)
+				if (document) {
+					resolve(document)
+				} else {
+					resolve(UserRecord.getDefaultRecord(username))
+				}
+			})
+		})
+	}
+
+	addTransaction(account, currency, amount) {
+		return new Promise((resolve) => {
+			ledgerCollection.insert({ account, currency, amount }, (err) => {
+				resolve()
+			})
+		})
+	}
+
+	getBalance(account) {
+		const aggregation = [
+			{
+				'$match': {
+					'account': account
+				}
+			}, {
+				'$group': {
+					'_id': '$currency',
+					'sum': {
+						'$sum': '$amount'
+					}
+				}
+			}
+		]
+		return new Promise((resolve) => {
+			ledgerCollection.aggregate(aggregation, (err, docs) => {
+				const map = new Map()
+				docs.forEach(doc => {
+					map.set(doc._id, doc.sum)
+				})
+				resolve(map)
+			})
+		})
+	}
+
+	async divergeGame(game) {
+		const turns = await this.getGame(game.root)
+
+	}
+
+	regenerateGameNextTurnId(gameId) {
+		return new Promise(resolve => {
+			gameCollection.update({ _id: gameId }, { $set: { next: new mongojs.ObjectID() } })
+		})
+	}
+
+	async purgeLastTurn(gameRootId, reason) {
+		const turns = await this.getGame(gameRootId)
+		const lastTurn = turns[turns.length - 1]
+		if (lastTurn.depth !== 0) {
+			const previousTurnId = turns[turns.length - 2]._id
+			gameCollection.update({ _id: previousTurnId }, { $set: { active: true } })
+			lastTurn.reason = reason
+			purgedCollection.insert(lastTurn)
+			gameCollection.delete({ _id: lastTurn._id })
+		}
+	}
+
+	addBan(username, configuration = {}) {
+		return new Promise(resolve => {
+			const document = {
+				username,
+				end: new Date(Date.now() + configuration.duration),
+				start: new Date(),
+				acknowledged: false,
+				type: configuration.type
+			}
+			banCollection.insert(document, (err) => {
+				resolve()
+			})
+		})
+	}
+
+	getBans(username, onlyActive) {
+		return new Promise(resolve => {
+			let findDocument = null
+			if (onlyActive) {
+				findDocument = {
+					$or: [
+						{ username, end: { $gt: new Date() } },
+						{ username, acknowledged: true }
+					]
+				}
+			} else {
+				findDocument = { username }
+			}
+			banCollection.find(findDocument, (err, docs) => {
+				resolve(docs)
+			})
+		})
+	}
+
+	acknowledgeBan(banId) {
+		banCollection.update({ _id: banId }, { $set: { acknowledged: true } })
 	}
 }
 
