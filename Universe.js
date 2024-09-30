@@ -354,7 +354,17 @@ class Universe {
 		this.commandRegistry.registerCommand(["/purge"], async (client, reason) => {
 			const selectedTurns = client.selectedTurns
 			if (!selectedTurns.description) return
-			this.db.purgeLastTurn(selectedTurns.description.root, reason)
+			await this.db.purgeLastTurn(selectedTurns.description.root, reason)
+			await client.space.reloadView(templates.view.level)
+			client.message("Turn purged!", 0)
+		}, reasonHasUserPermission("moderator"))
+		this.commandRegistry.registerCommand(["/diverge", "/fork"], async (client, reason) => {
+			const selectedTurns = client.selectedTurns
+			if (!selectedTurns.description) return
+			if (selectedTurns.description.depth == 0) return client.message("Unable to diverge game.", 0)
+			await this.db.divergeGame(selectedTurns.description, reason)
+			await client.space.reloadView(templates.view.level)
+			client.message("Game diverged!", 0)
 		}, reasonHasUserPermission("moderator"))
 		const verifyUsernames = (this.serverConfiguration.verifyUsernames && this.heartbeat)
 		this.server.on("clientConnected", async (client, authInfo) => {
