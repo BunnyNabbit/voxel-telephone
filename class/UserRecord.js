@@ -11,7 +11,7 @@ class UserRecord {
 	}
 	static getDefaultRecord(username) {
 		return {
-			_id: this.username,
+			_id: username,
 			dataVersion: 1,
 			permissions: {
 				mature: false,
@@ -27,14 +27,11 @@ class UserRecord {
 	save() {
 		return new Promise(async (resolve) => {
 			await this.data
+			await this.client.server.universe.db.saveUserRecord(this)
 			this.draining = true
-			userCollection.replaceOne({ _id: this.username }, this.data, { upsert: true }, (err) => {
-				this.draining = false
-				if (err) console.error(err)
-				resolve()
-			})
+			resolve()
 		})
 	}
 }
 
-exports.UserRecord = UserRecord
+module.exports = UserRecord

@@ -15,6 +15,7 @@ const Heartbeat = require("./class/Heartbeat.js")
 const Watchdog = require("./class/Watchdog.js")
 const DroneTransmitter = require("./class/DroneTransmitter.js")
 const templates = require("./templates.js")
+const UserRecord = require("./class/UserRecord.js")
 
 const builderDefaults = {
 	template: templates.builder
@@ -138,6 +139,16 @@ class Universe {
 				return true
 			}
 		}
+		function reasonHasUserPermission(matchValue, message = "You don't have permission to use this command!") {
+			return async function (client) {
+				const userRecord = await client.userRecord.data
+				if (userRecord.permissions[matchValue]) {
+					return true
+				}
+				if (message) client.message(message, 0)
+				return false
+			}
+		}
 		function reasonVcrDraining(matchValue, message) {
 			return function (client) {
 				if (client.space.changeRecord.draining == matchValue) {
@@ -204,7 +215,7 @@ class Universe {
 				client.message(`Game reported with reason: "${reason}"`, 0)
 				client.space.doNotReserve = true
 				client.space.removeClient(client);
-				await gotoHub(client)
+				await this.gotoHub(client)
 			}
 		})
 		this.commandRegistry.registerCommand(["/abort"], async (client) => {
@@ -340,6 +351,11 @@ class Universe {
 			const isModerationView = message == "mod" && this.serverConfiguration.moderators.includes(client.authInfo.username)
 			this.enterView(client, isModerationView)
 		})
+		this.commandRegistry.registerCommand(["/purge"], async (client, reason) => {
+			const selectedTurns = client.selectedTurns
+			if (!selectedTurns.description) return
+			this.db.purgeLastTurn(selectedTurns.description.root, reason)
+		}, reasonHasUserPermission("moderator"))
 		const verifyUsernames = (this.serverConfiguration.verifyUsernames && this.heartbeat)
 		this.server.on("clientConnected", async (client, authInfo) => {
 			if (this.server.clients.filter(otherClient => otherClient.socket.remoteAddress == client.socket.remoteAddress).length >= this.serverConfiguration.maxIpConnections) {
@@ -371,6 +387,7 @@ class Universe {
 			client.droneTransmitter = new DroneTransmitter(client)
 			this.server.clients.forEach(otherClient => otherClient.message(`+ ${client.authInfo.username} connected`, 0))
 			client.serverIdentification("Voxel Telephone", "a silly game", 0x64)
+			client.userRecord = new UserRecord(client, this.db.getUserRecordDocument(client.authInfo.username))
 			client.watchdog = new Watchdog(client);
 			await this.gotoHub(client)
 			client.on("setBlock", operation => {
@@ -410,7 +427,7 @@ class Universe {
 			client.on("message", async (message) => {
 				if (client.watchdog.rateOperation(10)) return
 				console.log(client.authInfo.username, message)
-				if (this.commandRegistry.attemptCall(client, message)) return
+				if (await this.commandRegistry.attemptCall(client, message)) return
 				// a few hardcoded commands
 				if (message == "/forcezero" && listOperators.includes(client.authInfo.username) && this.heartbeat) {
 					this.heartbeat.forceZero = true
