@@ -251,7 +251,9 @@ class Database {
 
 	regenerateGameNextTurnId(gameId) {
 		return new Promise(resolve => {
-			gameCollection.update({ _id: gameId }, { $set: { next: new mongojs.ObjectID() } })
+			gameCollection.update({ _id: gameId }, { $set: { next: new mongojs.ObjectID() } }, (err) => {
+				resolve()
+			})
 		})
 	}
 
@@ -260,11 +262,12 @@ class Database {
 		const lastTurn = turns[turns.length - 1]
 		if (lastTurn.depth !== 0) {
 			const previousTurnId = turns[turns.length - 2]._id
-			gameCollection.update({ _id: previousTurnId }, { $set: { active: true } })
-			lastTurn.reason = reason
-			purgedCollection.insert(lastTurn)
-			gameCollection.delete({ _id: lastTurn._id })
+			await gameCollection.update({ _id: previousTurnId }, { $set: { active: true } })
+			await this.regenerateGameNextTurnId(previousTurnId)
 		}
+		lastTurn.reason = reason
+		await purgedCollection.insert(lastTurn)
+		await gameCollection.remove({ _id: lastTurn._id })
 	}
 
 	addBan(username, configuration = {}) {
@@ -303,6 +306,16 @@ class Database {
 
 	acknowledgeBan(banId) {
 		banCollection.update({ _id: banId }, { $set: { acknowledged: true } })
+	}
+
+	saveUserRecord(userRecord) {
+		return new Promise(async resolve => {
+			userCollection.replaceOne({ _id: userRecord.username }, await userRecord.data, { upsert: true }, (err) => {
+				this.draining = false
+				if (err) console.error(err)
+				resolve()
+			})
+		})
 	}
 }
 
