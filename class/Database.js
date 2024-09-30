@@ -244,9 +244,45 @@ class Database {
 		})
 	}
 
-	async divergeGame(game) {
-		const turns = await this.getGame(game.root)
+	async divergeGame(descriptionTurn) {
+		const targetDepth = descriptionTurn.depth
+		const turns = await this.getGame(descriptionTurn.root)
+		const previousTurnId = turns[turns.length - 1]
+		return new Promise(async resolve => {
+			const promises = []
+			const divergedRootId = new mongojs.ObjectID()
+			let parentId = "self"
+			turns.forEach((turn) => {
+				promises.push(new Promise(resolve => {
+					const newDepth = turn.depth - targetDepth
+					if (newDepth >= 0) {
+						if (parentId == "self") {
+							const oldId = turn._id
+							turn._id = divergedRootId
+							turn.root = divergedRootId
+							turn.parent = "self"
+							turn.depth = newDepth
+							gameCollection.remove({ _id: oldId }, (err) => {
+								gameCollection.insert(turn, (err) => {
+									resolve()
+								})
+							})
+						} else {
+							const updateDocument = { $set: { depth: newDepth, parent: parentId, root: divergedRootId } }
+							gameCollection.update({ _id: turn._id }, updateDocument, (err) => {
+								resolve()
+							})
+						}
 
+						parentId = turn._id
+					}
+				}))
+			})
+			await Promise.all(promises)
+			await this.regenerateGameNextTurnId(previousTurnId)
+			gameCollection.update({ _id: previousTurnId }, { $set: { active: true } })
+			resolve()
+		})
 	}
 
 	regenerateGameNextTurnId(gameId) {
@@ -258,16 +294,20 @@ class Database {
 	}
 
 	async purgeLastTurn(gameRootId, reason) {
-		const turns = await this.getGame(gameRootId)
-		const lastTurn = turns[turns.length - 1]
-		if (lastTurn.depth !== 0) {
-			const previousTurnId = turns[turns.length - 2]._id
-			await gameCollection.update({ _id: previousTurnId }, { $set: { active: true } })
-			await this.regenerateGameNextTurnId(previousTurnId)
-		}
-		lastTurn.reason = reason
-		await purgedCollection.insert(lastTurn)
-		await gameCollection.remove({ _id: lastTurn._id })
+		return new Promise(async resolve => {
+			const turns = await this.getGame(gameRootId)
+			const lastTurn = turns[turns.length - 1]
+			if (lastTurn.depth !== 0) {
+				const previousTurnId = turns[turns.length - 2]._id
+				gameCollection.update({ _id: previousTurnId }, { $set: { active: true } })
+				await this.regenerateGameNextTurnId(previousTurnId)
+			}
+			lastTurn.reason = reason
+			purgedCollection.insert(lastTurn)
+			gameCollection.remove({ _id: lastTurn._id }, (err) => {
+				resolve()
+			})
+		})
 	}
 
 	addBan(username, configuration = {}) {
