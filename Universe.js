@@ -574,7 +574,7 @@ class Universe {
 			template: templates.view.level
 		})
 		client.message("View", 1)
-		client.message(" ", 2)
+		client.message("Start playing a game with /play", 2)
 		client.message(" ", 3)
 		promise.then(async level => {
 			await level.reloadView(templates.view.level)
