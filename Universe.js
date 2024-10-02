@@ -1,6 +1,7 @@
 const Server = require("classicborne-server-protocol")
 const Level = require("./class/Level.js")
 const ViewLevel = require("./class/ViewLevel.js")
+const HubLevel = require("./class/HubLevel.js")
 const GlobalCommandRegistry = require("./class/GlobalCommandRegistry.js")
 const Zone = require("./class/Zone.js")
 const ChangeRecord = require("./class/ChangeRecord.js")
@@ -66,23 +67,6 @@ class Universe {
 
 		this.levels = new Map()
 		this.playerReserved = this.db.playerReserved
-		const hubDefaults = {
-			template: templates.empty,
-			allowList: this.serverConfiguration.hubEditors
-		}
-		this.loadLevel(this.serverConfiguration.hubName, hubDefaults).then(async level => {
-			level.on("clientRemoved", async () => {
-				if (level.clients.length == 0 && !level.changeRecord.draining && level.changeRecord.dirty) {
-					console.log("Saving", level.name)
-					const size = await level.changeRecord.flushChanges()
-					console.log(`Saved ${size}`)
-				}
-			})
-			level.on("clientAdded", () => {
-
-			})
-			level.portals = await this.db.getPortals(level.name)
-		})
 
 		this.server.addClient = (client) => {
 			for (let i = 0; i < 127; i++) {
@@ -398,8 +382,8 @@ class Universe {
 			this.server.clients.forEach(otherClient => otherClient.message(`+ ${client.authInfo.username} connected`, 0))
 			client.serverIdentification("Voxel Telephone", "a silly game", 0x64)
 			client.userRecord = new UserRecord(client, this.db.getUserRecordDocument(client.authInfo.username))
-			client.watchdog = new Watchdog(client);
-			await this.gotoHub(client)
+			client.watchdog = new Watchdog(client)
+			this.gotoHub(client)
 			client.on("setBlock", operation => {
 				if (client.watchdog.rateOperation()) return
 				if (!client.space) return
@@ -516,8 +500,14 @@ class Universe {
 			})
 		})
 	}
-	gotoHub(client) {
-		const promise = this.loadLevel(this.serverConfiguration.hubName)
+	async gotoHub(client, forcedHubName) {
+		let hubName = forcedHubName || (await (client.userRecord.data)).defaultHub || this.serverConfiguration.hubName
+		const promise = this.loadLevel(hubName,{
+			template: templates.empty,
+			allowList: this.serverConfiguration.hubEditors,
+			levelClass: HubLevel,
+			arguments: [hubName, this.db]
+		})
 		client.message("Hub", 1)
 		client.message(" ", 2)
 		client.message(" ", 3)
