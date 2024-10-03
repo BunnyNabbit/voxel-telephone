@@ -335,6 +335,12 @@ class Universe {
 			const isModerationView = message == "mod" && this.serverConfiguration.moderators.includes(client.authInfo.username)
 			this.enterView(client, isModerationView)
 		})
+		this.commandRegistry.registerCommand(["/main", "/hub", "/spawn"], async (client, message) => {
+			if (client.space) {
+				client.space.removeClient(client)
+				this.gotoHub(client)
+			}
+		})
 		this.commandRegistry.registerCommand(["/purge"], async (client, reason) => {
 			const selectedTurns = client.selectedTurns
 			if (!selectedTurns.description) return
@@ -564,7 +570,7 @@ class Universe {
 			template: templates.view.level
 		})
 		client.message("View", 1)
-		client.message("Start playing a game with /play", 2)
+		client.message("Go back to hub with /main", 2)
 		client.message(" ", 3)
 		promise.then(async level => {
 			await level.reloadView(templates.view.level)
@@ -594,34 +600,37 @@ class Universe {
 				client.message(`Once you are finished building, use /finish`, 0)
 				client.message(`Once you are finished building, use /finish`, 3)
 				this.loadLevel(`game-${game.next}`, builderDefaults).then((level) => {
-					level.on("clientRemoved", async (client) => {
-						if (!level.changeRecord.dirty) {
-							await level.dispose()
-							this.levels.delete(level.name)
-							return
-						}
-						this.db.addInteraction(client.authInfo.username, game.next, "built")
-						exportLevelAsVox(level)
-						if (level.doNotReserve) return
-						// reserve game for player
-						this.playerReserved.set(client.authInfo.username, level.game)
-						console.log("reserved game")
-						if (!level.changeRecord.draining) {
-							level.changeRecord.flushChanges()
-						}
-						const timeout = setTimeout(async () => {
-							await level.dispose()
-							this.levels.delete(level.name)
-							this.playerReserved.delete(client.authInfo.username)
-							console.log("removed reserved game")
-						}, 7200000) // two hours
-						level.once("clientAdded", () => {
-							client.message(">> Returned to this game because it was reserved for you.")
-							client.message(">> Games will only be reserved for two hours.")
-							this.playerReserved.delete(client.authInfo.username)
-							clearTimeout(timeout)
+					if (!level.eventsAttached) {
+						level.eventsAttached = true
+						level.on("clientRemoved", async (client) => {
+							if (!level.changeRecord.dirty) {
+								await level.dispose()
+								this.levels.delete(level.name)
+								return
+							}
+							this.db.addInteraction(client.authInfo.username, game.next, "built")
+							exportLevelAsVox(level)
+							if (level.doNotReserve) return
+							// reserve game for player
+							this.playerReserved.set(client.authInfo.username, level.game)
+							console.log("reserved game")
+							if (!level.changeRecord.draining) {
+								level.changeRecord.flushChanges()
+							}
+							const timeout = setTimeout(async () => {
+								await level.dispose()
+								this.levels.delete(level.name)
+								this.playerReserved.delete(client.authInfo.username)
+								console.log("removed reserved game")
+							}, 7200000) // two hours
+							level.once("clientAdded", () => {
+								client.message(">> Returned to this game because it was reserved for you.")
+								client.message(">> Games will only be reserved for two hours.")
+								this.playerReserved.delete(client.authInfo.username)
+								clearTimeout(timeout)
+							})
 						})
-					})
+					}
 					level.game = game
 					level.addClient(client, [40, 10, 31])
 					client.teleporting = false
