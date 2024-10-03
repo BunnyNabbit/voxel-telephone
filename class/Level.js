@@ -1,3 +1,8 @@
+function componentToHex(component) {
+	var hex = component.toString(16).toUpperCase()
+	return hex.length == 1 ? "0" + hex : hex
+}
+
 function sendBlockset(client, blockset) {
 	for (let i = 0; i < 255; i++) {
 		let walkSound = 5
@@ -8,7 +13,7 @@ function sendBlockset(client, blockset) {
 		}
 		const block = {
 			id: i + 1,
-			name: "Placeholder#",
+			name: `${blockset[i].slice(0, 3).map(component => componentToHex(component)).join("")}#`,
 			fogDensity: 127,
 			fogR: blockset[i][0],
 			fogG: blockset[i][1],
@@ -189,7 +194,7 @@ class Level extends require("events") {
 		this.blocks.writeUInt8(block, position[0] + this.bounds[0] * (position[2] + this.bounds[2] * position[1]))
 	}
 	getBlock(position) {
-		return  this.blocks.readUInt8(position[0] + this.bounds[0] * (position[2] + this.bounds[2] * position[1]))
+		return this.blocks.readUInt8(position[0] + this.bounds[0] * (position[2] + this.bounds[2] * position[1]))
 	}
 	interpretCommand(command = "cuboid 1", client = null, actionBytes = []) { // i.e: cuboid 1
 		// consider: if the blockset has names, user could refer to blocks by name and not just id.
