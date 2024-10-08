@@ -9,7 +9,7 @@ const deflate = promisify(zlib.deflate)
 const inflate = promisify(zlib.inflate)
 const trash = import("trash")
 class ChangeRecord {
-	constructor(path, root = defaultRootDvd, loadedCallback = noop) {
+	constructor(path, root = defaultRootDvd, loadedCallback = () => { }) {
 		this.currentBuffer = new SmartBuffer()
 		this.path = path
 		this.draining = false

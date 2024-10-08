@@ -1,5 +1,5 @@
 class NullChangeRecord {
-	constructor(path, root = defaultRootDvd, loadedCallback = noop) {
+	constructor(path, root, loadedCallback = () => { }) {
 		this.currentBuffer = null
 		this.path = path
 		this.draining = false
@@ -16,15 +16,15 @@ class NullChangeRecord {
 	addBlockChange(position, block) {
 		this.appendAction(false, position.concat(block))
 	}
-	appendAction(isCommand = false, actionBytes, commandString) {
+	appendAction() {
 	}
-	async restoreBlockChangesToLevel(level, maxActions) {
-      return 0
+	async restoreBlockChangesToLevel() {
+		return 0
 	}
 	async flushChanges() {
 		return 0
 	}
-	async commit(toActionCount) {
+	async commit() {
 		return 0
 	}
 	async dispose() {

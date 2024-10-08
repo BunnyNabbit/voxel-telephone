@@ -1,3 +1,12 @@
+const exportLevelAsVox = require("./exportVox.js")
+const templates = require("./templates.js")
+const Zone = require("./class/Zone.js")
+
+function invertPromptType(promptType) {
+	if (promptType == "description") return "build"
+	return "description"
+}
+
 function register(universe) {
 	universe.registerCommand(["/rules"], (client) => {
 		client.message("== Rules", 0)
@@ -222,20 +231,20 @@ function register(universe) {
 		await universe.db.saveLevelPortals(client.space)
 		client.message("Zone added", 0)
 	})
-	universe.registerCommand(["/removeallzones"], async (client, message) => {
+	universe.registerCommand(["/removeallzones"], async (client) => {
 		if (!universe.serverConfiguration.hubEditors.includes(client.authInfo.username) || client.space.name.startsWith("game-")) return
 		client.space.portals = []
 		await universe.db.saveLevelPortals(client.space)
 		client.message("Zones removed", 0)
 	})
-	universe.registerCommand(["/play"], async (client, message) => {
+	universe.registerCommand(["/play"], async (client) => {
 		universe.startGame(client)
 	})
 	universe.registerCommand(["/view"], async (client, message) => {
 		const isModerationView = message == "mod" && universe.serverConfiguration.moderators.includes(client.authInfo.username)
 		universe.enterView(client, isModerationView)
 	})
-	universe.registerCommand(["/main", "/hub", "/spawn"], async (client, message) => {
+	universe.registerCommand(["/main", "/hub", "/spawn"], async (client) => {
 		if (client.space) {
 			client.space.removeClient(client)
 			universe.gotoHub(client)
