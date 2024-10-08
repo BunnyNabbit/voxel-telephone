@@ -3,14 +3,12 @@ const Level = require("./class/Level.js")
 const ViewLevel = require("./class/ViewLevel.js")
 const HubLevel = require("./class/HubLevel.js")
 const GlobalCommandRegistry = require("./class/GlobalCommandRegistry.js")
-const Zone = require("./class/Zone.js")
 const ChangeRecord = require("./class/ChangeRecord.js")
 const NullChangeRecord = require("./class/NullChangeRecord.js")
 const exportLevelAsVox = require("./exportVox.js")
 const filter = require("./filter.js")
 const defaultBlockset = require("./6-8-5-rgb.json")
 const crypto = require("crypto")
-const fs = require("fs")
 const Database = require("./class/Database.js")
 const Heartbeat = require("./class/Heartbeat.js")
 const Watchdog = require("./class/Watchdog.js")
@@ -27,13 +25,6 @@ const describeDefaults = {
 	allowList: ["not a name"]
 }
 
-function clamp(number, min, max) {
-	return Math.min(Math.max(number, min), max)
-}
-function createEmpty(bounds) {
-	return Buffer.alloc(bounds[0] * bounds[1] * bounds[2])
-}
-
 function randomIntFromInterval(min, max) {
 	return Math.floor(Math.random() * (max - min + 1) + min)
 }
@@ -41,12 +32,6 @@ function invertPromptType(promptType) {
 	if (promptType == "description") return "build"
 	return "description"
 }
-function sleep(ms) {
-	return new Promise((resolve) => {
-		setTimeout(resolve, ms)
-	})
-}
-
 class Universe {
 	constructor(serverConfiguration) {
 		console.log({ serverConfiguration })
@@ -257,7 +242,7 @@ class Universe {
 
 	async gotoHub(client, forcedHubName) {
 		let hubName = forcedHubName || (await (client.userRecord.data)).defaultHub || this.serverConfiguration.hubName
-		const promise = this.loadLevel(hubName,{
+		const promise = this.loadLevel(hubName, {
 			template: templates.empty,
 			allowList: this.serverConfiguration.hubEditors,
 			levelClass: HubLevel,

@@ -24,13 +24,10 @@ class UserRecord {
 			firstJoin: new Date()
 		}
 	}
-	save() {
-		return new Promise(async (resolve) => {
-			await this.data
-			await this.client.server.universe.db.saveUserRecord(this)
-			this.draining = true
-			resolve()
-		})
+	async save() {
+		await this.data
+		await this.client.server.universe.db.saveUserRecord(this)
+		this.draining = true
 	}
 }
 

@@ -43,7 +43,7 @@ class Database {
 	}
 
 	getGame(gameRootId) {
-		return new Promise(async resolve => {
+		return new Promise(resolve => {
 			gameCollection.find({ root: gameRootId }).sort({ depth: 1 }, (err, games) => {
 				resolve(games)
 			})
@@ -248,41 +248,38 @@ class Database {
 		const targetDepth = descriptionTurn.depth
 		const turns = await this.getGame(descriptionTurn.root)
 		const previousTurnId = turns[turns.length - 1]
-		return new Promise(async resolve => {
-			const promises = []
-			const divergedRootId = new mongojs.ObjectID()
-			let parentId = "self"
-			turns.forEach((turn) => {
-				promises.push(new Promise(resolve => {
-					const newDepth = turn.depth - targetDepth
-					if (newDepth >= 0) {
-						if (parentId == "self") {
-							const oldId = turn._id
-							turn._id = divergedRootId
-							turn.root = divergedRootId
-							turn.parent = "self"
-							turn.depth = newDepth
-							gameCollection.remove({ _id: oldId }, (err) => {
-								gameCollection.insert(turn, (err) => {
-									resolve()
-								})
-							})
-						} else {
-							const updateDocument = { $set: { depth: newDepth, parent: parentId, root: divergedRootId } }
-							gameCollection.update({ _id: turn._id }, updateDocument, (err) => {
+		const promises = []
+		const divergedRootId = new mongojs.ObjectID()
+		let parentId = "self"
+		turns.forEach((turn) => {
+			promises.push(new Promise(resolve => {
+				const newDepth = turn.depth - targetDepth
+				if (newDepth >= 0) {
+					if (parentId == "self") {
+						const oldId = turn._id
+						turn._id = divergedRootId
+						turn.root = divergedRootId
+						turn.parent = "self"
+						turn.depth = newDepth
+						gameCollection.remove({ _id: oldId }, (err) => {
+							gameCollection.insert(turn, (err) => {
 								resolve()
 							})
-						}
-
-						parentId = turn._id
+						})
+					} else {
+						const updateDocument = { $set: { depth: newDepth, parent: parentId, root: divergedRootId } }
+						gameCollection.update({ _id: turn._id }, updateDocument, (err) => {
+							resolve()
+						})
 					}
-				}))
-			})
-			await Promise.all(promises)
-			await this.regenerateGameNextTurnId(previousTurnId)
-			gameCollection.update({ _id: previousTurnId }, { $set: { active: true } })
-			resolve()
+
+					parentId = turn._id
+				}
+			}))
 		})
+		await Promise.all(promises)
+		await this.regenerateGameNextTurnId(previousTurnId)
+		gameCollection.update({ _id: previousTurnId }, { $set: { active: true } })
 	}
 
 	regenerateGameNextTurnId(gameId) {
@@ -294,16 +291,16 @@ class Database {
 	}
 
 	async purgeLastTurn(gameRootId, reason) {
-		return new Promise(async resolve => {
-			const turns = await this.getGame(gameRootId)
-			const lastTurn = turns[turns.length - 1]
-			if (lastTurn.depth !== 0) {
-				const previousTurnId = turns[turns.length - 2]._id
-				gameCollection.update({ _id: previousTurnId }, { $set: { active: true } })
-				await this.regenerateGameNextTurnId(previousTurnId)
-			}
-			lastTurn.reason = reason
-			purgedCollection.insert(lastTurn)
+		const turns = await this.getGame(gameRootId)
+		const lastTurn = turns[turns.length - 1]
+		if (lastTurn.depth !== 0) {
+			const previousTurnId = turns[turns.length - 2]._id
+			gameCollection.update({ _id: previousTurnId }, { $set: { active: true } })
+			await this.regenerateGameNextTurnId(previousTurnId)
+		}
+		lastTurn.reason = reason
+		purgedCollection.insert(lastTurn)
+		return new Promise(resolve => {
 			gameCollection.remove({ _id: lastTurn._id }, (err) => {
 				resolve()
 			})
