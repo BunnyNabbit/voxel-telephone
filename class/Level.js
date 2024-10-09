@@ -111,6 +111,7 @@ class Level extends require("events") {
 		this.portals = []
 		this.drones = new Set()
 		this.clientDrones = new Map()
+		this.blocking = false
 	}
 	messageAll(message) {
 		this.clients.forEach(client => {

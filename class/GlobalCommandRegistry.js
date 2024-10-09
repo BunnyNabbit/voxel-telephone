@@ -15,7 +15,12 @@ class GlobalCommandRegistry {
 		const remainingString = segments.join(" ")
 		const command = this.commands.get(commandName)
 		if (command && (!command.validate || await command.validate(client, remainingString))) {
-			command.action(client, remainingString)
+			try {
+				await command.action(client, remainingString)
+			} catch (err) {
+				console.error("Failed to run command", str, err)
+				client.message(`&cAn error occured while running the command. ${err}`, 0, ">&c")
+			}
 			return true
 		} else if (command) { // didn't pass validation, but a command was found.
 			return true
