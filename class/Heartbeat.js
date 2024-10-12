@@ -24,6 +24,7 @@ class Heartbeat {
 			max: "64",
 			software: "Classicborne Protocol",
 			public: "true",
+			web: "true",
 			salt: this.salt.toString("hex"),
 		}
 		axios.post(pingURL, qs.stringify(form)).then((response) => {
