@@ -12,7 +12,7 @@
   "dependencies": {
     "axios": "^0.28.1",
     "chunked-vox": "^1.0.0",
-    "classicborne-server-protocol": "^0.0.0",
+    "classicborne-server-protocol": "^0.1.1",
     "mongojs": "^3.1.0",
     "nbt": "^0.8.1",
     "qs": "^6.12.1",

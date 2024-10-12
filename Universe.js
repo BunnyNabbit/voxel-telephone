@@ -37,6 +37,7 @@ class Universe {
 		console.log({ serverConfiguration })
 		this.serverConfiguration = serverConfiguration
 		this.server = new Server(serverConfiguration.port)
+		this.server.setupWebSocketServer()
 		this.server.universe = this
 		this.server.clients = []
 		this.server.extensions.push({
@@ -88,7 +89,12 @@ class Universe {
 		commands.register(this)
 		const verifyUsernames = (this.serverConfiguration.verifyUsernames && this.heartbeat)
 		this.server.on("clientConnected", async (client, authInfo) => {
-			if (this.server.clients.filter(otherClient => otherClient.socket.remoteAddress == client.socket.remoteAddress).length >= this.serverConfiguration.maxIpConnections) {
+			if (client.httpRequest) {
+				client.address = client.httpRequest.headers["x-forwarded-for"]
+			} else {
+				client.address = client.socket.remoteAddress
+			}
+			if (this.server.clients.filter(otherClient => otherClient.address == client.address).length >= this.serverConfiguration.maxIpConnections) {
 				return client.disconnect("Too many connections!")
 			}
 			if (this.server.clients.some(otherClient => otherClient.authInfo.username == authInfo.username)) {
