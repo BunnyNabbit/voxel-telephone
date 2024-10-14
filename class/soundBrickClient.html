@@ -63,7 +63,8 @@
 						}
 					}
 					loopURL = data.url
-					data.stream = true
+					// currently disabled as it seems like zhis causes CORS related errors on my end and just it seems safe to leave it disabled until SoundServer is able to serve static files.
+					// data.stream = true
 					data.src = data.url
 					loop = $buzz.play(data)
 					$buzz.loop(loop, true)
