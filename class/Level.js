@@ -117,6 +117,7 @@ class Level extends require("events") {
 		this.clients.forEach(client => {
 			client.message(message, 0)
 		})
+		this.playSound("toggle")
 	}
 	sendDrones(client) {
 		this.drones.forEach(drone => {
@@ -157,6 +158,7 @@ class Level extends require("events") {
 	loadClient(client, position = [0, 0, 0], orientation = [0, 0]) {
 		client.loadLevel(this.blocks, this.bounds[0], this.bounds[1], this.bounds[2], false, () => {
 			client.setClickDistance(10000)
+			client.emit("levelLoaded")
 		}, () => {
 			if (this.blockset) sendBlockset(client, this.blockset)
 			if (this.environment) client.setEnvironmentProperties(this.environment)
@@ -270,7 +272,10 @@ class Level extends require("events") {
 		this.blocking = false
 		const command = this.currentCommand
 		command.action(this.currentCommandActionBytes)
-		if (this.loading == false) this.changeRecord.appendAction(true, this.currentCommandActionBytes, command.name)
+		if (this.loading == false) {
+			this.changeRecord.appendAction(true, this.currentCommandActionBytes, command.name)
+			this.playSound("poof")
+		}
 		if (!this.changeRecord.draining && this.changeRecord.currentActionCount > 1024) {
 			this.changeRecord.flushChanges().then((bytes) => {
 				this.messageAll(`Changes drained. ${bytes} bytes saved to VHS record`, 0)
@@ -280,11 +285,17 @@ class Level extends require("events") {
 	}
 	toggleVcr() {
 		this.inVcr = true
+		this.playSound("gameTrackDrone")
 	}
 	userHasPermission(username) {
 		if (this.allowList.length == 0) return true
 		if (this.allowList.includes(username)) return true
 		return false
+	}
+	playSound(soundName) {
+		this.clients.forEach(client => {
+			client.emit("playSound", client.universe.sounds[soundName])
+		})
 	}
 	async dispose() {
 		if (!this.changeRecord.draining && this.changeRecord.dirty) {

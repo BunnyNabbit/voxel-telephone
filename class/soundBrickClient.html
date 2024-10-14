@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+
+<head>
+	<title>sound-brick</title>
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="https://bunnynabbit.com/js/musquito-3.0.1.min.js"></script>
+	<script src="https://bunnynabbit.com/js/riffwave.js"></script>
+	<script async src="https://bunnynabbit.com/js/sfxr.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+	<p id="attribution"></p>
+	<script>
+		const session = location.search.replace("?", "")
+		const authObject = {
+			key: session
+		}
+		if (localStorage.getItem("sound-brick.cursor") && localStorage.getItem("sound-brick.session") == session) {
+			authObject.cursor = parseInt(localStorage.getItem("sound-brick.cursor"))
+		} else {
+			localStorage.setItem("sound-brick.cursor", "0")
+			localStorage.setItem("sound-brick.session", session)
+			authObject.cursor = 0
+		}
+		const socket = io({
+			auth: authObject
+		})
+		const attributionElement = document.getElementById("attribution")
+
+		socket.on('playSound', function (data) {
+			playSound(data)
+		})
+
+		let loop = null
+		let loopURL = null
+
+		let sfxrGenerationDegradation = 1
+		setInterval(() => { sfxrGenerationDegradation = 1 }, 300)
+
+		function playSound(data) {
+			const cursor = data.cursor
+			if (cursor > authObject.cursor) {
+				authObject.cursor = cursor
+				setTimeout(() => {
+					localStorage.setItem("sound-brick.cursor", `${cursor}`)
+				}, 500);
+			}
+			data = data.data
+			data.volume = data.volume ?? 1
+			if (data.loop) {
+				if (loopURL !== data.url) {
+					if (loop) {
+						const destroyLoop = loop
+						try {
+							$buzz.fade(destroyLoop, 0, 3)
+							setTimeout(() => {
+								$buzz.destroy(destroyLoop)
+							}, 3100);
+						} catch (err) {
+							console.warn(err)
+						}
+					}
+					loopURL = data.url
+					data.stream = true
+					data.src = data.url
+					loop = $buzz.play(data)
+					$buzz.loop(loop, true)
+				}
+			} else {
+				if (data.sfxr) {
+					sfxrGenerationDegradation += 0.1
+					let audio = new SoundEffect(data.url).parameters.mutate()
+					audio.sound_vol = ((0.04 / sfxrGenerationDegradation) * (data.volume * 1.5))
+					audio.sample_rate = Math.round((44100 / sfxrGenerationDegradation) * data.volume)
+					audio = new SoundEffect(audio).generate().getAudio()
+					audio.play()
+				} else {
+					data.src = data.url
+					$buzz.play(data)
+				}
+			}
+			if (data.attribution) {
+				attributionElement.innerText = data.attribution
+			}
+		}
+	</script>
+</body>
+
+</html>
