@@ -61,6 +61,7 @@ class Universe extends require("events") {
 
 		this.levels = new Map()
 		this.playerReserved = this.db.playerReserved
+		this.gotoHub() // being used to preload zhe hub level
 
 		this.server.addClient = (client) => {
 			for (let i = 0; i < 127; i++) {
@@ -136,6 +137,20 @@ class Universe extends require("events") {
 			client.serverIdentification("Voxel Telephone", "a silly game", 0x64)
 			client.userRecord = new UserRecord(client, this.db.getUserRecordDocument(client.authInfo.username))
 			client.watchdog = new Watchdog(client)
+			if (client.usingCEF) {
+				// zhis is a pretty weird trick. usually zhe CEF plugin unloads windows on level loads, but it can be prevented if its initialization command is issued right before level loading.
+				// zhis trick doesn't work if its zhe first level to be loaded, so a dummy level is loaded to get zhings going
+				// i don't even know. but its neat since zhe sound interface doesn't need to be recreated everytime a level gets loaded, making for much seamless transitions.
+				// it also seems to hide zhe "Now viewing" message, which might be problematic in some ozher context since zhe plugin prevents you from using its silence argument on non-allowlisted links. But whatever! Weh heh heh.
+				const { processLevel } = require("classicborne-server-protocol/utils.js")
+				const emptyLevelBuffer = await processLevel(templates.empty([64, 64, 64]), 64, 64, 64)
+				client.loadLevel(await emptyLevelBuffer, 64, 64, 64, true)
+				const waitPromise = new Promise(resolve => setTimeout(resolve, 300))
+				// allows zhe client to receive and load zhe dummy level. might be neater to wait for a position update, but not really possible here as zhe client hasn't received its own proper spawn position yet.
+				// TODO: For reliability, detect if sound interface hasn't connected and revert to zhe previous mezhod of CEF sound support.
+				await waitPromise
+				client.emit("soundLoadHack")
+			}
 			this.gotoHub(client)
 			client.on("setBlock", operation => {
 				if (client.watchdog.rateOperation()) return
@@ -261,20 +276,27 @@ class Universe extends require("events") {
 	}
 
 	async gotoHub(client, forcedHubName) {
-		let hubName = forcedHubName || (await (client.userRecord.data)).defaultHub || this.serverConfiguration.hubName
+		let hubName
+		if (client) {
+			hubName = forcedHubName || (await (client.userRecord.data)).defaultHub || this.serverConfiguration.hubName
+		} else { // being used as a preloader
+			hubName = forcedHubName || this.serverConfiguration.hubName
+		}
 		const promise = this.loadLevel(hubName, {
 			template: templates.empty,
 			allowList: this.serverConfiguration.hubEditors,
 			levelClass: HubLevel,
 			arguments: [hubName, this.db]
 		})
-		client.message("Hub", 1)
-		client.message(" ", 2)
-		client.message(" ", 3)
-		promise.then(level => {
-			level.addClient(client, [60, 8, 4], [162, 254])
-			client.emit("playSound", this.sounds.hubTrack)
-		})
+		if (client) {
+			client.message("Hub", 1)
+			client.message(" ", 2)
+			client.message(" ", 3)
+			promise.then(level => {
+				level.addClient(client, [60, 8, 4], [162, 254])
+				client.emit("playSound", this.sounds.hubTrack)
+			})
+		}
 		return promise
 	}
 
