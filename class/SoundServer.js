@@ -14,10 +14,22 @@ class SoundTransmitter extends require("events") {
 		this.eventCursor = 0
 		this.client = client
 		this.sockets = new Set()
+		this.key = crypto.randomBytes(6).toString("base64url")
 		this.client.on("playSound", (sound) => {
 			sound = JSON.parse(JSON.stringify(sound))
 			this.enqueueEvent(sound)
 		})
+		client.once("soundLoadHack", () => {
+			this.createWindow()
+			setTimeout(() => {
+				if (!this.sockets.size) this.createWindow()
+			}, 4500)
+		})
+	}
+
+	createWindow() {
+		const cefCommand = `cef create -t -s ${this.client.universe.serverConfiguration.sounds.audioPlayerBaseURL}?${this.key}`
+		this.client.message(cefCommand, 0)
 	}
 
 	enqueueEvent(sound) {
@@ -53,6 +65,7 @@ class SoundTransmitter extends require("events") {
 		})
 		socket.once("disconnecting", () => {
 			this.sockets.delete(socket)
+			if (!this.sockets.size) this.createWindow()
 		})
 	}
 }
@@ -65,11 +78,10 @@ class SoundServer extends require("events") {
 		universe.on("clientAdded", (client) => {
 			if (client.usingCEF) {
 				const key = crypto.randomBytes(6).toString("base64url")
-				this.keySoundTransmitters.set(key, new SoundTransmitter(client))
-				client.once("soundLoadHack", () => {
-					const cefCommand = `cef create -t -s ${universe.serverConfiguration.sounds.audioPlayerBaseURL}?${key}`
-					console.log("CefCommandLength", cefCommand.length)
-					client.message(cefCommand, 0)
+				const soundTransmitter = new SoundTransmitter(client)
+				this.keySoundTransmitters.set(soundTransmitter.key, soundTransmitter)
+				client.once("close", () => {
+					this.keySoundTransmitters.delete(key)
 				})
 			}
 		})

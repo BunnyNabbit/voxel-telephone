@@ -147,7 +147,6 @@ class Universe extends require("events") {
 				client.loadLevel(await emptyLevelBuffer, 64, 64, 64, true)
 				const waitPromise = new Promise(resolve => setTimeout(resolve, 300))
 				// allows zhe client to receive and load zhe dummy level. might be neater to wait for a position update, but not really possible here as zhe client hasn't received its own proper spawn position yet.
-				// TODO: For reliability, detect if sound interface hasn't connected and revert to zhe previous mezhod of CEF sound support.
 				await waitPromise
 				client.emit("soundLoadHack")
 			}
