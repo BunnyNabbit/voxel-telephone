@@ -66,7 +66,7 @@ class SoundServer extends require("events") {
 			if (client.usingCEF) {
 				const key = crypto.randomBytes(6).toString("base64url")
 				this.keySoundTransmitters.set(key, new SoundTransmitter(client))
-				client.on("levelLoaded", () => {
+				client.once("soundLoadHack", () => {
 					const cefCommand = `cef create -t -s ${universe.serverConfiguration.sounds.audioPlayerBaseURL}?${key}`
 					console.log("CefCommandLength", cefCommand.length)
 					client.message(cefCommand, 0)
