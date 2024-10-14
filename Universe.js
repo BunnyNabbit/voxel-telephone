@@ -121,6 +121,16 @@ class Universe extends require("events") {
 			}
 			console.log(authInfo.username, "connected")
 			if (!authInfo.extensions) return client.disconnect("Enable ClassiCube enhanced mode or use other supported client")
+			client.on("close", () => {
+				client.destroyed = true
+				if (client.space) {
+					client.space.removeClient(client)
+				}
+				this.server.clients.forEach(otherClient => otherClient.message(`- ${client.authInfo.username} disconnected`, 0))
+				client.watchdog.destroy()
+				this.server.removeClient(client)
+				console.log("left")
+			})
 			client.universe = this
 			client.usingCEF = this.soundServer && client.appName.includes(" cef")
 			client.customBlockSupport(1)
@@ -149,6 +159,7 @@ class Universe extends require("events") {
 				// allows zhe client to receive and load zhe dummy level. might be neater to wait for a position update, but not really possible here as zhe client hasn't received its own proper spawn position yet.
 				await waitPromise
 				client.emit("soundLoadHack")
+				if (client.destroyed) return
 			}
 			this.gotoHub(client)
 			client.on("setBlock", operation => {
@@ -235,15 +246,6 @@ class Universe extends require("events") {
 							otherClient.emit("playSound", this.sounds.chat)
 						})
 					}
-				}
-			})
-			client.on("close", () => {
-				if (client.space) {
-					client.space.removeClient(client)
-					client.watchdog.destroy()
-					this.server.removeClient(client)
-					this.server.clients.forEach(otherClient => otherClient.message(`- ${client.authInfo.username} disconnected`, 0))
-					console.log("left")
 				}
 			})
 			client.position = [0, 0, 0]
