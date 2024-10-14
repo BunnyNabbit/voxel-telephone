@@ -16,6 +16,7 @@ const DroneTransmitter = require("./class/DroneTransmitter.js")
 const templates = require("./templates.js")
 const UserRecord = require("./class/UserRecord.js")
 const commands = require("./commands.js")
+const cefSounds = require("./cefSounds.js")
 
 const builderDefaults = {
 	template: templates.builder
@@ -32,8 +33,9 @@ function invertPromptType(promptType) {
 	if (promptType == "description") return "build"
 	return "description"
 }
-class Universe {
+class Universe extends require("events") {
 	constructor(serverConfiguration) {
+		super()
 		console.log({ serverConfiguration })
 		this.serverConfiguration = serverConfiguration
 		this.server = new Server(serverConfiguration.port)
@@ -47,9 +49,14 @@ class Universe {
 		this.db = new Database(this.serverConfiguration)
 		const filterMessages = this.serverConfiguration.replacementMessages
 		const listOperators = this.serverConfiguration.listOperators
+		this.sounds = cefSounds(this.serverConfiguration.sounds.audioStaticBaseURL)
 
 		if (this.serverConfiguration.postToMainServer) {
 			this.heartbeat = new Heartbeat(`https://www.classicube.net/server/heartbeat/`, this)
+		}
+		if (this.serverConfiguration.sounds.enabled) {
+			const SoundServer = require("./class/SoundServer.js")
+			this.soundServer = new SoundServer(this)
 		}
 
 		this.levels = new Map()
@@ -69,6 +76,7 @@ class Universe {
 							anyClient.addPlayerName(i, client.authInfo.username, `&7${client.authInfo.username}`)
 						}
 					})
+					this.emit("clientAdded", client)
 					return
 				}
 			}
@@ -81,6 +89,7 @@ class Universe {
 			this.server.clients.forEach(anyClient => {
 				anyClient.removePlayerName(client.netId)
 			})
+			this.emit("clientRemoved", client)
 		}
 
 		this.canCreateCooldown = new Set()
@@ -111,6 +120,8 @@ class Universe {
 			}
 			console.log(authInfo.username, "connected")
 			if (!authInfo.extensions) return client.disconnect("Enable ClassiCube enhanced mode or use other supported client")
+			client.universe = this
+			client.usingCEF = this.soundServer && client.appName.includes(" cef")
 			client.customBlockSupport(1)
 			client.authInfo = authInfo
 			client.message("Welcome to Voxel Telephone. A silly game of telephone where you take turns describing and building.", 0)
@@ -205,7 +216,10 @@ class Universe {
 							this.canCreateCooldown.delete(client.authInfo.username)
 						}, 3600000) // one hour
 					} else {
-						this.server.clients.forEach(otherClient => otherClient.message(`&7${client.authInfo.username}: &f${message}`, 0, "> "))
+						this.server.clients.forEach(otherClient => {
+							otherClient.message(`&7${client.authInfo.username}: &f${message}`, 0, "> ")
+							otherClient.emit("playSound", this.sounds.chat)
+						})
 					}
 				}
 			})
@@ -259,6 +273,7 @@ class Universe {
 		client.message(" ", 3)
 		promise.then(level => {
 			level.addClient(client, [60, 8, 4], [162, 254])
+			client.emit("playSound", this.sounds.hubTrack)
 		})
 		return promise
 	}
@@ -316,6 +331,7 @@ class Universe {
 			await level.reloadView(templates.view.level)
 			level.addClient(client, [60, 8, 4], [162, 254])
 			client.teleporting = false
+			client.emit("playSound", this.sounds.viewTrack)
 		})
 	}
 	async startGame(client) {
@@ -374,6 +390,7 @@ class Universe {
 					level.game = game
 					level.addClient(client, [40, 10, 31])
 					client.teleporting = false
+					client.emit("playSound", this.sounds.gameTrack)
 				})
 			} else {
 				client.currentDescription = null
@@ -393,6 +410,7 @@ class Universe {
 					level.game = game
 					level.addClient(client, [40, 65, 31])
 					client.teleporting = false
+					client.emit("playSound", this.sounds.gameTrack)
 				})
 			}
 

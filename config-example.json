@@ -15,5 +15,11 @@
    "postToMainServer": false,
    "verifyUsernames": true,
    "maxIpConnections": 3,
-   "inspirationFeeds": ["https://www.bing.com/images/feed", "https://mix.com"]
+   "inspirationFeeds": ["https://www.bing.com/images/feed", "https://mix.com"],
+   "sounds": {
+      "enabled": false,
+      "interfacePort": 1333,
+      "audioStaticBaseURL": "https://bunnynabbit.com/audio/",
+      "audioPlayerBaseURL": "http://127.0.0.1:1333/"
+   }
 }

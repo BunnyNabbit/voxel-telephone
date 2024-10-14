@@ -74,6 +74,10 @@ function register(universe) {
 		client.space.loading = false
 		client.space.inVcr = false
 		client.message("Changes commited. VCR mode off", 0)
+		client.space.clients.forEach(client => {
+			client.emit("playSound", universe.sounds.deactivateVCR)
+			client.emit("playSound", universe.sounds.gameTrack)
+		})
 	}, reasonVcr(false, "Level isn't in VCR mode. /vcr"))
 	universe.registerCommand(["/finish"], async (client) => {
 		if (client.space && client.space.game && !client.space.changeRecord.draining) {
@@ -128,11 +132,16 @@ function register(universe) {
 			client.space.reload()
 			client.space.inVcr = false
 			client.message("Aborted. VCR mode off", 0)
+			client.space.clients.forEach(client => {
+				client.emit("playSound", universe.sounds.deactivateVCR)
+				client.emit("playSound", universe.sounds.gameTrack)
+			})
 		} else {
 			if (client.space.currentCommand) {
 				client.space.blocking = false
 				client.space.currentCommand = null
 				client.message("Command aborted", 0)
+				client.emit("playSound", universe.sounds.abort)
 			} else {
 				client.message("Nothing happened", 0)
 			}
@@ -148,6 +157,7 @@ function register(universe) {
 		} else {
 			client.message("Paint mode off", 0)
 		}
+		client.emit("playSound", universe.sounds.toggle)
 	})
 	universe.registerCommand(["/help"], async (client) => { // TODO: this should be replaced by a different system
 		client.message("/cuboid", 0)
@@ -177,7 +187,7 @@ function register(universe) {
 	universe.registerCommand(["/clients"], async (client) => {
 		client.message("&ePlayers using:", 0)
 		universe.server.clients.forEach(otherClient => {
-			client.message(`&e  ${otherClient.socket.appName}: &f${otherClient.authInfo.username}`, 0, "> ")
+			client.message(`&e  ${otherClient.appName}: &f${otherClient.authInfo.username}`, 0, "> ")
 		})
 	})
 	universe.registerCommand(["/vcr"], async (client) => {
@@ -191,6 +201,7 @@ function register(universe) {
 		client.message(`/commit - loads current state seen in the VCR preview. will override change record.`, 0)
 		client.message(`/abort - aborts VCR preview, loading state as it was before enabling VCR.`, 0)
 		client.space.reload()
+		client.emit("playSound", universe.sounds.activateVCR)
 	}, makeMultiValidator([reasonHasPermission(false, "You don't have permission to build in this level!"), reasonVcrDraining(true), reasonVcr(true, "The level is already in VCR mode")]))
 	universe.registerCommand(["/create"], async (client) => {
 		if (client.canCreate && client.space?.name == universe.serverConfiguration.hubName) {
@@ -206,6 +217,7 @@ function register(universe) {
 		client.space.reload()
 		client.message(`Rewinded. Current actions: ${client.space.changeRecord.actionCount}/${client.space.changeRecord.maxActions}`, 0)
 		client.message(`To commit this state use /commit. use /abort to exit VCR`, 0)
+		client.emit("playSound", universe.sounds.rewind)
 	}, reasonVcr(false, "Level isn't in VCR mode. /vcr"))
 	universe.registerCommand(["/fastforward", "/ff", "/redo"], async (client, message) => {
 		const count = Math.max(parseInt(message), 0) || 1
@@ -215,6 +227,7 @@ function register(universe) {
 		client.space.reload()
 		client.message(`Fast-forwarded. Current actions: ${client.space.changeRecord.actionCount}/${client.space.changeRecord.maxActions}`, 0)
 		client.message(`To commit this state use /commit. Use /abort to exit VCR`, 0)
+		client.emit("playSound", universe.sounds.fastForward)
 	}, reasonVcr(false, "Level isn't in VCR mode. /vcr"))
 	universe.registerCommand(["/addzone"], async (client, message) => {
 		if (client.space.name.startsWith("game-")) return
