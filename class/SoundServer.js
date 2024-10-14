@@ -101,7 +101,7 @@ class SoundServer extends require("events") {
 		io.on('connection', (socket) => {
 			if (socket.handshake.auth.key) {
 				const soundTransmitter = this.keySoundTransmitters.get(socket.handshake.auth.key)
-				if (!soundTransmitter || typeof socket.handshake.auth.cursor !== "number") socket.disconnect(true)
+				if (!soundTransmitter || typeof socket.handshake.auth.cursor !== "number") return socket.disconnect(true)
 				soundTransmitter.attach(socket, socket.handshake.auth.cursor)
 			}
 		})
