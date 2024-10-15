@@ -8,7 +8,7 @@ function createVoxelBufferTemplate(fileName) {
 		if (error) throw error
 		template = Buffer.from(data.value.BlockArray.value)
 	})
-	return function (bounds) {
+	return function () {
 		if (!template) throw "Builder template not found"
 		return Buffer.from(template)
 	}

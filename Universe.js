@@ -127,7 +127,7 @@ class Universe extends require("events") {
 	loadLevel(spaceName, defaults = {}) {
 		const cached = this.levels.get(spaceName)
 		if (cached) return cached
-		const promise = new Promise(async resolve => {
+		const promise = new Promise(resolve => {
 			const bounds = defaults.bounds ?? [64, 64, 64]
 			const template = defaults.template ?? templates.empty
 			const levelClass = defaults.levelClass ?? Level
@@ -249,7 +249,7 @@ class Universe extends require("events") {
 				client.message(`To skip, use /skip`, 0)
 				client.message("Use /report if the build is inappropriate", 0)
 				this.loadLevel(`game-${game._id}`, describeDefaults).then((level) => { // TODO: position
-					level.on("clientRemoved", async (client) => {
+					level.on("clientRemoved", async () => {
 						level.dispose()
 						this.levels.delete(level.name)
 					})
