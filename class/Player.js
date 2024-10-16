@@ -49,7 +49,7 @@ class Player extends require("events") {
          }
          universe.server.clients.forEach(otherClient => otherClient.message(`- ${client.authInfo.username} disconnected`, 0))
          client.watchdog.destroy()
-         universe.server.removeClient(client)
+         universe.removeClient(client)
          console.log("left")
       })
       client.universe = universe
@@ -62,7 +62,7 @@ class Player extends require("events") {
          client.message("* You are considered a list operator.", 0)
          client.message("* To force the heartbeat to post zero players, use /forcezero", 0)
       }
-      universe.server.addClient(client)
+      universe.addClient(client)
       client.droneTransmitter = new DroneTransmitter(client)
       universe.server.clients.forEach(otherClient => otherClient.message(`+ ${client.authInfo.username} connected`, 0))
       client.serverIdentification("Voxel Telephone", "a silly game", 0x64)
