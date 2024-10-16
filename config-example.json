@@ -21,5 +21,35 @@
       "interfacePort": 1333,
       "audioStaticBaseURL": "https://bunnynabbit.com/audio/",
       "audioPlayerBaseURL": "http://127.0.0.1:1333/"
+   },
+   "announcements": {
+      "interval": 180000,
+      "categoryWeight": {
+         "donation": 1,
+         "openSource": 1,
+         "buildingCommands": 8,
+         "gameTips": 8,
+         "safety": 1
+      },
+      "messages": {
+         "donation": [
+            "Support the server and its development https://ko-fi.com/bunnynabbit"
+         ],
+         "openSource": [
+            "Voxel Telephone is open source software https://github.com/BunnyNabbit/voxel-telephone",
+            "Found an issue? Report it! https://github.com/BunnyNabbit/voxel-telephone/issues"
+         ],
+         "buildingCommands": [
+            "Toggle paint mode by using the /paint command",
+            "Place down a block at your position with the /place command",
+            "Made a mistake? Enter the VCR with /vcr"
+         ],
+         "gameTips": [
+            "An entire game consists of 16 turns. When a game is completed, you can see all of its turns in the view mode"
+         ],
+         "safety": [
+            "See an inappropriate prompt or build? Use /report"
+         ]
+      }
    }
 }
