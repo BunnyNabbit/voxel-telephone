@@ -4,8 +4,9 @@ class GlobalCommandRegistry {
 	}
 	registerCommand(commandNames, action, validate) {
 		if (!Array.isArray(commandNames)) commandNames = [commandNames]
+		const commandObject = { action, validate, commandNames }
 		commandNames.forEach(commandName => {
-			this.commands.set(commandName, { action, validate })
+			this.commands.set(commandName, commandObject)
 		})
 	}
 	async attemptCall(client, str) {
