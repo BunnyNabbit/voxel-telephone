@@ -57,36 +57,6 @@ class Universe extends require("events") {
 		this.playerReserved = this.db.playerReserved
 		this.gotoHub() // being used to preload zhe hub level
 
-		this.server.addClient = (client) => {
-			for (let i = 0; i < 127; i++) {
-				if (!this.server.clients.some(client => client.netId == i)) {
-					client.netId = i
-					this.server.clients.forEach(otherClient => {
-						client.addPlayerName(otherClient.netId, otherClient.authInfo.username, `&7${otherClient.authInfo.username}`)
-					})
-					this.server.clients.push(client)
-					client.addPlayerName(0xff, client.authInfo.username, `&7${client.authInfo.username}`)
-					this.server.clients.forEach(anyClient => {
-						if (anyClient != client) {
-							anyClient.addPlayerName(i, client.authInfo.username, `&7${client.authInfo.username}`)
-						}
-					})
-					this.emit("clientAdded", client)
-					return
-				}
-			}
-
-			throw "Unable to generate unique player ID"
-		}
-		this.server.removeClient = (client) => {
-			const clientIndex = this.server.clients.indexOf(client)
-			if (clientIndex !== -1) this.server.clients.splice(clientIndex, 1)
-			this.server.clients.forEach(anyClient => {
-				anyClient.removePlayerName(client.netId)
-			})
-			this.emit("clientRemoved", client)
-		}
-
 		this.canCreateCooldown = new Set()
 
 		this.commandRegistry = new GlobalCommandRegistry()
@@ -97,6 +67,35 @@ class Universe extends require("events") {
 	}
 	async registerCommand(...args) {
 		this.commandRegistry.registerCommand(...args)
+	}
+
+	addClient(client) {
+		for (let i = 0; i < 127; i++) {
+			if (!this.server.clients.some(client => client.netId == i)) {
+				client.netId = i
+				this.server.clients.forEach(otherClient => {
+					client.addPlayerName(otherClient.netId, otherClient.authInfo.username, `&7${otherClient.authInfo.username}`)
+				})
+				this.server.clients.push(client)
+				client.addPlayerName(0xff, client.authInfo.username, `&7${client.authInfo.username}`)
+				this.server.clients.forEach(anyClient => {
+					if (anyClient != client) {
+						anyClient.addPlayerName(i, client.authInfo.username, `&7${client.authInfo.username}`)
+					}
+				})
+				this.emit("clientAdded", client)
+				return
+			}
+		}
+		throw "Unable to generate unique player ID"
+	}
+	removeClient(client) {
+		const clientIndex = this.server.clients.indexOf(client)
+		if (clientIndex !== -1) this.server.clients.splice(clientIndex, 1)
+		this.server.clients.forEach(anyClient => {
+			anyClient.removePlayerName(client.netId)
+		})
+		this.emit("clientRemoved", client)
 	}
 
 	async gotoHub(client, forcedHubName) {
