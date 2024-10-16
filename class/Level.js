@@ -201,12 +201,7 @@ class Level extends require("events") {
 	}
 	interpretCommand(command = "cuboid 1", client = null, actionBytes = []) { // i.e: cuboid 1
 		// consider: if the blockset has names, user could refer to blocks by name and not just id.
-		command = command.split(" ")
-		const commandName = command[0].toLowerCase()
-		let commandClass = commands.find(otherCommand => otherCommand.name.toLowerCase() == commandName)
-		if (!commandClass) {
-			commandClass = commands.find(otherCommand => otherCommand.aliases.includes(commandName))
-		}
+		const commandClass = this.getCommandClassFromName(command)
 		if (commandClass) {
 			this.blocking = true
 			this.currentCommand = new commandClass(this)
@@ -259,6 +254,15 @@ class Level extends require("events") {
 			}
 		}
 		this.messageAll(`Command needs ${currentType}, and it doesn't seem implemented :(`, 0)
+	}
+	getCommandClassFromName(command) {
+		command = command.split(" ")
+		const commandName = command[0].toLowerCase()
+		let commandClass = commands.find(otherCommand => otherCommand.name.toLowerCase() == commandName)
+		if (!commandClass) {
+			commandClass = commands.find(otherCommand => otherCommand.aliases.includes(commandName))
+		}
+		return commandClass
 	}
 	addActionBytes(splitCommand) {
 		let currentIndex = 0
