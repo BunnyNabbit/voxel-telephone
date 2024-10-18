@@ -34,72 +34,11 @@ function sendBlockset(client, blockset) {
 	}
 }
 
-class Command {
-	constructor(layout, level, enums = {}) {
-		this.level = level
-		this.layout = layout
-		this.enums = enums
-	}
-	setBlock(position, block) {
-		if (this.level.loading) {
-			this.level.rawSetBlock(position, block)
-		} else {
-			this.level.setBlock(position, block, [], false)
-		}
-	}
-	parseBytes(actionBytes) {
-		const data = {}
-		let indexOffset = 0
-		this.layout.forEach((layout, index) => {
-			layout = layout.split(":")
-			const name = layout[1]
-			const type = layout[0]
-			if (type.includes("enum")) {
-				data[name] = this.enums[name][actionBytes[index + indexOffset]]
-			} else if (type.includes("position")) {
-				data[name] = [
-					actionBytes[index + indexOffset],
-					actionBytes[index + indexOffset + 1],
-					actionBytes[index + indexOffset + 2]
-				]
-				indexOffset += 2
-			} else {
-				data[name] = actionBytes[index + indexOffset]
-			}
-		})
-		return data
-	}
-}
-
-class Cuboid extends Command {
-	name = "cuboid"
-	static help = ["Cuboid, makes a cuboid on two positions.", "If no arguments are added, block is inferred from your current hand and the server will ask for the block positions interactively."]
-	static aliases = ["z"]
-	constructor(level) {
-		super(["block:block", "&enum:mode", "position:position1", "position:position2"], level, {
-			mode: ["soild", "hollow", "walls", "holes", "wire"]
-		})
-	}
-	action(data) {
-		data = this.parseBytes(data)
-		const min = [0, 1, 2].map(index => Math.min(data.position1[index], data.position2[index]))
-		const max = [0, 1, 2].map(index => Math.max(data.position1[index], data.position2[index]))
-		const block = data.block
-		const mode = data.mode
-		for (let x = min[0]; x <= max[0]; x++) {
-			for (let y = min[1]; y <= max[1]; y++) {
-				for (let z = min[2]; z <= max[2]; z++) {
-					this.setBlock([x, y, z], block)
-				}
-			}
-		}
-	}
-}
-
+const levelCommands = require("./levelCommands.js").commands
 const Drone = require("./Drone.js")
 
 class Level extends require("events") {
-	static commands = [Cuboid]
+	static commands = levelCommands
 	constructor(bounds, blocks) {
 		super()
 		this.clients = []
