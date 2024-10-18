@@ -6,6 +6,8 @@ function toArray(iterator) {
 	return array
 }
 
+const Level = require("./class/Level.js")
+
 function register(universe) {
 	class Help {
 		constructor(universe) {
@@ -19,7 +21,6 @@ function register(universe) {
 			throw new Error("Unknown help type")
 		}
 		callClient(client, argument) {
-			// if (!argument) argument = "help"
 			if (!argument) {
 				client.message(`Categories: ${Object.values(categories).join(", ")}`, 0)
 				argument = "help"
@@ -27,14 +28,20 @@ function register(universe) {
 			argument = argument.toLowerCase().split(" ")[0]
 			const topic = this.topics.get(argument)
 			if (topic) return topic.renderClient(client)
-			const command = universe.commandRegistry.commands.get("/" + argument) || universe.commandRegistry.commands.get(argument)
+			const command = universe.commandRegistry.commands.get("/" + argument) || universe.commandRegistry.commands.get(argument) || Level.getCommandClassFromName(argument.replace("/", ""))
 			if (command) {
-				const commandHelp = this.commands.get(command.commandNames[0])
+				const commandHelp = this.commands.get((command.name && "/" + command.name) || command.commandNames[0])
 				if (!commandHelp) {
 					client.message(`Command exists but unable to find help document for it.`, 0)
 					return
 				}
-				client.message(`Aliases: ${command.commandNames.join(", ")}`, 0)
+				let aliases
+				if (command.commandNames) {
+					aliases = command.commandNames.filter(name => name !== command.commandNames[0]).join(", ")
+				} else {
+					aliases = command.aliases.map(alias => "/" + alias).join(", ")
+				}
+				if (aliases) client.message(`Aliases: ${aliases}`, 0)
 				commandHelp.renderClient(client)
 				return
 			}
@@ -46,7 +53,6 @@ function register(universe) {
 				return
 			}
 			client.message(`Unable to find help document for ${argument}.`, 0)
-			// TODO: building commands, since zhey're handled by zhe level and not by global command registry
 		}
 	}
 
@@ -165,6 +171,10 @@ function register(universe) {
 	help.register(new TopicHelp("crazy", [
 		`Crazy? I was crazy once. They locked me in a room. A rubber room. A rubber room with rats. A rubber room with rubber rats. And rubber rats make me crazy.`
 	]))
+
+	Level.commands.forEach((command) => {
+		help.register(new CommandHelp(`/${command.name}`, command.help, categories.building))
+	})
 
 	universe.registerCommand(["/help", "/cmdhelp"], (client, argument) => {
 		help.callClient(client, argument)

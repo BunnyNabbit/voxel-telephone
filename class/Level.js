@@ -96,10 +96,10 @@ class Cuboid extends Command {
 	}
 }
 
-const commands = [Cuboid]
 const Drone = require("./Drone.js")
 
 class Level extends require("events") {
+	static commands = [Cuboid]
 	constructor(bounds, blocks) {
 		super()
 		this.clients = []
@@ -201,7 +201,7 @@ class Level extends require("events") {
 	}
 	interpretCommand(command = "cuboid 1", client = null, actionBytes = []) { // i.e: cuboid 1
 		// consider: if the blockset has names, user could refer to blocks by name and not just id.
-		const commandClass = this.getCommandClassFromName(command)
+		const commandClass = Level.getCommandClassFromName(command)
 		if (commandClass) {
 			this.blocking = true
 			this.currentCommand = new commandClass(this)
@@ -210,6 +210,7 @@ class Level extends require("events") {
 			// atm, we don't parse the command for bytes. start interactive now
 			this.inferCurrentCommand()
 		} else {
+			const commandName = command[0].toLowerCase()
 			this.messageAll(`Unable to find command with name ${commandName} for level ${this.name}`, 0)
 		}
 	}
@@ -255,12 +256,12 @@ class Level extends require("events") {
 		}
 		this.messageAll(`Command needs ${currentType}, and it doesn't seem implemented :(`, 0)
 	}
-	getCommandClassFromName(command) {
+	static getCommandClassFromName(command) {
 		command = command.split(" ")
 		const commandName = command[0].toLowerCase()
-		let commandClass = commands.find(otherCommand => otherCommand.name.toLowerCase() == commandName)
+		let commandClass = Level.commands.find(otherCommand => otherCommand.name.toLowerCase() == commandName)
 		if (!commandClass) {
-			commandClass = commands.find(otherCommand => otherCommand.aliases.includes(commandName))
+			commandClass = Level.commands.find(otherCommand => otherCommand.aliases.includes(commandName))
 		}
 		return commandClass
 	}
