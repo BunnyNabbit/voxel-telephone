@@ -7,6 +7,8 @@ function invertPromptType(promptType) {
 	return "description"
 }
 
+const help = require("./help.js")
+
 function register(universe) {
 	universe.registerCommand(["/rules"], (client) => {
 		client.message("== Rules", 0)
@@ -159,14 +161,6 @@ function register(universe) {
 		}
 		client.emit("playSound", universe.sounds.toggle)
 	})
-	universe.registerCommand(["/help"], async (client) => { // TODO: this should be replaced by a different system
-		client.message("/cuboid", 0)
-		client.message("/place", 0)
-		client.message("/mark", 0)
-		client.message("/vcr - rewind mistakes", 0)
-		client.message("/paint - toggles paint mode", 0)
-		client.message("/abort - abort interactive operations", 0)
-	})
 	universe.registerCommand(["/skip"], async (client,) => {
 		if (client.space && client.space.game) {
 			universe.db.addInteraction(client.authInfo.username, client.space.game._id, "skip")
@@ -278,6 +272,8 @@ function register(universe) {
 		await client.space.reloadView(templates.view.level)
 		client.message("Game diverged!", 0)
 	}, reasonHasUserPermission("moderator"))
+
+	help.register(universe)
 }
 
 module.exports = {
