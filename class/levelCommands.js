@@ -41,7 +41,7 @@ class Cuboid extends Command {
 	static aliases = ["z"]
 	constructor(level) {
 		super(["block:block", "&enum:mode", "position:position1", "position:position2"], level, {
-			mode: ["soild", "hollow", "walls", "holes", "wire"]
+			mode: ["soild", "hollow", "walls", "holes"]
 		})
 	}
 	action(data) {
@@ -49,11 +49,30 @@ class Cuboid extends Command {
 		const min = [0, 1, 2].map(index => Math.min(data.position1[index], data.position2[index]))
 		const max = [0, 1, 2].map(index => Math.max(data.position1[index], data.position2[index]))
 		const block = data.block
-		// const mode = data.mode
+		const mode = data.mode
 		for (let x = min[0]; x <= max[0]; x++) {
 			for (let y = min[1]; y <= max[1]; y++) {
 				for (let z = min[2]; z <= max[2]; z++) {
-					this.setBlock([x, y, z], block)
+					switch (mode) {
+						case "soild":
+							this.setBlock([x, y, z], block)
+							break
+						case "hollow":
+							if (x === min[0] || x === max[0] || y === min[1] || y === max[1] || z === min[2] || z === max[2]) {
+								this.setBlock([x, y, z], block)
+							}
+							break
+						case "walls":
+							if (x === min[0] || x === max[0] || z === min[2] || z === max[2]) {
+								this.setBlock([x, y, z], block)
+							}
+							break
+						case "holes":
+							if ((x + y + z) % 2 === 0) {
+								this.setBlock([x, y, z], block)
+							}
+							break
+					}
 				}
 			}
 		}
