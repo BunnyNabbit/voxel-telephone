@@ -60,7 +60,8 @@ function register(universe) {
 
 	const categories = {
 		// misc: "Misc",
-		// safety: "Safety",
+		moderation: "Moderation",
+		safety: "Safety",
 		building: "Building",
 		information: "Information",
 		gameplay: "Gameplay"
@@ -134,18 +135,58 @@ function register(universe) {
 		`When used to cancel VCR. The level will revert to the state before VCR was enabled. No state will be commited in this case and may be used to safely check out a level's previous state.`
 	], categories.building))
 
+	help.register(new CommandHelp("/place", [
+		`Places a block at your player position. The block you are holding will be placed.`
+	], categories.building))
+
+	help.register(new CommandHelp("/mark", [
+		`Marks your player position for interactive commands.`,
+		`For example, ${highlight("/cuboid")} will ask for two positions. You can use ${highlight("/mark")} to set one of them.`
+	], categories.building))
+
 	help.register(new CommandHelp("/clients", [
 		`Lists active players and the clients they are using.`
 	], categories.information))
 
 	help.register(new CommandHelp("/finish", [
-		`Marks a building turn as finished and exits back to hub. Turn assignment will also avoid from giving turns to you from its associated game.`,
+		`Marks a turn as finished and exits back to hub. Turn assignment will also avoid from giving turns to you from its associated game.`,
 		`To avoid submitting your work as final, use ${highlight("/skip")} to pass your turn.`
 	], categories.gameplay))
 
 	help.register(new CommandHelp("/skip", [
 		`Skips the current turn. Turn assignment will avoid giving you that turn.`,
 	], categories.gameplay))
+
+	help.register(new CommandHelp("/main", [
+		`Enters the hub level.`,
+	], categories.gameplay))
+
+	help.register(new CommandHelp("/view", [
+		`Enters the view level where you can see finished and ongoing games.`,
+		`Each game is represented by a column with pairs of turns in each grid. If a game has not been finished, only icons representing the state of a turn will be visualized. If a game has been finished then the entire game sequence with builds and descriptions are visible.`,
+		`Players with moderation permission may use ${highlight("/view mod")} to enter a variant of the level to see builds for all games, even if they aren't complete.`,
+	], categories.gameplay))
+
+	help.register(new CommandHelp("/play", [
+		`Enters a new game. Games are picked randomly. If a game cannot be found, the system will prompt for you to create a new game by initializing its prompt.`,
+		`If you abruptly leave a building turn, your game will be reserved for a hour. During the reservation period, you may re-enter the game by using the command. After that time has passed, the game will be released to other players.`
+	], categories.gameplay))
+
+	help.register(new CommandHelp("/report", [
+		`Reports the current turn for moderation review. Additionally, the associated game will stop being played until the report has been acknowledged.`,
+		`Abuse of this command may result in moderation punishment. Please review ${highlight("/rules")} to see which content isn't allowed.`,
+	], categories.safety))
+
+	help.register(new CommandHelp("/purge", [
+		`Usage: ${highlight("/purge <reason>")}`,
+		`Purges the latest turn of a highlighted game in ${highlight("/view")}. ${highlight("<reason>")} is an optional reason for purging.`,
+		`This command is only available for moderators.`
+	], categories.moderation))
+
+	help.register(new CommandHelp("/diverge", [
+		`Creates a new game timeline branching off from the highlighted turn in ${highlight("/view")}.`,
+		`This command is only available for moderators.`
+	], categories.moderation))
 
 	const colorNames = {
 		"0": "Black",
