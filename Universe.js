@@ -52,6 +52,19 @@ class Universe extends require("events") {
 			const SoundServer = require("./class/SoundServer.js")
 			this.soundServer = new SoundServer(this)
 		}
+		setInterval(() => {
+			const weightedIndex = []
+			for (const [key, value] of Object.entries(this.serverConfiguration.announcements.categoryWeight)) {
+				for (let index = 0; index < value; index++) {
+					weightedIndex.push(key)
+				}
+			}
+			const category = this.serverConfiguration.announcements.messages[weightedIndex[randomIntFromInterval(0, weightedIndex.length - 1)]]
+			const message = category[randomIntFromInterval(0, category.length - 1)]
+			this.server.clients.forEach(client => {
+				client.message(message, 0, "> ")
+			})
+		}, this.serverConfiguration.announcements.interval)
 
 		this.levels = new Map()
 		this.playerReserved = this.db.playerReserved
