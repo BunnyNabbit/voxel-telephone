@@ -169,7 +169,7 @@ function register(universe) {
 			await universe.gotoHub(client)
 		}
 	})
-	universe.registerCommand(["/pl", "/place"], async (client) => {
+	universe.registerCommand(["/place", "/pl"], async (client) => {
 		if (client.watchdog.rateOperation(1)) return
 		const operationPosition = [0, -1, 0].map((offset, index) => client.position[index] + offset).map(value => Math.min(Math.max(Math.floor(value), 0), 63))
 		let block = client.heldBlock
