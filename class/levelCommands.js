@@ -91,9 +91,12 @@ class Line extends Command {
 		data = this.parseBytes(data)
 		// Get the block ID from the parsed data.
 		const block = data.block
-		// Get the start and end positions from the parsed data.
-		const start = data.start
-		const end = data.end
+		Line.process(data.start, data.end).forEach(position => {
+			this.setBlock(position, block)
+		})
+	}
+	static process(start, end) {
+		const output = []
 		// Calculate the differences between the start and end positions.
 		let dx = end[0] - start[0]
 		let dy = end[1] - start[1]
@@ -106,11 +109,47 @@ class Line extends Command {
 			const y = start[1] + dy * i / steps
 			const z = start[2] + dz * i / steps
 			// Set the block at the calculated position.
-			this.setBlock([x, y, z].map(value => Math.floor(value)), block)
+			output.push([x, y, z].map(value => Math.floor(value)))
 		}
+		return output
+	}
+}
+
+class AbnormalTriangle extends Command {
+	name = "AbnormalTriangle"
+	static help = ["Makes a triangle from three points. The resulting triangle may have holes", "If no arguments are added, block is inferred from your current hand and the server will ask for the block positions interactively."]
+	static aliases = ["triangle", "tri"]
+	constructor(level) {
+		super(["block:block", "position:position1", "position:position2", "position:position3"], level)
+	}
+	action(data) {
+		data = this.parseBytes(data)
+		const block = data.block
+		const positions = [data.position1, data.position2, data.position3]
+		function lineProcess(start, end) {
+			return {
+				positions: Line.process(start, end),
+				start, end
+			}
+		}
+		const lines = [
+			lineProcess(data.position1, data.position2),
+			lineProcess(data.position2, data.position3),
+			lineProcess(data.position3, data.position1)
+		]
+		// Find longest line to fill the triangle from
+		const longestLine = lines.slice().sort((a, b) => b.positions.length - a.positions.length)[0]
+		// Find end point, which is a point not used by the longest line
+		const triangleEndPoint = positions.find(position => !(longestLine.start == position || longestLine.end == position))
+		// Draw from longest line to end point
+		longestLine.positions.forEach(position => {
+			Line.process(position, triangleEndPoint).forEach(position => {
+				this.setBlock(position, block)
+			})
+		})
 	}
 }
 
 module.exports = {
-	commands: [Cuboid, Line]
+	commands: [Cuboid, Line, AbnormalTriangle]
 }
