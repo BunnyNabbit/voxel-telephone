@@ -82,7 +82,7 @@ class Cuboid extends Command {
 class Line extends Command {
 	name = "Line"
 	static help = ["Makes a line between two points.", "If no arguments are added, block is inferred from your current hand and the server will ask for the block positions interactively."]
-	static aliases = ["t"]
+	static aliases = ["l", "ln"]
 	constructor(level) {
 		super(["block:block", "position:start", "position:end"], level)
 	}
