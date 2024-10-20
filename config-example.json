@@ -15,7 +15,7 @@
    "postToMainServer": false,
    "verifyUsernames": true,
    "maxIpConnections": 3,
-   "inspirationFeeds": ["https://www.bing.com/images/feed", "https://mix.com"],
+   "inspirationFeeds": ["https://www.bing.com/images/feed", "https://mix.com/topic/for-you"],
    "sounds": {
       "enabled": false,
       "interfacePort": 1333,
