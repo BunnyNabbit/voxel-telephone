@@ -8,6 +8,7 @@
    "moderators": [],
    "listOperators": [],
    "texturePackUrl": "https://bunnynabbit.com/classicube/palette-tex.png",
+   "floorTextureUrl": "https://bunnynabbit.com/classicube/vt-floor.png",
    "serverName": "Voxel Telephone",
    "port": 25565,
    "dbName": "voxeltelephone",

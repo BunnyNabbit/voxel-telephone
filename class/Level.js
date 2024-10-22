@@ -113,6 +113,7 @@ class Level extends require("events") {
 	reload() {
 		this.clients.forEach(client => {
 			this.loadClient(client, client.position, client.orientation)
+			client.droneTransmitter.resendDrones()
 		})
 	}
 	setBlock(position, block, excludeClients = [], saveToRecord = true) {
