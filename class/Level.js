@@ -149,7 +149,7 @@ class Level extends require("events") {
 			this.currentCommandActionBytes = []
 			// atm, we don't parse the command for bytes. start interactive now
 			this.inferCurrentCommand()
-		} else {
+		} else if (command[0]) {
 			const commandName = command[0].toLowerCase()
 			this.messageAll(`Unable to find command with name ${commandName} for level ${this.name}`, 0)
 		}
