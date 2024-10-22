@@ -13,6 +13,7 @@ const templates = require("./templates.js")
 const commands = require("./commands.js")
 const cefSounds = require("./cefSounds.js")
 const Player = require("./class/Player.js")
+const Drone = require("./class/Drone.js")
 
 const builderDefaults = {
 	template: templates.builder
@@ -148,7 +149,7 @@ class Universe extends require("events") {
 			level.name = spaceName
 			level.blockset = defaults.blockset ?? defaultBlockset
 			level.environment = defaults.environment ?? {
-				sidesId: 250,
+				sidesId: 7,
 				edgeId: 250,
 				edgeHeight: 0
 			}
@@ -216,6 +217,12 @@ class Universe extends require("events") {
 				this.loadLevel(`game-${game.next}`, builderDefaults).then((level) => {
 					if (!level.eventsAttached) {
 						level.eventsAttached = true
+						const floorDrone = new Drone({ // represents zhe level's floor. drone is set below zhe level's transparent floor.
+							scale: [128, 0.8, 128],
+							skin: this.serverConfiguration.floorTextureUrl
+						})
+						level.addDrone(floorDrone)
+						floorDrone.setPosition({ x: 32, y: 0, z: 32 }, { yaw: 0, pitch: 0 })
 						level.on("clientRemoved", async (client) => {
 							if (!level.changeRecord.dirty) {
 								await level.dispose()
