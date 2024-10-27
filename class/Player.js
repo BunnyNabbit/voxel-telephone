@@ -56,7 +56,7 @@ class Player extends require("events") {
       client.usingCEF = universe.soundServer && client.appName.includes(" cef")
       client.customBlockSupport(1)
       client.authInfo = authInfo
-      client.message("Welcome to Voxel Telephone. A silly game of telephone where you take turns describing and building.", 0)
+      client.message("Welcome to Voxel Telephone. A multiplayer game where you build what you hear and describe what you see. Watch as creations transform through collaborative misinterpretation!", 0)
       universe.commandRegistry.attemptCall(client, "/rules")
       if (universe.serverConfiguration.listOperators.includes(authInfo.username)) {
          client.message("* You are considered a list operator.", 0)
@@ -65,7 +65,7 @@ class Player extends require("events") {
       universe.addClient(client)
       client.droneTransmitter = new DroneTransmitter(client)
       universe.server.clients.forEach(otherClient => otherClient.message(`+ ${client.authInfo.username} connected`, 0))
-      client.serverIdentification("Voxel Telephone", "a silly game", 0x64)
+      client.serverIdentification("Voxel Telephone", universe.serverConfiguration.taglines[randomIntFromInterval(0, universe.serverConfiguration.taglines.length - 1)], 0x64)
       client.userRecord = new UserRecord(client, universe.db.getUserRecordDocument(client.authInfo.username))
       client.watchdog = new Watchdog(client)
       if (client.usingCEF) {
