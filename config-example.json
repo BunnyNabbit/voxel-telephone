@@ -9,7 +9,7 @@
    "listOperators": [],
    "texturePackUrl": "https://bunnynabbit.com/classicube/palette-tex.png",
    "floorTextureUrl": "https://bunnynabbit.com/classicube/vt-floor.png",
-   "serverName": "Voxel Telephone",
+   "serverName": "Voxel Telephone: Lost in translation, found in creation.",
    "port": 25565,
    "dbName": "voxeltelephone",
    "hubName": "hub",
@@ -52,5 +52,14 @@
             "See an inappropriate prompt or build? Use /report"
          ]
       }
-   }
+   },
+   "taglines": [
+      "Where words become worlds, and back again.",
+      "Build it, describe it, watch it evolve.",
+      "Get creative, get building, get talking.",
+      "From pixels to prose, and back again.",
+      "Lost in translation, found in creation.",
+      "Whispers of blocks, echoes of imagination.",
+      "The classic game of telephone, now with 100% more blocks!"
+   ]
 }
