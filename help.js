@@ -144,6 +144,18 @@ function register(universe) {
 		`For example, ${highlight("/cuboid")} will ask for two positions. You can use ${highlight("/mark")} to set one of them.`
 	], categories.building))
 
+	help.register(new TopicHelp("templates", [
+		`builder - Used as the default template for building which includes a palette and axis lines.`,
+		`empty - An empty template. Used by describe turns and the hub level.`,
+	]))
+
+	help.register(new CommandHelp("/template", [
+		`Switches the level's template. For a list of templates, see ${highlight("/help templates")}.`,
+		`Because of how Voxel Telephone stores block changes of a level, it may be possible that the level will look different after switching to another template.`,
+		`Issues may become apparent if commands which read the level's state are used. ${highlight("/template empty")} may be useful for seeing how a level looks in the perspective of a describer.`,
+		`Switching the template is a non-destructive action in terms of the block change timeline. Using this command does not affect how the level will look to a describer and will always be viewed with an empty template.`
+	], categories.building))
+
 	help.register(new CommandHelp("/clients", [
 		`Lists active players and the clients they are using.`
 	], categories.information))

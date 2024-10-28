@@ -197,6 +197,26 @@ function register(universe) {
 		client.space.reload()
 		client.emit("playSound", universe.sounds.activateVCR)
 	}, makeMultiValidator([reasonHasPermission(false, "You don't have permission to build in this level!"), reasonVcrDraining(true), reasonVcr(true, "The level is already in VCR mode")]))
+	universe.registerCommand(["/template"], async (client, message) => {
+		let template
+		switch (message) {
+			case "builder":
+				template = templates.builder
+				break
+			case "empty":
+				template = templates.empty
+				break
+			default:
+				return client.message("Invalid template name. Use /help templates for a list of templates", 0)
+		}
+		if (client.space.loading) return client.message("Level is busy seeking. Try again later", 0)
+		if (client.space.changeRecord.dirty) await client.space.changeRecord.flushChanges()
+		client.space.template = template
+		client.space.blocks = client.space.template(client.space.bounds)
+		await client.space.changeRecord.restoreBlockChangesToLevel(client.space, Math.max(client.space.changeRecord.actionCount, 1))
+		client.space.reload()
+		client.emit("playSound", universe.sounds.deactivateVCR)
+	}, makeMultiValidator([reasonHasPermission(false, "You don't have permission to build in this level!"), reasonVcrDraining(true), reasonVcr(true, "The level is in VCR mode")]))
 	universe.registerCommand(["/create"], async (client) => {
 		if (client.canCreate && client.space?.name == universe.serverConfiguration.hubName) {
 			client.creating = true
