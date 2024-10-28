@@ -44,7 +44,7 @@ class Universe extends require("events") {
 			version: 1
 		})
 		this.db = new Database(this.serverConfiguration)
-		this.sounds = cefSounds(this.serverConfiguration.sounds.audioStaticBaseURL)
+		this.sounds = cefSounds()
 
 		if (this.serverConfiguration.postToMainServer) {
 			this.heartbeat = new Heartbeat(`https://www.classicube.net/server/heartbeat/`, this)

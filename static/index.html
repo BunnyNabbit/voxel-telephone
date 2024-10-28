@@ -4,9 +4,9 @@
 <head>
 	<title>sound-brick</title>
 	<script src="/socket.io/socket.io.js"></script>
-	<script src="https://bunnynabbit.com/js/musquito-3.0.1.min.js"></script>
-	<script src="https://bunnynabbit.com/js/riffwave.js"></script>
-	<script async src="https://bunnynabbit.com/js/sfxr.js"></script>
+	<script src="/js/musquito/musquito-3.0.1.min.js"></script>
+	<script src="/js/riffwave.js"></script>
+	<script async src="/js/sfxr.js"></script>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
@@ -63,8 +63,7 @@
 						}
 					}
 					loopURL = data.url
-					// currently disabled as it seems like zhis causes CORS related errors on my end and just it seems safe to leave it disabled until SoundServer is able to serve static files.
-					// data.stream = true
+					data.stream = true
 					data.src = data.url
 					loop = $buzz.play(data)
 					$buzz.loop(loop, true)
