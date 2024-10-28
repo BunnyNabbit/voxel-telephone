@@ -1,5 +1,5 @@
 
-function cefSounds(baseStaticURL) {
+function cefSounds(baseStaticURL = "/audio/") {
 	function sfxrSound(base58String) {
 		return {
 			sfxr: true,
@@ -33,10 +33,10 @@ function cefSounds(baseStaticURL) {
 		abort: fileSound("back.ogg"),
 		toggle: fileSound("engage.ogg"),
 		poof: fileSound("poof.ogg"),
-		gameTrack: attributedTrack("instructor-of-zhings.mp3", "Instructor of Zhings - BunnyNabbit - CC0"),
-		gameTrackDrone: attributedTrack("instructor-of-zhings-drone.mp3", "Instructor of Zhings (Drone) - BunnyNabbit - CC0"),
-		viewTrack: attributedTrack("gawking.mp3", "Gawking - BunnyNabbit - CC0"),
-		hubTrack: attributedTrack("sit-around.mp3", "Sit Around - BunnyNabbit - CC0")
+		gameTrack: attributedTrack("instructor-of-zhings.ogg", "Instructor of Zhings - BunnyNabbit - CC0"),
+		gameTrackDrone: attributedTrack("instructor-of-zhings-drone.ogg", "Instructor of Zhings (Drone) - BunnyNabbit - CC0"),
+		viewTrack: attributedTrack("gawking.ogg", "Gawking - BunnyNabbit - CC0"),
+		hubTrack: attributedTrack("sit-around.ogg", "Sit Around - BunnyNabbit - CC0")
 	}
 	return sounds
 }
