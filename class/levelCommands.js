@@ -5,10 +5,13 @@ class Command {
 		this.enums = enums
 	}
 	setBlock(position, block) {
-		if (this.level.loading) {
-			this.level.rawSetBlock(position, block)
-		} else {
-			this.level.setBlock(position, block, [], false)
+		try {
+			if (this.level.loading) {
+				this.level.rawSetBlock(position, block)
+			} else {
+				this.level.setBlock(position, block, [], false)
+			}
+		} catch (err) {
 		}
 	}
 	parseBytes(actionBytes) {
