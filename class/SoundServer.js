@@ -93,10 +93,7 @@ class SoundServer extends require("events") {
 		const app = express()
 		const server = createServer(app)
 		const io = new Server(server)
-
-		app.get('/', (req, res) => {
-			res.sendFile(join(__dirname, 'soundBrickClient.html'))
-		})
+		app.use('/', express.static(join(__dirname, '../static')))
 
 		io.on('connection', (socket) => {
 			if (socket.handshake.auth.key) {
