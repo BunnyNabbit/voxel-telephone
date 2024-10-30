@@ -90,7 +90,10 @@ function register(universe) {
 					client.message("There is nothing. Build the prompt you are given!")
 					return
 				}
-				universe.server.clients.forEach(otherClient => otherClient.message(`${client.authInfo.username} finished a turn (Build)`, 0))
+				universe.server.clients.forEach(otherClient => {
+					otherClient.message(`${client.authInfo.username} finished a turn (Build)`, 0)
+					otherClient.emit("playSound", client.universe.sounds.complete)
+				})
 				universe.db.continueGame(client.space.game, client.space.game.next, gameType, client.authInfo.username)
 				if (client.space.changeRecord.dirty) await client.space.changeRecord.flushChanges()
 				universe.db.addInteraction(client.authInfo.username, client.space.game.next, "built")
@@ -101,7 +104,10 @@ function register(universe) {
 					return
 				}
 				universe.db.addInteraction(client.authInfo.username, client.space.game._id, "described")
-				universe.server.clients.forEach(otherClient => otherClient.message(`${client.authInfo.username} finished a turn (Describe)`, 0))
+				universe.server.clients.forEach(otherClient => {
+					otherClient.message(`${client.authInfo.username} finished a turn (Describe)`, 0)
+					otherClient.emit("playSound", client.universe.sounds.complete)
+				})
 				await universe.db.continueGame(client.space.game, client.space.game.next, gameType, client.authInfo.username, client.currentDescription)
 				client.currentDescription = null
 			}
