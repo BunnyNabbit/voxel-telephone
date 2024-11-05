@@ -198,6 +198,10 @@ class Player extends require("events") {
             })
          }
       })
+      const hatchday = universe.getHatchday()
+      if (hatchday) {
+         client.message(hatchday.joinMessage, 0)
+      }
    }
 }
 
