@@ -39,7 +39,8 @@ function cefSounds(baseStaticURL = "/audio/") {
 		gameTrack: attributedTrack("instructor-of-zhings.ogg", "Instructor of Zhings - BunnyNabbit - CC0"),
 		gameTrackDrone: attributedTrack("instructor-of-zhings-drone.ogg", "Instructor of Zhings (Drone) - BunnyNabbit - CC0"),
 		viewTrack: attributedTrack("gawking.ogg", "Gawking - BunnyNabbit - CC0"),
-		hubTrack: attributedTrack("sit-around.ogg", "Sit Around - BunnyNabbit - CC0")
+		hubTrack: attributedTrack("sit-around.ogg", "Sit Around - BunnyNabbit - CC0"),
+		hubTrackHatchday: attributedTrack("sit-around-hatchday.ogg", "Sit Around (Hatchday) - BunnyNabbit - CC0")
 	}
 	return sounds
 }

@@ -5,4 +5,4 @@ Procedurally mutated sound effects created on [sfxr.me](https://sfxr.me/) and pl
 All tracks by BunnyNabbit is marked with [CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/). Project files located on https://bunnynabbit.com/app/endme/?bunnynabbitmusic#.
 - Instructor of Zhings (Four variants)
 - Gawking
-- Sit Around
+- Sit Around (Two variants)
