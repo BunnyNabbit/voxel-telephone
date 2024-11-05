@@ -158,7 +158,7 @@ function register(universe) {
 	universe.registerCommand(["/mark"], async (client) => {
 		client.space.inferCurrentCommand(client.position.map(value => Math.min(Math.max(Math.floor(value), 0), 63)))
 	}, makeMultiValidator([reasonHasPermission(false), reasonLevelBlocking(false, "There are no current commands being run on the level")]))
-	universe.registerCommand(["/paint"], async (client) => {
+	universe.registerCommand(["/paint", "/p"], async (client) => {
 		client.paintMode = !client.paintMode
 		if (client.paintMode) {
 			client.message("Paint mode on", 0)
