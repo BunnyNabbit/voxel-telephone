@@ -169,9 +169,11 @@ class Player extends require("events") {
                   universe.canCreateCooldown.delete(client.authInfo.username)
                }, 3600000) // one hour
             } else {
+               const userRecord = await (client.userRecord.data)
+               const sound = universe.sounds[userRecord.chatSound] || universe.sounds.chat
                universe.server.clients.forEach(otherClient => {
                   otherClient.message(`&7${client.authInfo.username}: &f${message}`, 0, "> ")
-                  otherClient.emit("playSound", universe.sounds.chat)
+                  otherClient.emit("playSound", sound)
                })
             }
          }
