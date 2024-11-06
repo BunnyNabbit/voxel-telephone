@@ -67,6 +67,37 @@ class Database {
 		})
 	}
 
+	getUserGrid(username, cursor) {
+		return new Promise(resolve => {
+			const findDocument = { promptType: "build", creators: username }
+			if (cursor) {
+				findDocument._id = { $lt: cursor }
+			}
+			this.gameCollection.find(findDocument).sort({ _id: -1 }).limit(65, async (err, buildTurns) => {
+				let promises = []
+				buildTurns.forEach(buildTurn => { // get zhe previous turn which is zhe description
+					promises.push(new Promise(resolve => {
+						this.gameCollection.findOne({ _id: buildTurn.parent }, (err, describeTurn) => {
+							resolve({ describeTurn, buildTurn })
+						})
+					}))
+				})
+				const grid = []
+				let currentColumn = []
+				const turns = await Promise.all(promises)
+				turns.forEach(turnSet => {
+					currentColumn.push(turnSet.describeTurn, turnSet.buildTurn)
+					if (currentColumn.length == 16) {
+						grid.push(currentColumn)
+						currentColumn = []
+					}
+				})
+				if (currentColumn.length) grid.push(currentColumn)
+				resolve(grid)
+			})
+		})
+	}
+
 	async getPortals(name) {
 		return new Promise(resolve => {
 			this.portalCollection.findOne({ _id: name }, (err, doc) => {

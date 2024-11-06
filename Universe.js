@@ -168,17 +168,18 @@ class Universe extends require("events") {
 		this.levels.set(spaceName, promise)
 		return promise
 	}
-	async enterView(client, moderationView = false, cursor) {
+	async enterView(client, viewData = {}, cursor) {
 		if (client.teleporting == true) return
 		client.teleporting = true
 		client.space.removeClient(client)
 		let spaceName = "game-view"
-		if (moderationView) spaceName += "-mod"
+		if (viewData.mode == "mod") spaceName += "-mod"
+		if (viewData.mode == "user") spaceName += `-user-${client.authInfo.username}`
 		if (cursor) spaceName += cursor
 		const promise = this.loadLevel(spaceName, {
 			useNullChangeRecord: true,
 			levelClass: ViewLevel,
-			arguments: [moderationView, cursor],
+			arguments: [viewData, cursor],
 			bounds: [576, 64, 512],
 			allowList: ["not a name"],
 			template: templates.view.level
