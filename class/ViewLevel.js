@@ -12,7 +12,7 @@ const emptyTurns = {
 }
 
 class ViewLevel extends Level {
-	constructor(bounds, blocks, moderationView, cursor) {
+	constructor(bounds, blocks, viewData = {}, cursor) {
 		super(bounds, blocks)
 		this.cursor = cursor
 		this.nextCursor = null
@@ -34,7 +34,7 @@ class ViewLevel extends Level {
 				const gridPosition = [position.z, position.x].map((component, offset) => clamp(Math.floor(component / 64) - offset, 0, 7))
 				const lastTurns = client.selectedTurns ?? emptyTurns
 				client.selectedTurns = this.getTurnsInGrid(gridPosition[0], gridPosition[1])
-				const canView = this.moderationView || (this.games[gridPosition[0]] && this.games[gridPosition[0]][15])
+				const canView = this.viewData.viewAll || (this.games[gridPosition[0]] && this.games[gridPosition[0]][15])
 				if (canView) {
 					client.selectedTurns = this.getTurnsInGrid(gridPosition[0], gridPosition[1])
 				} else {
@@ -56,13 +56,13 @@ class ViewLevel extends Level {
 					}
 				}
 				if (position.z > 512) {
-					this.universe.enterView(client, this.moderationView, this.nextCursor)
+					this.universe.enterView(client, this.viewData, this.nextCursor)
 				}
 			}
 			client.on("position", onPosition)
 			this.positionEventListeners.set(client, onPosition)
 		})
-		this.moderationView = moderationView
+		this.viewData = viewData
 	}
 	getTurnsInGrid(x, y) {
 		y = y * 2
@@ -79,13 +79,23 @@ class ViewLevel extends Level {
 			}
 		}
 	}
+	getGames() {
+		if (this.viewData.mode == "user") {
+			return this.universe.db.getUserGrid(this.viewData.username, this.cursor)
+		}
+		return this.universe.db.getGames(this.cursor)
+	}
 	async reloadView(template) {
 		const lastBlockBuffer = Buffer.from(this.blocks)
-		const games = await this.universe.db.getGames(this.cursor)
+		const games = await this.getGames()
 		this.games = games
 		this.blocks = template(this.bounds)
 		if (games.length >= 9) {
-			this.nextCursor = games[7][0]._id
+			if (this.viewData.mode == "user") {
+				this.nextCursor = games[7][1]._id // games were sorted by build ID razher zhen description.
+			} else {
+				this.nextCursor = games[7][0]._id
+			}
 		}
 		for (let gameIndex = 0; gameIndex < Math.min(games.length, 8); gameIndex++) {
 			const game = games[gameIndex]
@@ -114,7 +124,7 @@ class ViewLevel extends Level {
 					}
 					iconPosition++
 				}
-				const previewLevel = game.length == 16 || this.moderationView
+				const previewLevel = game.length == 16 || this.viewData.viewAll
 				const isOnlyDescription = !game[turnIndex + 1]
 				if (previewLevel && !isOnlyDescription) {
 					// todo

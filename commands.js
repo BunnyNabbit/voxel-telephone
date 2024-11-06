@@ -270,12 +270,15 @@ function register(universe) {
 		universe.startGame(client)
 	})
 	universe.registerCommand(["/view"], async (client, message) => {
-		const isModerationView = message == "mod"
-		if (isModerationView) {
+		if (message == "mod") {
 			const isModerator = await reasonHasUserPermission("moderator")(client)
 			if (!isModerator) return
+			universe.enterView(client, { viewAll: true, mode: "mod" })
+		} else if (message == "user") {
+			universe.enterView(client, { viewAll: true, mode: "user", username: client.authInfo.username })
+		} else {
+			universe.enterView(client)
 		}
-		universe.enterView(client, isModerationView)
 	})
 	universe.registerCommand(["/main", "/hub", "/spawn"], async (client) => {
 		if (client.space) {
