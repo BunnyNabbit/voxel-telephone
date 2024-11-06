@@ -1,1 +1,1 @@
-A telephone game about repeatedly describing and building. How can misinterpretations form throughout a game? Designed for the Classicube client.
+A telephone game about repeatedly describing and building. How can misinterpretations form throughout a game? Designed for the ClassiCube client.
