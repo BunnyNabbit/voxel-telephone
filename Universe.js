@@ -113,9 +113,10 @@ class Universe extends require("events") {
 	}
 
 	async gotoHub(client, forcedHubName) {
+		const hatchday = this.getHatchday()
 		let hubName
 		if (client) {
-			hubName = forcedHubName || (await (client.userRecord.data)).defaultHub || this.serverConfiguration.hubName
+			hubName = forcedHubName || (await (client.userRecord.data)).defaultHub || ((hatchday && hatchday.hubName) || this.serverConfiguration.hubName)
 		} else { // being used as a preloader
 			hubName = forcedHubName || this.serverConfiguration.hubName
 		}
@@ -131,10 +132,19 @@ class Universe extends require("events") {
 			client.message(" ", 3)
 			promise.then(level => {
 				level.addClient(client, [60, 8, 4], [162, 254])
-				client.emit("playSound", this.sounds.hubTrack)
+				client.emit("playSound", (hatchday && this.sounds[hatchday.hubTrack]) || this.sounds.hubTrack)
 			})
 		}
 		return promise
+	}
+	getHatchday() {
+		const hatchdays = this.serverConfiguration.hatchday
+		for (let index = 0; index < hatchdays.length; index++) {
+			const hatchday = hatchdays[index]
+			const { month, day } = hatchday
+			if (month === new Date().getMonth() + 1 && day === new Date().getDate()) return hatchday
+		}
+		return false
 	}
 
 	loadLevel(spaceName, defaults = {}) {

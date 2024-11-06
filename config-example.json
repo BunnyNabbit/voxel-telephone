@@ -10,6 +10,16 @@
    "texturePackUrl": "https://bunnynabbit.com/classicube/palette-tex.png",
    "floorTextureUrl": "https://bunnynabbit.com/classicube/vt-floor.png",
    "serverName": "Voxel Telephone: Lost in translation, found in creation.",
+   "hatchday": [
+      {
+         "month": 12,
+         "day": 1,
+         "joinMessage": "&bHappy hatchday to BunnyNabbit \"Aon\"!",
+         "hubName": "hub-hatchday",
+         "hubTrack": "hubTrackHatchday",
+         "userSignificance": "BunnyNabbit"
+      }
+   ],
    "port": 25565,
    "dbName": "voxeltelephone",
    "hubName": "hub",
