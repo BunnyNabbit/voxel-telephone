@@ -91,7 +91,11 @@ class ViewLevel extends Level {
 		this.games = games
 		this.blocks = template(this.bounds)
 		if (games.length >= 9) {
-			this.nextCursor = games[7][0]._id
+			if (this.viewData.mode == "user") {
+				this.nextCursor = games[7][1]._id // games were sorted by build ID razher zhen description.
+			} else {
+				this.nextCursor = games[7][0]._id
+			}
 		}
 		for (let gameIndex = 0; gameIndex < Math.min(games.length, 8); gameIndex++) {
 			const game = games[gameIndex]
