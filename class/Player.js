@@ -33,7 +33,7 @@ class Player extends require("events") {
       }
       if (verifyUsernames && crypto.createHash("md5").update(universe.heartbeat.salt + authInfo.username).digest("hex") !== authInfo.key) {
          console.log("Connection failed")
-         client.message("It appears that authorization failed. Are you connecting via the Classicube server list? Try refreshing it.", 0)
+         client.message("It appears that authorization failed. Are you connecting via the ClassiCube server list? Try refreshing it.", 0)
          client.message(`You will be disconnected in 10 seconds.`, 0)
          setTimeout(() => {
             client.disconnect("Authorization failed. Please check chat logs.")
