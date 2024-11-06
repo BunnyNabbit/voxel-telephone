@@ -119,7 +119,7 @@ class Database {
 	}
 
 	createNewGame(startingSentence, username) {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			const gameId = new mongojs.ObjectID()
 			const gameNextId = new mongojs.ObjectID()
 			const document = {
@@ -134,6 +134,7 @@ class Database {
 				depth: 0
 			}
 			this.gameCollection.insert(document, (err) => {
+				if (err) return reject(err)
 				resolve(document)
 			})
 		})
@@ -149,18 +150,20 @@ class Database {
 	}
 
 	addReport(username, id, reason) {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			this.reportCollection.insert({
 				username, forId: id, reason, unresolved: true
 			}, (err) => {
+				if (err) return reject(err)
 				resolve()
 			})
 		})
 	}
 
 	updateReportStatus(reportId, status) {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			this.reportCollection.update({ _id: reportId }, { $set: { unresolved: status } }, (err) => {
+				if (err) return reject(err)
 				resolve()
 			})
 		})
@@ -175,26 +178,29 @@ class Database {
 	}
 
 	addInteraction(username, id, type) {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			this.interactionCollection.insert({
 				username, forId: id, type
 			}, (err) => {
+				if (err) return reject(err)
 				resolve()
 			})
 		})
 	}
 
 	deactivateGame(gameId) {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			this.gameCollection.update({ _id: gameId }, { $set: { active: false } }, (err) => {
+				if (err) return reject(err)
 				resolve()
 			})
 		})
 	}
 
 	continueGame(originalDocument, newGameId, promptType, username, description) {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			this.gameCollection.update({ _id: originalDocument._id }, { $set: { active: false } }, (err) => {
+				if (err) return reject(err)
 				const gameNextId = new mongojs.ObjectID()
 				const document = {
 					_id: newGameId,
@@ -218,6 +224,7 @@ class Database {
 					document.promptType = "build"
 				}
 				this.gameCollection.insert(document, (err) => {
+					if (err) return reject(err)
 					if (!document.active) {
 						resolve({ document, status: 1 })
 					}
@@ -241,8 +248,9 @@ class Database {
 	}
 
 	addTransaction(account, currency, amount) {
-		return new Promise((resolve) => {
+		return new Promise((resolve, reject) => {
 			this.ledgerCollection.insert({ account, currency, amount }, (err) => {
+				if (err) return reject(err)
 				resolve()
 			})
 		})
@@ -282,7 +290,7 @@ class Database {
 		const divergedRootId = new mongojs.ObjectID()
 		let parentId = "self"
 		turns.forEach((turn) => {
-			promises.push(new Promise(resolve => {
+			promises.push(new Promise((resolve, reject) => {
 				const newDepth = turn.depth - targetDepth
 				if (newDepth >= 0) {
 					if (parentId == "self") {
@@ -292,13 +300,16 @@ class Database {
 						turn.parent = "self"
 						turn.depth = newDepth
 						this.gameCollection.remove({ _id: oldId }, (err) => {
+							if (err) return reject(err)
 							this.gameCollection.insert(turn, (err) => {
+								if (err) return reject(err)
 								resolve()
 							})
 						})
 					} else {
 						const updateDocument = { $set: { depth: newDepth, parent: parentId, root: divergedRootId } }
 						this.gameCollection.update({ _id: turn._id }, updateDocument, (err) => {
+							if (err) return reject()
 							resolve()
 						})
 					}
@@ -313,8 +324,9 @@ class Database {
 	}
 
 	regenerateGameNextTurnId(gameId) {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			this.gameCollection.update({ _id: gameId }, { $set: { next: new mongojs.ObjectID() } }, (err) => {
+				if (err) return reject(err)
 				resolve()
 			})
 		})
@@ -330,15 +342,16 @@ class Database {
 		}
 		lastTurn.reason = reason
 		this.purgedCollection.insert(lastTurn)
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			this.gameCollection.remove({ _id: lastTurn._id }, (err) => {
+				if (err) return reject(err)
 				resolve()
 			})
 		})
 	}
 
 	addBan(username, configuration = {}) {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			const document = {
 				username,
 				end: new Date(Date.now() + configuration.duration),
@@ -347,13 +360,14 @@ class Database {
 				type: configuration.type
 			}
 			this.banCollection.insert(document, (err) => {
+				if (err) return reject(err)
 				resolve()
 			})
 		})
 	}
 
 	getBans(username, onlyActive) {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			let findDocument = null
 			if (onlyActive) {
 				findDocument = {
@@ -366,6 +380,7 @@ class Database {
 				findDocument = { username }
 			}
 			this.banCollection.find(findDocument, (err, docs) => {
+				if (err) return reject(err)
 				resolve(docs)
 			})
 		})
@@ -375,9 +390,10 @@ class Database {
 		this.banCollection.update({ _id: banId }, { $set: { acknowledged: true } })
 	}
 
-	saveUserRecord(userRecord) {
-		return new Promise(async resolve => {
-			this.userCollection.replaceOne({ _id: userRecord.username }, await userRecord.data, { upsert: true }, (err) => {
+	async saveUserRecord(userRecord) {
+		const data = await userRecord.data
+		return new Promise(resolve => {
+			this.userCollection.replaceOne({ _id: userRecord.username }, data, { upsert: true }, (err) => {
 				this.draining = false
 				if (err) console.error(err)
 				resolve()
