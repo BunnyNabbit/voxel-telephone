@@ -276,8 +276,10 @@ function register(universe) {
 			universe.enterView(client, { viewAll: true, mode: "mod" })
 		} else if (message == "user") {
 			universe.enterView(client, { viewAll: true, mode: "user", username: client.authInfo.username })
-		} else {
+		} else if (!message) {
 			universe.enterView(client)
+		} else {
+			client.message("Unknown view argument. /help view", 0)
 		}
 	})
 	universe.registerCommand(["/main", "/hub", "/spawn"], async (client) => {
