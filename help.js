@@ -174,8 +174,9 @@ function register(universe) {
 	], categories.gameplay))
 
 	help.register(new CommandHelp("/view", [
+		`Usage: ${highlight("/view <mode>")}`,
 		`Enters the view level where you can see finished and ongoing games.`,
-		`Each game is represented by a column with pairs of turns in each grid. If a game has not been finished, only icons representing the state of a turn will be visualized. If a game has been finished then the entire game sequence with builds and descriptions are visible.`,
+		`When issued without a mode (${highlight("/view")}), each game will be represented by a column with pairs of turns in each grid. If a game has not been finished, only icons representing the state of a turn will be visualized. If a game has been finished then the entire game sequence with builds and descriptions are visible.`,
 		`${highlight("/view user")} shows you all of your own builds, even if the game it is associated with isn't completed.`,
 		`Players with moderation permission may use ${highlight("/view mod")} to enter a variant of the level to see builds for all games, even if they aren't complete.`
 	], categories.gameplay))
