@@ -55,7 +55,11 @@ class ViewLevel extends Level {
 						// client.message(" ", 11)
 					}
 				}
-				if (position.z > 512) {
+				if (!client.viewDebounce && position.z > 512) {
+					client.viewDebounce = true
+					setTimeout(() => {
+						client.viewDebounce = false
+					}, 1000)
 					this.universe.enterView(client, this.viewData, this.nextCursor)
 				}
 			}
