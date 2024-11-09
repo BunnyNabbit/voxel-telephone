@@ -21,12 +21,12 @@ module.exports = {
 		built: createVoxelBufferTemplate("view-icon-built.cw"),
 		description: createVoxelBufferTemplate("view-icon-description.cw"),
 		orphaned: createVoxelBufferTemplate("view-icon-orphaned.cw"),
-		patrol: createVoxelBufferTemplate("view-icon-patrol.cw"),
+		// patrol: createVoxelBufferTemplate("view-icon-patrol.cw"),
 		player: createVoxelBufferTemplate("view-icon-player.cw"),
-		report: createVoxelBufferTemplate("view-icon-report.cw"),
-		scyzhe: createVoxelBufferTemplate("view-icon-scyzhe.cw"),
-		modeBlitz: createVoxelBufferTemplate("view-mode-blitz.cw"),
-		modeCasual: createVoxelBufferTemplate("view-mode-casual.cw"),
+		// report: createVoxelBufferTemplate("view-icon-report.cw"),
+		// scyzhe: createVoxelBufferTemplate("view-icon-scyzhe.cw"),
+		// modeBlitz: createVoxelBufferTemplate("view-mode-blitz.cw"),
+		// modeCasual: createVoxelBufferTemplate("view-mode-casual.cw"),
 	},
 	empty: (bounds) => {
 		return Buffer.alloc(bounds[0] * bounds[1] * bounds[2])
