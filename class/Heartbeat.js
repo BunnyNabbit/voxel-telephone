@@ -7,7 +7,7 @@ const { join } = require('node:path')
 class Heartbeat {
 	constructor(urlBase, universe) {
 		this.universe = universe
-		this.salt = crypto.randomBytes(82).toString("hex")
+		this.salt = crypto.randomBytes(192).toString("base64url")
 		this.urlBase = urlBase
 		this.pinged = false
 		setInterval(() => {
@@ -29,7 +29,7 @@ class Heartbeat {
 			software: this.softwareName,
 			public: "true",
 			web: "true",
-			salt: this.salt.toString("hex"),
+			salt: this.salt,
 		}
 		axios.post(pingURL, qs.stringify(form)).then((response) => {
 			if (this.pinged == false) console.log(response.data)
