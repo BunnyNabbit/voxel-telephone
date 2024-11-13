@@ -134,7 +134,7 @@ class ViewLevel extends Level {
 					// todo
 					let previewLevel = new Level([64, 64, 64], templates.empty([64, 64, 64]))
 					let changeRecordPromise = new Promise(resolve => {
-						previewLevel.changeRecord = new ChangeRecord(`./blockRecords/game-${turn.next}/`, null, async () => {
+						previewLevel.changeRecord = new ChangeRecord(`./blockRecords/game-${turn.next}/`, async () => {
 							await previewLevel.changeRecord.restoreBlockChangesToLevel(previewLevel)
 							previewLevel.dispose()
 							resolve(previewLevel.blocks)

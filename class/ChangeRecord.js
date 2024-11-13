@@ -1,21 +1,17 @@
-const vhsBlockSize = 1024 * 5
 const promisify = require("node:util").promisify
 const fs = require("fs")
-const dvdKeyframeSpacing = vhsBlockSize
-const defaultRootDvd = "root"
 const SmartBuffer = require("smart-buffer").SmartBuffer
 const zlib = require("zlib")
 const deflate = promisify(zlib.deflate)
 const inflate = promisify(zlib.inflate)
 const trash = import("trash")
 class ChangeRecord {
-	constructor(path, root = defaultRootDvd, loadedCallback = () => { }) {
+	constructor(path, loadedCallback = () => { }) {
 		this.currentBuffer = new SmartBuffer()
 		this.path = path
 		this.draining = false
 		this.dirty = false
 		this.vhsFh = null
-		this.dvdFh = null
 		this.bounds = [64, 64, 64]
 		this.actionCount = 0
 		this.currentActionCount = 0
@@ -23,9 +19,8 @@ class ChangeRecord {
 		if (!fs.existsSync(path)) {
 			fs.mkdirSync(path)
 		}
-		Promise.all([fs.promises.open(path + "vhs.bin", "a+"), fs.promises.open(path + "dvd.bin", "a+")]).then((values) => {
+		Promise.all([fs.promises.open(path + "vhs.bin", "a+")]).then((values) => {
 			this.vhsFh = values[0]
-			this.dvdFh = values[1]
 			loadedCallback(this)
 		})
 	}
@@ -151,7 +146,6 @@ class ChangeRecord {
 
 	}
 	async dispose() {
-		await this.dvdFh.close()
 		await this.vhsFh.close()
 	}
 }
