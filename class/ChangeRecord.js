@@ -50,45 +50,61 @@ class ChangeRecord {
 			})
 		}
 	}
-	async restoreBlockChangesToLevel(level, maxActions) {
+	async _processVhsFile(vhsFh, processor) {
 		let currentPosition = 0
 		this.actionCount = 0
-		level.loading = true
 		while (true) {
 			let bufferLength = Buffer.alloc(4)
-			await this.vhsFh.read(bufferLength, 0, bufferLength.length, currentPosition)
+			await vhsFh.read(bufferLength, 0, bufferLength.length, currentPosition)
 			bufferLength = bufferLength.readUint32LE(0)
 			if (bufferLength == 0) break
+
 			const deflateBuffer = Buffer.alloc(bufferLength)
-			await this.vhsFh.read(deflateBuffer, 0, deflateBuffer.length, currentPosition + 4)
+			await vhsFh.read(deflateBuffer, 0, deflateBuffer.length, currentPosition + 4)
 			let changes = await inflate(deflateBuffer)
 			changes = SmartBuffer.fromBuffer(changes)
+
 			while (changes.remaining()) {
-				if (maxActions && this.actionCount == maxActions) {
-					level.loading = false
-					return this.actionCount
-				}
-				this.actionCount += 1
 				const actions = changes.readUInt8()
-				if (actions == 0) { // single block change
-					level.rawSetBlock([changes.readUInt8(), changes.readUInt8(), changes.readUInt8()], changes.readUInt8())
-				} else {
-					const actionBytes = []
-					const commandName = changes.readStringNT()
+				const actionBytes = []
+				let commandName = null
+
+				if (actions > 0) {
+					commandName = changes.readStringNT()
 					for (let i = 0; i < actions; i++) {
 						actionBytes.push(changes.readUInt8())
 					}
-					level.interpretCommand(commandName)
-					level.currentCommandActionBytes = actionBytes
-					level.commitAction()
+				}
+
+				if (!processor(actions, commandName, actionBytes, changes)) {
+					return this.actionCount // Allow early exit
 				}
 			}
-			// await sleep(0)
+
 			currentPosition += bufferLength + 4
 		}
-		level.loading = false
-		console.log("loaded", this.actionCount)
 		return this.actionCount
+	}
+	async restoreBlockChangesToLevel(level, maxActions) {
+		level.loading = true
+		const count = await this._processVhsFile(this.vhsFh, (actions, commandName, actionBytes, changes) => {
+			if (maxActions && this.actionCount == maxActions) {
+				level.loading = false
+				return false // Stop processing
+			}
+			this.actionCount += 1
+			if (actions == 0) {
+				level.rawSetBlock([changes.readUInt8(), changes.readUInt8(), changes.readUInt8()], changes.readUInt8())
+			} else {
+				level.interpretCommand(commandName)
+				level.currentCommandActionBytes = actionBytes
+				level.commitAction()
+			}
+			return true // Continue processing
+		})
+		level.loading = false
+		console.log("loaded", count)
+		return count
 	}
 	async flushChanges() {
 		this.draining = true
@@ -105,52 +121,34 @@ class ChangeRecord {
 		return vhsBlockBuffer.length
 	}
 	async commit(toActionCount) {
-		if (this.dirty) await this.flushChanges() // just in case
+		if (this.dirty) await this.flushChanges()
 		await this.vhsFh.close()
+
 		const oldPath = this.path + ".vhs.bin" + ".old"
 		const newPath = this.path + "vhs.bin"
 		fs.renameSync(newPath, oldPath)
 		this.vhsFh = await fs.promises.open(newPath, "a+")
 		const oldVhsFh = await fs.promises.open(oldPath, "a+")
 
-		let currentPosition = 0
-		this.actionCount = 0
-		while (true) {
-			let bufferLength = Buffer.alloc(4)
-			await oldVhsFh.read(bufferLength, 0, bufferLength.length, currentPosition)
-			bufferLength = bufferLength.readUint32LE(0)
-			if (bufferLength == 0) break
-			const deflateBuffer = Buffer.alloc(bufferLength)
-			await oldVhsFh.read(deflateBuffer, 0, deflateBuffer.length, currentPosition + 4)
-			let changes = await inflate(deflateBuffer)
-			changes = SmartBuffer.fromBuffer(changes)
-			while (changes.remaining()) {
-				if (this.actionCount == toActionCount) {
-					await this.flushChanges()
-					await oldVhsFh.close()
-					await (await trash).default(oldPath)
-					return this.actionCount
-				}
-				// this.actionCount += 1
-				const actions = changes.readUInt8()
-				if (actions == 0) { // single block change
-					this.addBlockChange([changes.readUInt8(), changes.readUInt8(), changes.readUInt8()], changes.readUInt8())
-				} else {
-					const actionBytes = []
-					const commandName = changes.readStringNT()
-					for (let i = 0; i < actions; i++) {
-						actionBytes.push(changes.readUInt8())
-					}
-					this.appendAction(true, actionBytes, commandName)
-				}
+		const count = await this._processVhsFile(oldVhsFh, (actions, commandName, actionBytes, changes) => {
+			if (this.actionCount == toActionCount) {
+				return false // Stop processing
 			}
-			await this.flushChanges()
-			currentPosition += bufferLength + 4
-		}
+			// this.actionCount += 1  Increment in _processVhsFile now
+			if (actions == 0) {
+				this.addBlockChange([changes.readUInt8(), changes.readUInt8(), changes.readUInt8()], changes.readUInt8())
+			} else {
+				this.appendAction(true, actionBytes, commandName)
+			}
+			return true // Continue processing
+		})
+
+		await this.flushChanges()
 		await oldVhsFh.close()
 		await (await trash).default(oldPath)
-		console.log("commited", this.actionCount)
-		return this.actionCount
+		console.log("commited", count)
+		return count
+
 	}
 	async dispose() {
 		await this.dvdFh.close()
