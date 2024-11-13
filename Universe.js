@@ -170,7 +170,7 @@ class Universe extends require("events") {
 			if (defaults.useNullChangeRecord) {
 				changeRecordClass = NullChangeRecord
 			}
-			level.changeRecord = new changeRecordClass(`./blockRecords/${spaceName}/`, null, async () => {
+			level.changeRecord = new changeRecordClass(`./blockRecords/${spaceName}/`, async () => {
 				await level.changeRecord.restoreBlockChangesToLevel(level)
 				resolve(level)
 			})
