@@ -135,7 +135,7 @@ function register(universe) {
 	universe.registerCommand(["/abort"], async (client) => {
 		if (client.space.loading) return client.message("Please wait", 0)
 		if (client.space.inVcr) {
-			client.space.blocks = client.space.template(client.space.bounds)
+			client.space.blocks = await Buffer.from(client.space.template(client.space.bounds))
 			await client.space.changeRecord.restoreBlockChangesToLevel(client.space)
 			client.space.reload()
 			client.space.inVcr = false
@@ -218,7 +218,7 @@ function register(universe) {
 		if (client.space.loading) return client.message("Level is busy seeking. Try again later", 0)
 		if (client.space.changeRecord.dirty) await client.space.changeRecord.flushChanges()
 		client.space.template = template
-		client.space.blocks = client.space.template(client.space.bounds)
+		client.space.blocks = Buffer.from(await client.space.template(client.space.bounds))
 		await client.space.changeRecord.restoreBlockChangesToLevel(client.space, Math.max(client.space.changeRecord.actionCount, 1))
 		client.space.reload()
 		client.emit("playSound", universe.sounds.deactivateVCR)
@@ -232,7 +232,7 @@ function register(universe) {
 	universe.registerCommand(["/rewind", "/rw", "/undo"], async (client, message) => {
 		const count = Math.max(parseInt(message), 0) || 1
 		if (client.space.loading) return client.message("Level is busy seeking. Try again later", 0)
-		client.space.blocks = client.space.template(client.space.bounds)
+		client.space.blocks = Buffer.from(await client.space.template(client.space.bounds))
 		await client.space.changeRecord.restoreBlockChangesToLevel(client.space, Math.max(client.space.changeRecord.actionCount - count, 1))
 		client.space.reload()
 		client.message(`Rewinded. Current actions: ${client.space.changeRecord.actionCount}/${client.space.changeRecord.maxActions}`, 0)
@@ -242,7 +242,7 @@ function register(universe) {
 	universe.registerCommand(["/fastforward", "/ff", "/redo"], async (client, message) => {
 		const count = Math.max(parseInt(message), 0) || 1
 		if (client.space.loading) return client.message("Level is busy seeking. Try again later", 0)
-		client.space.blocks = client.space.template(client.space.bounds)
+		client.space.blocks = Buffer.from(await client.space.template(client.space.bounds))
 		await client.space.changeRecord.restoreBlockChangesToLevel(client.space, Math.min(client.space.changeRecord.actionCount + count, client.space.changeRecord.maxActions))
 		client.space.reload()
 		client.message(`Fast-forwarded. Current actions: ${client.space.changeRecord.actionCount}/${client.space.changeRecord.maxActions}`, 0)
@@ -276,8 +276,10 @@ function register(universe) {
 			universe.enterView(client, { viewAll: true, mode: "mod" })
 		} else if (message == "user") {
 			universe.enterView(client, { viewAll: true, mode: "user", username: client.authInfo.username })
-		} else {
+		} else if (!message) {
 			universe.enterView(client)
+		} else {
+			client.message("Unknown view argument. /help view", 0)
 		}
 	})
 	universe.registerCommand(["/main", "/hub", "/spawn"], async (client) => {

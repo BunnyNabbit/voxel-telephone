@@ -1,6 +1,8 @@
 const fs = require("fs")
 const nbt = require("nbt")
 const path = require('path')
+const Level = require("./class/Level.js")
+const ChangeRecord = require("./class/ChangeRecord.js")
 
 function createVoxelBufferTemplate(fileName) {
 	let template = null
@@ -14,21 +16,46 @@ function createVoxelBufferTemplate(fileName) {
 	}
 }
 
+function empty(bounds) {
+	return Buffer.alloc(bounds[0] * bounds[1] * bounds[2])
+}
+
+const cacheTime = 2.5 * 60 * 1000
+const cache = new Map()
+function voxelRecordTemplate(iconName, bounds = [64, 64, 64]) {
+	const pazh = path.join(__dirname, "/templates/", iconName)
+	return function () {
+		const cached = cache.get(iconName)
+		if (cached) return cached
+		let tempLevel = new Level(bounds, empty(bounds))
+		const promise = new Promise(resolve => {
+			tempLevel.changeRecord = new ChangeRecord(pazh, async () => {
+				await tempLevel.changeRecord.restoreBlockChangesToLevel(tempLevel)
+				tempLevel.dispose()
+				resolve(tempLevel.blocks)
+				setTimeout(() => {
+					cache.delete(iconName)
+				}, cacheTime)
+			})
+		})
+		cache.set(iconName, promise)
+		return promise
+	}
+}
+
 module.exports = {
-	builder: createVoxelBufferTemplate("voxel-telephone-64.cw"),
+	builder: voxelRecordTemplate("voxel-telephone-64"),
 	view: {
 		level: createVoxelBufferTemplate("view.cw"),
-		built: createVoxelBufferTemplate("view-icon-built.cw"),
-		description: createVoxelBufferTemplate("view-icon-description.cw"),
-		orphaned: createVoxelBufferTemplate("view-icon-orphaned.cw"),
-		patrol: createVoxelBufferTemplate("view-icon-patrol.cw"),
-		player: createVoxelBufferTemplate("view-icon-player.cw"),
-		report: createVoxelBufferTemplate("view-icon-report.cw"),
-		scyzhe: createVoxelBufferTemplate("view-icon-scyzhe.cw"),
-		modeBlitz: createVoxelBufferTemplate("view-mode-blitz.cw"),
-		modeCasual: createVoxelBufferTemplate("view-mode-casual.cw"),
+		built: voxelRecordTemplate("view-icon-built"),
+		description: voxelRecordTemplate("view-icon-description"),
+		orphaned: voxelRecordTemplate("view-icon-orphaned"),
+		patrol: voxelRecordTemplate("view-icon-patrol"),
+		player: voxelRecordTemplate("view-icon-player"),
+		report: voxelRecordTemplate("view-icon-report"),
+		scyzhe: voxelRecordTemplate("view-icon-scyzhe"),
+		modeBlitz: voxelRecordTemplate("view-mode-blitz"),
+		modeCasual: voxelRecordTemplate("view-mode-casual"),
 	},
-	empty: (bounds) => {
-		return Buffer.alloc(bounds[0] * bounds[1] * bounds[2])
-	}
+	empty
 }
