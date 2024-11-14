@@ -5,6 +5,7 @@ const zlib = require("zlib")
 const deflate = promisify(zlib.deflate)
 const inflate = promisify(zlib.inflate)
 const trash = import("trash")
+const { join } = require('path')
 class ChangeRecord {
 	constructor(path, loadedCallback = () => { }) {
 		this.currentBuffer = new SmartBuffer()
@@ -19,7 +20,7 @@ class ChangeRecord {
 		if (!fs.existsSync(path)) {
 			fs.mkdirSync(path)
 		}
-		Promise.all([fs.promises.open(path + "vhs.bin", "a+")]).then((values) => {
+		Promise.all([fs.promises.open(join(path + "/vhs.bin"), "a+")]).then((values) => {
 			this.vhsFh = values[0]
 			loadedCallback(this)
 		})
