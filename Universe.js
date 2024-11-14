@@ -147,14 +147,15 @@ class Universe extends require("events") {
 		return false
 	}
 
-	loadLevel(spaceName, defaults = {}) {
+	async loadLevel(spaceName, defaults = {}) {
+		const bounds = defaults.bounds ?? [64, 64, 64]
+		const template = defaults.template ?? templates.empty
+		const templateBlocks = Buffer.from(await template(bounds))
 		const cached = this.levels.get(spaceName)
 		if (cached) return cached
 		const promise = new Promise(resolve => {
-			const bounds = defaults.bounds ?? [64, 64, 64]
-			const template = defaults.template ?? templates.empty
 			const levelClass = defaults.levelClass ?? Level
-			const level = new levelClass(bounds, template(bounds), ...(defaults.arguments ?? []))
+			const level = new levelClass(bounds, templateBlocks, ...(defaults.arguments ?? []))
 			level.template = template
 			level.name = spaceName
 			level.blockset = defaults.blockset ?? defaultBlockset
