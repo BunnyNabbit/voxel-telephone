@@ -107,12 +107,12 @@ class ViewLevel extends Level {
 			for (let turnIndex = 0; turnIndex < game.length; turnIndex++) {
 				const turn = game[turnIndex]
 				if (turn.promptType == "build") continue
-				const addIcon = (template) => {
+				const addIcon = async (template) => {
 					let voxels = null
 					if (Buffer.isBuffer(template)) {
 						voxels = template
 					} else {
-						voxels = template([64, 64, 64])
+						voxels = await template([64, 64, 64])
 					}
 					const zBlockOffset = gameIndex * 64
 					const xBlockOffset = iconPosition * 64
@@ -134,7 +134,7 @@ class ViewLevel extends Level {
 					// todo
 					let previewLevel = new Level([64, 64, 64], templates.empty([64, 64, 64]))
 					let changeRecordPromise = new Promise(resolve => {
-						previewLevel.changeRecord = new ChangeRecord(`./blockRecords/game-${turn.next}/`, null, async () => {
+						previewLevel.changeRecord = new ChangeRecord(`./blockRecords/game-${turn.next}/`, async () => {
 							await previewLevel.changeRecord.restoreBlockChangesToLevel(previewLevel)
 							previewLevel.dispose()
 							resolve(previewLevel.blocks)
@@ -147,19 +147,19 @@ class ViewLevel extends Level {
 					if (loadedLevel) {
 						loadedLevel = await loadedLevel
 						if (loadedLevel.clients.length) {
-							addIcon(templates.view.player)
+							await addIcon(templates.view.player)
 						} else {
-							addIcon(templates.view.orphaned)
+							await addIcon(templates.view.orphaned)
 						}
 						continue
 					}
 					if (isOnlyDescription) {
 						console.log(turn, turnIndex)
-						addIcon(templates.view.description)
+						await addIcon(templates.view.description)
 						continue
 					}
 					if (!isOnlyDescription) {
-						addIcon(templates.view.built)
+						await addIcon(templates.view.built)
 						continue
 					}
 					// other icons/todo
