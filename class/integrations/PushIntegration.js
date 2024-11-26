@@ -11,6 +11,7 @@ class PushIntegration {
 		gameProgression: 1,
 		chatMessage: 2,
 		startServer: 3,
+		playerConnection: 4,
 	}
 }
 

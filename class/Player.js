@@ -48,8 +48,8 @@ class Player extends require("events") {
          if (client.space) {
             client.space.removeClient(client)
          }
+         universe.pushMessage(`- ${client.authInfo.username} disconnected`, PushIntegration.interestType.playerConnection)
          universe.server.clients.forEach(otherClient => {
-            otherClient.message(`- ${client.authInfo.username} disconnected`, 0)
             otherClient.emit("playSound", universe.sounds.leave)
          })
          client.watchdog.destroy()
@@ -68,8 +68,8 @@ class Player extends require("events") {
       }
       universe.addClient(client)
       client.droneTransmitter = new DroneTransmitter(client)
+      universe.pushMessage(`+ ${client.authInfo.username} connected`, PushIntegration.interestType.playerConnection)
       universe.server.clients.forEach(otherClient => {
-         otherClient.message(`+ ${client.authInfo.username} connected`, 0)
          otherClient.emit("playSound", universe.sounds.join)
       })
       client.serverIdentification("Voxel Telephone", universe.serverConfiguration.taglines[randomIntFromInterval(0, universe.serverConfiguration.taglines.length - 1)], 0x64)
