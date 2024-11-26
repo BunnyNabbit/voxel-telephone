@@ -4,6 +4,7 @@ const Watchdog = require("./Watchdog.js")
 const DroneTransmitter = require("./DroneTransmitter.js")
 const UserRecord = require("./UserRecord.js")
 const templates = require("../templates.js")
+const PushIntegration = require("./integrations/PushIntegration.js")
 
 function randomIntFromInterval(min, max) {
    return Math.floor(Math.random() * (max - min + 1) + min)
@@ -171,8 +172,8 @@ class Player extends require("events") {
             } else {
                const userRecord = await (client.userRecord.data)
                const sound = universe.sounds[userRecord.chatSound] || universe.sounds.chat
+               universe.pushMessage(`&7${client.authInfo.username}: &f${message}`, PushIntegration.interestType.chatMessage)
                universe.server.clients.forEach(otherClient => {
-                  otherClient.message(`&7${client.authInfo.username}: &f${message}`, 0, "> ")
                   otherClient.emit("playSound", sound)
                })
             }
