@@ -42,15 +42,16 @@ class Database {
 	}
 
 	getGame(gameRootId) {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			this.gameCollection.find({ root: gameRootId }).sort({ depth: 1 }, (err, games) => {
+				if (err) return reject(err)
 				resolve(games)
 			})
 		})
 	}
 
 	getGames(cursor, limit = 9) {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			const findDocument = {
 				depth: 0
 			}
@@ -58,6 +59,7 @@ class Database {
 				findDocument._id = { $lt: cursor }
 			}
 			this.gameCollection.find(findDocument).sort({ _id: -1 }).limit(limit, async (err, games) => {
+				if (err) return reject(err)
 				let promises = []
 				games.forEach(game => {
 					promises.push(this.getGame(game._id))
@@ -68,16 +70,18 @@ class Database {
 	}
 
 	getUserGrid(username, cursor) {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			const findDocument = { promptType: "build", creators: username }
 			if (cursor) {
 				findDocument._id = { $lt: cursor }
 			}
 			this.gameCollection.find(findDocument).sort({ _id: -1 }).limit(65, async (err, buildTurns) => {
+				if (err) return reject(err)
 				let promises = []
 				buildTurns.forEach(buildTurn => { // get zhe previous turn which is zhe description
-					promises.push(new Promise(resolve => {
+					promises.push(new Promise((resolve, reject) => {
 						this.gameCollection.findOne({ _id: buildTurn.parent }, (err, describeTurn) => {
+							if (err) return reject(err)
 							resolve({ describeTurn, buildTurn })
 						})
 					}))
@@ -99,9 +103,10 @@ class Database {
 	}
 
 	async getPortals(name) {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			this.portalCollection.findOne({ _id: name }, (err, doc) => {
-				if (err || !doc) return resolve([])
+				if (err) return reject(err)
+				if (!doc) return resolve([])
 				const zones = doc.portals.map(zone => Zone.deserialize(zone))
 				resolve(zones)
 			})
@@ -109,10 +114,10 @@ class Database {
 	}
 
 	saveLevelPortals(level) {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			const portals = level.portals.map(portal => portal.serialize())
 			this.portalCollection.replaceOne({ _id: level.name }, { _id: level.name, portals }, { upsert: true }, (err,) => {
-				if (err) console.log(err)
+				if (err) return reject(err)
 				resolve()
 			})
 		})
@@ -141,9 +146,9 @@ class Database {
 	}
 
 	getInteraction(username, id, type) {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			this.interactionCollection.find({ username, forId: id, type }, (err, docs) => {
-				if (err) return resolve(null)
+				if (err) return reject(err)
 				resolve(docs[0])
 			})
 		})
@@ -170,8 +175,9 @@ class Database {
 	}
 
 	getReports(gameIds) {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			this.reportCollection.find({ _id: { $in: gameIds } }, (err, reports) => {
+				if (err) return reject(err)
 				resolve(reports)
 			})
 		})
@@ -271,8 +277,9 @@ class Database {
 				}
 			}
 		]
-		return new Promise((resolve) => {
+		return new Promise((resolve, reject) => {
 			this.ledgerCollection.aggregate(aggregation, (err, docs) => {
+				if (err) return reject(err)
 				const map = new Map()
 				docs.forEach(doc => {
 					map.set(doc._id, doc.sum)
@@ -392,10 +399,10 @@ class Database {
 
 	async saveUserRecord(userRecord) {
 		const data = await userRecord.data
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			this.userCollection.replaceOne({ _id: userRecord.username }, data, { upsert: true }, (err) => {
 				this.draining = false
-				if (err) console.error(err)
+				if (err) return reject(err)
 				resolve()
 			})
 		})
