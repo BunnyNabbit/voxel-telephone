@@ -20,6 +20,12 @@
          "userSignificance": "BunnyNabbit"
       }
    ],
+   "integrations": [
+      {
+         "class": "ServerAnnouncement",
+         "interests": ["gameProgression", "chatMessage"]
+      }
+   ],
    "port": 25565,
    "dbName": "voxeltelephone",
    "hubName": "hub",

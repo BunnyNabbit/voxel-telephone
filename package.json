@@ -10,6 +10,7 @@
   "license": "MIT",
   "repository": "github:BunnyNabbit/voxel-telephone",
   "dependencies": {
+    "@slack/web-api": "^7.7.0",
     "axios": "^0.28.1",
     "chunked-vox": "^1.0.0",
     "classicborne-server-protocol": "^0.3.0",
