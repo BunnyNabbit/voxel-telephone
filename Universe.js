@@ -57,10 +57,14 @@ class Universe extends require("events") {
 		this.integrations = []
 		if (this.serverConfiguration.integrations) {
 			this.serverConfiguration.integrations.forEach(integrationData => {
-				const integrationClass = require(`./class/integrations/${integrationData.class}.js`)
-				const interests = integrationData.interests.map(interest => PushIntegration.interestType[interest])
-				const integration = new integrationClass(interests, integrationData.authData, this)
-				this.integrations.push(integration)
+				try {
+					const integrationClass = require(`./class/integrations/${integrationData.class}.js`)
+					const interests = integrationData.interests.map(interest => PushIntegration.interestType[interest])
+					const integration = new integrationClass(interests, integrationData.authData, this)
+					this.integrations.push(integration)
+				} catch (error) {
+					console.error(error)
+				}
 			})
 		}
 		setInterval(() => {
