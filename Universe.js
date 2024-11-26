@@ -14,6 +14,7 @@ const commands = require("./commands.js")
 const cefSounds = require("./cefSounds.js")
 const Player = require("./class/Player.js")
 const Drone = require("./class/Drone.js")
+const PushIntegration = require("./class/integrations/PushIntegration.js")
 
 const builderDefaults = {
 	template: templates.builder
@@ -53,6 +54,15 @@ class Universe extends require("events") {
 			const SoundServer = require("./class/SoundServer.js")
 			this.soundServer = new SoundServer(this)
 		}
+		this.integrations = []
+		if (this.serverConfiguration.integrations) {
+			this.serverConfiguration.integrations.forEach(integrationData => {
+				const integrationClass = require(`./class/integrations/${integrationData.class}.js`)
+				const interests = integrationData.interests.map(interest => PushIntegration.interestType[interest])
+				const integration = new integrationClass(interests, integrationData.authData, this)
+				this.integrations.push(integration)
+			})
+		}
 		setInterval(() => {
 			const weightedIndex = []
 			for (const [key, value] of Object.entries(this.serverConfiguration.announcements.categoryWeight)) {
@@ -78,6 +88,7 @@ class Universe extends require("events") {
 		this.server.on("clientConnected", async (client, authInfo) => {
 			new Player(client, this, authInfo)
 		})
+		this.pushMessage(`Server started.`, PushIntegration.interestType.startServer)
 	}
 	async registerCommand(...args) {
 		this.commandRegistry.registerCommand(...args)
@@ -308,6 +319,14 @@ class Universe extends require("events") {
 				client.teleporting = false
 			}, 5000)
 		}
+	}
+
+	pushMessage(message, interest) {
+		this.integrations.filter(integration => integration.interests.has(interest)).forEach(integration => {
+			integration.postMessage(message).catch(err => {
+				console.warn("Failed to post message", err)
+			})
+		})
 	}
 }
 
