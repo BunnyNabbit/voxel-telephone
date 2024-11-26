@@ -93,6 +93,21 @@ class Universe extends require("events") {
 			new Player(client, this, authInfo)
 		})
 		this.pushMessage(`Server started.`, PushIntegration.interestType.startServer)
+		let closing = false
+		const processExit = () => {
+			if (closing) return
+			closing = true
+			Promise.race([
+				this.pushMessage("Someone is closing me!", PushIntegration.interestType.closeServer),
+				new Promise(resolve => setTimeout(() => {
+					resolve()
+				}, 3000))
+			]).then(() => {
+				process.exit()
+			})
+		}
+		process.once("SIGINT", processExit)
+		process.once("SIGTERM", processExit)
 	}
 	async registerCommand(...args) {
 		this.commandRegistry.registerCommand(...args)
@@ -326,11 +341,15 @@ class Universe extends require("events") {
 	}
 
 	pushMessage(message, interest) {
-		this.integrations.filter(integration => integration.interests.has(interest)).forEach(integration => {
-			integration.postMessage(message).catch(err => {
-				console.warn("Failed to post message", err)
+		const promise = Promise.allSettled(this.integrations.filter(integration => integration.interests.has(interest)).map(integration => integration.postMessage(message)))
+		promise.then(results => {
+			results.forEach(result => {
+				if (result.status === "rejected") {
+					console.error(`Failed to post message: ${result.reason}`)
+				}
 			})
 		})
+		return promise
 	}
 }
 
