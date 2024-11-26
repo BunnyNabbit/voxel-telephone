@@ -26,8 +26,6 @@ class Database {
 				for (let i = 0; i < docs.length; i++) {
 					const game = docs[i]
 					// check if game id is already active as a level
-					console.log(levels.keys())
-					console.log(levels.has(`game-${game.next}`))
 					if (levels.has(`game-${game.next}`) || levels.has(`game-${game._id}`)) continue
 					// check if user has skipped the current ID, or already completed the root ID.
 					const completeInteraction = await this.getInteraction(username, game.root, "complete")
