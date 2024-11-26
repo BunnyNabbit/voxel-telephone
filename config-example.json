@@ -23,7 +23,7 @@
    "integrations": [
       {
          "class": "ServerAnnouncement",
-         "interests": ["gameProgression", "chatMessage"]
+         "interests": ["gameProgression", "chatMessage", "playerConnection"]
       }
    ],
    "port": 25565,
