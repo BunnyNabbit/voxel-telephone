@@ -153,7 +153,7 @@ class Universe extends require("events") {
 		return promise
 	}
 	getHatchday() {
-		const hatchdays = this.serverConfiguration.hatchday
+		const hatchdays = this.serverConfiguration.hatchday ?? []
 		for (let index = 0; index < hatchdays.length; index++) {
 			const hatchday = hatchdays[index]
 			const { month, day } = hatchday
