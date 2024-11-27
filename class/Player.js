@@ -72,7 +72,9 @@ class Player extends require("events") {
       universe.server.clients.forEach(otherClient => {
          otherClient.emit("playSound", universe.sounds.join)
       })
-      client.serverIdentification("Voxel Telephone", universe.serverConfiguration.taglines[randomIntFromInterval(0, universe.serverConfiguration.taglines.length - 1)], 0x64)
+      let tagline = "how do i get cowboy paint off a dog ."
+      if (universe.serverConfiguration.taglines) tagline = universe.serverConfiguration.taglines[randomIntFromInterval(0, universe.serverConfiguration.taglines.length - 1)]
+      client.serverIdentification("Voxel Telephone", tagline, 0x64)
       client.userRecord = new UserRecord(client, universe.db.getUserRecordDocument(client.authInfo.username))
       client.watchdog = new Watchdog(client)
       if (client.usingCEF) {
