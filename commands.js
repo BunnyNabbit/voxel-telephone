@@ -136,7 +136,7 @@ function register(universe) {
 	universe.registerCommand(["/abort"], async (client) => {
 		if (client.space.loading) return client.message("Please wait", 0)
 		if (client.space.inVcr) {
-			client.space.blocks = await Buffer.from(client.space.template(client.space.bounds))
+			client.space.blocks = Buffer.from(await client.space.template(client.space.bounds))
 			await client.space.changeRecord.restoreBlockChangesToLevel(client.space)
 			client.space.reload()
 			client.space.inVcr = false
