@@ -146,7 +146,8 @@ class Universe extends require("events") {
 			client.message(" ", 2)
 			client.message(" ", 3)
 			promise.then(level => {
-				level.addClient(client, [60, 8, 4], [162, 254])
+				const spawn = level.getSpawnPosition()
+				level.addClient(client, spawn[0], spawn[1])
 				client.emit("playSound", (hatchday && this.sounds[hatchday.hubTrack]) || this.sounds.hubTrack)
 			})
 		}
