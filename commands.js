@@ -256,7 +256,11 @@ function register(universe) {
 		const command = message.split(" ").slice(6).join(" ")
 		if (values.length < 6 || !command) return client.message("Invalid arguments", 0)
 		const zone = new Zone(values.slice(0, 3), values.slice(3, 6))
-		zone.globalCommand = command
+		if (command == "spawnZone") { // special handling for spawnZone
+			zone.globalCommand = `spawnZone:${client.orientation[0]},${client.orientation[1]}`
+		} else { // all other commands
+			zone.globalCommand = command
+		}
 		client.space.portals.push(zone)
 		await universe.db.saveLevelPortals(client.space)
 		client.message("Zone added", 0)
