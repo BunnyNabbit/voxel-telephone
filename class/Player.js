@@ -195,7 +195,7 @@ class Player extends require("events") {
             }
             // portal detection
             client.space.portals.forEach(portal => {
-               if (portal.intersects(client.position)) {
+               if (!portal.spawnZone && portal.intersects(client.position)) {
                   if (portal.globalCommand) {
                      client.universe.commandRegistry.attemptCall(client, portal.globalCommand)
                   }
