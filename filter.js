@@ -3,7 +3,7 @@ try {
 	filterWords = require("./filterWords.json")
 } catch (error) {
 	filterWords = []
-	console.warn("filterWords.json appears to be missing. Loading without any bad words.")
+	console.warn("filterWords.json appears to be missing. Loading without any bad words.", error)
 }
 
 const blockedWords = new RegExp(filterWords.join("|"), "i")
