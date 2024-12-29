@@ -28,7 +28,7 @@ function register(universe) {
 	}
 	function reasonHasPermission(matchValue, message = "You don't have permission to build in this level!") {
 		return function (client) {
-			if (client.space.userHasPermission(client.authInfo.username) == matchValue) {
+			if (client.space.userHasPermission(client.username) == matchValue) {
 				if (message) client.message(message, 0)
 				return false
 			}

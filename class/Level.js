@@ -94,34 +94,34 @@ class Level extends require("events") {
 		this.addDrone(drone)
 		this.clients.push(client)
 	}
-	loadClient(client, position = [0, 0, 0], orientation = [0, 0]) {
-		client.loadLevel(this.blocks, this.bounds[0], this.bounds[1], this.bounds[2], false, () => {
-			client.setClickDistance(10000)
-			client.emit("levelLoaded")
+	loadClient(player, position = [0, 0, 0], orientation = [0, 0]) {
+		player.client.loadLevel(this.blocks, this.bounds[0], this.bounds[1], this.bounds[2], false, () => {
+			player.client.setClickDistance(10000)
+			player.emit("levelLoaded")
 		}, () => {
-			if (this.blockset) sendBlockset(client, this.blockset)
-			if (this.environment) client.setEnvironmentProperties(this.environment)
-			if (this.texturePackUrl) client.texturePackUrl(this.texturePackUrl)
-			client.setBlockPermission(7, 1, 1)
-			client.setBlockPermission(8, 1, 1)
-			client.setBlockPermission(9, 1, 1)
-			client.setBlockPermission(10, 1, 1)
-			client.setBlockPermission(11, 1, 1)
-			client.configureSpawnExt(-1, client.authInfo.username, position[0], position[1], position[2], orientation[0], orientation[1], client.authInfo.username)
+			if (this.blockset) sendBlockset(player.client, this.blockset)
+			if (this.environment) player.client.setEnvironmentProperties(this.environment)
+			if (this.texturePackUrl) player.client.texturePackUrl(this.texturePackUrl)
+			player.client.setBlockPermission(7, 1, 1)
+			player.client.setBlockPermission(8, 1, 1)
+			player.client.setBlockPermission(9, 1, 1)
+			player.client.setBlockPermission(10, 1, 1)
+			player.client.setBlockPermission(11, 1, 1)
+			player.client.configureSpawnExt(-1, player.authInfo.username, position[0], position[1], position[2], orientation[0], orientation[1], player.authInfo.username)
 		})
 	}
 	reload() {
-		this.clients.forEach(client => {
-			this.loadClient(client, client.position, client.orientation)
-			client.droneTransmitter.resendDrones()
+		this.clients.forEach(player => {
+			this.loadClient(player, player.position, player.orientation)
+			player.droneTransmitter.resendDrones()
 		})
 	}
 	setBlock(position, block, excludeClients = [], saveToRecord = true) {
 		this.blocks.writeUInt8(block, position[0] + this.bounds[0] * (position[2] + this.bounds[2] * position[1]))
 		// callback(block, position[0], position[1], position[2])
-		this.clients.forEach(client => {
-			if (!excludeClients.includes(client)) {
-				client.setBlock(block, position[0], position[1], position[2])
+		this.clients.forEach(player => {
+			if (!excludeClients.includes(player)) {
+				player.client.setBlock(block, position[0], position[1], position[2])
 			}
 		})
 		if (saveToRecord) {
