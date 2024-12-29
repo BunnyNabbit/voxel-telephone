@@ -98,21 +98,21 @@ class Universe extends require("events") {
 		this.commandRegistry.registerCommand(...args)
 	}
 
-	addClient(client) {
+	addClient(player) {
 		for (let i = 0; i < 127; i++) {
-			if (!this.server.clients.some(client => client.netId == i)) {
-				client.netId = i
-				this.server.clients.forEach(otherClient => {
-					client.addPlayerName(otherClient.netId, otherClient.authInfo.username, `&7${otherClient.authInfo.username}`)
+			if (!this.server.clients.some(player => player.netId == i)) {
+				player.netId = i
+				this.server.clients.forEach(otherPlayer => {
+					player.client.addPlayerName(otherPlayer.netId, otherPlayer.username, `&7${otherPlayer.username}`)
 				})
-				this.server.clients.push(client)
-				client.addPlayerName(0xff, client.authInfo.username, `&7${client.authInfo.username}`)
-				this.server.clients.forEach(anyClient => {
-					if (anyClient != client) {
-						anyClient.addPlayerName(i, client.authInfo.username, `&7${client.authInfo.username}`)
+				this.server.clients.push(player)
+				player.client.addPlayerName(0xff, player.username, `&7${player.username}`)
+				this.server.clients.forEach(anyPlayer => {
+					if (anyPlayer != player) {
+						anyPlayer.addPlayerName(i, player.username, `&7${player.username}`)
 					}
 				})
-				this.emit("clientAdded", client)
+				this.emit("clientAdded", player)
 				return
 			}
 		}

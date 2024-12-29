@@ -16,188 +16,189 @@ class Player extends require("events") {
       this.client = client
       this.universe = universe
       this.client.player = this
-      this.ready = this.initialize(client, universe, authInfo)
       this.authInfo = authInfo
+      this.username = authInfo.username
+      this.ready = this.initialize(client, universe, authInfo)
    }
    async initialize(client, universe, authInfo) {
       const verifyUsernames = (universe.serverConfiguration.verifyUsernames && universe.heartbeat)
-      if (client.httpRequest) {
-         client.address = client.httpRequest.headers["x-forwarded-for"]
+      if (this.httpRequest) {
+         this.address = this.client.httpRequest.headers["x-forwarded-for"]
       } else {
-         client.address = client.socket.remoteAddress
+         this.address = this.client.socket.remoteAddress
       }
-      if (universe.server.clients.filter(otherClient => otherClient.address == client.address).length >= universe.serverConfiguration.maxIpConnections) {
-         return client.disconnect("Too many connections!")
+      if (universe.server.clients.filter(otherClient => otherClient.address == this.address).length >= universe.serverConfiguration.maxIpConnections) {
+         return this.disconnect("Too many connections!")
       }
       if (universe.server.clients.some(otherClient => otherClient.authInfo.username == authInfo.username)) {
-         return client.disconnect("Another client already has that name")
+         return this.disconnect("Another client already has that name")
       }
       if (verifyUsernames && crypto.createHash("md5").update(universe.heartbeat.salt + authInfo.username).digest("hex") !== authInfo.key) {
          console.log("Connection failed")
-         client.message("It appears that authorization failed. Are you connecting via the ClassiCube server list? Try refreshing it.", 0)
-         client.message(`You will be disconnected in 10 seconds.`, 0)
+         this.message("It appears that authorization failed. Are you connecting via the ClassiCube server list? Try refreshing it.", 0)
+         this.message(`You will be disconnected in 10 seconds.`, 0)
          setTimeout(() => {
-            client.disconnect("Authorization failed. Please check chat logs.")
+            this.disconnect("Authorization failed. Please check chat logs.")
          }, 10000)
          return
       }
-      if (!authInfo.extensions) return client.disconnect("Enable ClassiCube enhanced mode or use other supported client")
+      if (!authInfo.extensions) return this.disconnect("Enable ClassiCube enhanced mode or use other supported client")
       console.log(authInfo.username, "connected")
-      client.on("close", () => {
-         client.destroyed = true
-         if (client.space) {
-            client.space.removeClient(client)
+      this.client.on("close", () => {
+         this.destroyed = true
+         if (this.space) {
+            this.space.removeClient(this)
          }
-         universe.pushMessage(`- ${client.authInfo.username} disconnected`, PushIntegration.interestType.playerConnection)
+         universe.pushMessage(`- ${this.authInfo.username} disconnected`, PushIntegration.interestType.playerConnection)
          universe.server.clients.forEach(otherClient => {
             otherClient.emit("playSound", universe.sounds.leave)
          })
-         client.watchdog.destroy()
-         universe.removeClient(client)
+         this.watchdog.destroy()
+         universe.removeClient(this)
          console.log("left")
       })
-      client.universe = universe
-      client.usingCEF = universe.soundServer && client.appName.includes(" cef")
-      client.customBlockSupport(1)
-      client.authInfo = authInfo
-      client.message("Welcome to Voxel Telephone. A multiplayer game where you build what you hear and describe what you see. Watch as creations transform through collaborative misinterpretation!", 0)
-      universe.commandRegistry.attemptCall(client, "/rules")
+      this.universe = universe
+      this.usingCEF = universe.soundServer && this.client.appName.includes(" cef")
+      this.client.customBlockSupport(1)
+      this.authInfo = authInfo
+      this.message("Welcome to Voxel Telephone. A multiplayer game where you build what you hear and describe what you see. Watch as creations transform through collaborative misinterpretation!", 0)
+      universe.commandRegistry.attemptCall(this, "/rules")
       if (universe.serverConfiguration.listOperators.includes(authInfo.username)) {
-         client.message("* You are considered a list operator.", 0)
-         client.message("* To force the heartbeat to post zero players, use /forcezero", 0)
+         this.message("* You are considered a list operator.", 0)
+         this.message("* To force the heartbeat to post zero players, use /forcezero", 0)
       }
-      universe.addClient(client)
-      client.droneTransmitter = new DroneTransmitter(client)
-      universe.pushMessage(`+ ${client.authInfo.username} connected`, PushIntegration.interestType.playerConnection)
+      universe.addClient(this)
+      this.droneTransmitter = new DroneTransmitter(this)
+      universe.pushMessage(`+ ${this.username} connected`, PushIntegration.interestType.playerConnection)
       universe.server.clients.forEach(otherClient => {
          otherClient.emit("playSound", universe.sounds.join)
       })
       let tagline = "how do i get cowboy paint off a dog ."
       if (universe.serverConfiguration.taglines) tagline = universe.serverConfiguration.taglines[randomIntFromInterval(0, universe.serverConfiguration.taglines.length - 1)]
-      client.serverIdentification("Voxel Telephone", tagline, 0x64)
-      client.userRecord = new UserRecord(client, universe.db.getUserRecordDocument(client.authInfo.username))
-      client.watchdog = new Watchdog(client)
-      if (client.usingCEF) {
+      this.client.serverIdentification("Voxel Telephone", tagline, 0x64)
+      this.userRecord = new UserRecord(this, universe.db.getUserRecordDocument(this.authInfo.username))
+      this.watchdog = new Watchdog(this)
+      if (this.usingCEF) {
          // zhis is a pretty weird trick. usually zhe CEF plugin unloads windows on level loads, but it can be prevented if its initialization command is issued right before level loading.
          // zhis trick doesn't work if its zhe first level to be loaded, so a dummy level is loaded to get zhings going
          // i don't even know. but its neat since zhe sound interface doesn't need to be recreated everytime a level gets loaded, making for much seamless transitions.
          // it also seems to hide zhe "Now viewing" message, which might be problematic in some ozher context since zhe plugin prevents you from using its silence argument on non-allowlisted links. But whatever! Weh heh heh.
          const { processLevel } = require("classicborne-server-protocol/utils.js")
          const emptyLevelBuffer = await processLevel(templates.empty([64, 64, 64]), 64, 64, 64)
-         client.loadLevel(await emptyLevelBuffer, 64, 64, 64, true)
+         this.client.loadLevel(await emptyLevelBuffer, 64, 64, 64, true)
          const waitPromise = new Promise(resolve => setTimeout(resolve, 300))
          // allows zhe client to receive and load zhe dummy level. might be neater to wait for a position update, but not really possible here as zhe client hasn't received its own proper spawn position yet.
          await waitPromise
-         client.emit("soundLoadHack")
-         if (client.destroyed) return
+         this.emit("soundLoadHack")
+         if (this.destroyed) return
       }
-      universe.gotoHub(client)
-      client.on("setBlock", operation => {
-         if (client.watchdog.rateOperation()) return
-         if (!client.space) return
+      universe.gotoHub(this)
+      this.client.on("setBlock", operation => {
+         if (this.watchdog.rateOperation()) return
+         if (!this.space) return
          const operationPosition = [operation.x, operation.y, operation.z]
          let block = operation.type
-         if (!client.space.userHasPermission(client.authInfo.username)) {
-            client.setBlock(client.space.getBlock(operationPosition), operationPosition[0], operationPosition[1], operationPosition[2])
-            return client.message("You don't have permission to build in this level", 0)
+         if (!this.space.userHasPermission(this.authInfo.username)) {
+            this.client.setBlock(this.space.getBlock(operationPosition), operationPosition[0], operationPosition[1], operationPosition[2])
+            return this.message("You don't have permission to build in this level", 0)
          }
          if (operationPosition.some(value => value > 63)) {
-            client.disconnect("Illegal position received")
+            this.disconnect("Illegal position received")
             return
          }
          if (operation.mode == 0) {
             block = 0
          }
-         if (client.space.inVcr) {
-            client.setBlock(client.space.getBlock(operationPosition), operationPosition[0], operationPosition[1], operationPosition[2])
-            client.message("Unable to place block. Level is in VCR mode", 0)
+         if (this.space.inVcr) {
+            this.client.setBlock(this.space.getBlock(operationPosition), operationPosition[0], operationPosition[1], operationPosition[2])
+            this.message("Unable to place block. Level is in VCR mode", 0)
             return
          }
-         if (client.space.blocking) {
-            client.setBlock(client.space.getBlock(operationPosition), operationPosition[0], operationPosition[1], operationPosition[2])
-            if (client.space.inferCurrentCommand(operationPosition) !== "inferred position") {
-               client.message("Unable to place block. Command in level is expecting additional arguments", 0)
+         if (this.space.blocking) {
+            this.client.setBlock(this.space.getBlock(operationPosition), operationPosition[0], operationPosition[1], operationPosition[2])
+            if (this.space.inferCurrentCommand(operationPosition) !== "inferred position") {
+               this.message("Unable to place block. Command in level is expecting additional arguments", 0)
             }
             return
          }
-         if (client.paintMode) {
-            client.space.setBlock(operationPosition, client.heldBlock, [])
+         if (this.paintMode) {
+            this.space.setBlock(operationPosition, this.heldBlock, [])
          } else {
-            client.space.setBlock(operationPosition, block, [client])
+            this.space.setBlock(operationPosition, block, [client])
          }
       })
-      client.on("message", async (message) => {
-         if (client.watchdog.rateOperation(10)) return
-         console.log(client.authInfo.username, message)
-         if (await universe.commandRegistry.attemptCall(client, message)) return
+      this.client.on("message", async (message) => {
+         if (this.watchdog.rateOperation(10)) return
+         console.log(this.authInfo.username, message)
+         if (await universe.commandRegistry.attemptCall(this, message)) return
          // a few hardcoded commands
-         if (message == "/forcezero" && universe.serverConfiguration.listOperators.includes(client.authInfo.username) && universe.heartbeat) {
+         if (message == "/forcezero" && universe.serverConfiguration.listOperators.includes(this.authInfo.username) && universe.heartbeat) {
             universe.heartbeat.forceZero = true
-            console.log(`! ${client.authInfo.username} forced heartbeat players to zero`)
-            universe.server.clients.forEach(otherClient => otherClient.message(`! ${client.authInfo.username} forced heartbeat players to zero`, 0))
+            console.log(`! ${this.authInfo.username} forced heartbeat players to zero`)
+            universe.server.clients.forEach(otherClient => otherClient.message(`! ${this.authInfo.username} forced heartbeat players to zero`, 0))
             return
          }
-         if (client.watchdog.rateOperation(20)) return
+         if (this.watchdog.rateOperation(20)) return
          // pass this to the level
          if (message.startsWith("/")) {
-            if (!client.space) return
-            if (!client.space.userHasPermission(client.authInfo.username)) return client.message("You don't have permission to build in this level", 0)
-            if (client.space.inVcr) {
-               client.message("Unable to use commands. Level is in VCR mode", 0)
+            if (!this.space) return
+            if (!this.space.userHasPermission(this.authInfo.username)) return this.message("You don't have permission to build in this level", 0)
+            if (this.space.inVcr) {
+               this.message("Unable to use commands. Level is in VCR mode", 0)
                return
             }
-            client.space.interpretCommand(message.replace("/", ""))
+            this.space.interpretCommand(message.replace("/", ""))
          } else {
             if (filter.matches(message)) {
                const filterMessages = universe.serverConfiguration.replacementMessages
-               universe.server.clients.forEach(otherClient => otherClient.message(`&7${client.authInfo.username}: &f${filterMessages[0, randomIntFromInterval(0, filterMessages.length - 1)]}`, 0))
+               universe.server.clients.forEach(otherClient => otherClient.message(`&7${this.authInfo.username}: &f${filterMessages[0, randomIntFromInterval(0, filterMessages.length - 1)]}`, 0))
                return
             }
-            if (client.space?.game?.promptType == "build") {
-               client.currentDescription = message
-               client.message("Description:", 0)
-               client.message(message, 0)
-               client.message(message, 1)
-               client.message("Use /finish to confirm your description for this build", 3)
-               client.message("Use /finish to confirm your description for this build", 0)
-            } else if (client.creating) {
-               client.creating = false
-               client.canCreate = false
-               universe.canCreateCooldown.add(client.authInfo.username)
-               client.message("Your description has been submitted!", 0)
-               const game = await universe.db.createNewGame(message, client.authInfo.username)
-               // addInteraction(client.authInfo.username, game._id, "complete")
-               universe.db.addInteraction(client.authInfo.username, game._id, "skip")
+            if (this.space?.game?.promptType == "build") {
+               this.currentDescription = message
+               this.message("Description:", 0)
+               this.message(message, 0)
+               this.message(message, 1)
+               this.message("Use /finish to confirm your description for this build", 3)
+               this.message("Use /finish to confirm your description for this build", 0)
+            } else if (this.creating) {
+               this.creating = false
+               this.canCreate = false
+               universe.canCreateCooldown.add(this.authInfo.username)
+               this.message("Your description has been submitted!", 0)
+               const game = await universe.db.createNewGame(message, this.authInfo.username)
+               // addInteraction(this.authInfo.username, game._id, "complete")
+               universe.db.addInteraction(this.authInfo.username, game._id, "skip")
                setTimeout(() => {
-                  universe.canCreateCooldown.delete(client.authInfo.username)
+                  universe.canCreateCooldown.delete(this.authInfo.username)
                }, 3600000) // one hour
             } else {
-               const userRecord = await (client.userRecord.data)
+               const userRecord = await (this.userRecord.data)
                const sound = universe.sounds[userRecord.chatSound] || universe.sounds.chat
-               universe.pushMessage(`&7${client.authInfo.username}: &f${message}`, PushIntegration.interestType.chatMessage)
+               universe.pushMessage(`&7${this.authInfo.username}: &f${message}`, PushIntegration.interestType.chatMessage)
                universe.server.clients.forEach(otherClient => {
                   otherClient.emit("playSound", sound)
                })
             }
          }
       })
-      client.position = [0, 0, 0]
-      client.orientation = [0, 0]
-      client.paintMode = false
-      client.on("position", (position, orientation, heldBlock) => {
-         client.position = [position.x, position.y, position.z]
-         client.heldBlock = heldBlock
-         client.orientation = [orientation.yaw, orientation.pitch]
-         if (client.space) {
-            const controlledDrone = client.space.clientDrones.get(client)
+      this.position = [0, 0, 0]
+      this.orientation = [0, 0]
+      this.paintMode = false
+      this.client.on("position", (position, orientation, heldBlock) => {
+         this.position = [position.x, position.y, position.z]
+         this.heldBlock = heldBlock
+         this.orientation = [orientation.yaw, orientation.pitch]
+         if (this.space) {
+            const controlledDrone = this.space.clientDrones.get(this)
             if (controlledDrone) {
                controlledDrone.setPosition(position, orientation)
             }
             // portal detection
-            client.space.portals.forEach(portal => {
-               if (!portal.spawnZone && portal.intersects(client.position)) {
+            this.space.portals.forEach(portal => {
+               if (!portal.spawnZone && portal.intersects(this.position)) {
                   if (portal.globalCommand) {
-                     client.universe.commandRegistry.attemptCall(client, portal.globalCommand)
+                     this.universe.commandRegistry.attemptCall(this, portal.globalCommand)
                   }
                }
             })
@@ -205,9 +206,28 @@ class Player extends require("events") {
       })
       const hatchday = universe.getHatchday()
       if (hatchday) {
-         client.message(hatchday.joinMessage, 0)
+         this.message(hatchday.joinMessage)
       }
    }
+   // probably shouldn't do zhat. but whatever
+   // customBlockSupport(version) {
+   //    this.client.customBlockSupport(version)
+   // }
+   // except for zhis one. we should try to improve on crappy protocol functions. not duplicate zhem.
+   message(message, types = [0]) {
+      if (typeof types === "number") {
+         types = [types]
+      }
+      types.forEach(type => {
+         this.client.message(message, type)
+      })
+   }
+   // addPlayerName(id, username, listName, groupName = "", groupOrder = 0) {
+   //    this.client.addPlayerName(id, username, listName, groupName, groupOrder)
+   // }
+   // serverIdentification(serverName, motd, userType) {
+   //    this.client.serverIdentification(serverName, motd, userType)
+   // }
 }
 
 module.exports = Player
