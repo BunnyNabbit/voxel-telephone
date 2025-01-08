@@ -188,7 +188,7 @@ function register(universe) {
 	universe.registerCommand(["/clients"], async (client) => {
 		client.message("&ePlayers using:", 0)
 		universe.server.clients.forEach(otherClient => {
-			client.message(`&e  ${otherClient.appName}: &f${otherClient.authInfo.username}`, 0, "> ")
+			client.message(`&e  ${otherClient.client.appName}: &f${otherClient.authInfo.username}`, 0, "> ")
 		})
 	})
 	universe.registerCommand(["/vcr"], async (client) => {
