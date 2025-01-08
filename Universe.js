@@ -109,7 +109,7 @@ class Universe extends require("events") {
 				player.client.addPlayerName(0xff, player.username, `&7${player.username}`)
 				this.server.clients.forEach(anyPlayer => {
 					if (anyPlayer != player) {
-						anyPlayer.addPlayerName(i, player.username, `&7${player.username}`)
+						anyPlayer.client.addPlayerName(i, player.username, `&7${player.username}`)
 					}
 				})
 				this.emit("clientAdded", player)
