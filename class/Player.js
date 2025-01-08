@@ -21,11 +21,6 @@ class Player extends require("events") {
    }
    async initialize(client, universe, authInfo) {
       const verifyUsernames = (universe.serverConfiguration.verifyUsernames && universe.heartbeat)
-      if (client.httpRequest) {
-         client.address = client.httpRequest.headers["x-forwarded-for"]
-      } else {
-         client.address = client.socket.remoteAddress
-      }
       if (universe.server.clients.filter(otherClient => otherClient.address == client.address).length >= universe.serverConfiguration.maxIpConnections) {
          return client.disconnect("Too many connections!")
       }
