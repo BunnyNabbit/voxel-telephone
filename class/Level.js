@@ -63,16 +63,16 @@ class Level extends require("events") {
 			client.droneTransmitter.addDrone(drone)
 		})
 	}
-	removeClient(client) {
-		client.space = null
-		const index = this.clients.indexOf(client)
+	removeClient(player) {
+		player.space = null
+		const index = this.clients.indexOf(player)
 		if (index) this.clients.splice(index, 1)
 		if (index !== -1) this.clients.splice(index, 1)
-		const drone = this.clientDrones.get(client)
-		this.clientDrones.delete(client)
+		const drone = this.clientDrones.get(player.client)
+		this.clientDrones.delete(player)
 		this.removeDrone(drone)
-		client.droneTransmitter.clearDrones()
-		this.emit("clientRemoved", client)
+		player.droneTransmitter.clearDrones()
+		this.emit("clientRemoved", player)
 	}
 	removeDrone(drone) {
 		drone.destroy()
@@ -84,15 +84,15 @@ class Level extends require("events") {
 		})
 		this.drones.add(drone)
 	}
-	addClient(client, position = [0, 0, 0], orientation = [0, 0]) {
-		this.emit("clientAdded", client)
-		client.space = this
-		this.loadClient(client, position, orientation)
-		this.sendDrones(client)
-		const drone = new Drone({ name: "&7" + client.authInfo.username })
-		this.clientDrones.set(client, drone)
+	addPlayer(player, position = [0, 0, 0], orientation = [0, 0]) {
+		this.emit("clientAdded", player)
+		player.space = this
+		this.loadClient(player, position, orientation)
+		this.sendDrones(player)
+		const drone = new Drone({ name: "&7" + player.authInfo.username })
+		this.clientDrones.set(player.client, drone)
 		this.addDrone(drone)
-		this.clients.push(client)
+		this.clients.push(player)
 	}
 	loadClient(player, position = [0, 0, 0], orientation = [0, 0]) {
 		player.client.loadLevel(this.blocks, this.bounds[0], this.bounds[1], this.bounds[2], false, () => {
