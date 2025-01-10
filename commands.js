@@ -92,7 +92,7 @@ function register(universe) {
 					return
 				}
 				universe.pushMessage(`${player.authInfo.username} finished a turn (Build)`, PushIntegration.interestType.gameProgression)
-				universe.server.clients.forEach(otherPlayer => {
+				universe.server.players.forEach(otherPlayer => {
 					otherPlayer.emit("playSound", player.universe.sounds.complete)
 				})
 				universe.db.continueGame(player.space.game, player.space.game.next, gameType, player.authInfo.username)
@@ -106,7 +106,7 @@ function register(universe) {
 				}
 				universe.db.addInteraction(player.authInfo.username, player.space.game._id, "described")
 				universe.pushMessage(`${player.authInfo.username} finished a turn (Describe)`, PushIntegration.interestType.gameProgression)
-				universe.server.clients.forEach(otherPlayer => {
+				universe.server.players.forEach(otherPlayer => {
 					otherPlayer.emit("playSound", player.universe.sounds.complete)
 				})
 				await universe.db.continueGame(player.space.game, player.space.game.next, gameType, player.authInfo.username, player.currentDescription)
@@ -187,7 +187,7 @@ function register(universe) {
 	}, makeMultiValidator([reasonHasPermission(false), reasonVcr(true, "Unable to place block. Level is in VCR mode"), reasonLevelBlocking(true, "Unable to place block. Command in level is expecting additional arguments")]))
 	universe.registerCommand(["/clients"], async (player) => {
 		player.message("&ePlayers using:", 0)
-		universe.server.clients.forEach(otherPlayer => {
+		universe.server.players.forEach(otherPlayer => {
 			player.message(`&e  ${otherPlayer.client.appName}: &f${otherPlayer.authInfo.username}`, 0, "> ")
 		})
 	})

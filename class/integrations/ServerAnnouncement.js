@@ -6,7 +6,7 @@ class ServerAnnouncement extends PushIntegration {
 	}
 
 	async postMessage(text) {
-		this.universe.server.clients.forEach(client => {
+		this.universe.server.players.forEach(client => {
 			client.message(text, 0)
 		})
 	}

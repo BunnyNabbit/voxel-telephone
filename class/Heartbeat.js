@@ -18,13 +18,13 @@ class Heartbeat {
 		console.log(this.softwareName)
 	}
 	postHeartbeat() {
-		let clientCount = Math.min(this.universe.server.clients.length, 32)
-		if (this.forceZero) clientCount = 0
+		let playerCount = Math.min(this.universe.server.players.length, 32)
+		if (this.forceZero) playerCount = 0
 		const pingURL = this.urlBase
 		const form = {
 			name: this.universe.serverConfiguration.serverName,
 			port: this.universe.serverConfiguration.port.toString(),
-			users: clientCount.toString(),
+			users: playerCount.toString(),
 			max: "64",
 			software: this.softwareName,
 			public: "true",
