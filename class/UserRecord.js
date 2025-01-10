@@ -1,12 +1,12 @@
 class UserRecord {
-	constructor(client, data) {
-		this.client = client
-		this.username = client.authInfo.username
+	constructor(player, data) {
+		this.player = player
+		this.username = player.authInfo.username
 		this.draining = false
 		this.new = false
 		this.data = data
-		client.on("close", () => {
-			this.save();
+		player.client.on("close", () => {
+			this.save()
 		})
 	}
 	static getDefaultRecord(username) {
@@ -26,7 +26,7 @@ class UserRecord {
 	}
 	async save() {
 		await this.data
-		await this.client.server.universe.db.saveUserRecord(this)
+		await this.player.client.server.universe.db.saveUserRecord(this)
 		this.draining = true
 	}
 }
