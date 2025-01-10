@@ -52,9 +52,9 @@ class Level extends require("events") {
 		this.clientDrones = new Map()
 		this.blocking = false
 	}
-	messageAll(message) {
+	messageAll(message, types = [0]) {
 		this.clients.forEach(client => {
-			client.message(message, 0)
+			client.message(message, types)
 		})
 		this.playSound("toggle")
 	}
@@ -128,7 +128,7 @@ class Level extends require("events") {
 			this.changeRecord.addBlockChange(position, block)
 			if (!this.changeRecord.draining && this.changeRecord.currentActionCount > 1024) {
 				this.changeRecord.flushChanges().then((bytes) => {
-					this.messageAll(`Changes drained. ${bytes} bytes saved to VHS record`, 0)
+					this.messageAll(`Changes drained. ${bytes} bytes saved to VHS record`)
 				})
 			}
 		}
@@ -151,7 +151,7 @@ class Level extends require("events") {
 			this.inferCurrentCommand()
 		} else if (command) {
 			const commandName = command.toLowerCase()
-			this.messageAll(`Unable to find command with name ${commandName} for level ${this.name}`, 0)
+			this.messageAll(`Unable to find command with name ${commandName} for level ${this.name}`)
 		}
 	}
 	inferCurrentCommand(providedData = 0) {
@@ -190,11 +190,11 @@ class Level extends require("events") {
 				return "inferred position"
 			} else {
 				if (!this.loading)
-					this.messageAll(`Place or break a block to mark the position for ${currentType}`, 0)
+					this.messageAll(`Place or break a block to mark the position for ${currentType}`)
 				return
 			}
 		}
-		this.messageAll(`Command needs ${currentType}, and it doesn't seem implemented :(`, 0)
+		this.messageAll(`Command needs ${currentType}, and it doesn't seem implemented :(`)
 	}
 	static getCommandClassFromName(command) {
 		command = command.split(" ")
@@ -223,7 +223,7 @@ class Level extends require("events") {
 		}
 		if (!this.changeRecord.draining && this.changeRecord.currentActionCount > 1024) {
 			this.changeRecord.flushChanges().then((bytes) => {
-				this.messageAll(`Changes drained. ${bytes} bytes saved to VHS record`, 0)
+				this.messageAll(`Changes drained. ${bytes} bytes saved to VHS record`)
 			})
 		}
 		this.currentCommand = null

@@ -25,9 +25,7 @@ class ViewLevel extends Level {
 			}
 			const positionEventListener = this.positionEventListeners.get(client)
 			client.removeListener("position", positionEventListener)
-			client.message(" ", 11)
-			client.message(" ", 12)
-			client.message(" ", 13)
+			client.message(" ", [11, 12, 13])
 		})
 		this.on("clientAdded", async (client) => {
 			const onPosition = (position) => {
@@ -48,11 +46,8 @@ class ViewLevel extends Level {
 							attribution += ` | Build: ${client.selectedTurns.build.creators.join()}`
 						}
 						client.message(attribution, 12)
-						// client.message(" ", 11)
 					} else {
-						client.message(" ", 13)
-						client.message(" ", 12)
-						// client.message(" ", 11)
+						client.message(" ", [12, 13])
 					}
 				}
 				if (!client.viewDebounce && position.z > 512) {

@@ -29,7 +29,7 @@ class SoundTransmitter extends require("events") {
 
 	createWindow() {
 		const cefCommand = `cef create -t -s ${this.client.universe.serverConfiguration.sounds.audioPlayerBaseURL}?${this.key}`
-		this.client.message(cefCommand, 0)
+		this.client.message(cefCommand)
 	}
 
 	enqueueEvent(sound) {

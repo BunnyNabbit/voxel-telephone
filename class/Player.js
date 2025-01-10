@@ -30,8 +30,8 @@ class Player extends require("events") {
       }
       if (verifyUsernames && crypto.createHash("md5").update(universe.heartbeat.salt + authInfo.username).digest("hex") !== authInfo.key) {
          console.log("Connection failed")
-         this.message("It appears that authorization failed. Are you connecting via the ClassiCube server list? Try refreshing it.", 0)
-         this.message(`You will be disconnected in 10 seconds.`, 0)
+         this.message("It appears that authorization failed. Are you connecting via the ClassiCube server list? Try refreshing it.")
+         this.message(`You will be disconnected in 10 seconds.`)
          setTimeout(() => {
             this.client.disconnect("Authorization failed. Please check chat logs.")
          }, 10000)
@@ -56,11 +56,11 @@ class Player extends require("events") {
       this.usingCEF = universe.soundServer && this.client.appName.includes(" cef")
       this.client.customBlockSupport(1)
       this.authInfo = authInfo
-      this.message("Welcome to Voxel Telephone. A multiplayer game where you build what you hear and describe what you see. Watch as creations transform through collaborative misinterpretation!", 0)
+      this.message("Welcome to Voxel Telephone. A multiplayer game where you build what you hear and describe what you see. Watch as creations transform through collaborative misinterpretation!")
       universe.commandRegistry.attemptCall(this, "/rules")
       if (universe.serverConfiguration.listOperators.includes(authInfo.username)) {
-         this.message("* You are considered a list operator.", 0)
-         this.message("* To force the heartbeat to post zero players, use /forcezero", 0)
+         this.message("* You are considered a list operator.")
+         this.message("* To force the heartbeat to post zero players, use /forcezero")
       }
       universe.addPlayer(this)
       this.droneTransmitter = new DroneTransmitter(this.client)
@@ -95,7 +95,7 @@ class Player extends require("events") {
          let block = operation.type
          if (!this.space.userHasPermission(this.authInfo.username)) {
             this.client.setBlock(this.space.getBlock(operationPosition), operationPosition[0], operationPosition[1], operationPosition[2])
-            return this.message("You don't have permission to build in this level", 0)
+            return this.message("You don't have permission to build in this level")
          }
          if (operationPosition.some(value => value > 63)) {
             this.client.disconnect("Illegal position received")
@@ -106,13 +106,13 @@ class Player extends require("events") {
          }
          if (this.space.inVcr) {
             this.client.setBlock(this.space.getBlock(operationPosition), operationPosition[0], operationPosition[1], operationPosition[2])
-            this.message("Unable to place block. Level is in VCR mode", 0)
+            this.message("Unable to place block. Level is in VCR mode")
             return
          }
          if (this.space.blocking) {
             this.client.setBlock(this.space.getBlock(operationPosition), operationPosition[0], operationPosition[1], operationPosition[2])
             if (this.space.inferCurrentCommand(operationPosition) !== "inferred position") {
-               this.message("Unable to place block. Command in level is expecting additional arguments", 0)
+               this.message("Unable to place block. Command in level is expecting additional arguments")
             }
             return
          }
@@ -130,37 +130,35 @@ class Player extends require("events") {
          if (message == "/forcezero" && universe.serverConfiguration.listOperators.includes(this.authInfo.username) && universe.heartbeat) {
             universe.heartbeat.forceZero = true
             console.log(`! ${this.authInfo.username} forced heartbeat players to zero`)
-            universe.server.players.forEach(otherClient => otherClient.message(`! ${this.authInfo.username} forced heartbeat players to zero`, 0))
+            universe.server.players.forEach(otherClient => otherClient.message(`! ${this.authInfo.username} forced heartbeat players to zero`))
             return
          }
          if (this.watchdog.rateOperation(20)) return
          // pass this to the level
          if (message.startsWith("/")) {
             if (!this.space) return
-            if (!this.space.userHasPermission(this.authInfo.username)) return this.message("You don't have permission to build in this level", 0)
+            if (!this.space.userHasPermission(this.authInfo.username)) return this.message("You don't have permission to build in this level")
             if (this.space.inVcr) {
-               this.message("Unable to use commands. Level is in VCR mode", 0)
+               this.message("Unable to use commands. Level is in VCR mode")
                return
             }
             this.space.interpretCommand(message.replace("/", ""))
          } else {
             if (filter.matches(message)) {
                const filterMessages = universe.serverConfiguration.replacementMessages
-               universe.server.players.forEach(otherClient => otherClient.message(`&7${this.authInfo.username}: &f${filterMessages[0, randomIntFromInterval(0, filterMessages.length - 1)]}`, 0))
+               universe.server.players.forEach(otherClient => otherClient.message(`&7${this.authInfo.username}: &f${filterMessages[0, randomIntFromInterval(0, filterMessages.length - 1)]}`))
                return
             }
             if (this.space?.game?.promptType == "build") {
                this.currentDescription = message
-               this.message("Description:", 0)
-               this.message(message, 0)
-               this.message(message, 1)
-               this.message("Use /finish to confirm your description for this build", 3)
-               this.message("Use /finish to confirm your description for this build", 0)
+               this.message("Description:")
+               this.message(message, [0, 1])
+               this.message("Use /finish to confirm your description for this build", [0, 3])
             } else if (this.creating) {
                this.creating = false
                this.canCreate = false
                universe.canCreateCooldown.add(this.authInfo.username)
-               this.message("Your description has been submitted!", 0)
+               this.message("Your description has been submitted!")
                const game = await universe.db.createNewGame(message, this.authInfo.username)
                // addInteraction(this.authInfo.username, game._id, "complete")
                universe.db.addInteraction(this.authInfo.username, game._id, "skip")

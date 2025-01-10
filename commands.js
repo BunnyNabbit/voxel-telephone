@@ -12,15 +12,15 @@ const help = require("./help.js")
 
 function register(universe) {
 	universe.registerCommand(["/rules"], (player) => {
-		player.message("== Rules", 0)
-		player.message("The point of the game is to see how builds transform when users take turn describing and building.", 0)
-		player.message("1. Do not intentionally derail the games. Build and describe as you genuinely see it.", 0)
-		player.message("2. Builds and prompts must not be inappropriate.", 0)
+		player.message("== Rules")
+		player.message("The point of the game is to see how builds transform when users take turn describing and building.")
+		player.message("1. Do not intentionally derail the games. Build and describe as you genuinely see it.")
+		player.message("2. Builds and prompts must not be inappropriate.")
 	})
 	function reasonVcr(matchValue, message) {
 		return function (player) {
 			if (player.space.inVcr == matchValue) {
-				if (message) player.message(message, 0)
+				if (message) player.message(message)
 				return false
 			}
 			return true
@@ -29,7 +29,7 @@ function register(universe) {
 	function reasonHasPermission(matchValue, message = "You don't have permission to build in this level!") {
 		return function (player) {
 			if (player.space.userHasPermission(player.username) == matchValue) {
-				if (message) player.message(message, 0)
+				if (message) player.message(message)
 				return false
 			}
 			return true
@@ -41,14 +41,14 @@ function register(universe) {
 			if (userRecord.permissions[matchValue]) {
 				return true
 			}
-			if (message) player.message(message, 0)
+			if (message) player.message(message)
 			return false
 		}
 	}
 	function reasonLevelBlocking(matchValue, message) {
 		return function (player) {
 			if (player.space.blocking == matchValue) {
-				if (message) player.message(message, 0)
+				if (message) player.message(message)
 				return false
 			}
 			return true
@@ -57,7 +57,7 @@ function register(universe) {
 	function reasonVcrDraining(matchValue, message = "VCR is busy. Try again later?") {
 		return function (player) {
 			if (player.space.changeRecord.draining == matchValue) {
-				if (message) player.message(message, 0)
+				if (message) player.message(message)
 				return false
 			}
 			return true
@@ -76,7 +76,7 @@ function register(universe) {
 		await player.space.changeRecord.commit(player.space.changeRecord.actionCount)
 		player.space.loading = false
 		player.space.inVcr = false
-		player.message("Changes commited. VCR mode off", 0)
+		player.message("Changes commited. VCR mode off")
 		player.space.clients.forEach(player => {
 			player.emit("playSound", universe.sounds.deactivateVCR)
 			player.emit("playSound", universe.sounds.gameTrack)
@@ -127,20 +127,20 @@ function register(universe) {
 			await universe.db.deactivateGame(player.space.game._id)
 			await universe.db.addReport(player.authInfo.username, player.space.game._id, reason)
 			console.log(`Game reported with reason: "${reason}"`)
-			player.message(`Game reported with reason: "${reason}"`, 0)
+			player.message(`Game reported with reason: "${reason}"`)
 			player.space.doNotReserve = true
 			player.space.removeClient(player);
 			await universe.gotoHub(player)
 		}
 	})
 	universe.registerCommand(["/abort"], async (player) => {
-		if (player.space.loading) return player.message("Please wait", 0)
+		if (player.space.loading) return player.message("Please wait")
 		if (player.space.inVcr) {
 			player.space.blocks = Buffer.from(await player.space.template(player.space.bounds))
 			await player.space.changeRecord.restoreBlockChangesToLevel(player.space)
 			player.space.reload()
 			player.space.inVcr = false
-			player.message("Aborted. VCR mode off", 0)
+			player.message("Aborted. VCR mode off")
 			player.space.clients.forEach(client => {
 				client.emit("playSound", universe.sounds.deactivateVCR)
 				client.emit("playSound", universe.sounds.gameTrack)
@@ -149,10 +149,10 @@ function register(universe) {
 			if (player.space.currentCommand) {
 				player.space.blocking = false
 				player.space.currentCommand = null
-				player.message("Command aborted", 0)
+				player.message("Command aborted")
 				player.emit("playSound", universe.sounds.abort)
 			} else {
-				player.message("Nothing happened", 0)
+				player.message("Nothing happened")
 			}
 		}
 	}, reasonHasPermission(false, "You don't have permission to build in this level!"))
@@ -162,9 +162,9 @@ function register(universe) {
 	universe.registerCommand(["/paint", "/p"], async (player) => {
 		player.paintMode = !player.paintMode
 		if (player.paintMode) {
-			player.message("Paint mode on", 0)
+			player.message("Paint mode on")
 		} else {
-			player.message("Paint mode off", 0)
+			player.message("Paint mode off")
 		}
 		player.emit("playSound", universe.sounds.toggle)
 	})
@@ -186,21 +186,21 @@ function register(universe) {
 		player.space.setBlock(operationPosition, block)
 	}, makeMultiValidator([reasonHasPermission(false), reasonVcr(true, "Unable to place block. Level is in VCR mode"), reasonLevelBlocking(true, "Unable to place block. Command in level is expecting additional arguments")]))
 	universe.registerCommand(["/clients"], async (player) => {
-		player.message("&ePlayers using:", 0)
+		player.message("&ePlayers using:")
 		universe.server.players.forEach(otherPlayer => {
-			player.message(`&e  ${otherPlayer.client.appName}: &f${otherPlayer.authInfo.username}`, 0, "> ")
+			player.message(`&e  ${otherPlayer.client.appName}: &f${otherPlayer.authInfo.username}`, "> ")
 		})
 	})
 	universe.registerCommand(["/vcr"], async (player) => {
 		if (player.space.changeRecord.dirty) await player.space.changeRecord.flushChanges()
 		player.space.changeRecord.maxActions = player.space.changeRecord.actionCount
 		player.space.toggleVcr()
-		player.message(`VCR has ${player.space.changeRecord.actionCount} actions. VCR Controls`, 0)
-		player.message(`/rewind (actions) - undos actions`, 0)
+		player.message(`VCR has ${player.space.changeRecord.actionCount} actions. VCR Controls`)
+		player.message(`/rewind (actions) - undos actions`)
 		// client.message(`/keyframe (keyframe number) - VCR brings to keyframe`)
-		player.message(`/fastforward (actions) - redos rewinded actions`, 0)
-		player.message(`/commit - loads current state seen in the VCR preview. will override change record.`, 0)
-		player.message(`/abort - aborts VCR preview, loading state as it was before enabling VCR.`, 0)
+		player.message(`/fastforward (actions) - redos rewinded actions`)
+		player.message(`/commit - loads current state seen in the VCR preview. will override change record.`)
+		player.message(`/abort - aborts VCR preview, loading state as it was before enabling VCR.`)
 		player.space.reload()
 		player.emit("playSound", universe.sounds.activateVCR)
 	}, makeMultiValidator([reasonHasPermission(false, "You don't have permission to build in this level!"), reasonVcrDraining(true), reasonVcr(true, "The level is already in VCR mode")]))
@@ -214,9 +214,9 @@ function register(universe) {
 				template = templates.empty
 				break
 			default:
-				return player.message("Invalid template name. Use /help templates for a list of templates", 0)
+				return player.message("Invalid template name. Use /help templates for a list of templates")
 		}
-		if (player.space.loading) return player.message("Level is busy seeking. Try again later", 0)
+		if (player.space.loading) return player.message("Level is busy seeking. Try again later")
 		if (player.space.changeRecord.dirty) await player.space.changeRecord.flushChanges()
 		player.space.template = template
 		player.space.blocks = Buffer.from(await player.space.template(player.space.bounds))
@@ -227,34 +227,34 @@ function register(universe) {
 	universe.registerCommand(["/create"], async (player) => {
 		if (player.canCreate && player.space?.name == universe.serverConfiguration.hubName) {
 			player.creating = true
-			player.message("Enter a description in chat. It can be mundane or imaginative.", 0)
+			player.message("Enter a description in chat. It can be mundane or imaginative.")
 		}
 	})
 	universe.registerCommand(["/rewind", "/rw", "/undo"], async (player, message) => {
 		const count = Math.max(parseInt(message), 0) || 1
-		if (player.space.loading) return player.message("Level is busy seeking. Try again later", 0)
+		if (player.space.loading) return player.message("Level is busy seeking. Try again later")
 		player.space.blocks = Buffer.from(await player.space.template(player.space.bounds))
 		await player.space.changeRecord.restoreBlockChangesToLevel(player.space, Math.max(player.space.changeRecord.actionCount - count, 1))
 		player.space.reload()
-		player.message(`Rewinded. Current actions: ${player.space.changeRecord.actionCount}/${player.space.changeRecord.maxActions}`, 0)
-		player.message(`To commit this state use /commit. use /abort to exit VCR`, 0)
+		player.message(`Rewinded. Current actions: ${player.space.changeRecord.actionCount}/${player.space.changeRecord.maxActions}`)
+		player.message(`To commit this state use /commit. use /abort to exit VCR`)
 		player.emit("playSound", universe.sounds.rewind)
 	}, reasonVcr(false, "Level isn't in VCR mode. /vcr"))
 	universe.registerCommand(["/fastforward", "/ff", "/redo"], async (player, message) => {
 		const count = Math.max(parseInt(message), 0) || 1
-		if (player.space.loading) return player.message("Level is busy seeking. Try again later", 0)
+		if (player.space.loading) return player.message("Level is busy seeking. Try again later")
 		player.space.blocks = Buffer.from(await player.space.template(player.space.bounds))
 		await player.space.changeRecord.restoreBlockChangesToLevel(player.space, Math.min(player.space.changeRecord.actionCount + count, player.space.changeRecord.maxActions))
 		player.space.reload()
-		player.message(`Fast-forwarded. Current actions: ${player.space.changeRecord.actionCount}/${player.space.changeRecord.maxActions}`, 0)
-		player.message(`To commit this state use /commit. Use /abort to exit VCR`, 0)
+		player.message(`Fast-forwarded. Current actions: ${player.space.changeRecord.actionCount}/${player.space.changeRecord.maxActions}`)
+		player.message(`To commit this state use /commit. Use /abort to exit VCR`)
 		player.emit("playSound", universe.sounds.fastForward)
 	}, reasonVcr(false, "Level isn't in VCR mode. /vcr"))
 	universe.registerCommand(["/addzone"], async (player, message) => {
 		if (player.space.name.startsWith("game-")) return
 		const values = message.split(" ").map(value => parseInt(value)).filter(value => !isNaN(value))
 		const command = message.split(" ").slice(6).join(" ")
-		if (values.length < 6 || !command) return player.message("Invalid arguments", 0)
+		if (values.length < 6 || !command) return player.message("Invalid arguments")
 		const zone = new Zone(values.slice(0, 3), values.slice(3, 6))
 		if (command == "spawnZone") { // special handling for spawnZone
 			zone.globalCommand = `spawnZone:${player.orientation[0]},${player.orientation[1]}`
@@ -263,13 +263,13 @@ function register(universe) {
 		}
 		player.space.portals.push(zone)
 		await universe.db.saveLevelPortals(player.space)
-		player.message("Zone added", 0)
+		player.message("Zone added")
 	}, reasonHasUserPermission("hubBuilder"))
 	universe.registerCommand(["/removeallzones"], async (player) => {
 		if (player.space.name.startsWith("game-")) return
 		player.space.portals = []
 		await universe.db.saveLevelPortals(player.space)
-		player.message("Zones removed", 0)
+		player.message("Zones removed")
 	}, reasonHasUserPermission("hubBuilder"))
 	universe.registerCommand(["/play"], async (player) => {
 		universe.startGame(player)
@@ -284,7 +284,7 @@ function register(universe) {
 		} else if (!message) {
 			universe.enterView(player)
 		} else {
-			player.message("Unknown view argument. /help view", 0)
+			player.message("Unknown view argument. /help view")
 		}
 	})
 	universe.registerCommand(["/main", "/hub", "/spawn"], async (player) => {
@@ -298,15 +298,15 @@ function register(universe) {
 		if (!selectedTurns.description) return
 		await universe.db.purgeLastTurn(selectedTurns.description.root, reason)
 		await player.space.reloadView(templates.view.level)
-		player.message("Turn purged!", 0)
+		player.message("Turn purged!")
 	}, reasonHasUserPermission("moderator"))
 	universe.registerCommand(["/diverge", "/fork"], async (player, reason) => {
 		const selectedTurns = player.selectedTurns
 		if (!selectedTurns.description) return
-		if (selectedTurns.description.depth == 0) return player.message("Unable to diverge game.", 0)
+		if (selectedTurns.description.depth == 0) return player.message("Unable to diverge game.")
 		await universe.db.divergeGame(selectedTurns.description, reason)
 		await player.space.reloadView(templates.view.level)
-		player.message("Game diverged!", 0)
+		player.message("Game diverged!")
 	}, reasonHasUserPermission("moderator"))
 
 	help.register(universe)
