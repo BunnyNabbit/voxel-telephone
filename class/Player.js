@@ -22,10 +22,10 @@ class Player extends require("events") {
    }
    async initialize(client, universe, authInfo) {
       const verifyUsernames = (universe.serverConfiguration.verifyUsernames && universe.heartbeat)
-      if (universe.server.clients.filter(otherClient => otherClient.address == client.address).length >= universe.serverConfiguration.maxIpConnections) {
+      if (universe.server.players.filter(otherClient => otherClient.address == client.address).length >= universe.serverConfiguration.maxIpConnections) {
          return this.client.disconnect("Too many connections!")
       }
-      if (universe.server.clients.some(otherClient => otherClient.authInfo.username == authInfo.username)) {
+      if (universe.server.players.some(otherClient => otherClient.authInfo.username == authInfo.username)) {
          return this.client.disconnect("Another client already has that name")
       }
       if (verifyUsernames && crypto.createHash("md5").update(universe.heartbeat.salt + authInfo.username).digest("hex") !== authInfo.key) {
@@ -45,11 +45,11 @@ class Player extends require("events") {
             this.space.removeClient(this)
          }
          universe.pushMessage(`- ${this.authInfo.username} disconnected`, PushIntegration.interestType.playerConnection)
-         universe.server.clients.forEach(otherClient => {
+         universe.server.players.forEach(otherClient => {
             otherClient.emit("playSound", universe.sounds.leave)
          })
          this.watchdog.destroy()
-         universe.removeClient(this)
+         universe.removePlayer(this)
          console.log("left")
       })
       this.universe = universe
@@ -65,7 +65,7 @@ class Player extends require("events") {
       universe.addPlayer(this)
       this.droneTransmitter = new DroneTransmitter(this.client)
       universe.pushMessage(`+ ${this.username} connected`, PushIntegration.interestType.playerConnection)
-      universe.server.clients.forEach(otherClient => {
+      universe.server.players.forEach(otherClient => {
          otherClient.emit("playSound", universe.sounds.join)
       })
       let tagline = "how do i get cowboy paint off a dog ."
@@ -130,7 +130,7 @@ class Player extends require("events") {
          if (message == "/forcezero" && universe.serverConfiguration.listOperators.includes(this.authInfo.username) && universe.heartbeat) {
             universe.heartbeat.forceZero = true
             console.log(`! ${this.authInfo.username} forced heartbeat players to zero`)
-            universe.server.clients.forEach(otherClient => otherClient.message(`! ${this.authInfo.username} forced heartbeat players to zero`, 0))
+            universe.server.players.forEach(otherClient => otherClient.message(`! ${this.authInfo.username} forced heartbeat players to zero`, 0))
             return
          }
          if (this.watchdog.rateOperation(20)) return
@@ -146,7 +146,7 @@ class Player extends require("events") {
          } else {
             if (filter.matches(message)) {
                const filterMessages = universe.serverConfiguration.replacementMessages
-               universe.server.clients.forEach(otherClient => otherClient.message(`&7${this.authInfo.username}: &f${filterMessages[0, randomIntFromInterval(0, filterMessages.length - 1)]}`, 0))
+               universe.server.players.forEach(otherClient => otherClient.message(`&7${this.authInfo.username}: &f${filterMessages[0, randomIntFromInterval(0, filterMessages.length - 1)]}`, 0))
                return
             }
             if (this.space?.game?.promptType == "build") {
@@ -171,7 +171,7 @@ class Player extends require("events") {
                const userRecord = await (this.userRecord.data)
                const sound = universe.sounds[userRecord.chatSound] || universe.sounds.chat
                universe.pushMessage(`&7${this.authInfo.username}: &f${message}`, PushIntegration.interestType.chatMessage)
-               universe.server.clients.forEach(otherClient => {
+               universe.server.players.forEach(otherClient => {
                   otherClient.emit("playSound", sound)
                })
             }

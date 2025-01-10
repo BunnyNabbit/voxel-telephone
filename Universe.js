@@ -39,7 +39,7 @@ class Universe extends require("events") {
 		this.server = new Server(serverConfiguration.port)
 		this.server.setupWebSocketServer()
 		this.server.universe = this
-		this.server.clients = []
+		this.server.players = []
 		this.server.extensions.push({
 			name: "MessageTypes",
 			version: 1
@@ -76,7 +76,7 @@ class Universe extends require("events") {
 			}
 			const category = this.serverConfiguration.announcements.messages[weightedIndex[randomIntFromInterval(0, weightedIndex.length - 1)]]
 			const message = category[randomIntFromInterval(0, category.length - 1)]
-			this.server.clients.forEach(client => {
+			this.server.players.forEach(client => {
 				client.message(message, 0, "> ")
 			})
 		}, this.serverConfiguration.announcements.interval)
@@ -100,14 +100,14 @@ class Universe extends require("events") {
 
 	addPlayer(player) {
 		for (let i = 0; i < 127; i++) {
-			if (!this.server.clients.some(player => player.netId == i)) {
+			if (!this.server.players.some(player => player.netId == i)) {
 				player.netId = i
-				this.server.clients.forEach(otherPlayer => {
+				this.server.players.forEach(otherPlayer => {
 					player.client.addPlayerName(otherPlayer.netId, otherPlayer.username, `&7${otherPlayer.username}`)
 				})
-				this.server.clients.push(player)
+				this.server.players.push(player)
 				player.client.addPlayerName(0xff, player.username, `&7${player.username}`)
-				this.server.clients.forEach(anyPlayer => {
+				this.server.players.forEach(anyPlayer => {
 					if (anyPlayer != player) {
 						anyPlayer.client.addPlayerName(i, player.username, `&7${player.username}`)
 					}
@@ -118,20 +118,20 @@ class Universe extends require("events") {
 		}
 		throw "Unable to generate unique player ID"
 	}
-	removeClient(player) {
-		const clientIndex = this.server.clients.indexOf(player)
-		if (clientIndex !== -1) this.server.clients.splice(clientIndex, 1)
-		this.server.clients.forEach(ozherPlayer => {
+	removePlayer(player) {
+		const clientIndex = this.server.players.indexOf(player)
+		if (clientIndex !== -1) this.server.players.splice(clientIndex, 1)
+		this.server.players.forEach(ozherPlayer => {
 			ozherPlayer.client.removePlayerName(player.netId)
 		})
 		this.emit("clientRemoved", player)
 	}
 
-	async gotoHub(client, forcedHubName) {
+	async gotoHub(player, forcedHubName) {
 		const hatchday = this.getHatchday()
 		let hubName
-		if (client) {
-			hubName = forcedHubName || (await (client.userRecord.data)).defaultHub || ((hatchday && hatchday.hubName) || this.serverConfiguration.hubName)
+		if (player) {
+			hubName = forcedHubName || (await (player.userRecord.data)).defaultHub || ((hatchday && hatchday.hubName) || this.serverConfiguration.hubName)
 		} else { // being used as a preloader
 			hubName = forcedHubName || this.serverConfiguration.hubName
 		}
@@ -141,14 +141,14 @@ class Universe extends require("events") {
 			levelClass: HubLevel,
 			arguments: [hubName, this.db]
 		})
-		if (client) {
-			client.message("Hub", 1)
-			client.message(" ", 2)
-			client.message(" ", 3)
+		if (player) {
+			player.message("Hub", 1)
+			player.message(" ", 2)
+			player.message(" ", 3)
 			promise.then(level => {
 				const spawn = level.getSpawnPosition()
-				level.addPlayer(client, spawn[0], spawn[1])
-				client.emit("playSound", (hatchday && this.sounds[hatchday.hubTrack]) || this.sounds.hubTrack)
+				level.addPlayer(player, spawn[0], spawn[1])
+				player.emit("playSound", (hatchday && this.sounds[hatchday.hubTrack]) || this.sounds.hubTrack)
 			})
 		}
 		return promise
@@ -195,13 +195,13 @@ class Universe extends require("events") {
 		this.levels.set(spaceName, promise)
 		return promise
 	}
-	async enterView(client, viewData = {}, cursor) {
-		if (client.teleporting == true) return
-		client.teleporting = true
-		client.space.removeClient(client)
+	async enterView(player, viewData = {}, cursor) {
+		if (player.teleporting == true) return
+		player.teleporting = true
+		player.space.removeClient(player)
 		let spaceName = "game-view"
 		if (viewData.mode == "mod") spaceName += "-mod"
-		if (viewData.mode == "user") spaceName += `-user-${client.authInfo.username}`
+		if (viewData.mode == "user") spaceName += `-user-${player.authInfo.username}`
 		if (cursor) spaceName += cursor
 		const promise = this.loadLevel(spaceName, {
 			useNullChangeRecord: true,
@@ -211,14 +211,14 @@ class Universe extends require("events") {
 			allowList: ["not a name"],
 			template: templates.view.level
 		})
-		client.message("View", 1)
-		client.message("Go back to hub with /main", 2)
-		client.message(" ", 3)
+		player.message("View", 1)
+		player.message("Go back to hub with /main", 2)
+		player.message(" ", 3)
 		promise.then(async level => {
 			await level.reloadView(templates.view.level)
-			level.addPlayer(client, [60, 8, 4], [162, 254])
-			client.teleporting = false
-			client.emit("playSound", this.sounds.viewTrack)
+			level.addPlayer(player, [60, 8, 4], [162, 254])
+			player.teleporting = false
+			player.emit("playSound", this.sounds.viewTrack)
 		})
 	}
 	async startGame(player) {
