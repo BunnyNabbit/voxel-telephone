@@ -143,8 +143,7 @@ class Universe extends require("events") {
 		})
 		if (player) {
 			player.message("Hub", 1)
-			player.message(" ", 2)
-			player.message(" ", 3)
+			player.message(" ", [2, 3])
 			promise.then(level => {
 				const spawn = level.getSpawnPosition()
 				level.addPlayer(player, spawn[0], spawn[1])
@@ -231,16 +230,13 @@ class Universe extends require("events") {
 			const gameType = invertPromptType(game.promptType)
 			player.message("Mode: Casual", 2)
 			if (gameType == "build") {
-				player.message(`==== Build the following ====`, 0)
-				player.message(game.prompt, 0)
-				player.message(game.prompt, 1)
-				player.message(game.prompt, 100)
-				player.message(`* Build as you interpret the prompt. Do not intentionally derail games!`, 0)
-				player.message(`To skip, use /skip`, 0)
-				player.message(`See building related commands by using /help`, 0)
-				player.message(`Use /report if the prompt is inappropriate`, 0)
-				player.message(`Once you are finished building, use /finish`, 0)
-				player.message(`Once you are finished building, use /finish`, 3)
+				player.message(`==== Build the following ====`)
+				player.message(game.prompt, [0, 1, 100])
+				player.message(`* Build as you interpret the prompt. Do not intentionally derail games!`)
+				player.message(`To skip, use /skip`)
+				player.message(`See building related commands by using /help`)
+				player.message(`Use /report if the prompt is inappropriate`)
+				player.message(`Once you are finished building, use /finish`, [0, 3])
 				this.loadLevel(`game-${game.next}`, builderDefaults).then((level) => {
 					if (!level.eventsAttached) {
 						level.eventsAttached = true
@@ -286,14 +282,14 @@ class Universe extends require("events") {
 				})
 			} else {
 				player.currentDescription = null
-				player.message("==== Describe what this build is ====", 0)
+				player.message("==== Describe what this build is ====")
 				player.message("Describe the build - Enter your description in chat", 100)
 				player.message("Enter your description in chat", 1)
-				player.message("* Do not comment on the quailty. i.e: \"poorly built cat\". Describe as you see it.", 0)
-				player.message(`* Describe as you interpret the build. Do not intentionally derail games!`, 0)
-				player.message("Enter your description in chat", 0)
-				player.message(`To skip, use /skip`, 0)
-				player.message("Use /report if the build is inappropriate", 0)
+				player.message("* Do not comment on the quailty. i.e: \"poorly built cat\". Describe as you see it.",)
+				player.message(`* Describe as you interpret the build. Do not intentionally derail games!`,)
+				player.message("Enter your description in chat")
+				player.message(`To skip, use /skip`)
+				player.message("Use /report if the build is inappropriate")
 				this.loadLevel(`game-${game._id}`, describeDefaults).then((level) => { // TODO: position
 					level.on("clientRemoved", async () => {
 						level.dispose()
@@ -309,15 +305,15 @@ class Universe extends require("events") {
 		} else {
 			await this.gotoHub(player)
 			if (this.canCreateCooldown.has(player.authInfo.username) == false) {
-				player.message("Whoops. Looks like we ran out of games! How about this, you can create a new prompt from nothing. Go ahead, use /create to start the process of making a prompt.", 0)
-				player.message("Think of something mundane or imaginative. It is entirely up to you.", 0)
+				player.message("Whoops. Looks like we ran out of games! How about this, you can create a new prompt from nothing. Go ahead, use /create to start the process of making a prompt.")
+				player.message("Think of something mundane or imaginative. It is entirely up to you.")
 				const inspirationFeeds = this.serverConfiguration.inspirationFeeds
 				const pickedFeed = inspirationFeeds[randomIntFromInterval(0, inspirationFeeds.length - 1)]
-				player.message(`Not inspired? ${pickedFeed}`, 0)
+				player.message(`Not inspired? ${pickedFeed}`)
 				player.canCreate = true
 			} else {
-				player.message("Voxel Telephone is out of games. Come back later!", 0)
-				player.message("If we are still out of games, you can submit another description a hour later.", 0)
+				player.message("Voxel Telephone is out of games. Come back later!")
+				player.message("If we are still out of games, you can submit another description a hour later.")
 			}
 			setTimeout(() => {
 				player.teleporting = false

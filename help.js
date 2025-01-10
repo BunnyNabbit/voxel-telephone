@@ -22,7 +22,7 @@ function register(universe) {
 		}
 		callClient(client, argument) {
 			if (!argument) {
-				client.message(`Categories: ${Object.values(categories).join(", ")}`, 0)
+				client.message(`Categories: ${Object.values(categories).join(", ")}`)
 				argument = "help"
 			}
 			argument = argument.toLowerCase().split(" ")[0]
@@ -32,7 +32,7 @@ function register(universe) {
 			if (command) {
 				const commandHelp = this.commands.get((command.name && "/" + command.name) || command.commandNames[0])
 				if (!commandHelp) {
-					client.message(`Command exists but unable to find help document for it.`, 0)
+					client.message(`Command exists but unable to find help document for it.`)
 					return
 				}
 				let aliases
@@ -41,18 +41,18 @@ function register(universe) {
 				} else {
 					aliases = command.aliases.map(alias => "/" + alias).join(", ")
 				}
-				if (aliases) client.message(`Aliases: ${aliases}`, 0)
+				if (aliases) client.message(`Aliases: ${aliases}`)
 				commandHelp.renderClient(client)
 				return
 			}
 			const category = categories[argument]
 			if (category) {
 				client.message(category)
-				client.message(`Topics: ${toArray(this.topics.values()).filter(help => help.category == category).map(help => help.name).join(", ")}`, 0)
-				client.message(`Commands: ${toArray(this.commands.values()).filter(help => help.category == category).map(help => help.name).join(", ")}`, 0)
+				client.message(`Topics: ${toArray(this.topics.values()).filter(help => help.category == category).map(help => help.name).join(", ")}`)
+				client.message(`Commands: ${toArray(this.commands.values()).filter(help => help.category == category).map(help => help.name).join(", ")}`)
 				return
 			}
-			client.message(`Unable to find help document for ${argument}.`, 0)
+			client.message(`Unable to find help document for ${argument}.`)
 		}
 	}
 
@@ -76,7 +76,7 @@ function register(universe) {
 		}
 		renderClient(client) {
 			this.help.forEach(message => {
-				client.message(message, 0, "> ")
+				client.message(message)
 			})
 		}
 	}
