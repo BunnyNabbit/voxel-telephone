@@ -18,48 +18,48 @@ class ViewLevel extends Level {
 		this.nextCursor = null
 		this.games = []
 		this.positionEventListeners = new Map()
-		this.on("clientRemoved", async (client) => {
-			if (!this.clients.length) {
+		this.on("playerRemoved", async (player) => {
+			if (!this.players.length) {
 				this.universe.levels.delete(this.name)
 				await this.dispose()
 			}
-			const positionEventListener = this.positionEventListeners.get(client)
-			client.removeListener("position", positionEventListener)
-			client.message(" ", [11, 12, 13])
+			const positionEventListener = this.positionEventListeners.get(player)
+			player.removeListener("position", positionEventListener)
+			player.message(" ", [11, 12, 13])
 		})
-		this.on("clientAdded", async (client) => {
+		this.on("playerAdded", async (player) => {
 			const onPosition = (position) => {
 				const gridPosition = [position.z, position.x].map((component, offset) => clamp(Math.floor(component / 64) - offset, 0, 7))
-				const lastTurns = client.selectedTurns ?? emptyTurns
-				client.selectedTurns = this.getTurnsInGrid(gridPosition[0], gridPosition[1])
+				const lastTurns = player.selectedTurns ?? emptyTurns
+				player.selectedTurns = this.getTurnsInGrid(gridPosition[0], gridPosition[1])
 				const canView = this.viewData.viewAll || (this.games[gridPosition[0]] && this.games[gridPosition[0]][15])
 				if (canView) {
-					client.selectedTurns = this.getTurnsInGrid(gridPosition[0], gridPosition[1])
+					player.selectedTurns = this.getTurnsInGrid(gridPosition[0], gridPosition[1])
 				} else {
-					client.selectedTurns = emptyTurns
+					player.selectedTurns = emptyTurns
 				}
-				if (client.selectedTurns.description != lastTurns.description) {
-					if (client.selectedTurns.description) {
-						client.message(client.selectedTurns.description.prompt, 13)
-						let attribution = `Description: ${client.selectedTurns.description.creators.join()}`
-						if (client.selectedTurns.build) {
-							attribution += ` | Build: ${client.selectedTurns.build.creators.join()}`
+				if (player.selectedTurns.description != lastTurns.description) {
+					if (player.selectedTurns.description) {
+						player.message(player.selectedTurns.description.prompt, 13)
+						let attribution = `Description: ${player.selectedTurns.description.creators.join()}`
+						if (player.selectedTurns.build) {
+							attribution += ` | Build: ${player.selectedTurns.build.creators.join()}`
 						}
-						client.message(attribution, 12)
+						player.message(attribution, 12)
 					} else {
-						client.message(" ", [12, 13])
+						player.message(" ", [12, 13])
 					}
 				}
-				if (!client.viewDebounce && position.z > 512) {
-					client.viewDebounce = true
+				if (!player.viewDebounce && position.z > 512) {
+					player.viewDebounce = true
 					setTimeout(() => {
-						client.viewDebounce = false
+						player.viewDebounce = false
 					}, 1000)
-					this.universe.enterView(client, this.viewData, this.nextCursor)
+					this.universe.enterView(player, this.viewData, this.nextCursor)
 				}
 			}
-			client.on("position", onPosition)
-			this.positionEventListeners.set(client, onPosition)
+			player.on("position", onPosition)
+			this.positionEventListeners.set(player, onPosition)
 		})
 		this.viewData = viewData
 	}
@@ -141,7 +141,7 @@ class ViewLevel extends Level {
 					let loadedLevel = this.universe.levels.get(`game-${turn.next}`)
 					if (loadedLevel) {
 						loadedLevel = await loadedLevel
-						if (loadedLevel.clients.length) {
+						if (loadedLevel.players.length) {
 							await addIcon(templates.view.player)
 						} else {
 							await addIcon(templates.view.orphaned)

@@ -77,7 +77,7 @@ function register(universe) {
 		player.space.loading = false
 		player.space.inVcr = false
 		player.message("Changes commited. VCR mode off")
-		player.space.clients.forEach(player => {
+		player.space.players.forEach(player => {
 			player.emit("playSound", universe.sounds.deactivateVCR)
 			player.emit("playSound", universe.sounds.gameTrack)
 		})
@@ -114,7 +114,7 @@ function register(universe) {
 			}
 			universe.db.addInteraction(player.authInfo.username, player.space.game.root, "complete")
 			player.space.doNotReserve = true
-			player.space.removeClient(player)
+			player.space.removePlayer(player)
 			await universe.gotoHub(player)
 		}
 	})
@@ -129,7 +129,7 @@ function register(universe) {
 			console.log(`Game reported with reason: "${reason}"`)
 			player.message(`Game reported with reason: "${reason}"`)
 			player.space.doNotReserve = true
-			player.space.removeClient(player);
+			player.space.removePlayer(player);
 			await universe.gotoHub(player)
 		}
 	})
@@ -141,9 +141,9 @@ function register(universe) {
 			player.space.reload()
 			player.space.inVcr = false
 			player.message("Aborted. VCR mode off")
-			player.space.clients.forEach(client => {
-				client.emit("playSound", universe.sounds.deactivateVCR)
-				client.emit("playSound", universe.sounds.gameTrack)
+			player.space.players.forEach(player => {
+				player.emit("playSound", universe.sounds.deactivateVCR)
+				player.emit("playSound", universe.sounds.gameTrack)
 			})
 		} else {
 			if (player.space.currentCommand) {
@@ -172,7 +172,7 @@ function register(universe) {
 		if (player.space && player.space.game) {
 			universe.db.addInteraction(player.authInfo.username, player.space.game._id, "skip")
 			player.space.doNotReserve = true
-			player.space.removeClient(player)
+			player.space.removePlayer(player)
 			await universe.gotoHub(player)
 		}
 	})
@@ -289,7 +289,7 @@ function register(universe) {
 	})
 	universe.registerCommand(["/main", "/hub", "/spawn"], async (player) => {
 		if (player.space) {
-			player.space.removeClient(player)
+			player.space.removePlayer(player)
 			universe.gotoHub(player)
 		}
 	})

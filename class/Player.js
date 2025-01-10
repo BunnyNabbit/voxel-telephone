@@ -42,7 +42,7 @@ class Player extends require("events") {
       this.client.on("close", () => {
          this.destroyed = true
          if (this.space) {
-            this.space.removeClient(this)
+            this.space.removePlayer(this)
          }
          universe.pushMessage(`- ${this.authInfo.username} disconnected`, PushIntegration.interestType.playerConnection)
          universe.server.players.forEach(otherClient => {

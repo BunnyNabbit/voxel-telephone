@@ -20,19 +20,19 @@ function register(universe) {
 			if (help instanceof TopicHelp) return this.topics.set(help.name, help)
 			throw new Error("Unknown help type")
 		}
-		callClient(client, argument) {
+		callPlayer(player, argument) {
 			if (!argument) {
-				client.message(`Categories: ${Object.values(categories).join(", ")}`)
+				player.message(`Categories: ${Object.values(categories).join(", ")}`)
 				argument = "help"
 			}
 			argument = argument.toLowerCase().split(" ")[0]
 			const topic = this.topics.get(argument)
-			if (topic) return topic.renderClient(client)
+			if (topic) return topic.displayHelpToPlayer(player)
 			const command = universe.commandRegistry.commands.get("/" + argument) || universe.commandRegistry.commands.get(argument) || Level.getCommandClassFromName(argument.replace("/", ""))
 			if (command) {
 				const commandHelp = this.commands.get((command.name && "/" + command.name) || command.commandNames[0])
 				if (!commandHelp) {
-					client.message(`Command exists but unable to find help document for it.`)
+					player.message(`Command exists but unable to find help document for it.`)
 					return
 				}
 				let aliases
@@ -41,18 +41,18 @@ function register(universe) {
 				} else {
 					aliases = command.aliases.map(alias => "/" + alias).join(", ")
 				}
-				if (aliases) client.message(`Aliases: ${aliases}`)
-				commandHelp.renderClient(client)
+				if (aliases) player.message(`Aliases: ${aliases}`)
+				commandHelp.displayHelpToPlayer(player)
 				return
 			}
 			const category = categories[argument]
 			if (category) {
-				client.message(category)
-				client.message(`Topics: ${toArray(this.topics.values()).filter(help => help.category == category).map(help => help.name).join(", ")}`)
-				client.message(`Commands: ${toArray(this.commands.values()).filter(help => help.category == category).map(help => help.name).join(", ")}`)
+				player.message(category)
+				player.message(`Topics: ${toArray(this.topics.values()).filter(help => help.category == category).map(help => help.name).join(", ")}`)
+				player.message(`Commands: ${toArray(this.commands.values()).filter(help => help.category == category).map(help => help.name).join(", ")}`)
 				return
 			}
-			client.message(`Unable to find help document for ${argument}.`)
+			player.message(`Unable to find help document for ${argument}.`)
 		}
 	}
 
@@ -74,9 +74,9 @@ function register(universe) {
 			this.help = help
 			this.category = category
 		}
-		renderClient(client) {
+		displayHelpToPlayer(player) {
 			this.help.forEach(message => {
-				client.message(message)
+				player.message(message)
 			})
 		}
 	}
@@ -231,8 +231,8 @@ function register(universe) {
 		help.register(new CommandHelp(`/${command.name}`, command.help, categories.building))
 	})
 
-	universe.registerCommand(["/help", "/cmdhelp"], (client, argument) => {
-		help.callClient(client, argument)
+	universe.registerCommand(["/help", "/cmdhelp"], (player, argument) => {
+		help.callPlayer(player, argument)
 	})
 
 	help.register(new CommandHelp("/help", [
