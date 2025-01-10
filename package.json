@@ -13,7 +13,7 @@
     "@slack/web-api": "^7.7.0",
     "axios": "^0.29.0",
     "chunked-vox": "^1.0.0",
-    "classicborne-server-protocol": "^0.3.0",
+    "classicborne-server-protocol": "^0.3.1",
     "express": "^4.21.2",
     "mongojs": "^3.1.0",
     "nbt": "^0.8.1",

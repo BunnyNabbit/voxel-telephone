@@ -5,7 +5,7 @@ class HubLevel extends Level {
 		super(bounds, blocks)
 		this.on("clientRemoved", async () => {
 			if (this.clients.length == 0 && !this.changeRecord.draining && this.changeRecord.dirty) {
-				const bytesSaved = await this.changeRecord.flushChanges()
+				await this.changeRecord.flushChanges()
 			}
 		})
 		this.portals = []
