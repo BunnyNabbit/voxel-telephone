@@ -7,19 +7,19 @@ class SoundEvent {
 }
 
 class SoundTransmitter extends require("events") {
-	constructor(client) {
+	constructor(player) {
 		super()
 		this.currentTrack = null
 		this.eventQueue = new Set()
 		this.eventCursor = 0
-		this.client = client
+		this.player = player
 		this.sockets = new Set()
 		this.key = crypto.randomBytes(6).toString("base64url")
-		this.client.on("playSound", (sound) => {
+		this.player.on("playSound", (sound) => {
 			sound = JSON.parse(JSON.stringify(sound))
 			this.enqueueEvent(sound)
 		})
-		client.once("soundLoadHack", () => {
+		player.once("soundLoadHack", () => {
 			this.createWindow()
 			setTimeout(() => {
 				if (!this.sockets.size) this.createWindow()
@@ -28,8 +28,8 @@ class SoundTransmitter extends require("events") {
 	}
 
 	createWindow() {
-		const cefCommand = `cef create -t -s ${this.client.universe.serverConfiguration.sounds.audioPlayerBaseURL}?${this.key}`
-		this.client.message(cefCommand)
+		const cefCommand = `cef create -t -s ${this.player.universe.serverConfiguration.sounds.audioPlayerBaseURL}?${this.key}`
+		this.player.message(cefCommand)
 	}
 
 	enqueueEvent(sound) {
@@ -75,12 +75,12 @@ class SoundServer extends require("events") {
 	constructor(universe) {
 		super()
 		this.keySoundTransmitters = new Map()
-		universe.on("clientAdded", (client) => {
-			if (client.usingCEF) {
+		universe.on("playerAdded", (player) => {
+			if (player.usingCEF) {
 				const key = crypto.randomBytes(6).toString("base64url")
-				const soundTransmitter = new SoundTransmitter(client)
+				const soundTransmitter = new SoundTransmitter(player)
 				this.keySoundTransmitters.set(soundTransmitter.key, soundTransmitter)
-				client.once("close", () => {
+				player.once("close", () => {
 					this.keySoundTransmitters.delete(key)
 				})
 			}

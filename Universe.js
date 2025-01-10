@@ -76,8 +76,8 @@ class Universe extends require("events") {
 			}
 			const category = this.serverConfiguration.announcements.messages[weightedIndex[randomIntFromInterval(0, weightedIndex.length - 1)]]
 			const message = category[randomIntFromInterval(0, category.length - 1)]
-			this.server.players.forEach(client => {
-				client.message(message, 0, "> ")
+			this.server.players.forEach(player => {
+				player.message(message, 0, "> ")
 			})
 		}, this.serverConfiguration.announcements.interval)
 
@@ -112,7 +112,7 @@ class Universe extends require("events") {
 						anyPlayer.client.addPlayerName(i, player.username, `&7${player.username}`)
 					}
 				})
-				this.emit("clientAdded", player)
+				this.emit("playerAdded", player)
 				return
 			}
 		}
@@ -124,7 +124,7 @@ class Universe extends require("events") {
 		this.server.players.forEach(ozherPlayer => {
 			ozherPlayer.client.removePlayerName(player.netId)
 		})
-		this.emit("clientRemoved", player)
+		this.emit("playerRemoved", player)
 	}
 
 	async gotoHub(player, forcedHubName) {
@@ -197,7 +197,7 @@ class Universe extends require("events") {
 	async enterView(player, viewData = {}, cursor) {
 		if (player.teleporting == true) return
 		player.teleporting = true
-		player.space.removeClient(player)
+		player.space.removePlayer(player)
 		let spaceName = "game-view"
 		if (viewData.mode == "mod") spaceName += "-mod"
 		if (viewData.mode == "user") spaceName += `-user-${player.authInfo.username}`
@@ -224,7 +224,7 @@ class Universe extends require("events") {
 		if (player.teleporting == true) return
 		player.teleporting = true
 		const games = await this.db.findActiveGames(player.authInfo.username, this.levels)
-		player.space.removeClient(player)
+		player.space.removePlayer(player)
 		if (games.length) {
 			const game = games[randomIntFromInterval(0, games.length - 1)]
 			const gameType = invertPromptType(game.promptType)
@@ -246,7 +246,7 @@ class Universe extends require("events") {
 						})
 						level.addDrone(floorDrone)
 						floorDrone.setPosition({ x: 32, y: 0, z: 32 }, { yaw: 0, pitch: 0 })
-						level.on("clientRemoved", async (client) => {
+						level.on("playerRemoved", async (client) => {
 							if (!level.changeRecord.dirty) {
 								await level.dispose()
 								this.levels.delete(level.name)
@@ -267,7 +267,7 @@ class Universe extends require("events") {
 								this.playerReserved.delete(client.authInfo.username)
 								console.log("removed reserved game")
 							}, 7200000) // two hours
-							level.once("clientAdded", () => {
+							level.once("playerAdded", () => {
 								client.message(">> Returned to this game because it was reserved for you.")
 								client.message(">> Games will only be reserved for two hours.")
 								this.playerReserved.delete(client.authInfo.username)
@@ -291,7 +291,7 @@ class Universe extends require("events") {
 				player.message(`To skip, use /skip`)
 				player.message("Use /report if the build is inappropriate")
 				this.loadLevel(`game-${game._id}`, describeDefaults).then((level) => { // TODO: position
-					level.on("clientRemoved", async () => {
+					level.on("playerRemoved", async () => {
 						level.dispose()
 						this.levels.delete(level.name)
 					})

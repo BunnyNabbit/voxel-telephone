@@ -41,7 +41,7 @@ class Level extends require("events") {
 	static commands = levelCommands
 	constructor(bounds, blocks) {
 		super()
-		this.clients = []
+		this.players = []
 		this.bounds = bounds
 		this.blocks = blocks
 		this.loading = false
@@ -53,48 +53,48 @@ class Level extends require("events") {
 		this.blocking = false
 	}
 	messageAll(message, types = [0]) {
-		this.clients.forEach(client => {
-			client.message(message, types)
+		this.players.forEach(player => {
+			player.message(message, types)
 		})
 		this.playSound("toggle")
 	}
-	sendDrones(client) {
+	sendDrones(player) {
 		this.drones.forEach(drone => {
-			client.droneTransmitter.addDrone(drone)
+			player.droneTransmitter.addDrone(drone)
 		})
 	}
-	removeClient(player) {
+	removePlayer(player) {
 		player.space = null
-		const index = this.clients.indexOf(player)
-		if (index) this.clients.splice(index, 1)
-		if (index !== -1) this.clients.splice(index, 1)
+		const index = this.players.indexOf(player)
+		if (index) this.players.splice(index, 1)
+		if (index !== -1) this.players.splice(index, 1)
 		const drone = this.clientDrones.get(player.client)
 		this.clientDrones.delete(player)
 		this.removeDrone(drone)
 		player.droneTransmitter.clearDrones()
-		this.emit("clientRemoved", player)
+		this.emit("playerRemoved", player)
 	}
 	removeDrone(drone) {
 		drone.destroy()
 		this.drones.delete(drone)
 	}
 	addDrone(drone) {
-		this.clients.forEach(otherClient => {
-			otherClient.droneTransmitter.addDrone(drone)
+		this.players.forEach(player => {
+			player.droneTransmitter.addDrone(drone)
 		})
 		this.drones.add(drone)
 	}
 	addPlayer(player, position = [0, 0, 0], orientation = [0, 0]) {
-		this.emit("clientAdded", player)
+		this.emit("playerAdded", player)
 		player.space = this
-		this.loadClient(player, position, orientation)
+		this.loadPlayer(player, position, orientation)
 		this.sendDrones(player)
 		const drone = new Drone({ name: "&7" + player.authInfo.username })
 		this.clientDrones.set(player.client, drone)
 		this.addDrone(drone)
-		this.clients.push(player)
+		this.players.push(player)
 	}
-	loadClient(player, position = [0, 0, 0], orientation = [0, 0]) {
+	loadPlayer(player, position = [0, 0, 0], orientation = [0, 0]) {
 		player.client.loadLevel(this.blocks, this.bounds[0], this.bounds[1], this.bounds[2], false, () => {
 			player.client.setClickDistance(10000)
 			player.emit("levelLoaded")
@@ -111,16 +111,16 @@ class Level extends require("events") {
 		})
 	}
 	reload() {
-		this.clients.forEach(player => {
-			this.loadClient(player, player.position, player.orientation)
+		this.players.forEach(player => {
+			this.loadPlayer(player, player.position, player.orientation)
 			player.droneTransmitter.resendDrones()
 		})
 	}
-	setBlock(position, block, excludeClients = [], saveToRecord = true) {
+	setBlock(position, block, excludePlayers = [], saveToRecord = true) {
 		this.blocks.writeUInt8(block, position[0] + this.bounds[0] * (position[2] + this.bounds[2] * position[1]))
 		// callback(block, position[0], position[1], position[2])
-		this.clients.forEach(player => {
-			if (!excludeClients.includes(player)) {
+		this.players.forEach(player => {
+			if (!excludePlayers.includes(player)) {
 				player.client.setBlock(block, position[0], position[1], position[2])
 			}
 		})
@@ -139,7 +139,7 @@ class Level extends require("events") {
 	getBlock(position) {
 		return this.blocks.readUInt8(position[0] + this.bounds[0] * (position[2] + this.bounds[2] * position[1]))
 	}
-	interpretCommand(command = "cuboid 1", client = null, actionBytes = []) { // i.e: cuboid 1
+	interpretCommand(command = "cuboid 1", player = null, actionBytes = []) { // i.e: cuboid 1
 		// consider: if the blockset has names, user could refer to blocks by name and not just id.
 		const commandClass = Level.getCommandClassFromName(command)
 		if (commandClass) {
@@ -172,8 +172,8 @@ class Level extends require("events") {
 			// to consider: maybe instead of being the first, could be inferred by the layout type modifier instead.
 			if (this.currentCommandLayoutIndex == 0) {
 				let heldBlock = 0
-				if (this.clients[0]) {
-					heldBlock = this.clients[0].heldBlock
+				if (this.players[0]) {
+					heldBlock = this.players[0].heldBlock
 				}
 				this.currentCommandLayoutIndex++
 				this.currentCommandActionBytes.push(heldBlock)
@@ -238,8 +238,8 @@ class Level extends require("events") {
 		return false
 	}
 	playSound(soundName) {
-		this.clients.forEach(client => {
-			client.emit("playSound", client.universe.sounds[soundName])
+		this.players.forEach(player => {
+			player.emit("playSound", player.universe.sounds[soundName])
 		})
 	}
 	async dispose() {
