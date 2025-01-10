@@ -22,12 +22,7 @@ class Player extends require("events") {
    }
    async initialize(client, universe, authInfo) {
       const verifyUsernames = (universe.serverConfiguration.verifyUsernames && universe.heartbeat)
-      if (this.httpRequest) {
-         this.address = this.client.httpRequest.headers["x-forwarded-for"]
-      } else {
-         this.address = this.client.socket.remoteAddress
-      }
-      if (universe.server.clients.filter(otherClient => otherClient.address == this.address).length >= universe.serverConfiguration.maxIpConnections) {
+      if (universe.server.clients.filter(otherClient => otherClient.address == client.address).length >= universe.serverConfiguration.maxIpConnections) {
          return this.client.disconnect("Too many connections!")
       }
       if (universe.server.clients.some(otherClient => otherClient.authInfo.username == authInfo.username)) {
