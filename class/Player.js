@@ -28,21 +28,21 @@ class Player extends require("events") {
          this.address = this.client.socket.remoteAddress
       }
       if (universe.server.clients.filter(otherClient => otherClient.address == this.address).length >= universe.serverConfiguration.maxIpConnections) {
-         return this.disconnect("Too many connections!")
+         return this.client.disconnect("Too many connections!")
       }
       if (universe.server.clients.some(otherClient => otherClient.authInfo.username == authInfo.username)) {
-         return this.disconnect("Another client already has that name")
+         return this.client.disconnect("Another client already has that name")
       }
       if (verifyUsernames && crypto.createHash("md5").update(universe.heartbeat.salt + authInfo.username).digest("hex") !== authInfo.key) {
          console.log("Connection failed")
          this.message("It appears that authorization failed. Are you connecting via the ClassiCube server list? Try refreshing it.", 0)
          this.message(`You will be disconnected in 10 seconds.`, 0)
          setTimeout(() => {
-            this.disconnect("Authorization failed. Please check chat logs.")
+            this.client.disconnect("Authorization failed. Please check chat logs.")
          }, 10000)
          return
       }
-      if (!authInfo.extensions) return this.disconnect("Enable ClassiCube enhanced mode or use other supported client")
+      if (!authInfo.extensions) return this.client.disconnect("Enable ClassiCube enhanced mode or use other supported client")
       console.log(authInfo.username, "connected")
       this.client.on("close", () => {
          this.destroyed = true
@@ -67,8 +67,8 @@ class Player extends require("events") {
          this.message("* You are considered a list operator.", 0)
          this.message("* To force the heartbeat to post zero players, use /forcezero", 0)
       }
-      universe.addClient(this)
-      this.droneTransmitter = new DroneTransmitter(this)
+      universe.addPlayer(this)
+      this.droneTransmitter = new DroneTransmitter(this.client)
       universe.pushMessage(`+ ${this.username} connected`, PushIntegration.interestType.playerConnection)
       universe.server.clients.forEach(otherClient => {
          otherClient.emit("playSound", universe.sounds.join)
@@ -103,7 +103,7 @@ class Player extends require("events") {
             return this.message("You don't have permission to build in this level", 0)
          }
          if (operationPosition.some(value => value > 63)) {
-            this.disconnect("Illegal position received")
+            this.client.disconnect("Illegal position received")
             return
          }
          if (operation.mode == 0) {
@@ -190,7 +190,7 @@ class Player extends require("events") {
          this.heldBlock = heldBlock
          this.orientation = [orientation.yaw, orientation.pitch]
          if (this.space) {
-            const controlledDrone = this.space.clientDrones.get(this)
+            const controlledDrone = this.space.clientDrones.get(this.client)
             if (controlledDrone) {
                controlledDrone.setPosition(position, orientation)
             }
