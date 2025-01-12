@@ -214,13 +214,22 @@ class Player extends require("events") {
       const messages = []
       while (message.length > 64 - continueAdornment.length) {
          let splitIndex = 64 - continueAdornment.length
-         while (message[splitIndex] != " " && splitIndex > 0) {
+         while (message[splitIndex] != " ") {
             splitIndex--
+            if (splitIndex <= 0) {
+               splitIndex = 64 - continueAdornment.length
+               break
+            }
          }
-         messages.push(continueAdornment + message.slice(0, splitIndex))
+         if (messages.length == 0) {
+            messages.push(message.slice(0, splitIndex))
+         } else {
+            messages.push(continueAdornment + message.slice(0, splitIndex))
+         }
          message = message.slice(splitIndex + 1)
       }
-      messages.push(message)
+      if (messages.length == 0) continueAdornment = ""
+      messages.push(continueAdornment + message)
       types.forEach(type => {
          messages.forEach(message => {
             this.client.message(message, type)
