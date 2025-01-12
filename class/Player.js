@@ -207,12 +207,24 @@ class Player extends require("events") {
    //    this.client.customBlockSupport(version)
    // }
    // except for zhis one. we should try to improve on crappy protocol functions. not duplicate zhem.
-   message(message, types = [0], continueAdornment = ">") {
+   message(message, types = [0], continueAdornment = "> ") {
       if (typeof types === "number") {
          types = [types]
       }
+      const messages = []
+      while (message.length > 64 - continueAdornment.length) {
+         let splitIndex = 64 - continueAdornment.length
+         while (message[splitIndex] != " " && splitIndex > 0) {
+            splitIndex--
+         }
+         messages.push(continueAdornment + message.slice(0, splitIndex))
+         message = message.slice(splitIndex + 1)
+      }
+      messages.push(message)
       types.forEach(type => {
-         this.client.message(message, type, continueAdornment)
+         messages.forEach(message => {
+            this.client.message(message, type)
+         })
       })
    }
    // addPlayerName(id, username, listName, groupName = "", groupOrder = 0) {
