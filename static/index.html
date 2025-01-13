@@ -45,7 +45,7 @@
 				authObject.cursor = cursor
 				setTimeout(() => {
 					localStorage.setItem("sound-brick.cursor", `${cursor}`)
-				}, 500);
+				}, 500)
 			}
 			data = data.data
 			data.volume = data.volume ?? 1
@@ -57,7 +57,7 @@
 							$buzz.fade(destroyLoop, 0, 3)
 							setTimeout(() => {
 								$buzz.destroy(destroyLoop)
-							}, 3100);
+							}, 3100)
 						} catch (err) {
 							console.warn(err)
 						}

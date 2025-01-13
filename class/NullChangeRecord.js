@@ -10,7 +10,7 @@ class NullChangeRecord {
 		this.currentActionCount = 0
 		setTimeout(() => {
 			loadedCallback(this)
-		}, 0);
+		}, 0)
 	}
 	addBlockChange(position, block) {
 		this.appendAction(false, position.concat(block))
