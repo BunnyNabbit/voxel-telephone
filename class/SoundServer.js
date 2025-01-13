@@ -43,7 +43,7 @@ class SoundTransmitter extends require("events") {
 				const deleteTrack = this.currentTrack
 				setTimeout(() => {
 					this.eventQueue.delete(deleteTrack)
-				}, 5000);
+				}, 5000)
 			}
 			this.currentTrack = event
 			this.eventQueue.add(event)
