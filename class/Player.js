@@ -211,25 +211,26 @@ class Player extends require("events") {
       if (typeof types === "number") {
          types = [types]
       }
+      const maxLength = 64 - continueAdornment.length
       const messages = []
-      while (message.length > 64 - continueAdornment.length) {
-         let splitIndex = 64 - continueAdornment.length
-         while (message[splitIndex] != " ") {
-            splitIndex--
-            if (splitIndex <= 0) {
-               splitIndex = 64 - continueAdornment.length
+      if (message.length <= maxLength) {  // Handle short messages directly
+         messages.push(message)
+      } else {
+         while (message.length > 0) {
+            if (message.length <= maxLength) {
+               messages.push(messages.length === 0 ? message : continueAdornment + message)
                break
             }
+            let splitIndex = message.lastIndexOf(" ", maxLength)
+            if (splitIndex === -1 || splitIndex === 0) {
+               splitIndex = Math.min(maxLength, message.length)
+            }
+            const currentMessage = messages.length === 0 ? message.substring(0, splitIndex) : continueAdornment + message.substring(0, splitIndex)
+            messages.push(currentMessage)
+            message = message.substring(splitIndex + 1).trim()
          }
-         if (messages.length == 0) {
-            messages.push(message.slice(0, splitIndex))
-         } else {
-            messages.push(continueAdornment + message.slice(0, splitIndex))
-         }
-         message = message.slice(splitIndex + 1)
       }
-      if (messages.length == 0) continueAdornment = ""
-      messages.push(continueAdornment + message)
+
       types.forEach(type => {
          messages.forEach(message => {
             this.client.message(message, type)
