@@ -213,19 +213,30 @@ class Player extends require("events") {
       }
       const maxLength = 64 - continueAdornment.length
       const messages = []
+      let currentColorCode = ""
       if (message.length <= maxLength) {  // Handle short messages directly
          messages.push(message)
       } else {
          while (message.length > 0) {
-            if (message.length <= maxLength) {
-               messages.push(messages.length === 0 ? message : continueAdornment + message)
+            const effectiveMaxLength = maxLength - currentColorCode.length // Adjust for color code length
+            if (message.length <= effectiveMaxLength) {
+               messages.push((messages.length === 0 ? "" : continueAdornment) + currentColorCode + message)
                break
             }
-            let splitIndex = message.lastIndexOf(" ", maxLength)
-            if (splitIndex === -1 || splitIndex === 0) {
-               splitIndex = Math.min(maxLength, message.length)
+            let splitIndex = message.lastIndexOf(" ", effectiveMaxLength)
+            // Check if the split is within a color code
+            const colorCodeIndex = message.lastIndexOf("&", effectiveMaxLength)
+            if (colorCodeIndex > splitIndex && colorCodeIndex < effectiveMaxLength + 2 && /^[0-9a-f]$/.test(message[colorCodeIndex + 1])) {
+               splitIndex = colorCodeIndex - 1 // Split before the color code, if found within the last couple of chars
             }
-            const currentMessage = messages.length === 0 ? message.substring(0, splitIndex) : continueAdornment + message.substring(0, splitIndex)
+            if (splitIndex === -1 || splitIndex === 0) {
+               splitIndex = Math.min(effectiveMaxLength, message.length)
+            }
+            const currentMessage = (messages.length === 0 ? "" : continueAdornment) + currentColorCode + message.substring(0, splitIndex)
+            const match = message.substring(0, splitIndex + 1).match(/&[0-9a-f](?!.*&[0-9a-f])/)
+            if (match) {
+               currentColorCode = match[0]
+            }
             messages.push(currentMessage)
             message = message.substring(splitIndex + 1).trim()
          }
