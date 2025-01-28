@@ -207,12 +207,45 @@ class Player extends require("events") {
    //    this.client.customBlockSupport(version)
    // }
    // except for zhis one. we should try to improve on crappy protocol functions. not duplicate zhem.
-   message(message, types = [0], continueAdornment = ">") {
+   message(message, types = [0], continueAdornment = "> ") {
       if (typeof types === "number") {
          types = [types]
       }
+      const maxLength = 64 - continueAdornment.length
+      const messages = []
+      let currentColorCode = ""
+      if (message.length <= maxLength) {  // Handle short messages directly
+         messages.push(message)
+      } else {
+         while (message.length > 0) {
+            const effectiveMaxLength = maxLength - currentColorCode.length // Adjust for color code length
+            if (message.length <= effectiveMaxLength) {
+               messages.push((messages.length === 0 ? "" : continueAdornment) + currentColorCode + message)
+               break
+            }
+            let splitIndex = message.lastIndexOf(" ", effectiveMaxLength)
+            // Check if the split is within a color code
+            const colorCodeIndex = message.lastIndexOf("&", effectiveMaxLength)
+            if (colorCodeIndex > splitIndex && colorCodeIndex < effectiveMaxLength + 2 && /^[0-9a-f]$/.test(message[colorCodeIndex + 1])) {
+               splitIndex = colorCodeIndex - 1 // Split before the color code, if found within the last couple of chars
+            }
+            if (splitIndex === -1 || splitIndex === 0) {
+               splitIndex = Math.min(effectiveMaxLength, message.length)
+            }
+            const currentMessage = (messages.length === 0 ? "" : continueAdornment) + currentColorCode + message.substring(0, splitIndex)
+            const match = message.substring(0, splitIndex).match(/&[0-9a-f](?!.*&[0-9a-f])/)
+            if (match) {
+               currentColorCode = match[0]
+            }
+            messages.push(currentMessage)
+            message = message.substring(splitIndex).trim()
+         }
+      }
+
       types.forEach(type => {
-         this.client.message(message, type, continueAdornment)
+         messages.forEach(message => {
+            this.client.message(message, type)
+         })
       })
    }
    // addPlayerName(id, username, listName, groupName = "", groupOrder = 0) {
