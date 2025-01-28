@@ -36,6 +36,8 @@ function sendBlockset(client, blockset) {
 
 const levelCommands = require("./levelCommands.js").commands
 const Drone = require("./Drone.js")
+// eslint-disable-next-line no-unused-vars
+const Player = require("./Player.js")
 
 class Level extends require("events") {
 	static commands = levelCommands
@@ -63,13 +65,16 @@ class Level extends require("events") {
 			player.droneTransmitter.addDrone(drone)
 		})
 	}
+	/**
+	 * Removes a player from the level.
+	 * @param {Player} player - The player to be removed.
+	 */
 	removePlayer(player) {
 		player.space = null
 		const index = this.players.indexOf(player)
-		if (index) this.players.splice(index, 1)
 		if (index !== -1) this.players.splice(index, 1)
 		const drone = this.clientDrones.get(player.client)
-		this.clientDrones.delete(player)
+		this.clientDrones.delete(player.client)
 		this.removeDrone(drone)
 		player.droneTransmitter.clearDrones()
 		this.emit("playerRemoved", player)
