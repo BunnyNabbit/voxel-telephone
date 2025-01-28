@@ -233,12 +233,12 @@ class Player extends require("events") {
                splitIndex = Math.min(effectiveMaxLength, message.length)
             }
             const currentMessage = (messages.length === 0 ? "" : continueAdornment) + currentColorCode + message.substring(0, splitIndex)
-            const match = message.substring(0, splitIndex + 1).match(/&[0-9a-f](?!.*&[0-9a-f])/)
+            const match = message.substring(0, splitIndex).match(/&[0-9a-f](?!.*&[0-9a-f])/)
             if (match) {
                currentColorCode = match[0]
             }
             messages.push(currentMessage)
-            message = message.substring(splitIndex + 1).trim()
+            message = message.substring(splitIndex).trim()
          }
       }
 
