@@ -6,7 +6,7 @@ function toArray(iterator) {
 	return array
 }
 
-const Level = require("./class/Level.js")
+const Level = require("./class/level/Level.js")
 
 function register(universe) {
 	class Help {

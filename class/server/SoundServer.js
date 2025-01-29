@@ -93,7 +93,7 @@ class SoundServer extends require("events") {
 		const app = express()
 		const server = createServer(app)
 		const io = new Server(server)
-		app.use('/', express.static(join(__dirname, '../static')))
+		app.use('/', express.static(join(__dirname, '../../static')))
 
 		io.on('connection', (socket) => {
 			if (socket.handshake.auth.key) {

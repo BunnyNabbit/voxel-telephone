@@ -35,9 +35,7 @@ function sendBlockset(client, blockset) {
 }
 
 const levelCommands = require("./levelCommands.js").commands
-const Drone = require("./Drone.js")
-// eslint-disable-next-line no-unused-vars
-const Player = require("./Player.js")
+const Drone = require("./drone/Drone.js")
 
 class Level extends require("events") {
 	static commands = levelCommands
