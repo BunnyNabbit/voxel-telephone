@@ -205,6 +205,7 @@ class Player extends require("events") {
 		}
 	}
 	message(message, types = [0], continueAdornment = "> ") {
+		const originalMessage = message
 		if (typeof types === "number") {
 			types = [types]
 		}
@@ -240,9 +241,13 @@ class Player extends require("events") {
 		}
 
 		types.forEach(type => {
-			messages.forEach(message => {
-				this.client.message(message, type)
-			})
+			if (type == 0) {
+				messages.forEach(message => {
+					this.client.message(message, type)
+				})
+			} else {
+				this.client.message(originalMessage, type)
+			}
 		})
 	}
 }
