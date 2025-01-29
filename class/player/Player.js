@@ -19,6 +19,7 @@ class Player extends require("events") {
 		this.authInfo = authInfo
 		this.username = authInfo.username
 		this.ready = this.initialize(client, universe, authInfo)
+		this.space = null
 	}
 	async initialize(client, universe, authInfo) {
 		const verifyUsernames = (universe.serverConfiguration.verifyUsernames && universe.heartbeat)
@@ -146,7 +147,7 @@ class Player extends require("events") {
 			} else {
 				if (filter.matches(message)) {
 					const filterMessages = universe.serverConfiguration.replacementMessages
-					universe.server.players.forEach(otherClient => otherClient.message(`&7${this.authInfo.username}: &f${filterMessages[0, randomIntFromInterval(0, filterMessages.length - 1)]}`))
+					universe.server.players.forEach(otherClient => otherClient.message(`&7${this.authInfo.username}: &f${filterMessages[randomIntFromInterval(0, filterMessages.length - 1)]}`))
 					return
 				}
 				if (this.space?.game?.promptType == "build") {
