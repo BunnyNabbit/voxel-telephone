@@ -1,6 +1,6 @@
 const exportLevelAsVox = require("./exportVox.js")
-const templates = require("./templates.js")
-const Zone = require("./class/Zone.js")
+const templates = require("./class/level/templates.js")
+const Zone = require("./class/level/Zone.js")
 const PushIntegration = require("./class/integrations/PushIntegration.js")
 
 function invertPromptType(promptType) {

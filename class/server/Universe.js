@@ -1,20 +1,20 @@
 const Server = require("classicborne-server-protocol")
-const Level = require("./class/Level.js")
-const ViewLevel = require("./class/ViewLevel.js")
-const HubLevel = require("./class/HubLevel.js")
-const GlobalCommandRegistry = require("./class/GlobalCommandRegistry.js")
-const ChangeRecord = require("./class/ChangeRecord.js")
-const NullChangeRecord = require("./class/NullChangeRecord.js")
-const exportLevelAsVox = require("./exportVox.js")
-const defaultBlockset = require("./6-8-5-rgb.json")
-const Database = require("./class/Database.js")
-const Heartbeat = require("./class/Heartbeat.js")
-const templates = require("./templates.js")
-const commands = require("./commands.js")
-const cefSounds = require("./cefSounds.js")
-const Player = require("./class/Player.js")
-const Drone = require("./class/Drone.js")
-const PushIntegration = require("./class/integrations/PushIntegration.js")
+const Level = require("../level/Level.js")
+const ViewLevel = require("../level//ViewLevel.js")
+const HubLevel = require("../level//HubLevel.js")
+const GlobalCommandRegistry = require("../GlobalCommandRegistry.js")
+const ChangeRecord = require("../level/changeRecord/ChangeRecord.js")
+const NullChangeRecord = require("../level/changeRecord/NullChangeRecord.js")
+const exportLevelAsVox = require("../../exportVox.js")
+const defaultBlockset = require("../../6-8-5-rgb.json")
+const Database = require("../Database.js")
+const Heartbeat = require("./Heartbeat.js")
+const templates = require("../level/templates.js")
+const commands = require("../../commands.js")
+const cefSounds = require("../../cefSounds.js")
+const Player = require("../player/Player.js")
+const Drone = require("../level/drone/Drone.js")
+const PushIntegration = require("../integrations/PushIntegration.js")
 
 const builderDefaults = {
 	template: templates.builder
@@ -51,14 +51,14 @@ class Universe extends require("events") {
 			this.heartbeat = new Heartbeat(`https://www.classicube.net/server/heartbeat/`, this)
 		}
 		if (this.serverConfiguration.sounds.enabled) {
-			const SoundServer = require("./class/SoundServer.js")
+			const SoundServer = require("./SoundServer.js")
 			this.soundServer = new SoundServer(this)
 		}
 		this.integrations = []
 		if (this.serverConfiguration.integrations) {
 			this.serverConfiguration.integrations.forEach(integrationData => {
 				try {
-					const integrationClass = require(`./class/integrations/${integrationData.class}.js`)
+					const integrationClass = require(`../integrations/${integrationData.class}.js`)
 					const interests = integrationData.interests.map(interest => PushIntegration.interestType[interest])
 					const integration = new integrationClass(interests, integrationData.authData, this)
 					this.integrations.push(integration)

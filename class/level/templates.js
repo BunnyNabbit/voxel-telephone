@@ -1,8 +1,8 @@
 const fs = require("fs")
 const nbt = require("nbt")
 const path = require('path')
-const Level = require("./class/Level.js")
-const ChangeRecord = require("./class/ChangeRecord.js")
+const Level = require("./Level.js")
+const ChangeRecord = require("./changeRecord/ChangeRecord.js")
 
 function createVoxelBufferTemplate(fileName) {
 	let template = null
