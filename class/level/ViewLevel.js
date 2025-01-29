@@ -24,7 +24,7 @@ class ViewLevel extends Level {
 				await this.dispose()
 			}
 			const positionEventListener = this.positionEventListeners.get(player)
-			player.removeListener("position", positionEventListener)
+			player.client.removeListener("position", positionEventListener)
 			player.message(" ", [11, 12, 13])
 		})
 		this.on("playerAdded", async (player) => {
@@ -58,7 +58,7 @@ class ViewLevel extends Level {
 					this.universe.enterView(player, this.viewData, this.nextCursor)
 				}
 			}
-			player.on("position", onPosition)
+			player.client.on("position", onPosition)
 			this.positionEventListeners.set(player, onPosition)
 		})
 		this.viewData = viewData
