@@ -40,7 +40,7 @@ class Heartbeat {
 	}
 	// https://stackoverflow.com/a/56975550
 	static getGitHash() {
-		const rev = fs.readFileSync(join(__dirname, "../.git/HEAD")).toString().trim().split(/.*[: ]/).slice(-1)[0]
+		const rev = fs.readFileSync(join(__dirname, "../../.git/HEAD")).toString().trim().split(/.*[: ]/).slice(-1)[0]
 		if (rev.indexOf('/') === -1) {
 			return rev
 		} else {
