@@ -245,13 +245,14 @@ class Level extends require("events") {
 			player.emit("playSound", player.universe.sounds[soundName])
 		})
 	}
-	async dispose() {
-		if (!this.changeRecord.draining && this.changeRecord.dirty) {
+	async dispose(saveChanges = true) {
+		if (!this.changeRecord.draining && this.changeRecord.dirty && saveChanges) {
 			await this.changeRecord.flushChanges()
 		}
 		await this.changeRecord.dispose()
 		this.emit("unloaded")
 		this.removeAllListeners()
 	}
+	static standardBounds = [64, 64, 64]
 }
 module.exports = Level
