@@ -314,9 +314,7 @@ function register(universe) {
 		if (!selectedTurns.description) return player.message("No game is selected.")
 		const game = await universe.db.getGame(selectedTurns.description.root)
 		if (game.length !== 16) return player.message("Game is not complete.")
-		const fastForwardLevel = new FastForwardLevel(game)
-		player.space.removePlayer(player)
-		fastForwardLevel.addPlayer(player)
+		universe.enterPlayback(player, game)
 	})
 
 	help.register(universe)

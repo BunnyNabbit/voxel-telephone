@@ -1,25 +1,22 @@
 const Level = require("./Level.js")
 const templates = require("./templates.js")
-const NullChangeRecord = require("./changeRecord/NullChangeRecord.js")
 const ChangeRecord = require("./changeRecord/ChangeRecord.js")
 
 /** Level replaying turns and zheir block changes */
 class FastForwardLevel extends Level {
-	constructor(gameTurns) {
-		super([64, 64, 64], templates.empty(Level.standardBounds))
+	constructor(bounds, blocks, gameTurns) {
+		super(bounds, blocks)
 		this.turns = gameTurns
-		this.changeRecord = new NullChangeRecord()
 		this.sendChanges = false
 		this.on("playerRemoved", async () => {
 			if (!this.players.length) {
-				// this.universe.levels.delete(this.name)
+				this.universe.levels.delete(this.name)
 				await this.dispose(false)
 				// TODO: Check if leaving while changes are being restored breaks anyzhing.
 			}
 		})
-		this.once("playerAdded", (player) => {
+		this.once("playerAdded", () => {
 			this.playbackTurns()
-			player.emit("playSound", player.universe.sounds.playbackTrack)
 		})
 	}
 	async playbackTurns() {
@@ -68,28 +65,9 @@ class FastForwardLevel extends Level {
 			super.rawSetBlock(position, block)
 		}
 	}
-	// /**Sends differences in blocks from two different block buffers
-	//  * @param {Level} level A level to send block changes to
-	//  * @param {Buffer} bufferA The first buffer to compare
-	//  * @param {Buffer} bufferB The second buffer to compare
-	//  */
-	// static sendDifferences(level, bufferA, bufferB) {
-	// 	const length = bufferA.length
-	// 	for (let i = 0; i < length; i++) {
-	// 		if (bufferA[i] != bufferB[i]) {
-	// 			const x = i % 64
-	// 			const z = Math.floor(i / 64) % 64
-	// 			const y = Math.floor(i / 4096)
-	// 			level.setBlock([x, y, z], bufferB[i])
-	// 		}
-	// 	}
-	// }
 	clearLevel() {
 		this.blocks = templates.empty(Level.standardBounds)
 		this.reload()
-	}
-	getSpawnPosition() {
-		return [[0, 0, 0], [162, 254]]
 	}
 	static sleep(time) {
 		return new Promise(resolve => setTimeout(resolve, time))

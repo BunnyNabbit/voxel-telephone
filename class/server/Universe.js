@@ -2,6 +2,7 @@ const Server = require("classicborne-server-protocol")
 const Level = require("../level/Level.js")
 const ViewLevel = require("../level//ViewLevel.js")
 const HubLevel = require("../level//HubLevel.js")
+const FastForwardLevel = require("../level//FastForwardLevel.js")
 const GlobalCommandRegistry = require("../GlobalCommandRegistry.js")
 const ChangeRecord = require("../level/changeRecord/ChangeRecord.js")
 const NullChangeRecord = require("../level/changeRecord/NullChangeRecord.js")
@@ -218,6 +219,24 @@ class Universe extends require("events") {
 			level.addPlayer(player, [60, 8, 4], [162, 254])
 			player.teleporting = false
 			player.emit("playSound", this.sounds.viewTrack)
+		})
+	}
+	async enterPlayback(player, game) {
+		if (player.teleporting == true) return
+		player.teleporting = true
+		player.space.removePlayer(player)
+		const promise = this.loadLevel(`game-${game._id}-${player.username}`, {
+			useNullChangeRecord: true,
+			levelClass: FastForwardLevel,
+			arguments: [game]
+		})
+		player.message("Playback", 1)
+		player.message("Go back to hub with /main", 2)
+		player.message(" ", 3)
+		promise.then(level => {
+			level.addPlayer(player, [60, 8, 4], [162, 254])
+			player.teleporting = false
+			player.emit("playSound", this.sounds.playbackTrack)
 		})
 	}
 	async startGame(player) {
