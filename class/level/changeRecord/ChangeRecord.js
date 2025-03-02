@@ -46,6 +46,12 @@ class ChangeRecord {
 			})
 		}
 	}
+	/**Process the VHS file with a given processor function.
+	 * @param {object} vhsFh - The file handle of the VHS file.
+	 * @param {function} processor - The processor function to process each action.
+	 * @returns {Promise<number>} The total number of actions processed.
+	 * @private
+	 */
 	async _processVhsFile(vhsFh, processor) {
 		let currentPosition = 0
 		this.actionCount = 0
@@ -72,7 +78,8 @@ class ChangeRecord {
 					}
 				}
 
-				if (!processor(actions, commandName, actionBytes, changes)) {
+				const exit = await processor(actions, commandName, actionBytes, changes)
+				if (!exit) {
 					return this.actionCount // Allow early exit
 				}
 			}
@@ -81,9 +88,18 @@ class ChangeRecord {
 		}
 		return this.actionCount
 	}
-	async restoreBlockChangesToLevel(level, maxActions) {
+	/**Restore block changes to a level.
+	 * @param {Level} level - The level to restore changes to.
+	 * @param {number} [maxActions] - The maximum number of actions to restore.
+	 * @param {function} [staller] - The function to call to stall the restore process.
+	 * @returns {Promise<number>} The total number of actions restored.
+	 */
+	async restoreBlockChangesToLevel(level, maxActions, staller) {
 		level.loading = true
-		const count = await this._processVhsFile(this.vhsFh, (actions, commandName, actionBytes, changes) => {
+		const count = await this._processVhsFile(this.vhsFh, async (actions, commandName, actionBytes, changes) => {
+			if (staller) {
+				await staller()
+			}
 			if (maxActions && this.actionCount == maxActions) {
 				level.loading = false
 				return false // Stop processing
@@ -146,6 +162,7 @@ class ChangeRecord {
 		return count
 
 	}
+	/** Closes file handles of change record. Does not flush changes. */
 	async dispose() {
 		await this.vhsFh.close()
 	}

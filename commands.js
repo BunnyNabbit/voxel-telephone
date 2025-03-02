@@ -2,6 +2,7 @@ const exportLevelAsVox = require("./exportVox.js")
 const templates = require("./class/level/templates.js")
 const Zone = require("./class/level/Zone.js")
 const PushIntegration = require("./class/integrations/PushIntegration.js")
+const FastForwardLevel = require("./class/level/FastForwardLevel.js")
 
 function invertPromptType(promptType) {
 	if (promptType == "description") return "build"
@@ -308,6 +309,15 @@ function register(universe) {
 		await player.space.reloadView(templates.view.level)
 		player.message("Game diverged!")
 	}, reasonHasUserPermission("moderator"))
+	universe.registerCommand(["/playback"], async (player) => {
+		const selectedTurns = player.selectedTurns
+		if (!selectedTurns.description) return player.message("No game is selected.")
+		const game = await universe.db.getGame(selectedTurns.description.root)
+		if (game.length !== 16) return player.message("Game is not complete.")
+		const fastForwardLevel = new FastForwardLevel(game)
+		player.space.removePlayer(player)
+		fastForwardLevel.addPlayer(player)
+	})
 
 	help.register(universe)
 }
