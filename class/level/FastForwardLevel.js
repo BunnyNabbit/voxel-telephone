@@ -20,15 +20,19 @@ class FastForwardLevel extends Level {
 		})
 	}
 	async playbackTurns() {
-		for (const turn of this.turns) {
+		// for (const turn of this.turns) {
+		for (let i = 0; i < this.turns.length / 2; i++) {
+			const descriptionTurn = this.turns[i * 2]
+			const buildTurn = this.turns[(i * 2) + 1]
 			const processTurn = new Promise(resolve => {
-				const changeRecord = new ChangeRecord(`./blockRecords/game-${turn.next}/`, async () => {
+				const changeRecord = new ChangeRecord(`./blockRecords/game-${buildTurn._id}/`, async () => {
 					await this.playbackChangeRecord(changeRecord)
 					resolve()
 				})
 			})
 			processTurn.then(() => {
-				this.messageAll(`placeholder.`)
+				this.messageAll(`${descriptionTurn.prompt} - Described by ${descriptionTurn.creators.join()} and built by ${buildTurn.creators.join()}`)
+				this.messageAll(descriptionTurn.prompt, [100])
 			}).catch(error => {
 				console.error(error)
 				this.messageAll(`Error processing turn.`)
