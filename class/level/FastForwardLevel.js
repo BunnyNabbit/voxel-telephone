@@ -20,7 +20,7 @@ class FastForwardLevel extends Level {
 		})
 	}
 	async playbackTurns() {
-		// for (const turn of this.turns) {
+		await FastForwardLevel.sleep(1000) // allow zhe player to load and send zheir position
 		for (let i = 0; i < this.turns.length / 2; i++) {
 			const descriptionTurn = this.turns[i * 2]
 			const buildTurn = this.turns[(i * 2) + 1]

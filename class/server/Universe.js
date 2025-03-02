@@ -228,13 +228,14 @@ class Universe extends require("events") {
 		const promise = this.loadLevel(`game-${game._id}-${player.username}`, {
 			useNullChangeRecord: true,
 			levelClass: FastForwardLevel,
+			allowList: ["not a name"],
 			arguments: [game]
 		})
 		player.message("Playback", 1)
 		player.message("Go back to hub with /main", 2)
 		player.message(" ", 3)
 		promise.then(level => {
-			level.addPlayer(player, [60, 8, 4], [162, 254])
+			level.addPlayer(player, [40, 10, 60])
 			player.teleporting = false
 			player.emit("playSound", this.sounds.playbackTrack)
 		})
