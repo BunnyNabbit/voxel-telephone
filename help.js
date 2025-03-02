@@ -201,6 +201,10 @@ function register(universe) {
 		`Creates a new game timeline branching off from the highlighted turn in ${highlight("/view")}.`,
 		`This command is only available for moderators.`
 	], categories.moderation))
+	
+	help.register(new CommandHelp("/playback", [
+		`Replay a set of turns in ${highlight("/view")}.`,
+	], categories.gameplay))
 
 	const colorNames = {
 		"0": "Black",
