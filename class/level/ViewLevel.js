@@ -82,6 +82,9 @@ class ViewLevel extends Level {
 		if (this.viewData.mode == "user") {
 			return this.universe.db.getUserGrid(this.viewData.username, this.cursor)
 		}
+		if (this.viewData.mode == "purged") {
+			return this.universe.db.getPurgedGrid(this.cursor)
+		}
 		return this.universe.db.getGames(this.cursor)
 	}
 	async reloadView(template) {
@@ -101,7 +104,7 @@ class ViewLevel extends Level {
 			let iconPosition = 1
 			for (let turnIndex = 0; turnIndex < game.length; turnIndex++) {
 				const turn = game[turnIndex]
-				if (turn.promptType == "build") continue
+				if (!turn || turn.promptType == "build") continue
 				const addIcon = async (template) => {
 					let voxels = null
 					if (Buffer.isBuffer(template)) {
@@ -126,7 +129,6 @@ class ViewLevel extends Level {
 				const previewLevel = game.length == 16 || this.viewData.viewAll
 				const isOnlyDescription = !game[turnIndex + 1]
 				if (previewLevel && !isOnlyDescription) {
-					// todo
 					let previewLevel = new Level([64, 64, 64], templates.empty([64, 64, 64]))
 					let changeRecordPromise = new Promise(resolve => {
 						previewLevel.changeRecord = new ChangeRecord(`./blockRecords/game-${turn.next}/`, async () => {

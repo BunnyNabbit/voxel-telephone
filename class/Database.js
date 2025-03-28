@@ -96,6 +96,38 @@ class Database {
 		})
 	}
 
+	getPurgedGrid(cursor) {
+		return new Promise(resolve => {
+			const findDocument = {}
+			if (cursor) {
+				findDocument._id = { $lt: cursor }
+			}
+			this.purgedCollection.find(findDocument).sort({ _id: -1 }).limit(65, async (err, purgedTurns) => {
+				const grid = []
+				let currentColumn = []
+				purgedTurns.forEach(turn => {
+					if (turn.promptType == "description") {
+						currentColumn.push(turn, null)
+					} else {
+						currentColumn.push({
+							promptType: "description",
+							creators: ["Moderator"],
+							prompt: turn.reason || "[ No reason provided ]",
+							next: turn._id,
+						}, turn)
+					}
+					if (currentColumn.length == 16) {
+						grid.push(currentColumn)
+						currentColumn = []
+					}
+				})
+				if (currentColumn.length) grid.push(currentColumn)
+				console.log(grid)
+				resolve(grid)
+			})
+		})
+	}
+
 	async getPortals(name) {
 		return new Promise(resolve => {
 			this.portalCollection.findOne({ _id: name }, (err, doc) => {
