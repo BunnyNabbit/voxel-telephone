@@ -202,6 +202,7 @@ class Universe extends require("events") {
 		let spaceName = "game-view"
 		if (viewData.mode == "mod") spaceName += "-mod"
 		if (viewData.mode == "user") spaceName += `-user-${player.authInfo.username}`
+		if (viewData.mode == "purged") spaceName += `-purged`
 		if (cursor) spaceName += cursor
 		const promise = this.loadLevel(spaceName, {
 			useNullChangeRecord: true,

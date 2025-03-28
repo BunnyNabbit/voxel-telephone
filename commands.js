@@ -2,7 +2,6 @@ const exportLevelAsVox = require("./exportVox.js")
 const templates = require("./class/level/templates.js")
 const Zone = require("./class/level/Zone.js")
 const PushIntegration = require("./class/integrations/PushIntegration.js")
-const FastForwardLevel = require("./class/level/FastForwardLevel.js")
 
 function invertPromptType(promptType) {
 	if (promptType == "description") return "build"
@@ -282,6 +281,10 @@ function register(universe) {
 			universe.enterView(player, { viewAll: true, mode: "mod" })
 		} else if (message == "user") {
 			universe.enterView(player, { viewAll: true, mode: "user", username: player.authInfo.username })
+		} else if (message == "purged") {
+			const isModerator = await reasonHasUserPermission("moderator")(player)
+			if (!isModerator) return
+			universe.enterView(player, { viewAll: true, mode: "purged", username: player.authInfo.username })
 		} else if (!message) {
 			universe.enterView(player)
 		} else {
