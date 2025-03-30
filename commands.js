@@ -314,7 +314,7 @@ function register(universe) {
 	}, reasonHasUserPermission("moderator"))
 	universe.registerCommand(["/playback"], async (player) => {
 		const selectedTurns = player.selectedTurns
-		if (!selectedTurns.description) return player.message("No game is selected.")
+		if (!selectedTurns?.description) return player.message("No game is selected.")
 		const game = await universe.db.getGame(selectedTurns.description.root)
 		if (game.length !== 16) return player.message("Game is not complete.")
 		universe.enterPlayback(player, game)
