@@ -328,7 +328,7 @@ function register(universe) {
 		})
 	}
 
-	unimplementedCommandHelper(["/levels", "/worlds", "/maps", "/goto", "/g", "/gr", "/gotorandom", "/joinrandom"], "where-are-levels")
+	unimplementedCommandHelper(["/levels", "/worlds", "/maps", "/goto", "/g", "/gr", "/gotorandom", "/joinrandom", "/move", "/teleport", "/tp"], "where-are-levels")
 	unimplementedCommandHelper(["/ranks"], "where-are-ranks")
 	unimplementedCommandHelper(["/os", "/realm", "/myrealm"], "where-are-realms")
 
