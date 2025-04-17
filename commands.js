@@ -274,7 +274,7 @@ function register(universe) {
 	universe.registerCommand(["/play"], async (player) => {
 		universe.startGame(player)
 	})
-	universe.registerCommand(["/view"], async (player, message) => {
+	universe.registerCommand(["/view", "/museum", "/gallery"], async (player, message) => {
 		if (message == "mod") {
 			const isModerator = await reasonHasUserPermission("moderator")(player)
 			if (!isModerator) return
@@ -319,6 +319,18 @@ function register(universe) {
 		if (game.length !== 16) return player.message("Game is not complete.")
 		universe.enterPlayback(player, game)
 	})
+
+	function unimplementedCommandHelper(commands, helpTopic) {
+		universe.registerCommand(commands, (player) => {
+			player.message("&cThis command is unavailable:")
+			universe.commandRegistry.attemptCall(player, `/help ${helpTopic}`)
+			player.message("&cFor help on existing commands and topics, use /help")
+		})
+	}
+
+	unimplementedCommandHelper(["/levels", "/worlds", "/maps", "/goto", "/g", "/gr", "/gotorandom", "/joinrandom"], "where-are-levels")
+	unimplementedCommandHelper(["/ranks"], "where-are-ranks")
+	unimplementedCommandHelper(["/os", "/realm", "/myrealm"], "where-are-realms")
 
 	help.register(universe)
 }
