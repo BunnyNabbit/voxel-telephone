@@ -22,7 +22,7 @@ function register(universe) {
 		}
 		callPlayer(player, argument) {
 			if (!argument) {
-				player.message(`Categories: ${Object.values(categories).join(", ")}`)
+				player.message(`${highlight("Categories")}: ${Object.values(categories).join(", ")}`)
 				argument = "help"
 			}
 			argument = argument.toLowerCase().split(" ")[0]
@@ -41,15 +41,15 @@ function register(universe) {
 				} else {
 					aliases = command.aliases.map(alias => "/" + alias).join(", ")
 				}
-				if (aliases) player.message(`Aliases: ${aliases}`)
+				if (aliases) player.message(`${highlight("Aliases")}: ${aliases}`)
 				commandHelp.displayHelpToPlayer(player)
 				return
 			}
 			const category = categories[argument]
 			if (category) {
 				player.message(category)
-				player.message(`Topics: ${toArray(this.topics.values()).filter(help => help.category == category).map(help => help.name).join(", ")}`)
-				player.message(`Commands: ${toArray(this.commands.values()).filter(help => help.category == category).map(help => help.name).join(", ")}`)
+				player.message(`${highlight("Topics")}: ${toArray(this.topics.values()).filter(help => help.category == category).map(help => help.name).join(", ")}`)
+				player.message(`${highlight("Commands")}: ${toArray(this.commands.values()).filter(help => help.category == category).map(help => help.name).join(", ")}`)
 				return
 			}
 			player.message(`Unable to find help document for ${argument}.`)
@@ -147,7 +147,7 @@ function register(universe) {
 	help.register(new TopicHelp("templates", [
 		`builder - Used as the default template for building which includes a palette and axis lines.`,
 		`empty - An empty template. Used by describe turns and the hub level.`,
-	]))
+	], categories.building))
 
 	help.register(new CommandHelp("/template", [
 		`Switches the level's template. For a list of templates, see ${highlight("/help templates")}.`,
@@ -240,11 +240,31 @@ function register(universe) {
 	})
 
 	help.register(new CommandHelp("/help", [
-		`Usage: ${highlight("/help <command/topic/category>")}`,
+		`Usage: ${highlight("/help <a command, topic or category>")}`,
 		`Lists help documentation and aliases (shortcuts) for a command, topic or category. If used without an argument provided, a list of command categories and topics is listed along with a few featured commands.`,
 		`For example, ${highlight("/help vcr")} will bring up the help documentation for the ${highlight("/vcr")} command.`,
 		`Throughout help documentation, you may notice ${highlight("<angled brackets>")} and ${highlight("[square brackets]")}. This annotation helps describe a command's argument and if that argument is optional or not. ${highlight("<angled brackets>")} describe an optional argument, while ${highlight("[square brackets]")} are required arguments.`
 	]), categories.information)
+
+	// misc topics for attempting to run commands from ozher server software
+	help.register(new TopicHelp("where-are-levels", [
+		`Voxel Telephone does not have a list of levels. Instead, all game modes are in the ${highlight("/main")} level hub as portals.`,
+		`Walk into the portals located in the hub to enter its game mode.`,
+		`Alternatively, use the following commands to enter a game mode.`,
+		`- ${highlight("/play")} - Enter a random game.`,
+		`- ${highlight("/view")} - Enter the view gallery.`,
+		`- ${highlight("/main")} - Enter the hub.`
+	]))
+	
+	help.register(new TopicHelp("where-are-ranks", [
+		`Voxel Telephone does not have a list of ranks.`
+	]))
+
+	help.register(new TopicHelp("where-are-realms", [
+		`Voxel Telephone currently does not have personal realms/overseer.`,
+		`If this is in your interests, please give attention to the following GitHub issue.`,
+		`https://github.com/BunnyNabbit/voxel-telephone/issues/17`
+	]))
 }
 
 module.exports = {
