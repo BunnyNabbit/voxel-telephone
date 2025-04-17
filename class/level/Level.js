@@ -149,9 +149,14 @@ class Level extends require("events") {
 			this.blocking = true
 			this.currentCommand = new commandClass(this)
 			this.currentCommandLayoutIndex = 0
-			this.currentCommandActionBytes = []
-			// atm, we don't parse the command for bytes. start interactive now
-			this.inferCurrentCommand()
+			this.currentCommandActionBytes = actionBytes
+			// parse command for bytes
+			const splitCommand = command.split(" ").slice(1)
+			if (splitCommand.length) {
+				this.processCommandArguments(splitCommand, player)
+			} else {
+				this.inferCurrentCommand()
+			}
 		} else if (command) {
 			const commandName = command.toLowerCase()
 			this.messageAll(`Unable to find command with name ${commandName} for level ${this.name}`)
@@ -208,13 +213,81 @@ class Level extends require("events") {
 		}
 		return commandClass
 	}
-	addActionBytes(splitCommand) {
+	processCommandArguments(splitCommand, player) {
 		let currentIndex = 0
+		const incrementIndex = (commandIndex = 1) => {
+			this.currentCommandLayoutIndex++
+			currentIndex += commandIndex
+		}
+		const validateByte = (num) => {
+			if (isNaN(num)) return false
+			if (num < 0) return false
+			if (num > 255) return false
+			return true
+		}
+		const withinLevelBounds = (position) => {
+			if (position[0] < 0 || position[1] < 0 || position[2] < 0) return false
+			if (position[0] >= this.bounds[0] || position[1] >= this.bounds[1] || position[2] >= this.bounds[2]) return false
+			return true
+		}
 		while (true) {
 			const layoutElement = this.currentCommand.layout[this.currentCommandLayoutIndex]
 			if (!layoutElement) break
 			if (splitCommand[currentIndex] == null) break
+			const type = layoutElement.split(":")[0].replace("&", "")
+			if (type == "block") {
+				let block
+				if (splitCommand[currentIndex] == "hand") {
+					block = player.heldBlock
+					this.currentCommandActionBytes.push(block)
+					incrementIndex()
+					continue
+				}
+				block = parseInt(splitCommand[currentIndex])
+				if (!validateByte(block)) {
+					player.message("Invalid block id")
+					break
+				}
+				this.currentCommandActionBytes.push(block)
+				incrementIndex()
+				continue
+			} else if (type == "position") {
+				let position = [0, 1, 2].map(index => parseInt(splitCommand[currentIndex + index]))
+				if (position.some(num => !validateByte(num))) {
+					player.message("Invalid position")
+					break
+				}
+				if (!withinLevelBounds(position)) {
+					player.message("Position out of bounds")
+					break
+				}
+				this.currentCommandActionBytes.push(...position)
+				incrementIndex(3)
+				continue
+			} else if (type == "enum") {
+				const enumName = layoutElement.split(":")[1]
+				const enumValue = splitCommand[currentIndex]
+				const attemptByte = parseInt(enumValue)
+				if (validateByte(attemptByte) && this.currentCommand.enums[enumName][attemptByte]) { // input is an index
+					this.currentCommandActionBytes.push(attemptByte)
+					incrementIndex()
+					continue
+				}
+				const index = this.currentCommand.enums[enumName].findIndex((value) => { // find index by enum name
+					return value == enumValue
+				})
+				if (index == -1) {
+					break
+				}
+				this.currentCommandActionBytes.push(index)
+				incrementIndex()
+				continue
+			}
+			player.message("" + splitCommand[currentIndex] + " is not a valid argument for " + layoutElement)
+			player.message("Entering interactive mode")
+			break
 		}
+		this.inferCurrentCommand()
 	}
 	commitAction() {
 		this.blocking = false

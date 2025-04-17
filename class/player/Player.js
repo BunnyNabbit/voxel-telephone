@@ -143,7 +143,7 @@ class Player extends require("events") {
 					this.message("Unable to use commands. Level is in VCR mode")
 					return
 				}
-				this.space.interpretCommand(message.replace("/", ""))
+				this.space.interpretCommand(message.replace("/", ""), this)
 			} else {
 				if (filter.matches(message)) {
 					const filterMessages = universe.serverConfiguration.replacementMessages
