@@ -77,10 +77,18 @@ class Level extends require("events") {
 		player.droneTransmitter.clearDrones()
 		this.emit("playerRemoved", player)
 	}
+	/**
+	 * Removes a drone from the level.
+	 * @param {Drone} drone - The drone to be removed.
+	 */
 	removeDrone(drone) {
 		drone.destroy()
 		this.drones.delete(drone)
 	}
+	/**
+	 * Adds a drone to the level.
+	 * @param {Drone} drone - The drone to be added.
+	 */
 	addDrone(drone) {
 		this.players.forEach(player => {
 			player.droneTransmitter.addDrone(drone)
@@ -318,6 +326,7 @@ class Level extends require("events") {
 			player.emit("playSound", player.universe.sounds[soundName])
 		})
 	}
+	/** Destroys the level, releasing any resources used for it. */
 	async dispose(saveChanges = true) {
 		if (!this.changeRecord.draining && this.changeRecord.dirty && saveChanges) {
 			await this.changeRecord.flushChanges()
