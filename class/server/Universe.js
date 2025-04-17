@@ -178,7 +178,8 @@ class Universe extends require("events") {
 			level.environment = defaults.environment ?? {
 				sidesId: 7,
 				edgeId: 250,
-				edgeHeight: 0
+				edgeHeight: 0,
+				cloudsHeight: 256
 			}
 			level.texturePackUrl = defaults.texturePackUrl ?? this.serverConfiguration.texturePackUrl
 			level.allowList = defaults.allowList ?? []
