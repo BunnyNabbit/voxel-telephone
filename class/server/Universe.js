@@ -214,7 +214,7 @@ class Universe extends require("events") {
 		})
 		player.message("View", 1)
 		player.message("Go back to hub with /main", 2)
-		player.message(" ", 3)
+		player.message("Noclip past level borders to view next page", 3)
 		promise.then(async level => {
 			await level.reloadView(templates.view.level)
 			level.addPlayer(player, [60, 8, 4], [162, 254])
