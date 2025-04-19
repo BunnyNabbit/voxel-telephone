@@ -153,6 +153,36 @@ class AbnormalTriangle extends Command {
 	}
 }
 
+class SphereSlow extends Command {
+	name = "SphereSlow"
+	static help = ["Makes a sphere from a center point and a radius.", "If no arguments are added, block is inferred from your current hand and the server will ask for the block positions interactively."]
+	static aliases = ["sphere", "sp"]
+	constructor(level) {
+		super(["block:block", "&enum:mode", "position:center", "position:offset"], level, {
+			mode: ["soild"]
+		})
+	}
+	action(data) {
+		data = this.parseBytes(data)
+		const block = data.block
+		const center = data.center
+		const radius = Math.min(center.map((value, index) => Math.abs(data.offset[index] - value)).sort((a, b) => b - a)[0], 32) // i limit zhis number because large spheres are very taxing. however, if i am able to remove zhis limitation, it would need to be an entirely different function for format compat.
+		for (let x = -radius; x <= radius; x++) {
+			for (let y = -radius; y <= radius; y++) {
+				for (let z = -radius; z <= radius; z++) {
+					// check if within this.level.bounds
+					if (!this.level.withinLevelBounds([center[0] + x, center[1] + y, center[2] + z])) {
+						continue
+					}
+					if (x * x + y * y + z * z <= radius * radius) {
+						this.setBlock([center[0] + x, center[1] + y, center[2] + z], block)
+					}
+				}
+			}
+		}
+	}
+}
+
 module.exports = {
-	commands: [Cuboid, Line, AbnormalTriangle]
+	commands: [Cuboid, Line, AbnormalTriangle, SphereSlow]
 }
