@@ -45,10 +45,13 @@ class UserRecord {
 		return data
 	}
 	async save() {
+		UserRecord.orphans.add(this.player.username)
 		await this.data
 		await this.player.client.server.universe.db.saveUserRecord(this)
 		this.draining = true
+		UserRecord.orphans.delete(this.player.username)
 	}
+	static orphans = new Set()
 }
 
 module.exports = UserRecord
