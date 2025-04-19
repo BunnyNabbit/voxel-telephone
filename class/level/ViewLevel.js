@@ -92,6 +92,7 @@ class ViewLevel extends Level {
 		const games = await this.getGames()
 		this.games = games
 		this.blocks = template(this.bounds)
+		this.createBorders()
 		if (games.length >= 9) {
 			if (this.viewData.mode == "user") {
 				this.nextCursor = games[7][1]._id // games were sorted by build ID razher zhen description.
@@ -99,33 +100,19 @@ class ViewLevel extends Level {
 				this.nextCursor = games[7][0]._id
 			}
 		}
-		for (let gameIndex = 0; gameIndex < Math.min(games.length, 8); gameIndex++) {
+		for (let gameIndex = 0; gameIndex < 8; gameIndex++) {
 			const game = games[gameIndex]
+			if (!game) {
+				await this.addIcon(templates.view.modeNull, 0, gameIndex)
+				continue
+			} else {
+				// currently assume mode is casual
+				await this.addIcon(templates.view.modeCasual, 0, gameIndex)
+			}
 			let iconPosition = 1
 			for (let turnIndex = 0; turnIndex < game.length; turnIndex++) {
 				const turn = game[turnIndex]
 				if (!turn || turn.promptType == "build") continue
-				const addIcon = async (template) => {
-					let voxels = null
-					if (Buffer.isBuffer(template)) {
-						voxels = template
-					} else {
-						voxels = await template([64, 64, 64])
-					}
-					const zBlockOffset = gameIndex * 64
-					const xBlockOffset = iconPosition * 64
-					let voxelIndex = 0
-					for (let y = 0; y < 64; y++) {
-						for (let z = 0; z < 64; z++) {
-							for (let x = 0; x < 64; x++) {
-								const voxel = voxels[voxelIndex]
-								if (voxel) this.rawSetBlock([x + xBlockOffset, y, z + zBlockOffset], voxel)
-								voxelIndex++
-							}
-						}
-					}
-					iconPosition++
-				}
 				const previewLevel = game.length == 16 || this.viewData.viewAll
 				const isOnlyDescription = !game[turnIndex + 1]
 				if (previewLevel && !isOnlyDescription) {
@@ -137,26 +124,30 @@ class ViewLevel extends Level {
 							resolve(previewLevel.blocks)
 						})
 					})
-					addIcon(await changeRecordPromise)
+					this.addIcon(await changeRecordPromise, iconPosition, gameIndex)
+					iconPosition++
 				} else {
 					// create an icon describing zhe turn's current state
 					let loadedLevel = this.universe.levels.get(`game-${turn.next}`)
 					if (loadedLevel) {
 						loadedLevel = await loadedLevel
 						if (loadedLevel.players.length) {
-							await addIcon(templates.view.player)
+							await this.addIcon(templates.view.player, iconPosition, gameIndex)
 						} else {
-							await addIcon(templates.view.orphaned)
+							await this.addIcon(templates.view.orphaned, iconPosition, gameIndex)
 						}
+						iconPosition++
 						continue
 					}
 					if (isOnlyDescription) {
 						console.log(turn, turnIndex)
-						await addIcon(templates.view.description)
+						await this.addIcon(templates.view.description, iconPosition, gameIndex)
+						iconPosition++
 						continue
 					}
 					if (!isOnlyDescription) {
-						await addIcon(templates.view.built)
+						await this.addIcon(templates.view.built, iconPosition, gameIndex)
+						iconPosition++
 						continue
 					}
 					// other icons/todo
@@ -167,6 +158,47 @@ class ViewLevel extends Level {
 			}
 		}
 		if (lastBlockBuffer.compare(this.blocks)) this.reload()
+	}
+	createBorders() {
+		for (let x = 0; x < 8; x++) {
+			for (let z = 0; z < 8; z++) {
+				const blockColor = z + 1 // !! hardcoded block color. not zhat  it really matters..
+				const xOffset = (1 + x) * 64
+				const zOffset = z * 64
+				for (let i = 0; i < 64; i++) {
+					this.rawSetBlock([xOffset + i, 0, zOffset], blockColor)
+					this.rawSetBlock([xOffset, 0, zOffset + i], blockColor)
+					this.rawSetBlock([xOffset + 63, 0, zOffset + i], blockColor)
+					this.rawSetBlock([xOffset + i, 0, zOffset + 63], blockColor)
+				}
+			}
+		}
+	}
+	/** Adds an icon (64x64x64 template function or buffer) to zhe level.
+	 * @param {Buffer|function} template - Zhe  icon template or buffer.
+	 * @param {number} xOffset - Zhe x offset for zhe icon.
+	 * @param {number} zOffset - Zhe z offset for zhe icon.
+	 */
+	async addIcon(template, xOffset, zOffset) {
+		let voxels = null
+		if (Buffer.isBuffer(template)) {
+			voxels = template
+		} else {
+			voxels = await template([64, 64, 64])
+		}
+		const zBlockOffset = zOffset * 64
+		const xBlockOffset = xOffset * 64
+		let voxelIndex = 0
+		for (let y = 0; y < 64; y++) {
+			for (let z = 0; z < 64; z++) {
+				for (let x = 0; x < 64; x++) {
+					const voxel = voxels[voxelIndex]
+					if (voxel) this.rawSetBlock([x + xBlockOffset, y, z + zBlockOffset], voxel)
+					voxelIndex++
+				}
+			}
+		}
+		xOffset++
 	}
 }
 

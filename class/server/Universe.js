@@ -211,13 +211,13 @@ class Universe extends require("events") {
 			arguments: [viewData, cursor],
 			bounds: [576, 64, 512],
 			allowList: ["not a name"],
-			template: templates.view.level
+			template: templates.empty
 		})
 		player.message("View", 1)
 		player.message("Go back to hub with /main", 2)
 		player.message("Noclip past level borders to view next page", 3)
 		promise.then(async level => {
-			await level.reloadView(templates.view.level)
+			await level.reloadView(templates.empty)
 			level.addPlayer(player, [60, 8, 4], [162, 254])
 			player.teleporting = false
 			player.emit("playSound", this.sounds.viewTrack)

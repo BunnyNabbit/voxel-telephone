@@ -1,20 +1,6 @@
-const fs = require("fs")
-const nbt = require("nbt")
 const path = require('path')
 const Level = require("./Level.js")
 const ChangeRecord = require("./changeRecord/ChangeRecord.js")
-
-function createVoxelBufferTemplate(fileName) {
-	let template = null
-	nbt.parse(fs.readFileSync(path.join(__dirname, fileName)), async (error, data) => {
-		if (error) throw error
-		template = Buffer.from(data.value.BlockArray.value)
-	})
-	return function () {
-		if (!template) throw "Builder template not found"
-		return Buffer.from(template)
-	}
-}
 
 function empty(bounds) {
 	return Buffer.alloc(bounds[0] * bounds[1] * bounds[2])
@@ -46,7 +32,6 @@ function voxelRecordTemplate(iconName, bounds = [64, 64, 64]) {
 module.exports = {
 	builder: voxelRecordTemplate("voxel-telephone-64"),
 	view: {
-		level: createVoxelBufferTemplate("view.cw"),
 		built: voxelRecordTemplate("view-icon-built"),
 		description: voxelRecordTemplate("view-icon-description"),
 		orphaned: voxelRecordTemplate("view-icon-orphaned"),
@@ -56,6 +41,7 @@ module.exports = {
 		scyzhe: voxelRecordTemplate("view-icon-scyzhe"),
 		modeBlitz: voxelRecordTemplate("view-mode-blitz"),
 		modeCasual: voxelRecordTemplate("view-mode-casual"),
+		modeNull: voxelRecordTemplate("view-mode-null"),
 	},
 	empty
 }

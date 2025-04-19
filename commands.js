@@ -301,7 +301,7 @@ function register(universe) {
 		const selectedTurns = player.selectedTurns
 		if (!selectedTurns.description) return
 		await universe.db.purgeLastTurn(selectedTurns.description.root, reason)
-		await player.space.reloadView(templates.view.level)
+		await player.space.reloadView(templates.empty)
 		player.message("Turn purged!")
 	}, reasonHasUserPermission("moderator"))
 	universe.registerCommand(["/diverge", "/fork"], async (player, reason) => {
@@ -309,7 +309,7 @@ function register(universe) {
 		if (!selectedTurns.description) return
 		if (selectedTurns.description.depth == 0) return player.message("Unable to diverge game.")
 		await universe.db.divergeGame(selectedTurns.description, reason)
-		await player.space.reloadView(templates.view.level)
+		await player.space.reloadView(templates.empty)
 		player.message("Game diverged!")
 	}, reasonHasUserPermission("moderator"))
 	universe.registerCommand(["/playback"], async (player) => {
