@@ -338,7 +338,7 @@ function register(universe) {
 				userRecord.configuration.cefSounds = value
 				break
 			default:
-				return player.message("Unknown setting. /help settings")
+				return player.message("Unknown setting. /help setting")
 		}
 		player.message(`Setting ${setting} to ${value}`)
 		player.emit("configuration", userRecord.configuration)
