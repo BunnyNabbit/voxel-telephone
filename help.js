@@ -206,6 +206,13 @@ function register(universe) {
 		`Replay a set of turns in ${highlight("/view")}.`,
 	], categories.gameplay))
 
+	help.register(new CommandHelp("/setting", [
+		`Usage: ${highlight("/setting [setting name] [value (on/off)]")}`,
+		`Allows for setting preferences.`,
+		`music - Should music play?`,
+		`sounds - Should sounds play?`
+	], categories.gameplay))
+
 	const colorNames = {
 		"0": "Black",
 		"1": "Navy",
