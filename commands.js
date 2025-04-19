@@ -37,7 +37,7 @@ function register(universe) {
 	}
 	function reasonHasUserPermission(matchValue, message = "You don't have permission to use this command!") {
 		return async function (player) {
-			const userRecord = await player.userRecord.data
+			const userRecord = await player.userRecord.get()
 			if (userRecord.permissions[matchValue]) {
 				return true
 			}

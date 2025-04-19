@@ -63,6 +63,7 @@ class Player extends require("events") {
 			this.message("* You are considered a list operator.")
 			this.message("* To force the heartbeat to post zero players, use /forcezero")
 		}
+		this.userRecord = new UserRecord(this, universe.db.getUserRecordDocument(this.authInfo.username))
 		universe.addPlayer(this)
 		this.droneTransmitter = new DroneTransmitter(this.client)
 		universe.pushMessage(`+ ${this.username} connected`, PushIntegration.interestType.playerConnection)
@@ -72,7 +73,6 @@ class Player extends require("events") {
 		let tagline = "how do i get cowboy paint off a dog ."
 		if (universe.serverConfiguration.taglines) tagline = universe.serverConfiguration.taglines[randomIntFromInterval(0, universe.serverConfiguration.taglines.length - 1)]
 		this.client.serverIdentification("Voxel Telephone", tagline, 0x64)
-		this.userRecord = new UserRecord(this, universe.db.getUserRecordDocument(this.authInfo.username))
 		this.watchdog = new Watchdog(this)
 		if (this.usingCEF) {
 			// zhis is a pretty weird trick. usually zhe CEF plugin unloads windows on level loads, but it can be prevented if its initialization command is issued right before level loading.
