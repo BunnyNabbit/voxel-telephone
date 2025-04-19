@@ -111,6 +111,8 @@ class SoundServer extends require("events") {
 				})
 				const userRecord = await player.userRecord.get()
 				player.emit("configuration", userRecord.configuration)
+				player.message("CEF sounds are enabled.")
+				player.message("Use &a/setting music off &fto disable music")
 			}
 		})
 		const express = require('express')
