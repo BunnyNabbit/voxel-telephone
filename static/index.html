@@ -40,6 +40,12 @@
 		setInterval(() => { sfxrGenerationDegradation = 1 }, 300)
 
 		function playSound(data) {
+			if (data.stop) {
+				loop = null
+				loopURL = null
+				$buzz.destroy(loop)
+				return
+			}
 			const cursor = data.cursor
 			if (cursor > authObject.cursor) {
 				authObject.cursor = cursor

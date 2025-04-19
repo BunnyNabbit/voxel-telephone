@@ -167,7 +167,7 @@ class Player extends require("events") {
 						universe.canCreateCooldown.delete(this.authInfo.username)
 					}, 3600000) // one hour
 				} else {
-					const userRecord = await (this.userRecord.data)
+					const userRecord = await this.userRecord.get()
 					const sound = universe.sounds[userRecord.chatSound] || universe.sounds.chat
 					message = message.replaceAll("%", "&")
 					universe.pushMessage(`&7${this.authInfo.username}: &f${message}`, PushIntegration.interestType.chatMessage)

@@ -320,6 +320,30 @@ function register(universe) {
 		universe.enterPlayback(player, game)
 	})
 
+	universe.registerCommand(["/setting"], async (player, message) => {
+		const interpretBoolean = (str) => {
+			if (str == "true" || str == "on" || str == "1" || str == "yes") return true
+			if (str == "false" || str == "off" || str == "0" || str == "no") return false
+			return null
+		}
+		const setting = message.split(" ")[0]
+		const value = interpretBoolean(message.split(" ")[1])
+		const userRecord = await player.userRecord.get()
+		if (value == null) return player.message("Invalid value. Must be true or false.")
+		switch (setting) {
+			case "music":
+				userRecord.configuration.cefMusic = value
+				break
+			case "sounds":
+				userRecord.configuration.cefSounds = value
+				break
+			default:
+				return player.message("Unknown setting. /help settings")
+		}
+		player.message(`Setting ${setting} to ${value}`)
+		player.emit("configuration", userRecord.configuration)
+	})
+
 	function unimplementedCommandHelper(commands, helpTopic) {
 		universe.registerCommand(commands, (player) => {
 			player.message("&cThis command is unavailable:")
