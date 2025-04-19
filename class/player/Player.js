@@ -39,6 +39,9 @@ class Player extends require("events") {
 			return
 		}
 		if (!authInfo.extensions) return this.client.disconnect("Enable ClassiCube enhanced mode or use other supported client")
+		if (UserRecord.orphans.has(authInfo.username)) {
+			return this.client.disconnect("Orphaned. Rejoin in a few minutes.")
+		}
 		console.log(authInfo.username, "connected")
 		this.client.on("close", () => {
 			this.destroyed = true
