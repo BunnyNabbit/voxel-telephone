@@ -25,6 +25,24 @@ class SoundTransmitter extends require("events") {
 				if (!this.sockets.size) this.createWindow()
 			}, 4500)
 		})
+		this.configuration = {
+			cefMusic: false,
+			cefSounds: false
+		}
+		player.on("configuration", (configuration) => {
+			this.configuration = configuration
+			if (!configuration.cefMusic) {
+				this.enqueueEvent({
+					loop: true,
+					stop: true
+				})
+			} else {
+				// resend current track
+				if (this.currentTrack) {
+					this.enqueueEvent(this.currentTrack.data)
+				}
+			}
+		})
 	}
 
 	createWindow() {
@@ -35,10 +53,12 @@ class SoundTransmitter extends require("events") {
 	enqueueEvent(sound) {
 		const event = new SoundEvent(sound, this.eventCursor)
 		this.eventCursor++
-		this.sockets.forEach(socket => {
-			socket.emit("playSound", event)
-		})
-		if (sound.loop) {
+		if (this.canPlay(sound)) {
+			this.sockets.forEach(socket => {
+				socket.emit("playSound", event)
+			})
+		}
+		if (sound.loop && !sound.stop) {
 			if (this.currentTrack) {
 				const deleteTrack = this.currentTrack
 				setTimeout(() => {
@@ -54,12 +74,18 @@ class SoundTransmitter extends require("events") {
 			}, 5000)
 		}
 	}
+	canPlay(sound) {
+		if (sound.stop) return true
+		if (sound.loop && this.configuration.cefMusic) return true
+		if (!sound.loop && this.configuration.cefSounds) return true
+		return false
+	}
 
 	attach(socket, cursor) {
 		this.sockets.add(socket)
 		this.eventQueue.forEach(event => {
 			console.log(event.cursor, cursor, event.cursor > cursor)
-			if (event.cursor > cursor || event.data.loop) {
+			if (this.canPlay(event.data) && (event.cursor > cursor || event.data.loop)) {
 				socket.emit("playSound", event)
 			}
 		})
@@ -75,7 +101,7 @@ class SoundServer extends require("events") {
 	constructor(universe) {
 		super()
 		this.keySoundTransmitters = new Map()
-		universe.on("playerAdded", (player) => {
+		universe.on("playerAdded", async (player) => {
 			if (player.usingCEF) {
 				const key = crypto.randomBytes(6).toString("base64url")
 				const soundTransmitter = new SoundTransmitter(player)
@@ -83,6 +109,8 @@ class SoundServer extends require("events") {
 				player.once("close", () => {
 					this.keySoundTransmitters.delete(key)
 				})
+				const userRecord = await player.userRecord.get()
+				player.emit("configuration", userRecord.configuration)
 			}
 		})
 		const express = require('express')
