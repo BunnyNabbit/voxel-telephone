@@ -12,7 +12,7 @@ class UserRecord {
 	static getDefaultRecord(username) {
 		return {
 			_id: username,
-			dataVersion: 1,
+			dataVersion: 2,
 			permissions: {
 				mature: false,
 				listOperator: false,
@@ -20,9 +20,29 @@ class UserRecord {
 				hubBuilder: false,
 				triage: false,
 			},
+			configuration: {
+				cefMusic: true,
+				cefSounds: true
+			},
 			lastJoin: new Date(),
 			firstJoin: new Date()
 		}
+	}
+	static updateData(data) {
+		if (data.dataVersion == 1) {
+			// adds configuration
+			data.configuration = {
+				cefMusic: true,
+				cefSounds: true
+			}
+			data.dataVersion = 2
+		}
+	}
+	async get() {
+		const data = await this.data
+		// update it if it is outdated
+		UserRecord.updateData(data)
+		return data
 	}
 	async save() {
 		await this.data

@@ -407,7 +407,7 @@ class Database {
 
 	saveUserRecord(userRecord) {
 		return new Promise(async resolve => {
-			this.userCollection.replaceOne({ _id: userRecord.username }, await userRecord.data, { upsert: true }, (err) => {
+			this.userCollection.replaceOne({ _id: userRecord.username }, await userRecord.get(), { upsert: true }, (err) => {
 				this.draining = false
 				if (err) console.error(err)
 				resolve()

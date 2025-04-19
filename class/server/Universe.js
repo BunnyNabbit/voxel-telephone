@@ -132,7 +132,7 @@ class Universe extends require("events") {
 		const hatchday = this.getHatchday()
 		let hubName
 		if (player) {
-			hubName = forcedHubName || (await (player.userRecord.data)).defaultHub || ((hatchday && hatchday.hubName) || this.serverConfiguration.hubName)
+			hubName = forcedHubName || (await player.userRecord.get()).defaultHub || ((hatchday && hatchday.hubName) || this.serverConfiguration.hubName)
 		} else { // being used as a preloader
 			hubName = forcedHubName || this.serverConfiguration.hubName
 		}
