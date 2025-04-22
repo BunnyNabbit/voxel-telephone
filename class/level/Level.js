@@ -63,8 +63,7 @@ class Level extends require("events") {
 			player.droneTransmitter.addDrone(drone)
 		})
 	}
-	/**
-	 * Removes a player from the level.
+	/**Removes a player from the level.
 	 * @param {Player} player - The player to be removed.
 	 */
 	removePlayer(player) {
@@ -77,16 +76,14 @@ class Level extends require("events") {
 		player.droneTransmitter.clearDrones()
 		this.emit("playerRemoved", player)
 	}
-	/**
-	 * Removes a drone from the level.
+	/**Removes a drone from the level.
 	 * @param {Drone} drone - The drone to be removed.
 	 */
 	removeDrone(drone) {
 		drone.destroy()
 		this.drones.delete(drone)
 	}
-	/**
-	 * Adds a drone to the level.
+	/**Adds a drone to the level.
 	 * @param {Drone} drone - The drone to be added.
 	 */
 	addDrone(drone) {
