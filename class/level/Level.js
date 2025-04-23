@@ -3,37 +3,6 @@ function componentToHex(component) {
 	return hex.length == 1 ? "0" + hex : hex
 }
 
-function sendBlockset(client, blockset) {
-	for (let i = 0; i < 255; i++) {
-		let walkSound = 5
-		let texture = 79
-		if (blockset[i][3] == 3) {
-			walkSound = 6
-			texture = 51
-		}
-		const block = {
-			id: i + 1,
-			name: `${blockset[i].slice(0, 3).map(component => componentToHex(component)).join("")}#`,
-			fogDensity: 127,
-			fogR: blockset[i][0],
-			fogG: blockset[i][1],
-			fogB: blockset[i][2],
-			draw: blockset[i][3],
-			walkSound,
-			topTexture: texture,
-			leftTexture: texture,
-			rightTexture: texture,
-			frontTexture: texture,
-			backTexture: texture,
-			bottomTexture: texture,
-			transmitLight: 1
-		}
-		client.defineBlock(block)
-		client.defineBlockExt(block)
-		// client.setInventoryOrder(i + 1, 0)
-	}
-}
-
 const levelCommands = require("./levelCommands.js").commands
 const Drone = require("./drone/Drone.js")
 
@@ -107,7 +76,7 @@ class Level extends require("events") {
 			player.client.setClickDistance(10000)
 			player.emit("levelLoaded")
 		}, () => {
-			if (this.blockset) sendBlockset(player.client, this.blockset)
+			if (this.blockset) Level.sendBlockset(player.client, this.blockset)
 			if (this.environment) player.client.setEnvironmentProperties(this.environment)
 			if (this.texturePackUrl) player.client.texturePackUrl(this.texturePackUrl)
 			player.client.setBlockPermission(7, 1, 1)
@@ -331,6 +300,35 @@ class Level extends require("events") {
 		await this.changeRecord.dispose()
 		this.emit("unloaded")
 		this.removeAllListeners()
+	}
+	static sendBlockset(client, blockset) {
+		for (let i = 0; i < 255; i++) {
+			let walkSound = 5
+			let texture = 79
+			if (blockset[i][3] == 3) {
+				walkSound = 6
+				texture = 51
+			}
+			const block = {
+				id: i + 1,
+				name: `${blockset[i].slice(0, 3).map(component => componentToHex(component)).join("")}#`,
+				fogDensity: 127,
+				fogR: blockset[i][0],
+				fogG: blockset[i][1],
+				fogB: blockset[i][2],
+				draw: blockset[i][3],
+				walkSound,
+				topTexture: texture,
+				leftTexture: texture,
+				rightTexture: texture,
+				frontTexture: texture,
+				backTexture: texture,
+				bottomTexture: texture,
+				transmitLight: 1
+			}
+			client.defineBlock(block)
+			client.defineBlockExt(block)
+		}
 	}
 	static standardBounds = [64, 64, 64]
 }
