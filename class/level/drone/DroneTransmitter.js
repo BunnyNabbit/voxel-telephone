@@ -13,11 +13,11 @@ class DroneTransmitter extends require("events") {
 	}
 	configureDrone(drone) {
 		const netId = this.netIds.get(drone)
-		this.client.configureSpawnExt(netId, drone.name, drone.position[0], drone.position[1], drone.position[2], drone.orientation[0], drone.orientation[1], drone.skin)
+		this.client.configureSpawnExt(netId, drone.ego.name, drone.position[0], drone.position[1], drone.position[2], drone.orientation[0], drone.orientation[1], drone.ego.skin)
 		// Set model scale
-		this.client.setEntityProperty(netId, 3, drone.modelScale[0] * 1000) // X
-		this.client.setEntityProperty(netId, 4, drone.modelScale[1] * 1000) // Y
-		this.client.setEntityProperty(netId, 5, drone.modelScale[2] * 1000) // Z
+		this.client.setEntityProperty(netId, 3, drone.ego.scale[0] * 1000) // X
+		this.client.setEntityProperty(netId, 4, drone.ego.scale[1] * 1000) // Y
+		this.client.setEntityProperty(netId, 5, drone.ego.scale[2] * 1000) // Z
 	}
 	resendDrones() {
 		this.drones.forEach(drone => {
