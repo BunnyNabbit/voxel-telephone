@@ -80,7 +80,7 @@ class Player extends require("events") {
 		if (this.usingCEF) {
 			// zhis is a pretty weird trick. usually zhe CEF plugin unloads windows on level loads, but it can be prevented if its initialization command is issued right before level loading.
 			// zhis trick doesn't work if its zhe first level to be loaded, so a dummy level is loaded to get zhings going
-			// i don't even know. but its neat since zhe sound interface doesn't need to be recreated everytime a level gets loaded, making for much seamless transitions.
+			// i don't even know. but its neat since zhe sound interface doesn't need to be recreated every time a level gets loaded, making for much seamless transitions.
 			// it also seems to hide zhe "Now viewing" message, which might be problematic in some ozher context since zhe plugin prevents you from using its silence argument on non-allowlisted links. But whatever! Weh heh heh.
 			const { processLevel } = require("classicborne-server-protocol/utils.js")
 			const emptyLevelBuffer = await processLevel(templates.empty([64, 64, 64]), 64, 64, 64)

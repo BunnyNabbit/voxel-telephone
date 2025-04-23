@@ -118,7 +118,7 @@ class Level extends require("events") {
 		return this.blocks.readUInt8(position[0] + this.bounds[0] * (position[2] + this.bounds[2] * position[1]))
 	}
 	interpretCommand(command = "cuboid 1", player = null, actionBytes = []) { // i.e: cuboid 1
-		// consider: if the blockset has names, user could refer to blocks by name and not just id.
+		// consider: if the block set has names, user could refer to blocks by name and not just id.
 		const commandClass = Level.getCommandClassFromName(command)
 		if (commandClass) {
 			this.blocking = true

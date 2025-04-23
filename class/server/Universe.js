@@ -308,7 +308,7 @@ class Universe extends require("events") {
 				player.message("==== Describe what this build is ====")
 				player.message("Describe the build - Enter your description in chat", 100)
 				player.message("Enter your description in chat", 1)
-				player.message("* Do not comment on the quailty. i.e: \"poorly built cat\". Describe as you see it.",)
+				player.message("* Do not comment on the quality. i.e: \"poorly built cat\". Describe as you see it.",)
 				player.message(`* Describe as you interpret the build. Do not intentionally derail games!`,)
 				player.message("Enter your description in chat")
 				player.message(`To skip, use /skip`)

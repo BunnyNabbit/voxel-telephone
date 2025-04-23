@@ -76,7 +76,7 @@ function register(universe) {
 		await player.space.changeRecord.commit(player.space.changeRecord.actionCount)
 		player.space.loading = false
 		player.space.inVcr = false
-		player.message("Changes commited. VCR mode off")
+		player.message("Changes committed. VCR mode off")
 		player.space.players.forEach(player => {
 			player.emit("playSound", universe.sounds.deactivateVCR)
 			player.emit("playSound", universe.sounds.gameTrack)
