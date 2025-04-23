@@ -1,11 +1,11 @@
-// Generates JSON formatted blockset palette
+// Generates JSON formatted block set palette
 
 import("nbt").then(module => {
    const nbt = module.default
    const palette = []
    nbt.parse(fs.readFileSync(`../voxel-telephone-64.cw`), async (error, data) => {
       if (error) {
-         return console.error("Error while decoding nbt data.", error)
+         return console.error("Error while decoding NBT data.", error)
       }
       Object.values(data.value.Metadata.value.CPE.value.BlockDefinitions.value).reverse().forEach(blockDefinition => {
          // console.log(blockDefinition.value.ID2.value)

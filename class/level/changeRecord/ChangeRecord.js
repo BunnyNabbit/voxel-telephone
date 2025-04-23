@@ -178,7 +178,7 @@ class ChangeRecord {
 		await this.flushChanges()
 		await oldVhsFh.close()
 		await (await trash).default(oldPath)
-		console.log("commited", count)
+		console.log("committed", count)
 		return count
 
 	}

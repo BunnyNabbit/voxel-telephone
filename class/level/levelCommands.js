@@ -44,7 +44,7 @@ class Cuboid extends Command {
 	static aliases = ["z"]
 	constructor(level) {
 		super(["block:block", "&enum:mode", "position:position1", "position:position2"], level, {
-			mode: ["soild", "hollow", "walls", "holes"]
+			mode: ["solid", "hollow", "walls", "holes"]
 		})
 	}
 	action(data) {
@@ -57,7 +57,7 @@ class Cuboid extends Command {
 			for (let y = min[1]; y <= max[1]; y++) {
 				for (let z = min[2]; z <= max[2]; z++) {
 					switch (mode) {
-						case "soild":
+						case "solid":
 							this.setBlock([x, y, z], block)
 							break
 						case "hollow":
@@ -159,14 +159,14 @@ class SphereSlow extends Command {
 	static aliases = ["sphere", "sp"]
 	constructor(level) {
 		super(["block:block", "&enum:mode", "position:center", "position:offset"], level, {
-			mode: ["soild"]
+			mode: ["solid"]
 		})
 	}
 	action(data) {
 		data = this.parseBytes(data)
 		const block = data.block
 		const center = data.center
-		const radius = Math.min(center.map((value, index) => Math.abs(data.offset[index] - value)).sort((a, b) => b - a)[0], 32) // i limit zhis number because large spheres are very taxing. however, if i am able to remove zhis limitation, it would need to be an entirely different function for format compat.
+		const radius = Math.min(center.map((value, index) => Math.abs(data.offset[index] - value)).sort((a, b) => b - a)[0], 32) // i limit zhis number because large spheres are very taxing. however, if i am able to remove zhis limitation, it would need to be an entirely different function for format compatibility.
 		for (let x = -radius; x <= radius; x++) {
 			for (let y = -radius; y <= radius; y++) {
 				for (let z = -radius; z <= radius; z++) {
