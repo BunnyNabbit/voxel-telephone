@@ -21,8 +21,7 @@ class Drone extends require("events") {
 		this.orientation = [orientation.yaw, orientation.pitch]
 		this.emit("position", this.position, this.orientation)
 	}
-	/**Destroys the drone, removing it from levels.
-	 */
+	/** Destroys the drone, removing it from levels. */
 	destroy() {
 		if (this.destroyed) return
 		this.destroyed = true
