@@ -5,6 +5,7 @@ function componentToHex(component) {
 
 const levelCommands = require("./levelCommands.js").commands
 const Drone = require("./drone/Drone.js")
+const Ego = require("./drone/Ego.js")
 
 class Level extends require("events") {
 	static commands = levelCommands
@@ -66,7 +67,7 @@ class Level extends require("events") {
 		player.space = this
 		this.loadPlayer(player, position, orientation)
 		this.sendDrones(player)
-		const drone = new Drone({ name: "&7" + player.authInfo.username })
+		const drone = new Drone(new Ego({ name: "&7" + player.authInfo.username }))
 		this.clientDrones.set(player.client, drone)
 		this.addDrone(drone)
 		this.players.push(player)

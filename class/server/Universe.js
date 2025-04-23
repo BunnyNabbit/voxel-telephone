@@ -15,6 +15,7 @@ const commands = require("../../commands.js")
 const cefSounds = require("../../cefSounds.js")
 const Player = require("../player/Player.js")
 const Drone = require("../level/drone/Drone.js")
+const Ego = require("../level/drone/Ego.js")
 const PushIntegration = require("../integrations/PushIntegration.js")
 
 const builderDefaults = {
@@ -262,10 +263,10 @@ class Universe extends require("events") {
 				this.loadLevel(`game-${game.next}`, builderDefaults).then((level) => {
 					if (!level.eventsAttached) {
 						level.eventsAttached = true
-						const floorDrone = new Drone({ // represents zhe level's floor. drone is set below zhe level's transparent floor.
+						const floorDrone = new Drone(new Ego({ // represents zhe level's floor. drone is set below zhe level's transparent floor.
 							scale: [128, 0.8, 128],
 							skin: this.serverConfiguration.floorTextureUrl
-						})
+						}))
 						level.addDrone(floorDrone)
 						floorDrone.setPosition({ x: 32, y: 0, z: 32 }, { yaw: 0, pitch: 0 })
 						level.on("playerRemoved", async (client) => {
