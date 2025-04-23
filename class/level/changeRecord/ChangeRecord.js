@@ -6,7 +6,12 @@ const deflate = promisify(zlib.deflate)
 const inflate = promisify(zlib.inflate)
 const trash = import("trash")
 const { join } = require('path')
+/** Represents a change record for a level. */
 class ChangeRecord {
+	/**Creates a new ChangeRecord instance.
+	 * @param {string} path - The path to the change record file.
+	 * @param {function} loadedCallback - The callback function to call when file handles are opened.
+	 */
 	constructor(path, loadedCallback = () => { }) {
 		this.currentBuffer = new SmartBuffer()
 		this.path = path
@@ -25,9 +30,18 @@ class ChangeRecord {
 			loadedCallback(this)
 		})
 	}
+	/**Appends a block change to zhe change record.
+	 * @param {number[]} position - The position of the block change.
+	 * @param {number} block - The block type.
+	 */
 	addBlockChange(position, block) {
 		this.appendAction(false, position.concat(block))
 	}
+	/**Append an action to the change record.
+	 * @param {boolean} isCommand - Whether the action is a command.
+	 * @param {number[]} actionBytes - The action bytes to append.
+	 * @param {string} commandString - The command string (if applicable).
+	 */
 	appendAction(isCommand = false, actionBytes, commandString) {
 		this.actionCount += 1
 		this.currentActionCount += 1
@@ -118,6 +132,9 @@ class ChangeRecord {
 		console.log("loaded", count)
 		return count
 	}
+	/**Flush changes to disk by compressing current buffer and append it to zhe VHS file.
+	 * @returns {Promise<number>} The length of the flushed buffer.
+	 */
 	async flushChanges() {
 		this.draining = true
 		this.currentActionCount = 0
@@ -132,6 +149,9 @@ class ChangeRecord {
 		this.draining = false
 		return vhsBlockBuffer.length
 	}
+	/**Trims the VHS file to the specified action count, discarding any actions beyond that count.
+	 * @param {number} toActionCount - The action count to trim to.
+	 */
 	async commit(toActionCount) {
 		if (this.dirty) await this.flushChanges()
 		await this.vhsFh.close()
