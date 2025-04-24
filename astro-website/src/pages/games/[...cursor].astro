@@ -6,7 +6,7 @@ const gamesPerPage = 20;
 const cursor = Astro.params.cursor;
 ---
 
-<ContentPage title="Games">
+<ContentPage title="Games" canon={`/games`}>
 	<div class="flex-container">
 		{
 			database.getGames(cursor, gamesPerPage).then((games) => {
