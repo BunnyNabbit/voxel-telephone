@@ -25,10 +25,6 @@ if (!game) {
 						if (turn.promptType === "description") {
 							return null;
 						} else {
-							console.log({
-								build: turn,
-								description: game[index - 1],
-							});
 							return (
 								<li>
 									<Turn description={game[index - 1]} build={turn} id={index}/>
