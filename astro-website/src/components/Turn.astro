@@ -1,0 +1,15 @@
+---
+const description = Astro.props.description;
+const build = Astro.props.build;
+const placeholderGraphic = "https://placecats.com/300/300";
+---
+
+<div>
+	<p>{description.prompt}</p>
+	<img
+		src={build.image ?? placeholderGraphic}
+		alt={description.prompt}
+		width="200"
+		height="64"
+	/>
+</div>

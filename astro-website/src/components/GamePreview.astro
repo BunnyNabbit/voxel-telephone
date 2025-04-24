@@ -1,0 +1,14 @@
+---
+const game = Astro.props.game;
+const placeholderGraphic = "https://placecats.com/300/300";
+---
+
+<div>
+	<p><a href={`/game/${game[0].root}`}>{game[0].prompt}</a></p>
+	<img
+		src={game[0].image || placeholderGraphic}
+		alt={game[0].prompt}
+		width="200"
+		height="64"
+	/>
+</div>
