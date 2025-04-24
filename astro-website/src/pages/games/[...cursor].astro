@@ -7,17 +7,13 @@ const cursor = Astro.params.cursor;
 ---
 
 <ContentPage title="Games">
-	<ul>
+	<div class="flex-container">
 		{
 			database.getGames(cursor, gamesPerPage).then((games) => {
 				return games.map((game: any) => {
-					return (
-						<li>
-							<GamePreview game={game} />
-						</li>
-					);
+					return <GamePreview game={game} />;
 				});
 			})
 		}
-	</ul>
+	</div>
 </ContentPage>
