@@ -1,7 +1,13 @@
 const { VoxelModelWriter } = require("chunked-vox")
 const fs = require("fs")
 
-async function exportLevelAsVox(level) {
+/**Export a level as a .vox file.
+ * @param {Level} level - The level to export.
+ * @param {string} [writePath] - The path to write the .vox file to.
+ * @return {Promise<void>} - A promise that resolves when the file is written.
+ */
+async function exportLevelAsVox(level, writePath) {
+	if (!writePath) writePath = level.changeRecord.path + "preview.vox"
 	return new Promise(resolve => {
 		if (!level.changeRecord) throw new Error("Level is missing change record")
 		// assuming exactly 255 entries in block set
@@ -19,7 +25,7 @@ async function exportLevelAsVox(level) {
 				}
 			}
 		}
-		fs.writeFile(level.changeRecord.path + "preview.vox", model.writeVox(), () => {
+		fs.writeFile(writePath, model.writeVox(), () => {
 			resolve()
 		})
 	})
