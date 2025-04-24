@@ -424,9 +424,9 @@ class Database {
 		})
 	}
 
-	addSpotvoxRender(buildTurn, data) {
+	addSpotvoxRender(buildTurnId, data) {
 		return new Promise(resolve => {
-			this.gameCollection.update({ _id: buildTurn._id }, { $set: { render: data } }, () => {
+			this.gameCollection.update({ _id: buildTurnId }, { $set: { render: data } }, () => {
 				resolve()
 			})
 		})
