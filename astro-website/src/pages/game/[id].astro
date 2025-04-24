@@ -6,7 +6,9 @@ import { ObjectId } from "mongojs";
 const gameId = Astro.params.id;
 let game = await database.getGame(new ObjectId(gameId));
 let title;
-console.log(gameId);
+if (game && game.length !== 16) {
+	game = null
+}
 if (!game) {
 	Astro.response.status = 404;
 	game = null;
