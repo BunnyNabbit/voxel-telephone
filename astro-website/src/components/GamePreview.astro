@@ -1,15 +1,17 @@
 ---
 import { Image } from 'astro:assets'
 const game = Astro.props.game;
-const placeholderGraphic = "https://placecats.com/300/300";
+const firstTurn = game[0]
+const lastTurn = game.reverse().find((turn: { promptType: string; }) => turn.promptType == "build")
+const imageAlt = game[game.findIndex((turn: { promptType: string; }) => turn.promptType == "build") + 1].prompt
 ---
 
 <div>
-	<p><a href={`/game/${game[0].root}`}>{game[0].prompt}</a></p>
+	<p><a href={`/game/${firstTurn.root}`}>{firstTurn.prompt}</a></p>
 	<Image
-		src={game[0].image || placeholderGraphic}
-		alt={game[0].prompt}
-		width="200"
+		src=`/image/${lastTurn._id}`
+		alt={imageAlt}
+		width="64"
 		height="64"
 	/>
 </div>

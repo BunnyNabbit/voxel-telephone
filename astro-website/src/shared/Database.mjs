@@ -37,6 +37,15 @@ export default class Database {
 		})
 	}
 
+	getTurnRender(turnId) {
+		return new Promise(resolve => {
+			this.gameCollection.findOne({ _id: turnId }, { render: 1 }, (err, turn) => {
+				if (!turn) return resolve()
+				resolve(turn.render)
+			})
+		})
+	}
+
 	getGame(gameRootId) {
 		return new Promise(resolve => {
 			this.gameCollection.find({ root: gameRootId }).sort({ depth: 1 }, (err, games) => {

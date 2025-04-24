@@ -22,9 +22,9 @@ const id = Astro.props.id
 		)
 	}
 	<Image
-		src={build.image ?? placeholderGraphic}
+		src={`/image/${build._id}`}
 		alt={description.prompt}
-		width="200"
+		width="64"
 		height="64"
 	/>
 	<p>
