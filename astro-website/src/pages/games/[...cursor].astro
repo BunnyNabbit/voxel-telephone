@@ -1,0 +1,23 @@
+---
+import ContentPage from "../../layouts/ContentPage.astro";
+import { database } from "../../shared/db.mjs";
+import GamePreview from "../../components/GamePreview.astro";
+const gamesPerPage = 20;
+const cursor = Astro.params.cursor;
+---
+
+<ContentPage title="Games">
+	<ul>
+		{
+			database.getGames(cursor, gamesPerPage).then((games) => {
+				return games.map((game: any) => {
+					return (
+						<li>
+							<GamePreview game={game} />
+						</li>
+					);
+				});
+			})
+		}
+	</ul>
+</ContentPage>
