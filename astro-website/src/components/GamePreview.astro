@@ -11,15 +11,33 @@ const imageAlt =
 			(turn: { promptType: string }) => turn.promptType == "build",
 		) + 1
 	].prompt;
+const finished = game.length == 16;
 ---
 
-<div class="card">
-	<div class="card-image">
-		<div class="card-image-container">
-			<img src=`/image/${lastTurn._id}` alt={imageAlt} height="165" />
+{
+	finished ? (
+		<div class="card">
+			<div class="card-image">
+				<div class="card-image-container">
+					<img
+						src={`/image/${lastTurn._id}`}
+						alt={imageAlt}
+						height="165"
+					/>
+				</div>
+			</div>
+			<div class="card-container">
+				<h3>
+					<a href={`/game/${firstTurn.root}`}>{firstTurn.prompt}</a>
+				</h3>
+			</div>
 		</div>
-	</div>
-	<div class="card-container">
-		<h3><a href={`/game/${firstTurn.root}`}>{firstTurn.prompt}</a></h3>
-	</div>
-</div>
+	) : (
+		<div class="card" aria-disabled="true">
+			<div class="card-container">
+				<h3>Unfinished game</h3>
+				<p>{game.length}/16 turns complete.</p>
+			</div>
+		</div>
+	)
+}
