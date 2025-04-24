@@ -7,32 +7,39 @@ let rootId = null;
 if (Astro.props.rootId) {
 	rootId = Astro.props.rootId;
 }
-const anchor = Astro.props.anchor ?? ""
-const id = Astro.props.id
+const anchor = Astro.props.anchor ?? "";
+const id = Astro.props.id;
 ---
 
-<div id={id}>
-	{
-		rootId ? (
-			<p>
-				<a href={`/game/${rootId}${anchor}`}>{description.prompt}</a>
-			</p>
-		) : (
-			<p>{description.prompt}</p>
-		)
-	}
-	<Image
-		src={`/image/${build._id}`}
-		alt={description.prompt}
-		width="64"
-		height="64"
-	/>
-	<p>
-		Prompt by <a href={`/player/${description.creators[0]}`}
-			>{description.creators[0]}</a
-		>.
-	</p>
-	<p>
-		Build by <a href={`/player/${build.creators[0]}`}>{build.creators[0]}</a>.
-	</p>
+<div id={id} class="card">
+	<div class="card-image">
+		<div class="card-image-container">
+			<img
+				src={`/image/${build._id}`}
+				alt={description.prompt}
+				height="165"
+			/>
+		</div>
+	</div>
+	<div class="card-container">
+		{
+			rootId ? (
+				<h3>
+					<a href={`/game/${rootId}${anchor}`}>{description.prompt}</h3>
+				</h3>
+			) : (
+				<h3>{description.prompt}</h3>
+			)
+		}
+		<p>
+			Prompt by <a href={`/player/${description.creators[0]}`}
+				>{description.creators[0]}</a
+			>.
+		</p>
+		<p>
+			Build by <a href={`/player/${build.creators[0]}`}
+				>{build.creators[0]}</a
+			>.
+		</p>
+	</div>
 </div>

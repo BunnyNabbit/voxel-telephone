@@ -1,17 +1,25 @@
 ---
-import { Image } from 'astro:assets'
+import { Image } from "astro:assets";
 const game = Astro.props.game;
-const firstTurn = game[0]
-const lastTurn = game.reverse().find((turn: { promptType: string; }) => turn.promptType == "build")
-const imageAlt = game[game.findIndex((turn: { promptType: string; }) => turn.promptType == "build") + 1].prompt
+const firstTurn = game[0];
+const lastTurn = game
+	.reverse()
+	.find((turn: { promptType: string }) => turn.promptType == "build");
+const imageAlt =
+	game[
+		game.findIndex(
+			(turn: { promptType: string }) => turn.promptType == "build",
+		) + 1
+	].prompt;
 ---
 
-<div>
-	<p><a href={`/game/${firstTurn.root}`}>{firstTurn.prompt}</a></p>
-	<Image
-		src=`/image/${lastTurn._id}`
-		alt={imageAlt}
-		width="64"
-		height="64"
-	/>
+<div class="card">
+	<div class="card-image">
+		<div class="card-image-container">
+			<img src=`/image/${lastTurn._id}` alt={imageAlt} height="165" />
+		</div>
+	</div>
+	<div class="card-container">
+		<h3><a href={`/game/${firstTurn.root}`}>{firstTurn.prompt}</a></h3>
+	</div>
 </div>

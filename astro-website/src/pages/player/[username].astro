@@ -32,20 +32,18 @@ const placeholderGraphic = "https://placecats.com/300/300";
 	{
 		userGrid.length > 0 ? (
 			<h2>Builds</h2>
-			<ul>
+			<div class="flex-container ">
 				{
 					userGrid.map((turn: any, index: number) => {
 						if (turn.promptType === "description") {
 							return null;
 						}
 						return (
-							<li>
-								<Turn description={userGrid[index - 1]} build={turn} rootId={turn.root} anchor={`#${turn.depth}`} />
-							</li>
+							<Turn description={userGrid[index - 1]} build={turn} rootId={turn.root} anchor={`#${turn.depth}`} />
 						);
 					})
 				}
-			</ul>
+			</div>
 		) : (
 			<p></p>
 		)
