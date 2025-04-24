@@ -1,12 +1,24 @@
 ---
-import { Image } from 'astro:assets'
+import { Image } from "astro:assets";
 const description = Astro.props.description;
 const build = Astro.props.build;
 const placeholderGraphic = "https://placecats.com/300/300";
+let rootId = null;
+if (Astro.props.rootId) {
+	rootId = Astro.props.rootId;
+}
 ---
 
 <div>
-	<p>{description.prompt}</p>
+	{
+		rootId ? (
+			<p>
+				<a href={`/game/${rootId}`}>{description.prompt}</a>
+			</p>
+		) : (
+			<p>{description.prompt}</p>
+		)
+	}
 	<Image
 		src={build.image ?? placeholderGraphic}
 		alt={description.prompt}
