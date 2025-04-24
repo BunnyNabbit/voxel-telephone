@@ -40,7 +40,7 @@ const placeholderGraphic = "https://placecats.com/300/300";
 						}
 						return (
 							<li>
-								<Turn description={userGrid[index - 1]} build={turn} rootId={turn.root} />
+								<Turn description={userGrid[index - 1]} build={turn} rootId={turn.root} anchor={`#${turn.depth}`} />
 							</li>
 						);
 					})

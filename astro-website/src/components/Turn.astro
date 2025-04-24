@@ -7,13 +7,15 @@ let rootId = null;
 if (Astro.props.rootId) {
 	rootId = Astro.props.rootId;
 }
+const anchor = Astro.props.anchor ?? ""
+const id = Astro.props.id
 ---
 
-<div>
+<div id={id}>
 	{
 		rootId ? (
 			<p>
-				<a href={`/game/${rootId}`}>{description.prompt}</a>
+				<a href={`/game/${rootId}${anchor}`}>{description.prompt}</a>
 			</p>
 		) : (
 			<p>{description.prompt}</p>
@@ -25,4 +27,12 @@ if (Astro.props.rootId) {
 		width="200"
 		height="64"
 	/>
+	<p>
+		Prompt by <a href={`/player/${description.creators[0]}`}
+			>{description.creators[0]}</a
+		>.
+	</p>
+	<p>
+		Build by <a href={`/player/${build.creators[0]}`}>{build.creators[0]}</a>.
+	</p>
 </div>
