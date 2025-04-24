@@ -3,7 +3,7 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 let { title } = Astro.props;
 let tabTitle;
-if (tabTitle !== "Voxel Telephone") {
+if (title !== "Voxel Telephone") {
 	tabTitle = title + " - Voxel Telephone";
 } else {
 	tabTitle = "Voxel Telephone";
