@@ -1,31 +1,9 @@
 ---
 import ContentPage from "../../layouts/ContentPage.astro";
-import { database } from "../../shared/db.mjs";
-import GamePreview from "../../components/GamePreview.astro";
-import { ObjectId } from "mongojs"
-const gamesPerPage = 20;
+import Games from "../../components/Games.astro";
 const cursor = Astro.params.cursor;
-let nextCursor = null;
-const games = await database.getGames(new ObjectId(cursor), gamesPerPage + 1);
-if (games.length > gamesPerPage) {
-	nextCursor = games[games.length - 2][0]._id;
-	games.pop();
-}
 ---
 
 <ContentPage title="Games" canon={`/games`}>
-	<div class="flex-container">
-		{
-			games.map((game: any) => {
-				return <GamePreview game={game} />;
-			})
-		}
-	</div>
-	{
-		nextCursor && (
-			<a href={`/games/${nextCursor}`} class="pagination-button">
-				Next Page
-			</a>
-		)
-	}
+	<Games cursor={cursor} pagination={true} games={21} />
 </ContentPage>
