@@ -414,6 +414,23 @@ class Database {
 			})
 		})
 	}
+
+	getSpotvoxRenderJobs() {
+		return new Promise(resolve => {
+			this.gameCollection.find({ promptType: "build", render: { $exists: false } }).limit(32, (err, docs) => {
+				if (err) return resolve([])
+				resolve(docs)
+			})
+		})
+	}
+
+	addSpotvoxRender(buildTurn, data) {
+		return new Promise(resolve => {
+			this.gameCollection.update({ _id: buildTurn._id }, { $set: { render: data } }, () => {
+				resolve()
+			})
+		})
+	}
 }
 
 module.exports = Database
