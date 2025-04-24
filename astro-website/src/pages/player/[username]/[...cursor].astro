@@ -1,9 +1,14 @@
 ---
-import { database } from "../../shared/db.mjs";
-import ContentPage from "../../layouts/ContentPage.astro";
+import { database } from "../../../shared/db.mjs";
+import ContentPage from "../../../layouts/ContentPage.astro";
 import { Image } from "astro:assets";
-import Turn from "../../components/Turn.astro";
+import Turn from "../../../components/Turn.astro";
+import { ObjectId } from "mongojs";
 const username = Astro.params.username;
+let cursor, nextCursor
+if (Astro.params.cursor) {
+	cursor = new ObjectId(Astro.params.cursor);
+}
 const userRecord = await database.getUserRecordDocument(username);
 let title = username;
 let userGrid = [];
@@ -14,10 +19,14 @@ if (!userRecord) {
 	if (userRecord.displayName) {
 		title = userRecord.displayName;
 	}
-	userGrid = await database.getUserGrid(username);
+	userGrid = await database.getUserGrid(username, cursor);
 	userGrid = userGrid.flat(1)
+	if (userGrid.length == 65 * 2) {
+		nextCursor = userGrid[userGrid.length - 3]._id;
+		userGrid.pop();
+		userGrid.pop();
+	}
 }
-const placeholderGraphic = "https://placecats.com/300/300";
 ---
 
 <ContentPage title={title}>
@@ -46,6 +55,13 @@ const placeholderGraphic = "https://placecats.com/300/300";
 			</div>
 		) : (
 			<p></p>
+		)
+	}
+	{
+		nextCursor && (
+			<a href={`/player/${username}/${nextCursor}`} class="pagination-button">
+				Next Page
+			</a>
 		)
 	}
 </ContentPage>
