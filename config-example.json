@@ -38,6 +38,9 @@
       "interfacePort": 1333,
       "audioPlayerBaseURL": "http://127.0.0.1:1333/"
    },
+   "website": {
+      "baseURL": "https://voxel-telephone.bunnynabbit.com/"
+   },
    "announcements": {
       "interval": 180000,
       "categoryWeight": {
