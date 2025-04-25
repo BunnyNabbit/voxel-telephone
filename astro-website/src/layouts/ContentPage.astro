@@ -35,6 +35,7 @@ const description = Astro.props.description;
 			<slot />
 			<!-- your content is injected here -->
 		</article>
+		<div class="page-padding"></div>
 		<Footer />
 	</body><style is:global>
 		* {
@@ -89,6 +90,13 @@ const description = Astro.props.description;
 			margin: 10px 0;
 			text-decoration: none;
 			border-radius: 5px;
+		}
+		.page-padding {
+			padding-top: 5rem;
+		}
+		body {
+			min-height: 100vh;
+			position: relative;
 		}
 	</style>
 </html>
