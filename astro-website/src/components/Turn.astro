@@ -10,7 +10,7 @@ const anchor = Astro.props.anchor ?? "";
 const id = Astro.props.id;
 ---
 
-<div id={id} class="card">
+<div id={id} class="card" transition:name={`${build._id}`}>
 	<div class="card-image">
 		<div class="card-image-container">
 			<img

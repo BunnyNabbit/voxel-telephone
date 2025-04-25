@@ -2,6 +2,7 @@
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import getCanonicalURL from "../shared/getCanonicalURL.mjs";
+import { ClientRouter } from "astro:transitions";
 let { title } = Astro.props;
 let tabTitle;
 if (title !== "Voxel Telephone") {
@@ -23,6 +24,7 @@ if (Astro.props.canon) {
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="canonical" href={canon} />
 		<title>{tabTitle}</title>
+		<ClientRouter />
 	</head>
 	<body>
 		<Header />
