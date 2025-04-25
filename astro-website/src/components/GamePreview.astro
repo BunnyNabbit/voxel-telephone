@@ -16,7 +16,7 @@ const finished = game.length == 16;
 
 {
 	finished ? (
-		<div class="card">
+		<div class="card" transition:name={`${lastTurn._id}`}>
 			<div class="card-image">
 				<div class="card-image-container">
 					<img
