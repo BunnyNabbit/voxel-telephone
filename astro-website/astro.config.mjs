@@ -10,7 +10,6 @@ export default defineConfig({
     mode: 'standalone',
   }),
   prefetch: {
-    prefetchAll: true,
     defaultStrategy: "hover"
   }
 });
