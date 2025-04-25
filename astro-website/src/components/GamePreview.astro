@@ -33,7 +33,7 @@ const finished = game.length == 16;
 			</div>
 		</div>
 	) : (
-		<div class="card" aria-disabled="true">
+		<div class="card" aria-disabled="true" transition:name={`${lastTurn._id}`}>
 			<div class="card-container">
 				<h3>Unfinished game</h3>
 				<p>{game.length}/16 turns complete.</p>
