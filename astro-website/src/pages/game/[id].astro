@@ -7,7 +7,7 @@ const gameId = Astro.params.id;
 let game = await database.getGame(new ObjectId(gameId));
 let title;
 if (game && game.length !== 16) {
-	game = null
+	game = null;
 }
 if (!game) {
 	Astro.response.status = 404;
@@ -18,26 +18,32 @@ if (!game) {
 }
 ---
 
-<ContentPage title={title} canon={`/game/${gameId}`}>
-	<ol>
-		{
-			game ? (
-				game
+{
+	game ? (
+		<ContentPage title={title} canon={`/game/${gameId}`} description={`Game timeline of ${title}`}>
+			<ol>
+				{game
 					.map((turn: any, index: number) => {
 						if (turn.promptType === "description") {
 							return null;
 						} else {
 							return (
 								<li>
-									<Turn description={game[index - 1]} build={turn} id={index}/>
+									<Turn
+										description={game[index - 1]}
+										build={turn}
+										id={index}
+									/>
 								</li>
 							);
 						}
 					})
-					.filter((element: any) => element != null)
-			) : (
-				<p>No game found with that ID.</p>
-			)
-		}
-	</ol>
-</ContentPage>
+					.filter((element: any) => element != null)}
+			</ol>
+		</ContentPage>
+	) : (
+		<ContentPage title={title}>
+			<p>Game not found.</p>
+		</ContentPage>
+	)
+}
