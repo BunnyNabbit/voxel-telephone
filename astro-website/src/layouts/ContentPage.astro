@@ -24,9 +24,10 @@ const ogImage = Astro.props.ogImage;
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="icon" href="/favicon.webp" type="image/webp" />
 		<link rel="canonical" href={canon} />
 		<title>{tabTitle}</title>
-		<meta property="theme-color" content="#00A7FF"/>
+		<meta property="theme-color" content="#00A7FF" />
 		<meta property="og:title" content={tabTitle} />
 		{description && 
 			<meta name="description" content={description} />
