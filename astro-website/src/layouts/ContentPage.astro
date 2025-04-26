@@ -41,10 +41,9 @@ const ogImage = Astro.props.ogImage;
 	<body>
 		<Header />
 		<h1>{title}</h1>
-		<article>
+		<main>
 			<slot />
-			<!-- your content is injected here -->
-		</article>
+		</main>
 		<div class="page-padding"></div>
 		<Footer />
 	</body><style is:global>
