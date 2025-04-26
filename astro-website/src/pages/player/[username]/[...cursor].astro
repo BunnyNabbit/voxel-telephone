@@ -3,6 +3,7 @@ import { database } from "../../../shared/db.mjs";
 import ContentPage from "../../../layouts/ContentPage.astro";
 import { Image } from "astro:assets";
 import Turn from "../../../components/Turn.astro";
+import Timestamp from "../../../components/Timestamp.astro";
 import { ObjectId } from "mongojs";
 const username = Astro.params.username;
 let cursor, nextCursor
@@ -33,7 +34,7 @@ if (!userRecord) {
 	{
 		userRecord ? (
 			<Image src={`https://www.classicube.net/face/${username}/`} alt={`Head shot of ${username}`} width="128" height="128" />
-			<p>First joined: {userRecord.firstJoin}.</p>
+			<p>First joined: <Timestamp date={userRecord.firstJoin} /></p>
 		) : (
 			<p>Player not found.</p>
 		)
