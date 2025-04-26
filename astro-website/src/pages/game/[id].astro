@@ -9,18 +9,25 @@ let title;
 if (game && game.length !== 16) {
 	game = null;
 }
+let ogImage = null;
 if (!game) {
 	Astro.response.status = 404;
 	game = null;
 	title = "Game not found";
 } else {
 	title = game[0].prompt;
+	ogImage = `/image/${game[1]._id}`;
 }
 ---
 
 {
 	game ? (
-		<ContentPage title={title} canon={`/game/${gameId}`} description={`Game timeline of ${title}`}>
+		<ContentPage
+			title={title}
+			canon={`/game/${gameId}`}
+			description={`Game timeline of ${title}`}
+			ogImage={ogImage}
+		>
 			<ol>
 				{game
 					.map((turn: any, index: number) => {

@@ -17,6 +17,7 @@ if (Astro.props.canon) {
 	canon = getCanonicalURL(Astro.url.pathname);
 }
 const description = Astro.props.description;
+const ogImage = Astro.props.ogImage;
 ---
 
 <html lang="en">
@@ -25,7 +26,16 @@ const description = Astro.props.description;
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="canonical" href={canon} />
 		<title>{tabTitle}</title>
-		{description && <meta name="description" content={description} />}
+		<meta property="theme-color" content="#00A7FF"/>
+		<meta property="og:title" content={tabTitle} />
+		{description && 
+			<meta name="description" content={description} />
+			<meta property="og:description" content={description} />
+		}
+		{ogImage &&
+			<meta property="og:image" content={ogImage} />
+			<meta property="twitter:card" content="summary_large_image" />
+		}
 		<ClientRouter />
 	</head>
 	<body>
