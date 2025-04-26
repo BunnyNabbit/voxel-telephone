@@ -1,5 +1,6 @@
 ---
 import { Image } from "astro:assets";
+import Timestamp from "./Timestamp.astro";
 const description = Astro.props.description;
 const build = Astro.props.build;
 let rootId = null;
@@ -24,7 +25,7 @@ const id = Astro.props.id;
 		{
 			rootId ? (
 				<h3>
-					<a href={`/game/${rootId}${anchor}`}>{description.prompt}</h3>
+					<a href={`/game/${rootId}${anchor}`}>{description.prompt}</a>
 				</h3>
 			) : (
 				<h3>{description.prompt}</h3>
@@ -33,12 +34,14 @@ const id = Astro.props.id;
 		<p>
 			Prompt by <a href={`/player/${description.creators[0]}`}
 				>{description.creators[0]}</a
-			>.
+			>
+			<Timestamp date={description.next.getTimestamp()} />.
 		</p>
 		<p>
 			Build by <a href={`/player/${build.creators[0]}`}
 				>{build.creators[0]}</a
-			>.
+			>
+			<Timestamp date={build.next.getTimestamp()} />.
 		</p>
 	</div>
 </div>

@@ -1,5 +1,6 @@
 ---
 import { Image } from "astro:assets";
+import Timestamp from "./Timestamp.astro";
 const game = Astro.props.game;
 const firstTurn = game[0];
 const lastTurn = game
@@ -30,12 +31,14 @@ const finished = game.length == 16;
 				<h3>
 					<a href={`/game/${firstTurn.root}`}>{firstTurn.prompt}</a>
 				</h3>
+				<p>Played from <Timestamp date={firstTurn.next.getTimestamp()}/> to <Timestamp date={lastTurn.next.getTimestamp()}/>.</p>
 			</div>
 		</div>
 	) : (
 		<div class="card" aria-disabled="true" transition:name={`${firstTurn._id}`}>
 			<div class="card-container">
 				<h3>Unfinished game</h3>
+				<p>Started on <Timestamp date={firstTurn.next.getTimestamp()}/>.</p>
 				<p>{game.length}/16 turns complete.</p>
 			</div>
 		</div>
