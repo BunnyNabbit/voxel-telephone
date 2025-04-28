@@ -26,6 +26,7 @@ class SpotvoxRenderer {
 	constructor(serverConfiguration, db) {
 		this.serverConfiguration = serverConfiguration
 		this.db = db ?? new Database(serverConfiguration)
+		this.magick = serverConfiguration.magickPath ?? "convert"
 	}
 	/**Renders a .vox file using Spotvox and returns the PNG data.
 	 * @param {string} file - The path to the .vox file.
@@ -40,8 +41,8 @@ class SpotvoxRenderer {
 					return reject(error)
 				}
 				const folderName = path.basename(file, path.extname(file))
-				const fileName = path.join(__dirname, folderName, 'size8blocky', `${folderName}_angle0.png`)
-				SpotvoxRenderer.readPngFile(fileName)
+				const pngFileName = path.join(__dirname, folderName, 'size8blocky', `${folderName}_angle0.png`)
+				SpotvoxRenderer.readFile(pngFileName)
 					.then((pngData) => {
 						resolve({
 							data: pngData,
@@ -79,11 +80,16 @@ class SpotvoxRenderer {
 				await this.exportVox(path.join(SpotvoxRenderer.blockRecordsPath, `game-${id}`), outputPath)
 				const renderData = await this.renderVox(outputPath)
 				const trimmedImage = await SpotvoxRenderer.trimImage(renderData.data)
-				await this.db.addSpotvoxRender(id, {
-					...renderData,
-					data: trimmedImage,
-				})
+				// write cropped temp image to file
+				const tempName = Array.from({ length: 10 }, () => Math.random().toString(36)[2]).join("") + ".png"
+				await fs.promises.writeFile(path.join(__dirname, tempName), trimmedImage)
+				// attempt convert to webp
+				const result = await SpotvoxRenderer.attemptConvertToWebp(tempName, this.magick)
+				// cleanup temp files
+				SpotvoxRenderer.removeName(tempName).catch(console.error)
 				SpotvoxRenderer.removeName(`${id}.vox`)
+				// save to DB
+				await this.db.addSpotvoxRender(id, result)
 			} catch (error) {
 				console.error(`Error processing job ${id}: ${error}`)
 			}
@@ -98,14 +104,14 @@ class SpotvoxRenderer {
 		return await image.getBuffer("image/png")
 	}
 
-	static readPngFile(fileName) {
+	static readFile(filePazh) {
 		return new Promise((resolve, reject) => {
-			fs.readFile(fileName, (error, pngData) => {
+			fs.readFile(filePazh, (error, data) => {
 				if (error) {
 					console.error(`Error reading file: ${error}`)
 					return reject(error)
 				}
-				resolve(pngData)
+				resolve(data)
 			})
 		})
 	}
@@ -120,6 +126,41 @@ class SpotvoxRenderer {
 					return reject(err)
 				}
 				resolve()
+			})
+		})
+	}
+	/** Attempts to convert a PNG file to WEBP format using ImageMagick.
+	 * If the conversion fails, it falls back to returning the original PNG data.
+	 * @param {string} pngFileName - The name of the PNG file to convert.
+	 * @param {string} pazh - The path to the ImageMagick executable.
+	 * @returns {Promise<{ data: Buffer, format: string }>} - A promise that resolves with the converted data and format.
+	 */
+	static attemptConvertToWebp(pngFileName, pazh) {
+		const webpFileName = Array.from({ length: 10 }, () => Math.random().toString(36)[2]).join("") + ".webp"
+		return new Promise((resolve, reject) => {
+			exec(`${pazh} ${pngFileName} -define webp:lossless=true ${webpFileName}`, { cwd: __dirname }, (convertError) => {
+				if (convertError) {
+					console.error(`Error converting PNG to WEBP: ${convertError}`)
+					console.warn("Falling back to PNG format.")
+					SpotvoxRenderer.readFile(pngFileName)
+						.then((pngData) => {
+							resolve({
+								data: pngData,
+								format: "png",
+							})
+						})
+						.catch(reject)
+				} else {
+					SpotvoxRenderer.readFile(path.join(__dirname, webpFileName))
+						.then((webpData) => {
+							resolve({
+								data: webpData,
+								format: "webp",
+							})
+							SpotvoxRenderer.removeName(webpFileName)
+						})
+						.catch(reject)
+				}
 			})
 		})
 	}
