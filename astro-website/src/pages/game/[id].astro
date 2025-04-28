@@ -16,7 +16,10 @@ if (!game) {
 	title = "Game not found";
 } else {
 	title = game[0].prompt;
-	ogImage = `/image/${game[1]._id}`;
+	ogImage = {
+		url: `/image/${game[1]._id}`,
+		alt: game[0].prompt,
+	};
 }
 ---
 
