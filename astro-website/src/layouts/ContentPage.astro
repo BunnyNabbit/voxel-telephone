@@ -29,12 +29,16 @@ const ogImage = Astro.props.ogImage;
 		<title>{tabTitle}</title>
 		<meta property="theme-color" content="#00A7FF" />
 		<meta property="og:title" content={tabTitle} />
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="Voxel Telephone" />
+		<meta property="og:url" content={canon} />
 		{description && 
 			<meta name="description" content={description} />
 			<meta property="og:description" content={description} />
 		}
 		{ogImage &&
-			<meta property="og:image" content={ogImage} />
+			<meta property="og:image" content={ogImage.url} />
+			<meta property="og:image:alt" content={ogImage.alt} />
 			<meta property="twitter:card" content="summary_large_image" />
 		}
 		<ClientRouter />

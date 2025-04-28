@@ -30,7 +30,7 @@ if (!userRecord) {
 }
 ---
 
-<ContentPage title={title} description={`Builds by ${username}`} canon={`/player/${username}`} ogImage={`https://www.classicube.net/face/${username}/`}>
+<ContentPage title={title} description={`Builds by ${username}`} canon={`/player/${username}`} ogImage={{url: `https://www.classicube.net/face/${username}/`, alt: `Head shot of ${username}`}}>
 	{
 		userRecord ? (
 			<Image src={`https://www.classicube.net/face/${username}/`} alt={`Head shot of ${username}`} width="128" height="128" />
