@@ -28,9 +28,9 @@ class SpotvoxRenderer {
 		this.db = db ?? new Database(serverConfiguration)
 		this.magick = serverConfiguration.magickPath ?? "convert"
 	}
-	/**Renders a .vox file using Spotvox and returns the WEBP data.
+	/**Renders a .vox file using Spotvox and returns the PNG data.
 	 * @param {string} file - The path to the .vox file.
-	 * @returns {Promise<Buffer>} - A promise that resolves with the WEBP data.
+	 * @returns {Promise<Buffer>} - A promise that resolves with the PNG data.
 	 */
 	renderVox(file) {
 		return new Promise((resolve, reject) => {
