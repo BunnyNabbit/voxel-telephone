@@ -27,9 +27,9 @@ class SpotvoxRenderer {
 		this.serverConfiguration = serverConfiguration
 		this.db = db ?? new Database(serverConfiguration)
 	}
-	/**Renders a .vox file using Spotvox and returns the PNG data.
+	/**Renders a .vox file using Spotvox and returns the WEBP data.
 	 * @param {string} file - The path to the .vox file.
-	 * @returns {Promise<Buffer>} - A promise that resolves with the PNG data.
+	 * @returns {Promise<Buffer>} - A promise that resolves with the WEBP data.
 	 */
 	renderVox(file) {
 		return new Promise((resolve, reject) => {
@@ -40,16 +40,36 @@ class SpotvoxRenderer {
 					return reject(error)
 				}
 				const folderName = path.basename(file, path.extname(file))
-				const fileName = path.join(__dirname, folderName, 'size8blocky', `${folderName}_angle0.png`)
-				SpotvoxRenderer.readPngFile(fileName)
-					.then((pngData) => {
-						resolve({
-							data: pngData,
-							format: "png",
-						})
-						return SpotvoxRenderer.removeName(folderName)
-					})
-					.catch(reject)
+				const pngFileName = path.join(__dirname, folderName, 'size8blocky', `${folderName}_angle0.png`)
+				const webpFileName = path.join(__dirname, folderName, 'size8blocky', `${folderName}_angle0.webp`)
+
+				// Convert PNG to WEBP using ImageMagick
+				const convertCommand = `convert ${pngFileName} -quality 80 ${webpFileName}`
+				exec(convertCommand, (convertError) => {
+					if (convertError) {
+						console.error(`Error converting PNG to WEBP: ${convertError}`)
+						console.warn("Falling back to PNG format.")
+						SpotvoxRenderer.readFile(pngFileName)
+							.then((pngData) => {
+								resolve({
+									data: pngData,
+									format: "png",
+								})
+								return SpotvoxRenderer.removeName(folderName)
+							})
+							.catch(reject)
+					} else {
+						SpotvoxRenderer.readFile(webpFileName)
+							.then((webpData) => {
+								resolve({
+									data: webpData,
+									format: "webp",
+								})
+								return SpotvoxRenderer.removeName(folderName)
+							})
+							.catch(reject)
+					}
+				})
 			})
 		})
 	}
@@ -106,6 +126,18 @@ class SpotvoxRenderer {
 					return reject(error)
 				}
 				resolve(pngData)
+			})
+		})
+	}
+
+	static readFile(fileName) {
+		return new Promise((resolve, reject) => {
+			fs.readFile(fileName, (error, data) => {
+				if (error) {
+					console.error(`Error reading file: ${error}`)
+					return reject(error)
+				}
+				resolve(data)
 			})
 		})
 	}
