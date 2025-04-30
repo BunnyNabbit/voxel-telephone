@@ -31,7 +31,7 @@ if (!post || !categoryPost) {
 const { Content } = await render(post);
 ---
 
-<ContentPage title={post.data.title}>
+<ContentPage title={post.data.title} includeH1={false}>
 	<Content />
 	<p>
 		Category: <a href={`/help/${categoryPost.id}`}
