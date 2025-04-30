@@ -137,4 +137,7 @@ filterWords.json
 config.json
 # ClassiCube client files (.cw shortcut)
 /texturecache
+# Spotvox renderer
 spotvox.jar
+# Astro public .txt files
+/astro-website/public/*.txt
