@@ -1,0 +1,40 @@
+---
+import { getCollection, render, getEntry } from "astro:content";
+import ContentPage from "../../../layouts/ContentPage.astro";
+export const prerender = true;
+export async function getStaticPaths() {
+	const posts = await getCollection("help");
+	return posts.map((post) => {
+		return {
+			params: {
+				// i am very trying to avoid metadata in md files by using directory structure instead
+				id: post.id.split("/")[1] || post.id.split("/")[0] || "/",
+				category: post.id.split("/")[0] || "none",
+			},
+			props: { post },
+		};
+	});
+}
+const { category } = Astro.params;
+const { id } = Astro.params;
+
+let slug = `${category}/${id}`;
+
+const post = await getEntry("help", slug);
+const categoryPost = await getEntry("help", category);
+if (!post || !categoryPost) {
+	return new Response(null, {
+		status: 404,
+		statusText: "Not found",
+	});
+}
+const { Content } = await render(post);
+---
+
+<ContentPage title={post.data.title}>
+	<Content />
+	<p>
+		Category: <a href={`/help/${categoryPost.id}`}
+			>{categoryPost.data.title}</a>
+	</p>
+</ContentPage>
