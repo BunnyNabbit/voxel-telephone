@@ -1,0 +1,52 @@
+---
+import { getCollection, render, getEntry } from "astro:content";
+import ContentPage from "../../../layouts/ContentPage.astro";
+export const prerender = true;
+export async function getStaticPaths() {
+	const posts = await getCollection("help");
+	const processed = posts
+		.filter((post) => {
+			return !post.id.includes("/");
+		})
+		.map((post) => {
+			console.log(post.rendered?.metadata);
+			return {
+				params: {
+					id: post.id,
+					category: post.id,
+				},
+				props: { post },
+			};
+		});
+	// console.log(posts)
+	return processed;
+}
+const { post } = Astro.props;
+const { category } = Astro.params;
+const { Content } = await render(post);
+---
+
+<ContentPage title={post.data.title} includeH1={false}>
+	<Content />
+	<ul>
+		{
+			await getCollection("help").then((posts) => {
+				return posts.map((post) => {
+					if (post.id.includes(category + "/")) {
+						return (
+							<li>
+								<a
+									href={`./${category}/${post.id.split("/")[1]}`}
+									class="text-blue-500 hover:underline"
+								>
+									{post.data.title}
+								</a>
+							</li>
+						);
+					}
+				});
+			})
+		}
+	</ul>
+	<p><a href="/help">Help index</a></p>
+</ContentPage>
