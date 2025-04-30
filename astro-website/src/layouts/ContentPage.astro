@@ -18,7 +18,11 @@ let canon;
 if (Astro.props.canon) {
 	canon = getCanonicalURL(Astro.props.canon);
 } else {
-	canon = getCanonicalURL(Astro.url.pathname);
+	let pathname = Astro.url.pathname;
+	if (Astro.url.pathname.endsWith("/")) {
+		pathname = Astro.url.pathname.slice(0, -1);
+	}
+	canon = getCanonicalURL(pathname);
 }
 const description = Astro.props.description;
 const ogImage = Astro.props.ogImage;
