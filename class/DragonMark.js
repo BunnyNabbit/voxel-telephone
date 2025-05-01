@@ -42,6 +42,17 @@ class InlineCode extends BaseElement {
 	}
 }
 
+class Image extends BaseElement {
+	constructor() {
+		super()
+		this.type = "image"
+		this.content = {
+			url: "",
+			altText: "",
+		}
+	}
+}
+
 /** Basic Markdown parser namespace */
 class DragonMark {
 	/**Parses the given text and returns a structure array.
@@ -81,6 +92,20 @@ class DragonMark {
 							codeBlock.content += line[i]
 						}
 						paragraph.addElement(codeBlock)
+					}  else if (char === "!" && line[i + 1] === "[") {
+						i += 2 // Skip the "!["
+						const image = new Image()
+						while (line[i] !== "]" && i < line.length) {
+							image.content.altText += line[i++]
+						}
+						i++ // Skip the "]"
+						if (line[i] === "(") {
+							i++ // Skip the "("
+							while (line[i] !== ")" && i < line.length) {
+								image.content.url += line[i++]
+							}
+						}
+						paragraph.addElement(image)
 					} else {
 						currentText.content += char
 					}
@@ -100,32 +125,14 @@ class DragonMark {
 	static normalizeLineEndings(text) {
 		return text.replace(/\r\n/g, "\n")
 	}
-	/**Converts the given parsed structure to Minecraft classic text format.
-	 * @param {Array} structure - The structure to convert.
-	 * @param {string} defaultColorCode - The default color code to use.
-	 * @returns {string} - The converted text.
-	 */
-	static convertStructureToClassicText(structure, defaultColorCode = "&f") {
-		let output = []
-		structure.forEach((element) => {
-			if (element instanceof Heading) {
-				let headingText = element.content.map((e) => (e instanceof Text ? e.content : "")).join("")
-				let invertedLevel = 7 - element.level
-				output.push(`${"=".repeat(invertedLevel)} &c${headingText}${defaultColorCode} ${"=".repeat(invertedLevel)}`)
-			} else if (element instanceof Paragraph) {
-				let paragraph = ""
-				element.content.forEach((e) => {
-					if (e instanceof Text) {
-						paragraph += e.content
-					} else if (e instanceof InlineCode) {
-						paragraph += `&a${e.content}${defaultColorCode}`
-					}
-				})
-				output.push(paragraph)
-			}
-		})
-		return output
-	}
 }
 
-module.exports = DragonMark
+module.exports = {
+	DragonMark,
+	BaseElement,
+	Paragraph,
+	Heading,
+	Text,
+	InlineCode,
+	Image
+}
