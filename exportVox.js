@@ -21,7 +21,7 @@ async function exportLevelAsVox(level, writePath) {
 			for (let y = 0; y < level.bounds[1]; y++) {
 				for (let z = 0; z < level.bounds[2]; z++) {
 					const voxel = level.getBlock([x, y, z])
-					model.setBlock(x, z, y, voxel) // z is gravity axis in MagicaVoxel
+					model.setBlock(x, level.bounds[1] - 1 - z, y, voxel) // z is gravity axis in MagicaVoxel. coordinate system has Y flipped
 				}
 			}
 		}
