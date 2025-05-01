@@ -1,6 +1,6 @@
 const fs = require("fs")
 const path = require("path")
-const DragonMark = require("./class/DragonMark.js")
+const { DragonMark, Heading, Paragraph, Text, InlineCode, Image } = require("./class/DragonMark.js")
 const Level = require("./class/level/Level.js")
 
 class Category {
@@ -43,10 +43,10 @@ class Help {
 	 * @param {Universe} universe - The universe object to interact with.
 	 */
 	constructor(universe) {
-		this.data = Help.loadHelpDocs(path.join(__dirname, "astro-website/src/help")).then(data => {
+		this.universe = universe
+		this.data = Help.loadHelpDocs(path.join(__dirname, "astro-website/src/help"), path.join(__dirname, "astro-website/dist/client/_astro"), universe.serverConfiguration.website.baseURL).then(data => {
 			this.data = data
 		})
-		this.universe = universe
 	}
 	/**Displays help information to the player based on the provided argument.
 	 * @param {Player} player - The player to display help information to.
@@ -86,11 +86,11 @@ class Help {
 	 * @param {String} markdown - The markdown content to parse.
 	 * @returns {Object} - An object containing the parsed text and heading.
 	 */
-	static parseMarkdownToClassicText(markdown) {
+	static parseMarkdownToClassicText(markdown, config) {
 		const structure = DragonMark.parse(markdown)
 		const firstHeading = structure.find(element => element.type === "heading").content[0].content
 		return {
-			text: DragonMark.convertStructureToClassicText(structure),
+			text: Help.convertStructureToClassicText(structure, "&f", config),
 			heading: firstHeading
 		}
 	}
@@ -98,10 +98,30 @@ class Help {
 	 * @param {String} directory - The directory to load help documents from.
 	 * @returns {Promise<Object>} - A promise that resolves to an object containing topics, commands, and categories.
 	 */
-	static async loadHelpDocs(directory) {
+	static async loadHelpDocs(directory, astroAssetCache, baseURL) {
 		const topics = new Map()
 		const commands = new Map()
 		const categories = new Map()
+		const fullImageURLs = new Map()
+		await fs.promises.readdir(astroAssetCache).then(files => {
+			files.forEach(file => {
+				if (file.endsWith(".webp")) {
+					const [name, hash] = path.basename(file).split(".")
+					const key = `./${name}.webp`
+					const existing = fullImageURLs.get(fullImageURLs)
+					const fullURL = `${baseURL}_astro/${name}.${hash}.webp`
+					if (!existing) {
+						fullImageURLs.set(key, fullURL)
+					} else { // replace if shorter
+						if (existing.length > name.length) {
+							fullImageURLs.set(key, fullURL)
+						}
+					}
+				}
+			})
+		}).catch(err => {
+			console.warn(`Unable to read astro asset cache: ${err}`)
+		})
 		const files = await Help.fileWalker(directory, 1)
 
 		for (const file of files) {
@@ -111,7 +131,10 @@ class Help {
 					continue
 				}
 				const content = await fs.promises.readFile(file, "utf-8")
-				const parsed = Help.parseMarkdownToClassicText(content)
+				const parsed = Help.parseMarkdownToClassicText(content, {
+					fullImageURLs,
+					baseURL
+				})
 				let category = path.basename(path.dirname(file))
 				if (category == "help") {
 					category = null
@@ -134,6 +157,34 @@ class Help {
 		}
 
 		return { topics, commands, categories }
+	}
+	/**Converts the given parsed DragonMark structure to Minecraft classic text format.
+	* @param {Array} structure - The structure to convert.
+	* @param {string} defaultColorCode - The default color code to use.
+	* @returns {string} - The converted text.
+	*/
+	static convertStructureToClassicText(structure, defaultColorCode = "&f", imageConfig) {
+		let output = []
+		structure.forEach((element) => {
+			if (element instanceof Heading) {
+				let headingText = element.content.map((e) => (e instanceof Text ? e.content : "")).join("")
+				let invertedLevel = 7 - element.level
+				output.push(`${"=".repeat(invertedLevel)} &c${headingText}${defaultColorCode} ${"=".repeat(invertedLevel)}`)
+			} else if (element instanceof Paragraph) {
+				let paragraph = ""
+				element.content.forEach((e) => {
+					if (e instanceof Text) {
+						paragraph += e.content
+					} else if (e instanceof InlineCode) {
+						paragraph += `&a${e.content}${defaultColorCode}`
+					} else if (e instanceof Image) {
+						paragraph += `${imageConfig.fullImageURLs.get(e.content.url)} (${e.content.altText})`
+					}
+				})
+				output.push(paragraph)
+			}
+		})
+		return output
 	}
 	/**Explores recursively a directory and returns all the file paths and folder paths.
 	 * @see http://stackoverflow.com/a/5827895/4241030
