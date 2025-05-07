@@ -90,7 +90,10 @@ class Level extends require("events") {
 	}
 	reload() {
 		this.players.forEach(player => {
-			this.loadPlayer(player, player.position, player.orientation)
+			const reloadedPosition = Array.from(player.position)
+			const heightOffset = 22 / 32 // Player spawn height is different from reported height. Offset by # fixed-point units.
+			reloadedPosition[1] -= heightOffset
+			this.loadPlayer(player, reloadedPosition, player.orientation)
 			player.droneTransmitter.resendDrones()
 		})
 	}
