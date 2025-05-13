@@ -431,6 +431,18 @@ class Database {
 			})
 		})
 	}
+	/**Add a license to a turn.
+	 * @param {ObjectID} turnId - The ID of the turn.
+	 * @param {string} licenseSlug - The license identifier.
+	 * @returns {Promise<void>} - A promise that resolves when the operation is complete.
+	 */
+	addTurnLicense(turnId, licenseSlug) {
+		return new Promise(resolve => {
+			this.gameCollection.update({ _id: turnId }, { $addToSet: { licenses: licenseSlug } }, () => {
+				resolve()
+			})
+		})
+	}
 }
 
 module.exports = Database

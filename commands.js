@@ -2,6 +2,7 @@ const exportLevelAsVox = require("./exportVox.js")
 const templates = require("./class/level/templates.js")
 const Zone = require("./class/level/Zone.js")
 const PushIntegration = require("./class/integrations/PushIntegration.js")
+const creationLicenses = require("./creationLicenses.js")
 
 function invertPromptType(promptType) {
 	if (promptType == "description") return "build"
@@ -342,6 +343,54 @@ function register(universe) {
 		}
 		player.message(`Setting ${setting} to ${value}`)
 		player.emit("configuration", userRecord.configuration)
+	})
+
+	universe.registerCommand(["/license"], async (player, licenseName) => {
+		const selectedTurns = player.selectedTurns
+		if (!licenseName && selectedTurns && selectedTurns.build) {
+			// Show current licenses
+			const buildTurn = selectedTurns.build
+			const licenses = buildTurn.licenses ?? []
+			if (licenses.length == 0) {
+				player.message("No licenses found.")
+			} else {
+				player.message("Current licenses:")
+				licenses.forEach(license => {
+					const licenseData = creationLicenses[license]
+					if (licenseData) {
+						player.message(`- ${licenseData.name} (${license})`)
+					}
+				})
+			}
+			return
+		}
+		licenseName = licenseName.toUpperCase()
+		if (!creationLicenses[licenseName]) {
+			if (licenseName.length) {
+				player.message("Unknown license.")
+			}
+			universe.commandRegistry.attemptCall(player, `/help license`)
+			return
+		}
+		if (!selectedTurns || !selectedTurns.description) return player.message("No game is selected.")
+		// check ownership
+		const buildTurn = selectedTurns.build
+		if (!buildTurn) return player.message("No build selected.")
+		if (!buildTurn.creators.includes(player.authInfo.username)) {
+			player.message("You are not the owner of this build.")
+			return
+		}
+		const license = creationLicenses[licenseName]
+		// check if license already exists
+		const exists = (buildTurn.licenses ?? []).includes(licenseName)
+		if (exists) {
+			player.message("License already exists.")
+			return
+		}
+		universe.db.addTurnLicense(buildTurn._id, licenseName, license.licenseData).then(() => {
+			player.message(`Added license ${license.name} to ${selectedTurns.description.prompt}.`)
+			player.space.reloadView(templates.empty)
+		})
 	})
 
 	function unimplementedCommandHelper(commands, helpTopic) {
