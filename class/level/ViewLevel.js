@@ -26,6 +26,7 @@ class ViewLevel extends Level {
 			const positionEventListener = this.positionEventListeners.get(player)
 			player.client.removeListener("position", positionEventListener)
 			player.message(" ", [11, 12, 13])
+			player.selectedTurns = emptyTurns
 		})
 		this.on("playerAdded", async (player) => {
 			const onPosition = (position) => {
