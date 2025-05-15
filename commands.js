@@ -2,7 +2,10 @@ const exportLevelAsVox = require("./exportVox.js")
 const templates = require("./class/level/templates.js")
 const Zone = require("./class/level/Zone.js")
 const PushIntegration = require("./class/integrations/PushIntegration.js")
-const creationLicenses = require("./creationLicenses.js")
+let creationLicenses = {}
+import("./creationLicenses.mjs").then(module => {
+	creationLicenses = module.default
+})
 
 function invertPromptType(promptType) {
 	if (promptType == "description") return "build"
