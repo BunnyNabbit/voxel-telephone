@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import Timestamp from "./Timestamp.astro";
+import LicenseIcons from "./LicenseIcons.astro";
 const description = Astro.props.description;
 const build = Astro.props.build;
 let rootId = null;
@@ -9,6 +10,7 @@ if (Astro.props.rootId) {
 }
 const anchor = Astro.props.anchor ?? "";
 const id = Astro.props.id;
+const licenses = build.licenses ?? [];
 ---
 
 <div id={id} class="card" transition:name={`${build._id}`}>
@@ -43,5 +45,6 @@ const id = Astro.props.id;
 			>
 			<Timestamp date={build.next.getTimestamp()} />.
 		</p>
+		<LicenseIcons licenses={licenses} />
 	</div>
 </div>
