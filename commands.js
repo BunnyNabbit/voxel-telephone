@@ -13,10 +13,7 @@ const help = require("./help.js")
 
 function register(universe) {
 	universe.registerCommand(["/rules"], (player) => {
-		player.message("== Rules")
-		player.message("The point of the game is to see how builds transform when users take turn describing and building.")
-		player.message("1. Do not intentionally derail the games. Build and describe as you genuinely see it.")
-		player.message("2. Builds and prompts must not be inappropriate.")
+		universe.commandRegistry.attemptCall(player, `/help rules`)
 	})
 	function reasonVcr(matchValue, message) {
 		return function (player) {
