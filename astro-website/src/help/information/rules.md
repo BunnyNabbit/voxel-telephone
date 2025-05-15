@@ -1,5 +1,5 @@
 ---
-title: "/rules"
+title: "Rules"
 contributors: ["BunnyNabbit \"Aon\""]
 ---
 # Rules
