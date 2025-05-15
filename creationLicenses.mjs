@@ -27,22 +27,27 @@ class OpenGameArtLicense extends License {
 	}
 }
 
-module.exports = {
+export default {
 	"CC0": new CreativeCommonsLicense("CC0 1.0 Universal", "CC0 1.0", {
 		url: "https://creativecommons.org/publicdomain/zero/1.0/",
-		publicDomain: true
+		publicDomain: true,
+		icon: "cc0.webp"
 	}),
 	"CC BY": new CreativeCommonsLicense("Attribution 4.0 International", "CC BY 4.0", {
 		url: "https://creativecommons.org/licenses/by/4.0/",
 		attribution: true,
+		icon: "cc-by.webp"
 	}),
 	"CC BY-SA": new CreativeCommonsLicense("Attribution-ShareAlike 4.0 International", "CC BY-SA 4.0", {
 		url: "https://creativecommons.org/licenses/by-sa/4.0/",
 		attribution: true,
-		shareAlike: true
+		shareAlike: true,
+		icon: "cc-by-sa.webp"
 	}),
 	"OGA BY": new OpenGameArtLicense("OpenGameArt.org Attribution 4.0", "OGA BY 4.0", {
 		url: "https://opengameart.org/sites/default/files/archive/oga-by-40.txt",
 		attribution: true,
+		icon: "oga.webp",
+		iconClass: "license-icon-square"
 	})
 }
