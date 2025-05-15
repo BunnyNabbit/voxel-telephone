@@ -1,0 +1,55 @@
+---
+const licenses = Astro.props.licenses;
+const licenseData = {
+	CC0: {
+		url: "https://creativecommons.org/publicdomain/zero/1.0/",
+		icon: "cc0.webp",
+		name: "CC0 1.0 Universal",
+	},
+	"CC BY": {
+		url: "https://creativecommons.org/licenses/by/4.0/",
+		icon: "cc-by.webp",
+		name: "Attribution 4.0 International",
+	},
+	"CC BY-SA": {
+		url: "https://creativecommons.org/licenses/by-sa/4.0/",
+		icon: "cc-by-sa.webp",
+		name: "Attribution-ShareAlike 4.0 International",
+	},
+	"OGA BY": {
+		url: "https://opengameart.org/sites/default/files/archive/oga-by-40.txt",
+		icon: "oga.webp",
+		name: "OpenGameArt.org Attribution 4.0",
+		class: "license-icon-square",
+	},
+};
+---
+
+<div class="licenses">
+	{
+		licenses.map((license) => (
+			<img
+				src={`/license-icons/${licenseData[license].icon}`}
+				alt={licenseData[license].name}
+				title={licenseData[license].name}
+				class={licenseData[license].class ?? "license-icon-banner"}
+			/>
+		))
+	}
+</div>
+<style>
+	.license-icon-banner {
+		width: 88px;
+		height: 31px;
+	}
+	.license-icon-square {
+		width: 31px;
+		height: 31px;
+	}
+	.licenses {
+		display: flex;
+		gap: 8px;
+		flex-wrap: wrap;
+		justify-content: center;
+	}
+</style>
