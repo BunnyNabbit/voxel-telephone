@@ -133,23 +133,23 @@ class Level extends require("events") {
 			if (splitCommand.length) {
 				this.processCommandArguments(splitCommand, player)
 			} else {
-				this.inferCurrentCommand()
+				this.inferCurrentCommand(null, player)
 			}
 		} else if (command) {
 			const commandName = command.toLowerCase()
 			this.messageAll(`Unable to find command with name ${commandName} for level ${this.name}`)
 		}
 	}
-	inferCurrentCommand(providedData = 0) {
+	inferCurrentCommand(providedData = null, player = null) {
 		const currentType = this.currentCommand.layout[this.currentCommandLayoutIndex]
 		if (currentType == null) {
-			return this.commitAction()
+			return this.commitAction(player)
 		}
 		if (currentType.startsWith("&")) {
 			// TODO: infer byte type size: i.e: the zero element is a position, and would need three action bytes.
 			this.currentCommandLayoutIndex++
 			this.currentCommandActionBytes.push(0)
-			return this.inferCurrentCommand()
+			return this.inferCurrentCommand(null, player)
 		}
 		const type = currentType.split(":")[0]
 
@@ -163,7 +163,7 @@ class Level extends require("events") {
 				}
 				this.currentCommandLayoutIndex++
 				this.currentCommandActionBytes.push(heldBlock)
-				return this.inferCurrentCommand()
+				return this.inferCurrentCommand(null, player)
 			}
 		}
 		if (type == "position") {
@@ -172,7 +172,7 @@ class Level extends require("events") {
 				this.currentCommandActionBytes.push(providedData[1])
 				this.currentCommandActionBytes.push(providedData[2])
 				this.currentCommandLayoutIndex++
-				this.inferCurrentCommand()
+				this.inferCurrentCommand(null, player)
 				return "inferred position"
 			} else {
 				if (!this.loading)
@@ -265,10 +265,9 @@ class Level extends require("events") {
 			player.message("Entering interactive mode")
 			break
 		}
-		this.inferCurrentCommand()
+		this.inferCurrentCommand(null, player)
 	}
-	commitAction() {
-		this.blocking = false
+	commitAction(player = null) {
 		const command = this.currentCommand
 		command.action(this.currentCommandActionBytes)
 		if (this.loading == false) {
@@ -280,7 +279,14 @@ class Level extends require("events") {
 				this.messageAll(`Changes drained. ${bytes} bytes saved to VHS record`)
 			})
 		}
-		this.currentCommand = null
+		if (player && player.repeatMode) {
+			this.currentCommandLayoutIndex = 0
+			this.currentCommandActionBytes = []
+			this.inferCurrentCommand(null, player) // FIXME: possible infinite loop if no command layout exists. check for &
+		} else {
+			this.currentCommand = null
+			this.blocking = false
+		}
 	}
 	toggleVcr() {
 		this.inVcr = true
