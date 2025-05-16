@@ -158,7 +158,7 @@ function register(universe) {
 		}
 	}, reasonHasPermission(false, "You don't have permission to build in this level!"))
 	universe.registerCommand(["/mark"], async (player) => {
-		player.space.inferCurrentCommand(player.position.map((value, index) => Math.min(Math.max(Math.floor(value), 0), player.space.bounds[index] - 1)))
+		player.space.inferCurrentCommand(player.position.map((value, index) => Math.min(Math.max(Math.floor(value), 0), player.space.bounds[index] - 1)), player)
 	}, makeMultiValidator([reasonHasPermission(false), reasonLevelBlocking(false, "There are no current commands being run on the level")]))
 	universe.registerCommand(["/paint", "/p"], async (player) => {
 		player.paintMode = !player.paintMode
@@ -166,6 +166,15 @@ function register(universe) {
 			player.message("Paint mode on")
 		} else {
 			player.message("Paint mode off")
+		}
+		player.emit("playSound", universe.sounds.toggle)
+	})
+	universe.registerCommand(["/repeat", "/static", "/t"], async (player) => {
+		player.repeatMode = !player.repeatMode
+		if (player.repeatMode) {
+			player.message("Repeat mode on")
+		} else {
+			player.message("Repeat mode off")
 		}
 		player.emit("playSound", universe.sounds.toggle)
 	})
