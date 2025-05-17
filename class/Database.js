@@ -6,6 +6,7 @@ const UserRecord = require("./player/UserRecord.js")
 class Database {
 	constructor(serverConfiguration) {
 		this.gameCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephone")
+		this.downloadsCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephoneDownloads")
 		this.reportCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephoneReports")
 		this.interactionCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephoneInteractions")
 		this.portalCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephonePortals")
@@ -427,6 +428,20 @@ class Database {
 	addSpotvoxRender(buildTurnId, data) {
 		return new Promise(resolve => {
 			this.gameCollection.update({ _id: buildTurnId }, { $set: { render: data } }, () => {
+				resolve()
+			})
+		})
+	}
+	/**Add a download entry.
+	 * @param {ObjectID} turnId - The ID of a turn.
+	 * @param {Buffer} data - The download data.
+	 * @param {string} format - The download format.
+	 * @returns {Promise<void>} - A promise that resolves when the operation is complete.
+	 */
+	addDownload(turnId, data, format) {
+		const id = `${turnId}-${format}`
+		return new Promise(resolve => {
+			this.downloadsCollection.replaceOne({ _id: id }, { _id: id, forId: turnId, data, format }, { upsert: true }, () => {
 				resolve()
 			})
 		})
