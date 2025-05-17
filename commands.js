@@ -85,6 +85,10 @@ function register(universe) {
 	}, reasonVcr(false, "Level isn't in VCR mode. /vcr"))
 	universe.registerCommand(["/finish"], async (player) => {
 		if (player.space && player.space.game && !player.space.changeRecord.draining) {
+			if (player.space.inVcr) {
+				player.message("Hold up! Did you mean to use /abort instead? Exit out of VCR to if you intend to submit your game.")
+				return
+			}
 			const gameType = invertPromptType(player.space.game.promptType)
 			console.log(gameType)
 			if (gameType == "build") {
