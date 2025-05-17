@@ -25,8 +25,9 @@ async function exportLevelAsVox(level, writePath) {
 				}
 			}
 		}
-		fs.writeFile(writePath, model.writeVox(), () => {
-			resolve()
+		const voxData = model.writeVox()
+		fs.writeFile(writePath, voxData, () => {
+			resolve({ voxData, writePath })
 		})
 	})
 }
