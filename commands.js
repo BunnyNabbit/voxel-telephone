@@ -12,7 +12,7 @@ function invertPromptType(promptType) {
 	return "description"
 }
 
-const help = require("./help.js")
+const Help = require("./class/Help.js")
 
 function register(universe) {
 	universe.registerCommand(["/rules"], (player) => {
@@ -418,7 +418,7 @@ function register(universe) {
 	unimplementedCommandHelper(["/ranks"], "where-are-ranks")
 	unimplementedCommandHelper(["/os", "/realm", "/myrealm"], "where-are-realms")
 
-	help.register(universe)
+	Help.register(universe)
 }
 
 module.exports = {
