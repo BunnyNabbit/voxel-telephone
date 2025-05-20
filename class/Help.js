@@ -55,9 +55,11 @@ class Help {
 	async callPlayer(player, argument) {
 		await this.data
 		const universe = this.universe
+		let displayLink = false
 		if (!argument) {
 			player.message(`&cCategories&f: ${Array.from(this.data.categories).map(([key]) => this.data.categories.get(key).name).join(", ")}`)
 			argument = "help"
+			displayLink = true
 		}
 		argument = argument.toLowerCase().split(" ")[0]
 		const topic = this.data.topics.get(argument)
@@ -73,6 +75,9 @@ class Help {
 				return
 			}
 			commandHelp.displayHelpToPlayer(player)
+			if (displayLink) {
+				player.message(`&eHelp documentation is available on the web. ${universe.serverConfiguration.website.baseURL}help`)
+			}
 			return
 		}
 		const category = this.data.categories.get(argument)
