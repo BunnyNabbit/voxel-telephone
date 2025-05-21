@@ -106,6 +106,7 @@ function register(universe) {
 						const firstDescription = game[0].prompt
 						const lastDescription = game[game.length - 2].prompt
 						universe.pushMessage(`${player.authInfo.username} finished a game! Check out the game that started as &a"${firstDescription}" &fand ended with &a"${lastDescription}" &fIn the view gallery.`, PushIntegration.interestType.gameProgression)
+						universe.db.setGameCompletion(status.document.root, true)
 					}
 				})
 				if (player.space.changeRecord.dirty) await player.space.changeRecord.flushChanges()
