@@ -1,6 +1,9 @@
 ---
 title: "/SphereSlow"
 contributors: ["BunnyNabbit \"Aon\""]
+summary: "The `/SphereSlow` command creates a sphere from a center point and a radius."
+image: "./sphereslow-output.webp"
+imageAlt: "Red sphere"
 ---
 # /SphereSlow
 Makes a sphere from a center point and a radius.

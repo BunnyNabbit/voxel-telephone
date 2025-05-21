@@ -1,6 +1,7 @@
 ---
 title: "/diverge"
 contributors: ["BunnyNabbit \"Aon\""]
+summary: "The `/diverge` command creates a new game timeline branching off from the highlighted turn in `/view`."
 ---
 # /diverge
 Creates a new game timeline branching off from the highlighted turn in `/view`.

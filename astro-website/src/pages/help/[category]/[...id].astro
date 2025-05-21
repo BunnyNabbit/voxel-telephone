@@ -29,12 +29,25 @@ if (!post || !categoryPost) {
 	});
 }
 const { Content } = await render(post);
+let image;
+if (post.data.image) {
+	image = {
+		url: post.data.image.src,
+		alt: post.data.title,
+	};
+}
 ---
 
-<ContentPage title={post.data.title} includeH1={false}>
+<ContentPage
+	title={post.data.title}
+	includeH1={false}
+	description={post.data.summary}
+	ogImage={image}
+>
 	<Content />
 	<p>
 		Category: <a href={`/help/${categoryPost.id}`}
-			>{categoryPost.data.title}</a>
+			>{categoryPost.data.title}</a
+		>
 	</p>
 </ContentPage>

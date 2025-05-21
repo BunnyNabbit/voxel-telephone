@@ -1,6 +1,7 @@
 ---
 title: "Rules"
 contributors: ["BunnyNabbit \"Aon\""]
+summary: "The rules of Voxel Telephone."
 ---
 # Rules
 The point of the game is to see how builds transform when users take turn describing and building.

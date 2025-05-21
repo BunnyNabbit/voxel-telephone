@@ -1,6 +1,7 @@
 ---
 title: "/license"
 contributors: ["BunnyNabbit \"Aon\""]
+summary: "The `/license` command adds a license to a build."
 ---
 # /license
 Usage: `/license <license name>`
