@@ -1,6 +1,7 @@
 ---
 title: "/abort"
 contributors: ["BunnyNabbit \"Aon\""]
+summary: "The `/abort` command cancels interactive operations."
 ---
 # /abort
 Used for canceling interactive operations, such as building commands or disabling VCR mode.
