@@ -12,16 +12,17 @@ const anchor = Astro.props.anchor ?? "";
 const id = Astro.props.id;
 const asModel = Astro.props.asModel ?? false;
 const licenses = build.licenses ?? [];
-let addGameLink = false;
+let addLink = false;
 let url;
 if (rootId) {
 	url = `/game/${rootId}${anchor}`;
-	if (build.gameStatus) addGameLink = true;
+	if (build.gameStatus) addLink = true;
 }
 let Header = "h3";
 if (asModel) {
 	Header = "h2";
 	url = `/model/${build._id}`;
+	addLink = true;
 }
 const addModelLink = !asModel && licenses.length > 0;
 ---
@@ -38,7 +39,7 @@ const addModelLink = !asModel && licenses.length > 0;
 	</div>
 	<div class="card-container">
 		{
-			addGameLink ? (
+			addLink ? (
 				<Header>
 					<a href={url}>{description.prompt}</a>
 				</Header>
