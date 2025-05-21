@@ -342,6 +342,8 @@ class Database {
 		})
 		await Promise.all(promises)
 		await this.regenerateGameNextTurnId(previousTurnId)
+		await this.setGameCompletion(descriptionTurn.root, false)
+		await this.setGameCompletion(divergedRootId, false)
 		this.gameCollection.update({ _id: previousTurnId }, { $set: { active: true } })
 	}
 
@@ -365,6 +367,7 @@ class Database {
 		this.purgedCollection.insert(lastTurn)
 		return new Promise(resolve => {
 			this.gameCollection.remove({ _id: lastTurn._id }, (err) => {
+				this.setGameCompletion(gameRootId, false)
 				resolve()
 			})
 		})
@@ -456,6 +459,17 @@ class Database {
 	addTurnLicense(turnId, licenseSlug) {
 		return new Promise(resolve => {
 			this.gameCollection.update({ _id: turnId }, { $addToSet: { licenses: licenseSlug } }, () => {
+				resolve()
+			})
+		})
+	}
+	/**Sets completion state for all turns in game
+	 * @param {ObjectID} gameId - The ID of the game.
+	 * @param {boolean} status - The status type.
+	 */
+	setGameCompletion(gameId, status) {
+		return new Promise(resolve => {
+			this.gameCollection.updateMany({ root: gameId }, { $set: { gameStatus: status } }, () => {
 				resolve()
 			})
 		})
