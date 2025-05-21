@@ -249,10 +249,12 @@ class Database {
 					document.promptType = "build"
 				}
 				this.gameCollection.insert(document, (err) => {
-					if (!document.active) {
-						resolve({ document, status: 1 })
+					if (err) console.error(err)
+					if (document.active) {
+						resolve({ document, gameCompleted: false })
+					} else {
+						resolve({ document, gameCompleted: true })
 					}
-					resolve({ document, status: 0 })
 				})
 			})
 		})

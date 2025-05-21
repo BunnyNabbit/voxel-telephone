@@ -100,7 +100,14 @@ function register(universe) {
 				universe.server.players.forEach(otherPlayer => {
 					otherPlayer.emit("playSound", player.universe.sounds.complete)
 				})
-				universe.db.continueGame(player.space.game, player.space.game.next, gameType, player.authInfo.username)
+				universe.db.continueGame(player.space.game, player.space.game.next, gameType, player.authInfo.username).then(async (status) => {
+					if (status.gameCompleted) {
+						const game = await universe.db.getGame(status.document.root)
+						const firstDescription = game[0].prompt
+						const lastDescription = game[game.length - 2].prompt
+						universe.pushMessage(`${player.authInfo.username} finished a game! Check out the game that started as &a"${firstDescription}" &fand ended with &a"${lastDescription}" &fIn the view gallery.`, PushIntegration.interestType.gameProgression)
+					}
+				})
 				if (player.space.changeRecord.dirty) await player.space.changeRecord.flushChanges()
 				universe.db.addInteraction(player.authInfo.username, player.space.game.next, "built")
 				exportLevelAsVox(player.space)
