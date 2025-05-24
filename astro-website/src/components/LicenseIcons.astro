@@ -2,14 +2,18 @@
 const licenses = Astro.props.licenses;
 import licenseData from "../../../creationLicenses.mjs";
 let Container = "div";
+let target = null
+let rel = null
 if (Astro.props.link) {
 	Container = "a";
+	target = "_blank";
+	rel = "license noopener";
 }
 ---
 
 {
 	licenses.map((license) => (
-		<Container>
+		<Container href={licenseData[license].licenseData.url} target={target} rel={rel}>
 			<img
 				src={`/license-icons/${licenseData[license].licenseData.icon}`}
 				alt={licenseData[license].name}
