@@ -1,7 +1,7 @@
 const fs = require("fs")
 const path = require("path")
-const { DragonMark, Heading, Paragraph, Text, InlineCode, Image } = require("./class/DragonMark.js")
-const Level = require("./class/level/Level.js")
+const { DragonMark, Heading, Paragraph, Text, InlineCode, Image } = require("./DragonMark.js")
+const Level = require("./level/Level.js")
 
 class Category {
 	constructor(name) {
@@ -44,7 +44,7 @@ class Help {
 	 */
 	constructor(universe) {
 		this.universe = universe
-		this.data = Help.loadHelpDocs(path.join(__dirname, "astro-website/src/help"), path.join(__dirname, "astro-website/dist/client/_astro"), universe.serverConfiguration.website.baseURL).then(data => {
+		this.data = Help.loadHelpDocs(path.join(__dirname, "../astro-website/src/help"), path.join(__dirname, "../astro-website/dist/client/_astro"), universe.serverConfiguration.website.baseURL).then(data => {
 			this.data = data
 		})
 	}
@@ -55,9 +55,11 @@ class Help {
 	async callPlayer(player, argument) {
 		await this.data
 		const universe = this.universe
+		let displayLink = false
 		if (!argument) {
 			player.message(`&cCategories&f: ${Array.from(this.data.categories).map(([key]) => this.data.categories.get(key).name).join(", ")}`)
 			argument = "help"
+			displayLink = true
 		}
 		argument = argument.toLowerCase().split(" ")[0]
 		const topic = this.data.topics.get(argument)
@@ -73,6 +75,9 @@ class Help {
 				return
 			}
 			commandHelp.displayHelpToPlayer(player)
+			if (displayLink) {
+				player.message(`&eHelp documentation is available on the web. ${universe.serverConfiguration.website.baseURL}help`)
+			}
 			return
 		}
 		const category = this.data.categories.get(argument)
@@ -214,16 +219,16 @@ class Help {
 			}
 		}
 	}
+	/**Registers the help command with the universe.
+	 * @param {Universe} universe - The universe instance to register the command with.
+	 */
+	static register(universe) {
+		const help = new Help(universe)
+
+		universe.registerCommand(["/help", "/cmdhelp"], (player, argument) => {
+			help.callPlayer(player, argument)
+		})
+	}
 }
 
-function register(universe) {
-	const help = new Help(universe)
-
-	universe.registerCommand(["/help", "/cmdhelp"], (player, argument) => {
-		help.callPlayer(player, argument)
-	})
-}
-
-module.exports = {
-	register
-}
+module.exports = Help

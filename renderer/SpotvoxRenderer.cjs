@@ -61,9 +61,9 @@ class SpotvoxRenderer {
 			exportLevel.blockset = defaultBlockset
 			exportLevel.changeRecord = new ChangeRecord(changeRecordPath, async () => {
 				await exportLevel.changeRecord.restoreBlockChangesToLevel(exportLevel)
-				exportVox(exportLevel, outputPath).then(() => {
+				exportVox(exportLevel, outputPath).then((voxData) => {
 					exportLevel.dispose()
-					resolve()
+					resolve(voxData)
 				})
 			})
 		})
@@ -77,7 +77,8 @@ class SpotvoxRenderer {
 			try {
 				console.log(job)
 				const outputPath = path.join(__dirname, `${id}.vox`)
-				await this.exportVox(path.join(SpotvoxRenderer.blockRecordsPath, `game-${id}`), outputPath)
+				const voxExport = await this.exportVox(path.join(SpotvoxRenderer.blockRecordsPath, `game-${id}`), outputPath)
+				this.db.addDownload(id, voxExport.voxData, "vox")
 				const renderData = await this.renderVox(outputPath)
 				const trimmedImage = await SpotvoxRenderer.trimImage(renderData.data)
 				// write cropped temp image to file

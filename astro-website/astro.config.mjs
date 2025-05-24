@@ -15,5 +15,6 @@ export default defineConfig({
   integrations: [sitemap()],
   prefetch: {
     defaultStrategy: "hover"
-  }
+  },
+  trailingSlash: "never"
 });

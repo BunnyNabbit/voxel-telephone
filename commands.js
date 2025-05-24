@@ -12,7 +12,7 @@ function invertPromptType(promptType) {
 	return "description"
 }
 
-const help = require("./help.js")
+const Help = require("./class/Help.js")
 
 function register(universe) {
 	universe.registerCommand(["/rules"], (player) => {
@@ -85,6 +85,10 @@ function register(universe) {
 	}, reasonVcr(false, "Level isn't in VCR mode. /vcr"))
 	universe.registerCommand(["/finish"], async (player) => {
 		if (player.space && player.space.game && !player.space.changeRecord.draining) {
+			if (player.space.inVcr) {
+				player.message("Hold up! Did you mean to use /abort instead? Exit out of VCR to if you intend to submit your game.")
+				return
+			}
 			const gameType = invertPromptType(player.space.game.promptType)
 			console.log(gameType)
 			if (gameType == "build") {
@@ -96,7 +100,15 @@ function register(universe) {
 				universe.server.players.forEach(otherPlayer => {
 					otherPlayer.emit("playSound", player.universe.sounds.complete)
 				})
-				universe.db.continueGame(player.space.game, player.space.game.next, gameType, player.authInfo.username)
+				universe.db.continueGame(player.space.game, player.space.game.next, gameType, player.authInfo.username).then(async (status) => {
+					if (status.gameCompleted) {
+						const game = await universe.db.getGame(status.document.root)
+						const firstDescription = game[0].prompt
+						const lastDescription = game[game.length - 2].prompt
+						universe.pushMessage(`${player.authInfo.username} finished a game! Check out the game that started as &a"${firstDescription}" &fand ended with &a"${lastDescription}" &fIn the view gallery.`, PushIntegration.interestType.gameProgression)
+						universe.db.setGameCompletion(status.document.root, true)
+					}
+				})
 				if (player.space.changeRecord.dirty) await player.space.changeRecord.flushChanges()
 				universe.db.addInteraction(player.authInfo.username, player.space.game.next, "built")
 				exportLevelAsVox(player.space)
@@ -158,7 +170,7 @@ function register(universe) {
 		}
 	}, reasonHasPermission(false, "You don't have permission to build in this level!"))
 	universe.registerCommand(["/mark"], async (player) => {
-		player.space.inferCurrentCommand(player.position.map(value => Math.min(Math.max(Math.floor(value), 0), 63)))
+		player.space.inferCurrentCommand(player.position.map((value, index) => Math.min(Math.max(Math.floor(value), 0), player.space.bounds[index] - 1)), player)
 	}, makeMultiValidator([reasonHasPermission(false), reasonLevelBlocking(false, "There are no current commands being run on the level")]))
 	universe.registerCommand(["/paint", "/p"], async (player) => {
 		player.paintMode = !player.paintMode
@@ -166,6 +178,15 @@ function register(universe) {
 			player.message("Paint mode on")
 		} else {
 			player.message("Paint mode off")
+		}
+		player.emit("playSound", universe.sounds.toggle)
+	})
+	universe.registerCommand(["/repeat", "/static", "/t"], async (player) => {
+		player.repeatMode = !player.repeatMode
+		if (player.repeatMode) {
+			player.message("Repeat mode on")
+		} else {
+			player.message("Repeat mode off")
 		}
 		player.emit("playSound", universe.sounds.toggle)
 	})
@@ -405,7 +426,7 @@ function register(universe) {
 	unimplementedCommandHelper(["/ranks"], "where-are-ranks")
 	unimplementedCommandHelper(["/os", "/realm", "/myrealm"], "where-are-realms")
 
-	help.register(universe)
+	Help.register(universe)
 }
 
 module.exports = {

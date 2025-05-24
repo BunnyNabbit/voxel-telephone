@@ -1,6 +1,7 @@
 ---
 title: "/view"
 contributors: ["BunnyNabbit \"Aon\""]
+summary: "The `/view` command enters the view level where you can see finished and ongoing games."
 ---
 # /view
 Usage: `/view <mode>`
