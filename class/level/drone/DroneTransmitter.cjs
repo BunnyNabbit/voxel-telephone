@@ -1,5 +1,5 @@
 /** @typedef {import("classicborne-server-protocol/class/Client.cjs").Client} Client */
-/** @typedef {import("./Drone.js")} Drone */
+/** @typedef {import("./Drone.cjs")} Drone */
 /** Represents a drone transmitter for replicating drones to a player's client. */
 class DroneTransmitter extends require("events") {
 	/**Creates a new DroneTransmitter instance.

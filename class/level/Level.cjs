@@ -3,9 +3,9 @@ function componentToHex(component) {
 	return hex.length == 1 ? "0" + hex : hex
 }
 
-const levelCommands = require("./levelCommands.js").commands
-const Drone = require("./drone/Drone.js")
-const Ego = require("./drone/Ego.js")
+const levelCommands = require("./levelCommands.cjs").commands
+const Drone = require("./drone/Drone.cjs")
+const Ego = require("./drone/Ego.cjs")
 
 class Level extends require("events") {
 	static commands = levelCommands

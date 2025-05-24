@@ -2,7 +2,7 @@
   "name": "voxel-telephone",
   "version": "1.0.0",
   "description": "Server for CPE clients. Telephone game about describing and building repeatedly.",
-  "main": "voxelTelephone.js",
+  "main": "voxelTelephone.mjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

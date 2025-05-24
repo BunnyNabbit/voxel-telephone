@@ -1,22 +1,23 @@
-const Server = require("classicborne-server-protocol")
-const Level = require("../level/Level.js")
-const ViewLevel = require("../level//ViewLevel.js")
-const HubLevel = require("../level//HubLevel.js")
-const FastForwardLevel = require("../level//FastForwardLevel.js")
-const GlobalCommandRegistry = require("../GlobalCommandRegistry.js")
-const ChangeRecord = require("../level/changeRecord/ChangeRecord.js")
-const NullChangeRecord = require("../level/changeRecord/NullChangeRecord.js")
-const exportLevelAsVox = require("../../exportVox.js")
-const defaultBlockset = require("../../6-8-5-rgb.json")
-const Database = require("../Database.js")
-const Heartbeat = require("./Heartbeat.js")
-const templates = require("../level/templates.js")
-const commands = require("../../commands.js")
-const cefSounds = require("../../cefSounds.js")
-const Player = require("../player/Player.js")
-const Drone = require("../level/drone/Drone.js")
-const Ego = require("../level/drone/Ego.js")
-const PushIntegration = require("../integrations/PushIntegration.js")
+import Server from "classicborne-server-protocol"
+import Level from "../level/Level.cjs"
+import ViewLevel from "../level/ViewLevel.cjs"
+import HubLevel from "../level/HubLevel.cjs"
+import FastForwardLevel from "../level/FastForwardLevel.cjs"
+import GlobalCommandRegistry from "../GlobalCommandRegistry.cjs"
+import ChangeRecord from "../level/changeRecord/ChangeRecord.cjs"
+import NullChangeRecord from "../level/changeRecord/NullChangeRecord.cjs"
+import exportLevelAsVox from "../../exportVox.cjs"
+import defaultBlockset from "../../6-8-5-rgb.json" with { type: "json" }
+import Database from "../Database.cjs"
+import Heartbeat from "./Heartbeat.cjs"
+import templates from "../level/templates.cjs"
+import commands from "../../commands.cjs"
+import cefSounds from "../../cefSounds.cjs"
+import Player from "../player/Player.cjs"
+import Drone from "../level/drone/Drone.cjs"
+import Ego from "../level/drone/Ego.cjs"
+import PushIntegration from "../integrations/PushIntegration.cjs"
+import { EventEmitter } from "events"
 
 const builderDefaults = {
 	template: templates.builder
@@ -33,7 +34,7 @@ function invertPromptType(promptType) {
 	if (promptType == "description") return "build"
 	return "description"
 }
-class Universe extends require("events") {
+export class Universe extends EventEmitter {
 	constructor(serverConfiguration) {
 		super()
 		console.log({ serverConfiguration })
@@ -53,14 +54,18 @@ class Universe extends require("events") {
 			this.heartbeat = new Heartbeat(`https://www.classicube.net/server/heartbeat/`, this)
 		}
 		if (this.serverConfiguration.sounds.enabled) {
-			const SoundServer = require("./SoundServer.js")
-			this.soundServer = new SoundServer(this)
+			// const SoundServer = require("./SoundServer.cjs")
+			import(`./SoundServer.cjs`).then(SoundServer => {
+				SoundServer = SoundServer.default
+				this.soundServer = new SoundServer(this)
+			})
 		}
 		this.integrations = []
 		if (this.serverConfiguration.integrations) {
-			this.serverConfiguration.integrations.forEach(integrationData => {
+			this.serverConfiguration.integrations.forEach(async integrationData => {
 				try {
-					const integrationClass = require(`../integrations/${integrationData.class}.js`)
+					// const integrationClass = require(`../integrations/${integrationData.class}.js`)
+					const integrationClass = (await import(`../integrations/${integrationData.class}.cjs`)).default
 					const interests = integrationData.interests.map(interest => PushIntegration.interestType[interest])
 					const integration = new integrationClass(interests, integrationData.authData, this)
 					this.integrations.push(integration)
@@ -352,5 +357,3 @@ class Universe extends require("events") {
 		})
 	}
 }
-
-module.exports = Universe

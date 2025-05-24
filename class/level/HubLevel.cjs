@@ -1,4 +1,4 @@
-const Level = require("./Level.js")
+const Level = require("./Level.cjs")
 
 class HubLevel extends Level {
 	constructor(bounds, blocks, name, db) {

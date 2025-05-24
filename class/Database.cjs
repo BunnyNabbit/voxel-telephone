@@ -1,7 +1,7 @@
 const mongojs = require("mongojs")
 
-const Zone = require("./level/Zone.js")
-const UserRecord = require("./player/UserRecord.js")
+const Zone = require("./level/Zone.cjs")
+const UserRecord = require("./player/UserRecord.cjs")
 
 class Database {
 	constructor(serverConfiguration) {

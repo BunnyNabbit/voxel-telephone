@@ -1,10 +1,10 @@
-const filter = require("../../filter.js")
+const filter = require("../../filter.cjs")
 const crypto = require("crypto")
-const Watchdog = require("./Watchdog.js")
-const DroneTransmitter = require("../level/drone/DroneTransmitter.js")
-const UserRecord = require("./UserRecord.js")
-const templates = require("../level/templates.js")
-const PushIntegration = require("../integrations/PushIntegration.js")
+const Watchdog = require("./Watchdog.cjs")
+const DroneTransmitter = require("../level/drone/DroneTransmitter.cjs")
+const UserRecord = require("./UserRecord.cjs")
+const templates = require("../level/templates.cjs")
+const PushIntegration = require("../integrations/PushIntegration.cjs")
 
 function randomIntFromInterval(min, max) {
 	return Math.floor(Math.random() * (max - min + 1) + min)
