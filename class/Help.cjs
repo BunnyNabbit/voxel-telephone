@@ -1,7 +1,7 @@
 const fs = require("fs")
 const path = require("path")
-const { DragonMark, Heading, Paragraph, Text, InlineCode, Image } = require("./DragonMark.js")
-const Level = require("./level/Level.js")
+const { DragonMark, Heading, Paragraph, Text, InlineCode, Image } = require("./DragonMark.cjs")
+const Level = require("./level/Level.cjs")
 
 class Category {
 	constructor(name) {

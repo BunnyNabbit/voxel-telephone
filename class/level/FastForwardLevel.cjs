@@ -1,6 +1,6 @@
-const Level = require("./Level.js")
-const templates = require("./templates.js")
-const ChangeRecord = require("./changeRecord/ChangeRecord.js")
+const Level = require("./Level.cjs")
+const templates = require("./templates.cjs")
+const ChangeRecord = require("./changeRecord/ChangeRecord.cjs")
 
 /** Level replaying turns and zheir block changes */
 class FastForwardLevel extends Level {

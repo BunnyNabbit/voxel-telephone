@@ -1,6 +1,6 @@
-const Level = require("./Level.js")
-const ChangeRecord = require("./changeRecord/ChangeRecord.js")
-const templates = require("./templates.js")
+const Level = require("./Level.cjs")
+const ChangeRecord = require("./changeRecord/ChangeRecord.cjs")
+const templates = require("./templates.cjs")
 
 function clamp(number, min, max) {
 	return Math.min(Math.max(number, min), max)

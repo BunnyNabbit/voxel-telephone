@@ -1,4 +1,4 @@
-const Ego = require("./Ego.js")
+const Ego = require("./Ego.cjs")
 /** Represents a drone entity for replicating character and positions of player and non-player entities.. */
 class Drone extends require("events") {
 	/**Creates a new drone instance.

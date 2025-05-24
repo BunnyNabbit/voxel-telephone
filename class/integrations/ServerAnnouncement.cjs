@@ -1,4 +1,4 @@
-const PushIntegration = require("./PushIntegration.js")
+const PushIntegration = require("./PushIntegration.cjs")
 
 class ServerAnnouncement extends PushIntegration {
 	constructor(interests, authData, universe) {

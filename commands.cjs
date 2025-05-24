@@ -1,7 +1,7 @@
-const exportLevelAsVox = require("./exportVox.js")
-const templates = require("./class/level/templates.js")
-const Zone = require("./class/level/Zone.js")
-const PushIntegration = require("./class/integrations/PushIntegration.js")
+const exportLevelAsVox = require("./exportVox.cjs")
+const templates = require("./class/level/templates.cjs")
+const Zone = require("./class/level/Zone.cjs")
+const PushIntegration = require("./class/integrations/PushIntegration.cjs")
 let creationLicenses = {}
 import("./creationLicenses.mjs").then(module => {
 	creationLicenses = module.default
@@ -12,7 +12,7 @@ function invertPromptType(promptType) {
 	return "description"
 }
 
-const Help = require("./class/Help.js")
+const Help = require("./class/Help.cjs")
 
 function register(universe) {
 	universe.registerCommand(["/rules"], (player) => {

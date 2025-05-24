@@ -1,6 +1,6 @@
 const path = require('path')
-const Level = require("./Level.js")
-const ChangeRecord = require("./changeRecord/ChangeRecord.js")
+const Level = require("./Level.cjs")
+const ChangeRecord = require("./changeRecord/ChangeRecord.cjs")
 
 function empty(bounds) {
 	return Buffer.alloc(bounds[0] * bounds[1] * bounds[2])
