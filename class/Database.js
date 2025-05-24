@@ -6,6 +6,7 @@ const UserRecord = require("./player/UserRecord.js")
 class Database {
 	constructor(serverConfiguration) {
 		this.gameCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephone")
+		this.downloadsCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephoneDownloads")
 		this.reportCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephoneReports")
 		this.interactionCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephoneInteractions")
 		this.portalCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephonePortals")
@@ -248,10 +249,12 @@ class Database {
 					document.promptType = "build"
 				}
 				this.gameCollection.insert(document, (err) => {
-					if (!document.active) {
-						resolve({ document, status: 1 })
+					if (err) console.error(err)
+					if (document.active) {
+						resolve({ document, gameCompleted: false })
+					} else {
+						resolve({ document, gameCompleted: true })
 					}
-					resolve({ document, status: 0 })
 				})
 			})
 		})
@@ -339,6 +342,8 @@ class Database {
 		})
 		await Promise.all(promises)
 		await this.regenerateGameNextTurnId(previousTurnId)
+		await this.setGameCompletion(descriptionTurn.root, false)
+		await this.setGameCompletion(divergedRootId, false)
 		this.gameCollection.update({ _id: previousTurnId }, { $set: { active: true } })
 	}
 
@@ -362,6 +367,7 @@ class Database {
 		this.purgedCollection.insert(lastTurn)
 		return new Promise(resolve => {
 			this.gameCollection.remove({ _id: lastTurn._id }, (err) => {
+				this.setGameCompletion(gameRootId, false)
 				resolve()
 			})
 		})
@@ -431,6 +437,20 @@ class Database {
 			})
 		})
 	}
+	/**Add a download entry.
+	 * @param {ObjectID} turnId - The ID of a turn.
+	 * @param {Buffer} data - The download data.
+	 * @param {string} format - The download format.
+	 * @returns {Promise<void>} - A promise that resolves when the operation is complete.
+	 */
+	addDownload(turnId, data, format) {
+		const id = `${turnId}-${format}`
+		return new Promise(resolve => {
+			this.downloadsCollection.replaceOne({ _id: id }, { _id: id, forId: turnId, data, format }, { upsert: true }, () => {
+				resolve()
+			})
+		})
+	}
 	/**Add a license to a turn.
 	 * @param {ObjectID} turnId - The ID of the turn.
 	 * @param {string} licenseSlug - The license identifier.
@@ -439,6 +459,17 @@ class Database {
 	addTurnLicense(turnId, licenseSlug) {
 		return new Promise(resolve => {
 			this.gameCollection.update({ _id: turnId }, { $addToSet: { licenses: licenseSlug } }, () => {
+				resolve()
+			})
+		})
+	}
+	/**Sets completion state for all turns in game
+	 * @param {ObjectID} gameId - The ID of the game.
+	 * @param {boolean} status - The status type.
+	 */
+	setGameCompletion(gameId, status) {
+		return new Promise(resolve => {
+			this.gameCollection.updateMany({ root: gameId }, { $set: { gameStatus: status } }, () => {
 				resolve()
 			})
 		})

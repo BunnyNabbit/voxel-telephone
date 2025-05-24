@@ -4,6 +4,7 @@ console.log("loaded")
 export default class Database {
 	constructor(serverConfiguration) {
 		this.gameCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephone")
+		this.downloadsCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephoneDownloads")
 		this.reportCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephoneReports")
 		this.interactionCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephoneInteractions")
 		this.portalCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephonePortals")
@@ -42,6 +43,24 @@ export default class Database {
 			this.gameCollection.findOne({ _id: turnId }, { render: 1 }, (err, turn) => {
 				if (!turn) return resolve()
 				resolve(turn.render)
+			})
+		})
+	}
+
+	getTurnDownload(turnId, format) {
+		return new Promise(resolve => {
+			this.downloadsCollection.findOne({ forId: turnId, format }, (err, download) => {
+				if (!download) return resolve()
+				resolve(download)
+			})
+		})
+	}
+
+	getTurn(turnId) {
+		return new Promise(resolve => {
+			this.gameCollection.findOne({ _id: turnId }, (err, turn) => {
+				if (!turn) return resolve()
+				resolve(turn)
 			})
 		})
 	}
@@ -130,6 +149,37 @@ export default class Database {
 				})
 				if (currentColumn.length) grid.push(currentColumn)
 				console.log(grid)
+				resolve(grid)
+			})
+		})
+	}
+
+	getLicensedGrid(cursor) {
+		return new Promise(resolve => {
+			const findDocument = { promptType: "build", licenses: { $exists: true } }
+			if (cursor) {
+				findDocument._id = { $lt: cursor }
+			}
+			this.gameCollection.find(findDocument).sort({ _id: -1 }).limit(65, async (err, buildTurns) => {
+				let promises = []
+				buildTurns.forEach(buildTurn => {
+					promises.push(new Promise(resolve => {
+						this.gameCollection.findOne({ _id: buildTurn.parent }, (err, describeTurn) => {
+							resolve({ describeTurn, buildTurn })
+						})
+					}))
+				})
+				const grid = []
+				let currentColumn = []
+				const turns = await Promise.all(promises)
+				turns.forEach(turnSet => {
+					currentColumn.push(turnSet.describeTurn, turnSet.buildTurn)
+					if (currentColumn.length == 16) {
+						grid.push(currentColumn)
+						currentColumn = []
+					}
+				})
+				if (currentColumn.length) grid.push(currentColumn)
 				resolve(grid)
 			})
 		})

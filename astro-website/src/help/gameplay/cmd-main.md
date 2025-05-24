@@ -1,6 +1,7 @@
 ---
 title: "/main"
 contributors: ["BunnyNabbit \"Aon\""]
+summary: "The `/main` command teleports the player to the hub level or their homebase."
 ---
 # /main
-Enters the hub level.
+Teleports the player to the hub level or their homebase.

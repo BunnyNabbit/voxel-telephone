@@ -7,9 +7,12 @@ import { glob, file } from 'astro/loaders';
 // 3. Define your collection(s)
 const help = defineCollection({
 	loader: glob({ pattern: "**/*.md", base: "./src/help" }),
-	schema: z.object({
+	schema: ({ image }) => z.object({
 		title: z.string(),
 		contributors: z.array(z.string()).optional(),
+		summary: z.string().optional(),
+		image: image().optional(),
+		imageAlt: z.string().optional(),
 	})
 })
 

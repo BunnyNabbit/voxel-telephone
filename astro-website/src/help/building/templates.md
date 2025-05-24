@@ -1,6 +1,9 @@
 ---
 title: "Templates"
 contributors: ["BunnyNabbit \"Aon\""]
+summary: "A list of various templates that can be used while building."
+image: "./template-builder.webp"
+imageAlt: "A space with a color palette arranged in a cube and axis lines pointing out from a corner."
 ---
 # Templates
 ## builder

@@ -10,7 +10,21 @@ if (Astro.props.rootId) {
 }
 const anchor = Astro.props.anchor ?? "";
 const id = Astro.props.id;
+const asModel = Astro.props.asModel ?? false;
 const licenses = build.licenses ?? [];
+let addLink = false;
+let url;
+if (rootId) {
+	url = `/game/${rootId}${anchor}`;
+	if (build.gameStatus) addLink = true;
+}
+let Header = "h3";
+if (asModel) {
+	Header = "h2";
+	url = `/model/${build._id}`;
+	addLink = true;
+}
+const addModelLink = !asModel && licenses.length > 0;
 ---
 
 <div id={id} class="card" transition:name={`${build._id}`}>
@@ -25,26 +39,48 @@ const licenses = build.licenses ?? [];
 	</div>
 	<div class="card-container">
 		{
-			rootId ? (
-				<h3>
-					<a href={`/game/${rootId}${anchor}`}>{description.prompt}</a>
-				</h3>
+			addLink ? (
+				<Header>
+					<a href={url}>{description.prompt}</a>
+				</Header>
 			) : (
-				<h3>{description.prompt}</h3>
+				<Header>{description.prompt}</Header>
 			)
 		}
-		<p>
-			Prompt by <a href={`/player/${description.creators[0]}`}
-				>{description.creators[0]}</a
-			>
-			<Timestamp date={description.next.getTimestamp()} />.
-		</p>
+		{
+			!asModel && (
+				<p>
+					Prompt by{" "}
+					<a href={`/player/${description.creators[0]}`}>
+						{description.creators[0]}
+					</a>
+					<Timestamp date={description.next.getTimestamp()} />.
+				</p>
+			)
+		}
 		<p>
 			Build by <a href={`/player/${build.creators[0]}`}
 				>{build.creators[0]}</a
 			>
 			<Timestamp date={build.next.getTimestamp()} />.
 		</p>
-		<LicenseIcons licenses={licenses} />
+		{
+			addModelLink && (
+				<p>
+					<a href={`/model/${build._id}`}>Model available</a>
+				</p>
+			)
+		}
+		<div class="licenses">
+			<LicenseIcons licenses={licenses} />
+		</div>
 	</div>
 </div>
+<style>
+	.licenses {
+		display: flex;
+		gap: 8px;
+		flex-wrap: wrap;
+		justify-content: center;
+	}
+</style>

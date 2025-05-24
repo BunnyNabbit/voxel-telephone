@@ -1,6 +1,7 @@
 ---
 title: "/play"
 contributors: ["BunnyNabbit \"Aon\""]
+summary: "The `/play` command enters a new game."
 ---
 # /play
 Enters a new game. Games are picked randomly. If a game cannot be found, the system will prompt for you to create a new game by initializing its prompt.

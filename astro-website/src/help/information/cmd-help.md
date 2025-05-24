@@ -1,6 +1,7 @@
 ---
 title: "/help"
 contributors: ["BunnyNabbit \"Aon\""]
+summary: "The `/help` command lists help documentation and aliases (shortcuts) for a command, topic or category."
 ---
 # /help
 Usage: `/help <a command, topic or category>`

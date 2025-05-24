@@ -1,6 +1,7 @@
 ---
 title: "/vcr"
 contributors: ["BunnyNabbit \"Aon\""]
+summary: "The `/vcr` command enables VCR mode in a level."
 ---
 # /vcr
 Enables VCR mode in a level, allowing for previous level states to be viewed and switched to.

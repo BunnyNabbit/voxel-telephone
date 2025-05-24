@@ -115,7 +115,7 @@ class Player extends require("events") {
 			}
 			if (this.space.blocking) {
 				this.client.setBlock(this.space.getBlock(operationPosition), operationPosition[0], operationPosition[1], operationPosition[2])
-				if (this.space.inferCurrentCommand(operationPosition) !== "inferred position") {
+				if (this.space.inferCurrentCommand(operationPosition, this) !== "inferred position") {
 					this.message("Unable to place block. Command in level is expecting additional arguments")
 				}
 				return
