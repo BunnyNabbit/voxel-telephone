@@ -1,6 +1,7 @@
 ---
 title: "Where are realms?"
 contributors: ["BunnyNabbit \"Aon\""]
+noIndex: true
 ---
 # Where are realms?
 Voxel Telephone currently does not have personal realms/overseer.
