@@ -1,4 +1,4 @@
-class UserRecord {
+export class UserRecord {
 	constructor(player, data) {
 		this.player = player
 		this.username = player.authInfo.username
@@ -53,5 +53,3 @@ class UserRecord {
 	}
 	static orphans = new Set()
 }
-
-module.exports = UserRecord

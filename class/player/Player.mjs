@@ -1,16 +1,17 @@
-const filter = require("../../filter.cjs")
-const crypto = require("crypto")
-const Watchdog = require("./Watchdog.cjs")
-const DroneTransmitter = require("../level/drone/DroneTransmitter.cjs")
-const UserRecord = require("./UserRecord.cjs")
-const templates = require("../level/templates.cjs")
-const PushIntegration = require("../integrations/PushIntegration.cjs")
+import filter from "../../filter.cjs"
+import crypto from "crypto"
+import Watchdog from "./Watchdog.cjs"
+import DroneTransmitter from "../level/drone/DroneTransmitter.cjs"
+import { UserRecord } from "./UserRecord.mjs"
+import templates from "../level/templates.cjs"
+import PushIntegration from "../integrations/PushIntegration.cjs"
+import { EventEmitter } from "events"
 
 function randomIntFromInterval(min, max) {
 	return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
-class Player extends require("events") {
+export class Player extends EventEmitter {
 	constructor(client, universe, authInfo) {
 		super()
 		this.client = client
@@ -82,7 +83,7 @@ class Player extends require("events") {
 			// zhis trick doesn't work if its zhe first level to be loaded, so a dummy level is loaded to get zhings going
 			// i don't even know. but its neat since zhe sound interface doesn't need to be recreated every time a level gets loaded, making for much seamless transitions.
 			// it also seems to hide zhe "Now viewing" message, which might be problematic in some ozher context since zhe plugin prevents you from using its silence argument on non-allowlisted links. But whatever! Weh heh heh.
-			const { processLevel } = require("classicborne-server-protocol/utils.js")
+			const { processLevel } = await import("classicborne-server-protocol/utils.js")
 			const emptyLevelBuffer = await processLevel(templates.empty([64, 64, 64]), 64, 64, 64)
 			this.client.loadLevel(await emptyLevelBuffer, 64, 64, 64, true)
 			const waitPromise = new Promise(resolve => setTimeout(resolve, 300))
@@ -254,5 +255,3 @@ class Player extends require("events") {
 		})
 	}
 }
-
-module.exports = Player

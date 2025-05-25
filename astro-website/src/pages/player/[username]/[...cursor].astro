@@ -10,7 +10,7 @@ let cursor, nextCursor
 if (Astro.params.cursor) {
 	cursor = new ObjectId(Astro.params.cursor);
 }
-const userRecord = await database.getUserRecordDocument(username);
+const userRecord = await database.getUserRecordDocument(username, true);
 let title = username;
 let userGrid = [];
 if (!userRecord) {
