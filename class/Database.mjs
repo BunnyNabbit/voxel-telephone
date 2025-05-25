@@ -1,9 +1,8 @@
-const mongojs = require("mongojs")
+import mongojs from "mongojs"
+import { Zone } from "./level/Zone.mjs"
+import { UserRecord } from "./player/UserRecord.mjs"
 
-const Zone = require("./level/Zone.cjs")
-const UserRecord = require("./player/UserRecord.cjs")
-
-class Database {
+export class Database {
 	constructor(serverConfiguration) {
 		this.gameCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephone")
 		this.downloadsCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephoneDownloads")
@@ -75,6 +74,37 @@ class Database {
 			this.gameCollection.find(findDocument).sort({ _id: -1 }).limit(65, async (err, buildTurns) => {
 				let promises = []
 				buildTurns.forEach(buildTurn => { // get zhe previous turn which is zhe description
+					promises.push(new Promise(resolve => {
+						this.gameCollection.findOne({ _id: buildTurn.parent }, (err, describeTurn) => {
+							resolve({ describeTurn, buildTurn })
+						})
+					}))
+				})
+				const grid = []
+				let currentColumn = []
+				const turns = await Promise.all(promises)
+				turns.forEach(turnSet => {
+					currentColumn.push(turnSet.describeTurn, turnSet.buildTurn)
+					if (currentColumn.length == 16) {
+						grid.push(currentColumn)
+						currentColumn = []
+					}
+				})
+				if (currentColumn.length) grid.push(currentColumn)
+				resolve(grid)
+			})
+		})
+	}
+
+	getLicensedGrid(cursor) {
+		return new Promise(resolve => {
+			const findDocument = { promptType: "build", licenses: { $exists: true } }
+			if (cursor) {
+				findDocument._id = { $lt: cursor }
+			}
+			this.gameCollection.find(findDocument).sort({ _id: -1 }).limit(65, async (err, buildTurns) => {
+				let promises = []
+				buildTurns.forEach(buildTurn => {
 					promises.push(new Promise(resolve => {
 						this.gameCollection.findOne({ _id: buildTurn.parent }, (err, describeTurn) => {
 							resolve({ describeTurn, buildTurn })
@@ -260,14 +290,18 @@ class Database {
 		})
 	}
 
-	getUserRecordDocument(username) {
+	getUserRecordDocument(username, returnEmptyIfAbsent = false) {
 		return new Promise((resolve, reject) => {
 			this.userCollection.findOne({ _id: username }, (err, document) => {
 				if (err) return reject(err)
 				if (document) {
 					resolve(document)
 				} else {
-					resolve(UserRecord.getDefaultRecord(username))
+					if (returnEmptyIfAbsent) {
+						resolve()
+					} else {
+						resolve(UserRecord.getDefaultRecord(username))
+					}
 				}
 			})
 		})
@@ -437,6 +471,33 @@ class Database {
 			})
 		})
 	}
+
+	getTurnRender(turnId) {
+		return new Promise(resolve => {
+			this.gameCollection.findOne({ _id: turnId }, { render: 1 }, (err, turn) => {
+				if (!turn) return resolve()
+				resolve(turn.render)
+			})
+		})
+	}
+
+	getTurn(turnId) {
+		return new Promise(resolve => {
+			this.gameCollection.findOne({ _id: turnId }, (err, turn) => {
+				if (!turn) return resolve()
+				resolve(turn)
+			})
+		})
+	}
+
+	getTurnDownload(turnId, format) {
+		return new Promise(resolve => {
+			this.downloadsCollection.findOne({ forId: turnId, format }, (err, download) => {
+				if (!download) return resolve()
+				resolve(download)
+			})
+		})
+	}
 	/**Add a download entry.
 	 * @param {ObjectID} turnId - The ID of a turn.
 	 * @param {Buffer} data - The download data.
@@ -475,5 +536,3 @@ class Database {
 		})
 	}
 }
-
-module.exports = Database

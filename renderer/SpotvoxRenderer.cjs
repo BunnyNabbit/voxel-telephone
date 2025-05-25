@@ -1,5 +1,5 @@
 const { exec } = require('node:child_process')
-const Database = require("../class/Database.cjs")
+const { Database } = require("../class/Database.mjs")
 const fs = require('fs')
 const path = require('path')
 const exportVox = require("../exportVox.cjs")
