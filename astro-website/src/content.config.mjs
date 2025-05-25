@@ -13,6 +13,7 @@ const help = defineCollection({
 		summary: z.string().optional(),
 		image: image().optional(),
 		imageAlt: z.string().optional(),
+		noIndex: z.boolean().optional(),
 	})
 })
 

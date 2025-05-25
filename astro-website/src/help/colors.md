@@ -1,5 +1,6 @@
 ---
 title: "Colors"
+noIndex: true
 ---
 # Colors
 - 0: &0Black

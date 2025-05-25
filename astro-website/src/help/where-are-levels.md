@@ -1,6 +1,7 @@
 ---
 title: "Where are levels?"
 contributors: ["BunnyNabbit \"Aon\""]
+noIndex: true
 ---
 # Where are levels?
 Voxel Telephone does not have a list of levels. Instead, all game modes are in the `/main` level hub as portals.

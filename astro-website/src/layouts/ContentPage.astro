@@ -27,6 +27,7 @@ if (Astro.props.canon) {
 const description = Astro.props.description;
 const ogImage = Astro.props.ogImage;
 const includeH1 = Astro.props.includeH1 ?? true;
+const noIndex = Astro.props.noIndex ?? false;
 ---
 
 <html lang="en">
@@ -50,6 +51,9 @@ const includeH1 = Astro.props.includeH1 ?? true;
 			<meta property="og:image" content={ogImage.url} />
 			<meta property="og:image:alt" content={ogImage.alt} />
 			<meta property="twitter:card" content="summary_large_image" />
+		}
+		{noIndex &&
+			<meta name="robots" content="noindex" />
 		}
 		<ClientRouter />
 	</head>
