@@ -59,10 +59,10 @@ const noIndex = Astro.props.noIndex ?? false;
 	</head>
 	<body>
 		<Header />
-		{
-			includeH1 && <h1>{title}</h1>
-		}
 		<main>
+			{
+				includeH1 && <h1>{title}</h1>
+			}
 			<slot />
 		</main>
 		<div class="page-padding"></div>
@@ -135,6 +135,10 @@ const noIndex = Astro.props.noIndex ?? false;
 		body {
 			min-height: 100vh;
 			position: relative;
+			margin: 0;
+		}
+		main, nav {
+			padding: 1rem;
 		}
 		code {
 			background-color: #f1f1f1;
