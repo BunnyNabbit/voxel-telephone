@@ -20,6 +20,9 @@ importers:
       classicborne-server-protocol:
         specifier: ^0.3.2
         version: 0.3.2
+      esm-path:
+        specifier: ^1.0.1
+        version: 1.0.1
       express:
         specifier: ^4.21.2
         version: 4.21.2
@@ -704,6 +707,9 @@ packages:
     peerDependenciesMeta:
       jiti:
         optional: true
+
+  esm-path@1.0.1:
+    resolution: {integrity: sha512-wsS/xE+UuRqDnocJ9ejv1HOIRC/8t0Xrplakjm9aSkm3y2cNF4cbPMEZ6QXK7DyWGtwAOPGJgJtJ/juvmT1gIA==}
 
   espree@10.3.0:
     resolution: {integrity: sha512-0QYC8b24HWY8zjRnDTL6RiHfDbAWn63qb4LMj1Z4b076A4une81+z03Kg7l7mn/48PUTqoLptSXez8oknU8Clg==}
@@ -2685,6 +2691,8 @@ snapshots:
       zod: 3.24.4
     transitivePeerDependencies:
       - supports-color
+
+  esm-path@1.0.1: {}
 
   espree@10.3.0:
     dependencies:
