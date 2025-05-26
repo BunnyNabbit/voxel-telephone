@@ -1,13 +1,25 @@
-const { exec } = require('node:child_process')
-const { Database } = require("../class/Database.mjs")
-const fs = require('fs')
-const path = require('path')
-const exportVox = require("../exportVox.cjs")
-const Level = require("../class/level/Level.cjs")
-const ChangeRecord = require("../class/level/changeRecord/ChangeRecord.cjs")
-const templates = require("../class/level/templates.cjs")
-const defaultBlockset = require("../6-8-5-rgb.json")
-const { Jimp } = require("jimp")
+// const { exec } = require('node:child_process')
+// const { Database } = require("../class/Database.mjs")
+// const fs = require('fs')
+// const path = require('path')
+// const exportVox = require("../exportVox.cjs")
+// const Level = require("../class/level/Level.cjs")
+// const ChangeRecord = require("../class/level/changeRecord/ChangeRecord.cjs")
+// const templates = require("../class/level/templates.cjs")
+// const defaultBlockset = require("../6-8-5-rgb.json")
+// const { Jimp } = require("jimp")
+import { exec } from "node:child_process"
+import { Database } from "../class/Database.mjs"
+import fs from "fs"
+import path from "path"
+import exportVox from "../exportVox.cjs"
+import Level from "../class/level/Level.cjs"
+import ChangeRecord from "../class/level/changeRecord/ChangeRecord.cjs"
+import templates from "../class/level/templates.cjs"
+import defaultBlockset from "../6-8-5-rgb.json" with { type: "json" }
+import { Jimp } from "jimp"
+import { getAbsolutePath } from "esm-path"
+const __dirname = getAbsolutePath(import.meta.url)
 // java -jar ../spotvox.jar ./Copter.vox --multiple=-4 --rotations=1
 // this generates a folder in the current working directory named after the input file.
 // the folder structure looks like this
@@ -22,7 +34,7 @@ const { Jimp } = require("jimp")
 // we only need Copter/size8blocky/Copter_angle0.png. delete the folder after getting it
 
 /** Represents a MagicaVoxel .vox renderer using Spotvox. */
-class SpotvoxRenderer {
+export default class SpotvoxRenderer {
 	constructor(serverConfiguration, db) {
 		this.serverConfiguration = serverConfiguration
 		this.db = db ?? new Database(serverConfiguration)
@@ -167,7 +179,8 @@ class SpotvoxRenderer {
 	}
 }
 
-const serverConfiguration = require('../config.json')
+// const serverConfiguration = require('../config.json')
+import serverConfiguration from '../config.json' with { type: 'json' }
 const renderer = new SpotvoxRenderer(serverConfiguration);
 (async function main() {
 	while (true) {
@@ -175,9 +188,3 @@ const renderer = new SpotvoxRenderer(serverConfiguration);
 		await new Promise(resolve => setTimeout(resolve, 5000))
 	}
 })()
-
-// renderer.renderVox("./Copter.vox").then((output) => {
-// 	console.log(`${output.format} data length: ${output.data.length}`)
-// })
-
-module.exports = SpotvoxRenderer
