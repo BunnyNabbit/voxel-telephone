@@ -281,7 +281,6 @@ export class Universe extends EventEmitter {
 								return
 							}
 							this.db.addInteraction(client.authInfo.username, game.next, "built")
-							exportLevelAsVox(level)
 							if (level.doNotReserve) return
 							// reserve game for player
 							this.playerReserved.set(client.authInfo.username, level.game)
