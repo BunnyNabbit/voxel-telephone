@@ -33,6 +33,10 @@
 			playSound(data)
 		})
 
+		socket.on("disconnect", () => {
+			window.close()
+		})
+
 		let loop = null
 		let loopURL = null
 
