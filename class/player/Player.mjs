@@ -78,6 +78,7 @@ export class Player extends EventEmitter {
 		if (universe.serverConfiguration.taglines) tagline = universe.serverConfiguration.taglines[randomIntFromInterval(0, universe.serverConfiguration.taglines.length - 1)]
 		this.client.serverIdentification("Voxel Telephone", tagline, 0x64)
 		this.watchdog = new Watchdog(this)
+		Player.sendHotbar(this)
 		if (this.usingCEF) {
 			// zhis is a pretty weird trick. usually zhe CEF plugin unloads windows on level loads, but it can be prevented if its initialization command is issued right before level loading.
 			// zhis trick doesn't work if its zhe first level to be loaded, so a dummy level is loaded to get zhings going
@@ -254,4 +255,10 @@ export class Player extends EventEmitter {
 			}
 		})
 	}
+	static sendHotbar(player) {
+		this.defaultHotbar.forEach((blockId, index) => {
+			player.client.setHotbar(blockId, index)
+		})
+	} 
+	static defaultHotbar = [9, 29, 44, 164, 244, 248, 228, 213, 209]
 }
