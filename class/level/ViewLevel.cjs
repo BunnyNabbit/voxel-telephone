@@ -40,16 +40,7 @@ class ViewLevel extends Level {
 					player.selectedTurns = emptyTurns
 				}
 				if (player.selectedTurns.description != lastTurns.description) {
-					if (player.selectedTurns.description) {
-						player.message(player.selectedTurns.description.prompt, 13)
-						let attribution = `Description: ${player.selectedTurns.description.creators.join()}`
-						if (player.selectedTurns.build) {
-							attribution += ` | Build: ${player.selectedTurns.build.creators.join()}`
-						}
-						player.message(attribution, 12)
-					} else {
-						player.message(" ", [12, 13])
-					}
+					this.displaySelectedTurns(player)
 				}
 				if (!player.viewDebounce && position.z > 512) {
 					player.viewDebounce = true
@@ -173,6 +164,21 @@ class ViewLevel extends Level {
 					this.rawSetBlock([xOffset + i, 0, zOffset + 63], blockColor)
 				}
 			}
+		}
+	}
+	/**Displays selected turns to the player.
+	 * @param {Player} player - Player to display turns to.
+	*/
+	displaySelectedTurns(player) {
+		if (player.selectedTurns.description) {
+			player.message(player.selectedTurns.description.prompt, 13)
+			let attribution = `Description: ${player.selectedTurns.description.creators.join()}`
+			if (player.selectedTurns.build) {
+				attribution += ` | Build: ${player.selectedTurns.build.creators.join()}`
+			}
+			player.message(attribution, 12)
+		} else {
+			player.message(" ", [12, 13])
 		}
 	}
 	/** Adds an icon (64x64x64 template function or buffer) to zhe level.
