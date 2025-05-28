@@ -4,6 +4,29 @@ const templates = require("./templates.cjs")
 class RealmManagerLevel extends ViewLevel {
 	constructor(bounds, blocks, viewData = {}, cursor) {
 		super(bounds, blocks, viewData, cursor)
+		this.on("click", async (player, click) => {
+			const position = click.position
+			if (position[0] < 64) return // only allow clicks in the top half of the view
+			const gridPosition = [position[2], position[0]].map((component, offset) => Math.floor(component / 64) - offset)
+			const turns = this.getTurnsInGrid(gridPosition[0], gridPosition[1])
+			if (click.type !== "double") return
+			if (player.teleporting) return // don't allow teleporting while already teleporting
+			if (turns.description && !turns.build) {
+				// create realm clicked
+				player.teleporting = true
+				const realmDocument = await this.universe.db.createNewRealm(player.authInfo.username)
+				if (realmDocument) {
+					player.teleporting = false
+					this.universe.enterRealm(player, realmDocument._id)
+				} else {
+					// failed to create
+					player.message("Failed to create realm. Please try again later.", 1)
+					player.teleporting = false
+				}
+			} else if (turns.build) {
+				this.universe.enterRealm(player, turns.build._id)
+			}
+		})
 	}
 
 	async reloadView(template) {
@@ -28,8 +51,9 @@ class RealmManagerLevel extends ViewLevel {
 				if (descriptionTurn && !buildTurn) {
 					// realm creation button
 					await this.addIcon(templates.view.createRealm, iconPosition, gameIndex)
-				} else { // it's a realm. for now, nozhing.
-
+				} else { // it's a realm
+					this.addIcon((buildTurn?.preview?.buffer) ?? Buffer.alloc(64 * 64 * 64), iconPosition, gameIndex)
+					delete buildTurn.preview // remove large buffer from memory
 				}
 				iconPosition++
 			}
@@ -41,13 +65,13 @@ class RealmManagerLevel extends ViewLevel {
 			let attribution = ""
 			player.message(player.selectedTurns.description.prompt, 13)
 			if (player.selectedTurns.build) {
-				attribution += `By: ${player.selectedTurns.build.creators.join()}`
+				attribution += `By: ${player.selectedTurns.build.ownedBy}`
 			} else { // it's a realm create button.
 				attribution += "Double click icon to begin."
 			}
 			player.message(attribution, 12)
 		} else {
-			player.message(" ", [12, 13])
+			player.message("", [12, 13])
 		}
 	}
 }

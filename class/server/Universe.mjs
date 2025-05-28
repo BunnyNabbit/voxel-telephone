@@ -17,6 +17,7 @@ import Drone from "../level/drone/Drone.cjs"
 import Ego from "../level/drone/Ego.cjs"
 import PushIntegration from "../integrations/PushIntegration.cjs"
 import { EventEmitter } from "events"
+import RealmLevel from "../level/RealmLevel.cjs"
 
 const builderDefaults = {
 	template: templates.builder
@@ -248,6 +249,33 @@ export class Universe extends EventEmitter {
 			player.teleporting = false
 			player.emit("playSound", this.sounds.playbackTrack)
 		})
+	}
+	async enterRealm(player, realmId) {
+		if (player.teleporting == true) return
+		player.teleporting = true
+		player.space.removePlayer(player)
+		const realmDocument = await this.db.getRealm(realmId)
+		if (!realmDocument) {
+			player.message("Realm not found", 1)
+			player.teleporting = false
+			return
+		}
+		const levelName = `realm-${realmDocument._id}`
+		const promise = this.loadLevel(levelName, {
+			useNullChangeRecord: false,
+			levelClass: RealmLevel,
+			arguments: [realmDocument],
+			bounds: [255, 255, 255],
+			template: templates.empty,
+			allowList: [realmDocument.ownedBy]
+		})
+		promise.then(level => {
+			level.addPlayer(player, [40, 10, 31])
+			player.teleporting = false
+			player.emit("playSound", this.sounds.gameTrack)
+		})
+		player.message("Realm", 1)
+		player.message("Go back to hub with /main", 2)
 	}
 	async startGame(player) {
 		if (player.teleporting == true) return

@@ -543,12 +543,12 @@ export class Database {
 	 */
 	getRealmGrid(username, cursor) {
 		return new Promise(resolve => {
-			const findDocument = { promptType: "build", creators: username }
+			const findDocument = { ownedBy: username }
 			let limit = 65
 			const grid = []
 			let currentColumn = []
 			if (cursor) {
-				findDocument._id = { $lt: cursor, ownedBy: username }
+				findDocument._id = { $lt: cursor }
 			} else {
 				limit-- // make space for + icon
 				currentColumn.push({
@@ -575,4 +575,80 @@ export class Database {
 			})
 		})
 	}
+	/**Creates a new realm for a user.
+	 * @param {string} username - The username of the user.
+	 * @returns {Promise<Object>} - A promise that resolves to the created realm document or null if an error occurs.
+	 */
+	createNewRealm(username) {
+		return new Promise(resolve => {
+			const realmId = new mongojs.ObjectID()
+			const document = {
+				_id: realmId,
+				ownedBy: username,
+				realmName: Database.generateName()
+			}
+			this.realmCollection.insert(document, (err) => {
+				if (err) {
+					console.error("Error creating new realm:", err)
+					return resolve(null)
+				}
+				resolve(document)
+			})
+		})
+	}
+	/**Fetches a realm by its ID.
+	 * @param {ObjectID} realmId - The ID of the realm to fetch.
+	 * @returns {Promise<Object>} - A promise that resolves to the realm document or null if not found.
+	 */
+	getRealm(realmId) {
+		return new Promise(resolve => {
+			this.realmCollection.findOne({ _id: realmId }, (err, realm) => {
+				if (err || !realm) {
+					console.error("Error fetching realm:", err)
+					return resolve(null)
+				}
+				resolve(realm)
+			})
+		})
+	}
+	/**Saves a realm preview.
+	 * @param {ObjectID} realmId - The ID of the realm.
+	 * @param {Buffer} blocks - The blocks to save as a preview.
+	 * @returns {Promise<void>} - A promise that resolves when the operation is complete.
+	 */
+	saveRealmPreview(realmId, blocks) {
+		return new Promise(resolve => {
+			this.realmCollection.update({ _id: realmId }, { $set: { preview: blocks } }, (err) => {
+				if (err) {
+					console.error("Error saving realm preview:", err)
+				}
+				resolve()
+			})
+		})
+	}
+	/**Generates a random name consisting of three syllables.
+	 * @param {number} lengzh - The number of syllables to generate (default is 3).
+	 * @returns {string} - A randomly generated name.
+	 */
+	static generateName(lengzh = 3) {
+		let name = ""
+		for (let i = 0; i < lengzh; i++) {
+			const randomIndex = Database.randomIntFromInterval(0, Database.zhreeTypes.length - 1)
+			name += Database.zhreeTypes[randomIndex]
+		}
+		return name
+	}
+	static randomIntFromInterval(min, max) {
+		return Math.floor(Math.random() * (max - min + 1) + min)
+	}
+	static zhreeTypes = [
+		"tou",
+		"hoo",
+		"oh",
+		"xow",
+		"hy",
+		"th",
+		"we",
+		"to"
+	]
 }

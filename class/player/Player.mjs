@@ -94,17 +94,27 @@ export class Player extends EventEmitter {
 			if (this.destroyed) return
 		}
 		universe.gotoHub(this)
+		this.lastClick = new Date()
+		this.lastClickPosition = [0, 0, 0]
+		const doubleClickTime = 500
 		this.client.on("setBlock", operation => {
 			if (this.watchdog.rateOperation()) return
 			if (!this.space) return
 			const operationPosition = [operation.x, operation.y, operation.z]
+			if (operationPosition.some((value, index) => value > this.space.bounds[index] - 1)) {
+				console.log(`Player ${this.authInfo.username} attempted to place a block outside of bounds: ${operationPosition}`)
+				return
+			}
 			let block = operation.type
 			if (!this.space.userHasPermission(this.authInfo.username)) {
 				this.client.setBlock(this.space.getBlock(operationPosition), operationPosition[0], operationPosition[1], operationPosition[2])
-				return this.message("You don't have permission to build in this level")
-			}
-			if (operationPosition.some(value => value > 63)) {
-				this.client.disconnect("Illegal position received")
+				if (new Date() - this.lastClick < doubleClickTime && this.lastClickPosition.every((value, index) => value === operationPosition[index])) {
+					this.space.emit("click", this, { position: operationPosition, holdingBlock: block, type: "double" })
+				} else {
+					this.space.emit("click", this, { position: operationPosition, holdingBlock: block, type: "single" })
+				}
+				this.lastClick = new Date()
+				this.lastClickPosition = operationPosition
 				return
 			}
 			if (operation.mode == 0) {
@@ -259,6 +269,6 @@ export class Player extends EventEmitter {
 		this.defaultHotbar.forEach((blockId, index) => {
 			player.client.setHotbar(blockId, index)
 		})
-	} 
+	}
 	static defaultHotbar = [9, 29, 44, 164, 244, 248, 228, 213, 209]
 }
