@@ -18,8 +18,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       classicborne-server-protocol:
-        specifier: ^0.3.2
-        version: 0.3.2
+        specifier: ^0.3.3
+        version: 0.3.3
       esm-path:
         specifier: ^1.0.1
         version: 1.0.1
@@ -483,8 +483,8 @@ packages:
   chunked-vox@1.0.0:
     resolution: {integrity: sha512-y51p00p/FB60fHmamaGi+mWy4PrTenvH2N7P9J1aOmjgcvUDEYsNGeAWKjmd/tJUFpITFD+bpENLjptAodfzvw==}
 
-  classicborne-server-protocol@0.3.2:
-    resolution: {integrity: sha512-8XEO3QQUU5mbttFR7uk5kzUxmgmwtUmAy/4cejH3zn/Pzc9UrdfIftpkEqH7mrxrskZD1bfqRt6UTxYJrqzlOQ==}
+  classicborne-server-protocol@0.3.3:
+    resolution: {integrity: sha512-9bcOjKB1c4MPWbmkW37TLcuRBFgX+W+gG7essFAfBr+SunbbYjxYfdxTTg7R6rIONRmpdVIn3e8eCTg7NKmdQA==}
 
   clean-stack@4.2.0:
     resolution: {integrity: sha512-LYv6XPxoyODi36Dp976riBtSY27VmFo+MKqEU9QCCWyTrdEPDog+RWA7xQWHi6Vbp61j5c4cdzzX1NidnwtUWg==}
@@ -2460,7 +2460,7 @@ snapshots:
       ndarray: 1.0.19
       smart-buffer: 4.2.0
 
-  classicborne-server-protocol@0.3.2:
+  classicborne-server-protocol@0.3.3:
     dependencies:
       smart-buffer: 4.2.0
       ws: 8.18.2
