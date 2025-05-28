@@ -13,6 +13,7 @@ export class Database {
 		this.banCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephoneBans")
 		this.ledgerCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephoneLedger")
 		this.purgedCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephonePurged")
+		this.realmCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephoneRealms")
 		this.playerReserved = new Map()
 	}
 	findActiveGames(username, levels) {
@@ -532,6 +533,45 @@ export class Database {
 		return new Promise(resolve => {
 			this.gameCollection.updateMany({ root: gameId }, { $set: { gameStatus: status } }, () => {
 				resolve()
+			})
+		})
+	}
+	/**Get the realm grid for a user.
+	 * @param {string} username - The username of the user.
+	 * @param {ObjectID} cursor - The cursor for pagination.
+	 * @returns {Promise<Array>} - A promise that resolves to an array of realms.
+	 */
+	getRealmGrid(username, cursor) {
+		return new Promise(resolve => {
+			const findDocument = { promptType: "build", creators: username }
+			let limit = 65
+			const grid = []
+			let currentColumn = []
+			if (cursor) {
+				findDocument._id = { $lt: cursor, ownedBy: username }
+			} else {
+				limit-- // make space for + icon
+				currentColumn.push({
+					promptType: "description",
+					prompt: "Create a realm!"
+				}, null)
+			}
+
+			this.realmCollection.find(findDocument).sort({ _id: -1 }).limit(limit, async (err, realms) => {
+				realms.forEach(realm => {
+					currentColumn.push({
+						promptType: "description",
+						creators: [realm.ownedBy],
+						prompt: realm.realmName,
+						next: realm._id,
+					}, realm)
+					if (currentColumn.length == 16) {
+						grid.push(currentColumn)
+						currentColumn = []
+					}
+				})
+				if (currentColumn.length) grid.push(currentColumn)
+				resolve(grid)
 			})
 		})
 	}

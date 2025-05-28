@@ -210,10 +210,12 @@ export class Universe extends EventEmitter {
 		if (viewData.mode == "mod") spaceName += "-mod"
 		if (viewData.mode == "user") spaceName += `-user-${player.authInfo.username}`
 		if (viewData.mode == "purged") spaceName += `-purged`
+		if (viewData.mode == "realm") spaceName += `-realms-${viewData.player}`
 		if (cursor) spaceName += cursor
+		let levelClass = viewData.levelClass ?? ViewLevel
 		const promise = this.loadLevel(spaceName, {
 			useNullChangeRecord: true,
-			levelClass: ViewLevel,
+			levelClass: levelClass,
 			arguments: [viewData, cursor],
 			bounds: [576, 64, 512],
 			allowList: ["not a name"],

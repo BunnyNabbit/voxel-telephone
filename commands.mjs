@@ -7,6 +7,7 @@ import templates from "./class/level/templates.cjs"
 import { Zone } from "./class/level/Zone.mjs"
 import PushIntegration from "./class/integrations/PushIntegration.cjs"
 import Help from "./class/Help.cjs"
+import RealmManagerLevel from "./class/level/RealmManagerLevel.cjs"
 
 let creationLicenses = {}
 import("./creationLicenses.mjs").then(module => {
@@ -419,6 +420,13 @@ export class Commands {
 			})
 		})
 
+		universe.registerCommand(["/realm", "/os", "/myrealm"], async (player, argument) => {
+			if (!argument) {
+				universe.enterView(player, { viewAll: true, mode: "realm", player: player.authInfo.username, levelClass: RealmManagerLevel })
+				return
+			}
+		})
+
 		function unimplementedCommandHelper(commands, helpTopic) {
 			universe.registerCommand(commands, (player) => {
 				player.message("&cThis command is unavailable:")
@@ -429,7 +437,6 @@ export class Commands {
 
 		unimplementedCommandHelper(["/levels", "/worlds", "/maps", "/goto", "/g", "/gr", "/gotorandom", "/joinrandom", "/move", "/teleport", "/tp"], "where-are-levels")
 		unimplementedCommandHelper(["/ranks"], "where-are-ranks")
-		unimplementedCommandHelper(["/os", "/realm", "/myrealm"], "where-are-realms")
 
 		Help.register(universe)
 	}
