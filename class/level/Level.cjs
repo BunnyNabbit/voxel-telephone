@@ -21,6 +21,13 @@ class Level extends require("events") {
 		this.drones = new Set()
 		this.clientDrones = new Map()
 		this.blocking = false
+		this.addListener("click", (player, click) => {
+			if (click.type == "double") {
+				player.emit("playSound", player.universe.sounds.abort)
+			} else {
+				player.emit("playSound", player.universe.sounds.click)
+			}
+		})
 	}
 	messageAll(message, types = [0]) {
 		this.players.forEach(player => {
