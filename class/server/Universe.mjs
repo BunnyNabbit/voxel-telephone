@@ -6,7 +6,6 @@ import FastForwardLevel from "../level/FastForwardLevel.cjs"
 import GlobalCommandRegistry from "../GlobalCommandRegistry.cjs"
 import ChangeRecord from "../level/changeRecord/ChangeRecord.cjs"
 import NullChangeRecord from "../level/changeRecord/NullChangeRecord.cjs"
-import exportLevelAsVox from "../../exportVox.cjs"
 import defaultBlockset from "../../6-8-5-rgb.json" with { type: "json" }
 import { Database } from "../Database.mjs"
 import Heartbeat from "./Heartbeat.cjs"
