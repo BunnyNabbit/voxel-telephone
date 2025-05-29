@@ -43,7 +43,7 @@ class RealmLevel extends Level {
 	static downsample(blocks) {
 		console.time("downsample")
 		const downsampled = Buffer.alloc(64 * 64 * 64)
-		const bounds = 255
+		const bounds = 256
 		let downsampleIndex = 0
 		for (let y = 0; y < 64; y++) {
 			for (let z = 0; z < 64; z++) {
