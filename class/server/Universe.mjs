@@ -6,7 +6,6 @@ import FastForwardLevel from "../level/FastForwardLevel.cjs"
 import GlobalCommandRegistry from "../GlobalCommandRegistry.cjs"
 import ChangeRecord from "../level/changeRecord/ChangeRecord.cjs"
 import NullChangeRecord from "../level/changeRecord/NullChangeRecord.cjs"
-import exportLevelAsVox from "../../exportVox.cjs"
 import defaultBlockset from "../../6-8-5-rgb.json" with { type: "json" }
 import { Database } from "../Database.mjs"
 import Heartbeat from "./Heartbeat.cjs"
@@ -18,6 +17,7 @@ import Drone from "../level/drone/Drone.cjs"
 import Ego from "../level/drone/Ego.cjs"
 import PushIntegration from "../integrations/PushIntegration.cjs"
 import { EventEmitter } from "events"
+import RealmLevel from "../level/RealmLevel.cjs"
 
 const builderDefaults = {
 	template: templates.builder
@@ -210,10 +210,12 @@ export class Universe extends EventEmitter {
 		if (viewData.mode == "mod") spaceName += "-mod"
 		if (viewData.mode == "user") spaceName += `-user-${player.authInfo.username}`
 		if (viewData.mode == "purged") spaceName += `-purged`
+		if (viewData.mode == "realm") spaceName += `-realms-${viewData.player}`
 		if (cursor) spaceName += cursor
+		let levelClass = viewData.levelClass ?? ViewLevel
 		const promise = this.loadLevel(spaceName, {
 			useNullChangeRecord: true,
-			levelClass: ViewLevel,
+			levelClass: levelClass,
 			arguments: [viewData, cursor],
 			bounds: [576, 64, 512],
 			allowList: ["not a name"],
@@ -247,6 +249,34 @@ export class Universe extends EventEmitter {
 			player.teleporting = false
 			player.emit("playSound", this.sounds.playbackTrack)
 		})
+	}
+	async enterRealm(player, realmId) {
+		if (player.teleporting == true) return
+		player.teleporting = true
+		player.space.removePlayer(player)
+		const realmDocument = await this.db.getRealm(realmId)
+		if (!realmDocument) {
+			player.message("Realm not found", 1)
+			player.teleporting = false
+			return
+		}
+		const levelName = `realm-${realmDocument._id}`
+		const promise = this.loadLevel(levelName, {
+			useNullChangeRecord: false,
+			levelClass: RealmLevel,
+			arguments: [realmDocument],
+			bounds: [256, 256, 256],
+			template: templates.empty,
+			allowList: [realmDocument.ownedBy]
+		})
+		promise.then(level => {
+			level.addPlayer(player, [40, 10, 31])
+			player.teleporting = false
+			player.emit("playSound", this.sounds.gameTrack)
+		})
+		player.message("Realm", 1)
+		player.message("Go back to hub with /main", 2)
+		player.message(" ", 3)
 	}
 	async startGame(player) {
 		if (player.teleporting == true) return
