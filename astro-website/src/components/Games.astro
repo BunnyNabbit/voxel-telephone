@@ -5,8 +5,9 @@ import { ObjectId } from "mongojs";
 const cursor = Astro.props.cursor;
 const doPagination = Astro.props.pagination ?? false;
 const gamesPerPage = Astro.props.games ?? 5;
+const onlyCompleted = Astro.props.onlyCompleted ?? false;
 let nextCursor = null;
-const games = await database.getGames(new ObjectId(cursor), gamesPerPage);
+const games = await database.getGames(new ObjectId(cursor), gamesPerPage, onlyCompleted);
 if (doPagination && games.length == gamesPerPage) {
 	nextCursor = games[games.length - 2][0]._id;
 	games.pop();

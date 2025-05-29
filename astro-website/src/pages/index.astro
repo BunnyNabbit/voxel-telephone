@@ -6,8 +6,8 @@ import Games from "../components/Games.astro";
 <ContentPage title="Voxel Telephone" description="A multiplayer game where you build what you hear and describe what you see.">
 	<p>From pixels to prose, and back again. Voxel Telephone is a unique multiplayer experience where you build what you hear and describe what you see. Watch as creations transform through collaborative misinterpretation! Join us on <a href="https://www.classicube.net/server/play/1209f0e99914671f9cffc14d23f543c4/?canProxy=true">ClassiCube</a> to play!</p>
 	<h2>Recent games</h2>
-	<p>Check out the latest games played on Voxel Telephone.</p>
-	<Games pagination={false} games={5} />
+	<p>Check out the latest games completed on Voxel Telephone.</p>
+	<Games pagination={false} games={5} onlyCompleted={true} />
 	<p>Want to see more? Check out the <a href="/games">full list</a>.</p>
 	<h2>Join the fun!</h2>
 	<p>Voxel Telephone is a multiplayer game, and you can join in on the fun! Just head over to <a href="https://www.classicube.net/server/play/1209f0e99914671f9cffc14d23f543c4/?canProxy=true">ClassiCube</a> and join our server to start playing. We can't wait to see what you create!</p>
