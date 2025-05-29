@@ -265,7 +265,7 @@ export class Universe extends EventEmitter {
 			useNullChangeRecord: false,
 			levelClass: RealmLevel,
 			arguments: [realmDocument],
-			bounds: [255, 255, 255],
+			bounds: [256, 256, 256],
 			template: templates.empty,
 			allowList: [realmDocument.ownedBy]
 		})
