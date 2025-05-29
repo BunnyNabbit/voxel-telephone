@@ -71,7 +71,7 @@ class RealmManagerLevel extends ViewLevel {
 			}
 			player.message(attribution, 12)
 		} else {
-			player.message("", [12, 13])
+			player.message(" ", [12, 13])
 		}
 	}
 }

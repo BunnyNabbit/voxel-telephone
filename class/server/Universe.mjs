@@ -276,6 +276,7 @@ export class Universe extends EventEmitter {
 		})
 		player.message("Realm", 1)
 		player.message("Go back to hub with /main", 2)
+		player.message(" ", 3)
 	}
 	async startGame(player) {
 		if (player.teleporting == true) return
