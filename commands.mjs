@@ -420,11 +420,11 @@ export class Commands {
 			})
 		})
 
-		universe.registerCommand(["/realm", "/os", "/myrealm"], async (player, argument) => {
-			if (!argument) {
-				universe.enterView(player, { viewAll: true, mode: "realm", player: player.authInfo.username, levelClass: RealmManagerLevel })
-				return
-			}
+		universe.registerCommand(["/realm", "/os", "/myrealm"], async (player) => {
+			// if (!argument) {
+			universe.enterView(player, { viewAll: true, mode: "realm", player: player.authInfo.username, levelClass: RealmManagerLevel })
+			return
+			// }
 		})
 
 		function unimplementedCommandHelper(commands, helpTopic) {
