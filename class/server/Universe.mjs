@@ -10,7 +10,7 @@ import defaultBlockset from "../../6-8-5-rgb.json" with { type: "json" }
 import { Database } from "../Database.mjs"
 import Heartbeat from "./Heartbeat.cjs"
 import templates from "../level/templates.cjs"
-import { Commands } from "../../commands.mjs"
+import { Commands } from "../player/Commands.mjs"
 import cefSounds from "../../cefSounds.cjs"
 import { Player } from "../player/Player.mjs"
 import Drone from "../level/drone/Drone.cjs"
