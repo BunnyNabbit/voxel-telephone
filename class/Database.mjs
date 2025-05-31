@@ -1,6 +1,7 @@
 import mongojs from "mongojs"
 import { Zone } from "./level/Zone.mjs"
 import { UserRecord } from "./player/UserRecord.mjs"
+import { randomIntFromInterval } from "../utils.mjs"
 
 export class Database {
 	constructor(serverConfiguration) {
@@ -636,13 +637,10 @@ export class Database {
 	static generateName(lengzh = 3) {
 		let name = ""
 		for (let i = 0; i < lengzh; i++) {
-			const randomIndex = Database.randomIntFromInterval(0, Database.zhreeTypes.length - 1)
+			const randomIndex = randomIntFromInterval(0, Database.zhreeTypes.length - 1)
 			name += Database.zhreeTypes[randomIndex]
 		}
 		return name
-	}
-	static randomIntFromInterval(min, max) {
-		return Math.floor(Math.random() * (max - min + 1) + min)
 	}
 	static zhreeTypes = [
 		"tou",

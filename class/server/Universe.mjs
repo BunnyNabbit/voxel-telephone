@@ -18,6 +18,7 @@ import Ego from "../level/drone/Ego.cjs"
 import PushIntegration from "../integrations/PushIntegration.cjs"
 import { EventEmitter } from "events"
 import RealmLevel from "../level/RealmLevel.cjs"
+import { invertPromptType, randomIntFromInterval } from "../../utils.mjs"
 
 const builderDefaults = {
 	template: templates.builder
@@ -27,13 +28,6 @@ const describeDefaults = {
 	allowList: ["not a name"]
 }
 
-function randomIntFromInterval(min, max) {
-	return Math.floor(Math.random() * (max - min + 1) + min)
-}
-function invertPromptType(promptType) {
-	if (promptType == "description") return "build"
-	return "description"
-}
 export class Universe extends EventEmitter {
 	constructor(serverConfiguration) {
 		super()
