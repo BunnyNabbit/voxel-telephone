@@ -42,6 +42,7 @@ module.exports = {
 		modeBlitz: voxelRecordTemplate("view-mode-blitz"),
 		modeCasual: voxelRecordTemplate("view-mode-casual"),
 		modeNull: voxelRecordTemplate("view-mode-null"),
+		createRealm: voxelRecordTemplate("view-icon-create-realm"),
 	},
 	empty
 }

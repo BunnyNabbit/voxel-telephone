@@ -13,6 +13,7 @@ export class Database {
 		this.banCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephoneBans")
 		this.ledgerCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephoneLedger")
 		this.purgedCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephonePurged")
+		this.realmCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephoneRealms")
 		this.playerReserved = new Map()
 	}
 	findActiveGames(username, levels) {
@@ -538,4 +539,119 @@ export class Database {
 			})
 		})
 	}
+	/**Get the realm grid for a user.
+	 * @param {string} username - The username of the user.
+	 * @param {ObjectID} cursor - The cursor for pagination.
+	 * @returns {Promise<Array>} - A promise that resolves to an array of realms.
+	 */
+	getRealmGrid(username, cursor) {
+		return new Promise(resolve => {
+			const findDocument = { ownedBy: username }
+			let limit = 65
+			const grid = []
+			let currentColumn = []
+			if (cursor) {
+				findDocument._id = { $lt: cursor }
+			} else {
+				limit-- // make space for + icon
+				currentColumn.push({
+					promptType: "description",
+					prompt: "Create a realm!"
+				}, null)
+			}
+
+			this.realmCollection.find(findDocument).sort({ _id: -1 }).limit(limit, async (err, realms) => {
+				realms.forEach(realm => {
+					currentColumn.push({
+						promptType: "description",
+						creators: [realm.ownedBy],
+						prompt: realm.realmName,
+						next: realm._id,
+					}, realm)
+					if (currentColumn.length == 16) {
+						grid.push(currentColumn)
+						currentColumn = []
+					}
+				})
+				if (currentColumn.length) grid.push(currentColumn)
+				resolve(grid)
+			})
+		})
+	}
+	/**Creates a new realm for a user.
+	 * @param {string} username - The username of the user.
+	 * @returns {Promise<Object>} - A promise that resolves to the created realm document or null if an error occurs.
+	 */
+	createNewRealm(username) {
+		return new Promise(resolve => {
+			const realmId = new mongojs.ObjectID()
+			const document = {
+				_id: realmId,
+				ownedBy: username,
+				realmName: Database.generateName()
+			}
+			this.realmCollection.insert(document, (err) => {
+				if (err) {
+					console.error("Error creating new realm:", err)
+					return resolve(null)
+				}
+				resolve(document)
+			})
+		})
+	}
+	/**Fetches a realm by its ID.
+	 * @param {ObjectID} realmId - The ID of the realm to fetch.
+	 * @returns {Promise<Object>} - A promise that resolves to the realm document or null if not found.
+	 */
+	getRealm(realmId) {
+		return new Promise(resolve => {
+			this.realmCollection.findOne({ _id: realmId }, (err, realm) => {
+				if (err || !realm) {
+					console.error("Error fetching realm:", err)
+					return resolve(null)
+				}
+				resolve(realm)
+			})
+		})
+	}
+	/**Saves a realm preview.
+	 * @param {ObjectID} realmId - The ID of the realm.
+	 * @param {Buffer} blocks - The blocks to save as a preview.
+	 * @returns {Promise<void>} - A promise that resolves when the operation is complete.
+	 */
+	saveRealmPreview(realmId, blocks) {
+		return new Promise(resolve => {
+			this.realmCollection.update({ _id: realmId }, { $set: { preview: blocks } }, (err) => {
+				if (err) {
+					console.error("Error saving realm preview:", err)
+				}
+				resolve()
+			})
+		})
+	}
+	/**Generates a random name consisting of three syllables.
+	 * @param {number} lengzh - The number of syllables to generate (default is 3).
+	 * @returns {string} - A randomly generated name.
+	 */
+	static generateName(lengzh = 3) {
+		let name = ""
+		for (let i = 0; i < lengzh; i++) {
+			const randomIndex = Database.randomIntFromInterval(0, Database.zhreeTypes.length - 1)
+			name += Database.zhreeTypes[randomIndex]
+		}
+		return name
+	}
+	static randomIntFromInterval(min, max) {
+		return Math.floor(Math.random() * (max - min + 1) + min)
+	}
+	static zhreeTypes = [
+		"tou",
+		"hoo",
+		"oh",
+		"xow",
+		"hy",
+		"th",
+		"we",
+		"to"
+	]
 }
