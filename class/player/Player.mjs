@@ -6,10 +6,7 @@ import { UserRecord } from "./UserRecord.mjs"
 import templates from "../level/templates.cjs"
 import PushIntegration from "../integrations/PushIntegration.cjs"
 import { EventEmitter } from "events"
-
-function randomIntFromInterval(min, max) {
-	return Math.floor(Math.random() * (max - min + 1) + min)
-}
+import { randomIntFromInterval } from "../../utils.mjs"
 
 export class Player extends EventEmitter {
 	constructor(client, universe, authInfo) {

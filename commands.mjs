@@ -1,83 +1,21 @@
-// const exportLevelAsVox = require("./exportVox.cjs")
-// const templates = require("./class/level/templates.cjs")
-// const { Zone } = require("./class/level/Zone.mjs")
-// const PushIntegration = require("./class/integrations/PushIntegration.cjs")
 import exportLevelAsVox from "./exportVox.cjs"
 import templates from "./class/level/templates.cjs"
 import { Zone } from "./class/level/Zone.mjs"
 import PushIntegration from "./class/integrations/PushIntegration.cjs"
 import Help from "./class/Help.cjs"
 import RealmManagerLevel from "./class/level/RealmManagerLevel.cjs"
+import { invertPromptType } from "./utils.mjs"
 
 let creationLicenses = {}
 import("./creationLicenses.mjs").then(module => {
 	creationLicenses = module.default
 })
 
-function invertPromptType(promptType) {
-	if (promptType == "description") return "build"
-	return "description"
-}
-
 export class Commands {
 	static register(universe) {
 		universe.registerCommand(["/rules"], (player) => {
 			universe.commandRegistry.attemptCall(player, `/help rules`)
 		})
-		function reasonVcr(matchValue, message) {
-			return function (player) {
-				if (player.space.inVcr == matchValue) {
-					if (message) player.message(message)
-					return false
-				}
-				return true
-			}
-		}
-		function reasonHasPermission(matchValue, message = "You don't have permission to build in this level!") {
-			return function (player) {
-				if (player.space.userHasPermission(player.username) == matchValue) {
-					if (message) player.message(message)
-					return false
-				}
-				return true
-			}
-		}
-		function reasonHasUserPermission(matchValue, message = "You don't have permission to use this command!") {
-			return async function (player) {
-				const userRecord = await player.userRecord.get()
-				if (userRecord.permissions[matchValue]) {
-					return true
-				}
-				if (message) player.message(message)
-				return false
-			}
-		}
-		function reasonLevelBlocking(matchValue, message) {
-			return function (player) {
-				if (player.space.blocking == matchValue) {
-					if (message) player.message(message)
-					return false
-				}
-				return true
-			}
-		}
-		function reasonVcrDraining(matchValue, message = "VCR is busy. Try again later?") {
-			return function (player) {
-				if (player.space.changeRecord.draining == matchValue) {
-					if (message) player.message(message)
-					return false
-				}
-				return true
-			}
-		}
-		function makeMultiValidator(reasons = []) {
-			return async function (player, str) {
-				for (const reason of reasons) {
-					if (await reason(player, str) == false) return false
-				}
-				return true
-			}
-		}
 		universe.registerCommand(["/commit"], async (player) => {
 			player.space.loading = true
 			await player.space.changeRecord.commit(player.space.changeRecord.actionCount)
@@ -88,7 +26,7 @@ export class Commands {
 				player.emit("playSound", universe.sounds.deactivateVCR)
 				player.emit("playSound", universe.sounds.gameTrack)
 			})
-		}, reasonVcr(false, "Level isn't in VCR mode. /vcr"))
+		}, Commands.reasonVcr(false, "Level isn't in VCR mode. /vcr"))
 		universe.registerCommand(["/finish"], async (player) => {
 			if (player.space && player.space.game && !player.space.changeRecord.draining) {
 				if (player.space.inVcr) {
@@ -174,10 +112,10 @@ export class Commands {
 					player.message("Nothing happened")
 				}
 			}
-		}, reasonHasPermission(false, "You don't have permission to build in this level!"))
+		}, Commands.reasonHasPermission(false, "You don't have permission to build in this level!"))
 		universe.registerCommand(["/mark"], async (player) => {
 			player.space.inferCurrentCommand(player.position.map((value, index) => Math.min(Math.max(Math.floor(value), 0), player.space.bounds[index] - 1)), player)
-		}, makeMultiValidator([reasonHasPermission(false), reasonLevelBlocking(false, "There are no current commands being run on the level")]))
+		}, Commands.makeMultiValidator([Commands.reasonHasPermission(false), Commands.reasonLevelBlocking(false, "There are no current commands being run on the level")]))
 		universe.registerCommand(["/paint", "/p"], async (player) => {
 			player.paintMode = !player.paintMode
 			if (player.paintMode) {
@@ -212,7 +150,7 @@ export class Commands {
 				return
 			}
 			player.space.setBlock(operationPosition, block)
-		}, makeMultiValidator([reasonHasPermission(false), reasonVcr(true, "Unable to place block. Level is in VCR mode"), reasonLevelBlocking(true, "Unable to place block. Command in level is expecting additional arguments")]))
+		}, Commands.makeMultiValidator([Commands.reasonHasPermission(false), Commands.reasonVcr(true, "Unable to place block. Level is in VCR mode"), Commands.reasonLevelBlocking(true, "Unable to place block. Command in level is expecting additional arguments")]))
 		universe.registerCommand(["/clients"], async (player) => {
 			player.message("&ePlayers using:")
 			universe.server.players.forEach(otherPlayer => {
@@ -231,7 +169,7 @@ export class Commands {
 			player.message(`/abort - aborts VCR preview, loading state as it was before enabling VCR.`)
 			player.space.reload()
 			player.emit("playSound", universe.sounds.activateVCR)
-		}, makeMultiValidator([reasonHasPermission(false, "You don't have permission to build in this level!"), reasonVcrDraining(true), reasonVcr(true, "The level is already in VCR mode")]))
+		}, Commands.makeMultiValidator([Commands.reasonHasPermission(false, "You don't have permission to build in this level!"), Commands.reasonVcrDraining(true), Commands.reasonVcr(true, "The level is already in VCR mode")]))
 		universe.registerCommand(["/template"], async (player, message) => {
 			let template
 			switch (message) {
@@ -251,7 +189,7 @@ export class Commands {
 			await player.space.changeRecord.restoreBlockChangesToLevel(player.space, Math.max(player.space.changeRecord.actionCount, 1))
 			player.space.reload()
 			player.emit("playSound", universe.sounds.deactivateVCR)
-		}, makeMultiValidator([reasonHasPermission(false, "You don't have permission to build in this level!"), reasonVcrDraining(true), reasonVcr(true, "The level is in VCR mode")]))
+		}, Commands.makeMultiValidator([Commands.reasonHasPermission(false, "You don't have permission to build in this level!"), Commands.reasonVcrDraining(true), Commands.reasonVcr(true, "The level is in VCR mode")]))
 		universe.registerCommand(["/create"], async (player) => {
 			if (player.canCreate && player.space?.name == universe.serverConfiguration.hubName) {
 				player.creating = true
@@ -267,7 +205,7 @@ export class Commands {
 			player.message(`Rewinded. Current actions: ${player.space.changeRecord.actionCount}/${player.space.changeRecord.maxActions}`)
 			player.message(`To commit this state use /commit. use /abort to exit VCR`)
 			player.emit("playSound", universe.sounds.rewind)
-		}, reasonVcr(false, "Level isn't in VCR mode. /vcr"))
+		}, Commands.reasonVcr(false, "Level isn't in VCR mode. /vcr"))
 		universe.registerCommand(["/fastforward", "/ff", "/redo"], async (player, message) => {
 			const count = Math.max(parseInt(message), 0) || 1
 			if (player.space.loading) return player.message("Level is busy seeking. Try again later")
@@ -277,7 +215,7 @@ export class Commands {
 			player.message(`Fast-forwarded. Current actions: ${player.space.changeRecord.actionCount}/${player.space.changeRecord.maxActions}`)
 			player.message(`To commit this state use /commit. Use /abort to exit VCR`)
 			player.emit("playSound", universe.sounds.fastForward)
-		}, reasonVcr(false, "Level isn't in VCR mode. /vcr"))
+		}, Commands.reasonVcr(false, "Level isn't in VCR mode. /vcr"))
 		universe.registerCommand(["/addzone"], async (player, message) => {
 			if (player.space.name.startsWith("game-")) return
 			const values = message.split(" ").map(value => parseInt(value)).filter(value => !isNaN(value))
@@ -292,25 +230,25 @@ export class Commands {
 			player.space.portals.push(zone)
 			await universe.db.saveLevelPortals(player.space)
 			player.message("Zone added")
-		}, reasonHasUserPermission("hubBuilder"))
+		}, Commands.reasonHasUserPermission("hubBuilder"))
 		universe.registerCommand(["/removeallzones"], async (player) => {
 			if (player.space.name.startsWith("game-")) return
 			player.space.portals = []
 			await universe.db.saveLevelPortals(player.space)
 			player.message("Zones removed")
-		}, reasonHasUserPermission("hubBuilder"))
+		}, Commands.reasonHasUserPermission("hubBuilder"))
 		universe.registerCommand(["/play"], async (player) => {
 			universe.startGame(player)
 		})
 		universe.registerCommand(["/view", "/museum", "/gallery"], async (player, message) => {
 			if (message == "mod") {
-				const isModerator = await reasonHasUserPermission("moderator")(player)
+				const isModerator = await Commands.reasonHasUserPermission("moderator")(player)
 				if (!isModerator) return
 				universe.enterView(player, { viewAll: true, mode: "mod" })
 			} else if (message == "user") {
 				universe.enterView(player, { viewAll: true, mode: "user", username: player.authInfo.username })
 			} else if (message == "purged") {
-				const isModerator = await reasonHasUserPermission("moderator")(player)
+				const isModerator = await Commands.reasonHasUserPermission("moderator")(player)
 				if (!isModerator) return
 				universe.enterView(player, { viewAll: true, mode: "purged", username: player.authInfo.username })
 			} else if (!message) {
@@ -331,7 +269,7 @@ export class Commands {
 			await universe.db.purgeLastTurn(selectedTurns.description.root, reason)
 			await player.space.reloadView(templates.empty)
 			player.message("Turn purged!")
-		}, reasonHasUserPermission("moderator"))
+		}, Commands.reasonHasUserPermission("moderator"))
 		universe.registerCommand(["/diverge", "/fork"], async (player, reason) => {
 			const selectedTurns = player.selectedTurns
 			if (!selectedTurns.description) return
@@ -339,7 +277,7 @@ export class Commands {
 			await universe.db.divergeGame(selectedTurns.description, reason)
 			await player.space.reloadView(templates.empty)
 			player.message("Game diverged!")
-		}, reasonHasUserPermission("moderator"))
+		}, Commands.reasonHasUserPermission("moderator"))
 		universe.registerCommand(["/playback"], async (player) => {
 			const selectedTurns = player.selectedTurns
 			if (!selectedTurns?.description) return player.message("No game is selected.")
@@ -439,5 +377,59 @@ export class Commands {
 		unimplementedCommandHelper(["/ranks"], "where-are-ranks")
 
 		Help.register(universe)
+	}
+	static reasonVcr(matchValue, message) {
+		return function (player) {
+			if (player.space.inVcr == matchValue) {
+				if (message) player.message(message)
+				return false
+			}
+			return true
+		}
+	}
+	static reasonHasPermission(matchValue, message = "You don't have permission to build in this level!") {
+		return function (player) {
+			if (player.space.userHasPermission(player.username) == matchValue) {
+				if (message) player.message(message)
+				return false
+			}
+			return true
+		}
+	}
+	static reasonHasUserPermission(matchValue, message = "You don't have permission to use this command!") {
+		return async function (player) {
+			const userRecord = await player.userRecord.get()
+			if (userRecord.permissions[matchValue]) {
+				return true
+			}
+			if (message) player.message(message)
+			return false
+		}
+	}
+	static reasonLevelBlocking(matchValue, message) {
+		return function (player) {
+			if (player.space.blocking == matchValue) {
+				if (message) player.message(message)
+				return false
+			}
+			return true
+		}
+	}
+	static reasonVcrDraining(matchValue, message = "VCR is busy. Try again later?") {
+		return function (player) {
+			if (player.space.changeRecord.draining == matchValue) {
+				if (message) player.message(message)
+				return false
+			}
+			return true
+		}
+	}
+	static makeMultiValidator(reasons = []) {
+		return async function (player, str) {
+			for (const reason of reasons) {
+				if (await reason(player, str) == false) return false
+			}
+			return true
+		}
 	}
 }
