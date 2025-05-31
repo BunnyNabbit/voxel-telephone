@@ -1,13 +1,13 @@
-import exportLevelAsVox from "./exportVox.cjs"
-import templates from "./class/level/templates.cjs"
-import { Zone } from "./class/level/Zone.mjs"
-import PushIntegration from "./class/integrations/PushIntegration.cjs"
-import Help from "./class/Help.cjs"
-import RealmManagerLevel from "./class/level/RealmManagerLevel.cjs"
-import { invertPromptType } from "./utils.mjs"
+import exportLevelAsVox from "../../exportVox.cjs"
+import templates from "../level/templates.cjs"
+import { Zone } from "../level/Zone.mjs"
+import PushIntegration from "../integrations/PushIntegration.cjs"
+import Help from "../Help.cjs"
+import RealmManagerLevel from "../level/RealmManagerLevel.cjs"
+import { invertPromptType } from "../../utils.mjs"
 
 let creationLicenses = {}
-import("./creationLicenses.mjs").then(module => {
+import("../../creationLicenses.mjs").then(module => {
 	creationLicenses = module.default
 })
 
