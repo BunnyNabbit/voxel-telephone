@@ -37,7 +37,6 @@ function voxelRecordTemplate(iconName, defaultBounds = [64, 64, 64]) {
 
 export const templates = {
 	builder: voxelRecordTemplate("voxel-telephone-64"),
-	"builder-realm": voxelRecordTemplate("voxel-telephone-64", [256, 256, 256]),
 	view: {
 		built: voxelRecordTemplate("view-icon-built"),
 		description: voxelRecordTemplate("view-icon-description"),
