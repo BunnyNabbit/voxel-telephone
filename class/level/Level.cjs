@@ -4,6 +4,7 @@ function componentToHex(component) {
 }
 
 const levelCommands = require("./levelCommands.cjs").commands
+const { textSymbols } = require("../../constants.cjs")
 const Drone = require("./drone/Drone.cjs")
 const Ego = require("./drone/Ego.cjs")
 
@@ -276,7 +277,7 @@ class Level extends require("events") {
 	}
 	commitAction(player = null) {
 		const command = this.currentCommand
-		const { requiresRefreshing } =  command.action(this.currentCommandActionBytes)
+		const { requiresRefreshing } = command.action(this.currentCommandActionBytes)
 		if (this.loading == false) {
 			this.changeRecord.appendAction(true, this.currentCommandActionBytes, command.name)
 			this.playSound("poof")
@@ -301,7 +302,7 @@ class Level extends require("events") {
 	toggleVcr() {
 		this.inVcr = true
 		this.playSound("gameTrackDrone")
-		this.setBlinkText(Level.textSymbols.pause)
+		this.setBlinkText(textSymbols.pause)
 	}
 	userHasPermission(username) {
 		if (this.allowList.length == 0) return true
@@ -315,20 +316,29 @@ class Level extends require("events") {
 	}
 	/**Sets the text that will blink in the level, or stops blinking if `blinkText` is false.
 	 * @param {string|boolean} blinkText - The text to blink, or `false` to stop blinking.
+	 * @param {string} [subliminalText] - Optional subliminal text to display when blinking.
 	 */
-	setBlinkText(blinkText = false) {
+	setBlinkText(blinkText = false, subliminalText) {
 		clearInterval(this.blinkInterval)
-		if (blinkText === false) return this.blinkText = null
+		if (blinkText === false) {
+			this.players.forEach(player => {
+				player.message(" ", 100)
+			})
+			return this.blinkText = null
+		}
 		let toggle = false
-		this.blinkText = blinkText
-		this.blinkInterval = setInterval(() => {
+		this.blinkText = subliminalText || blinkText
+		const blink = () => {
 			toggle = !toggle
 			let text = " "
-			if (toggle) text = blinkText
+			if (toggle) text = this.blinkText
 			this.players.forEach(player => {
 				player.message(text, 100)
 			})
-		}, 500)
+			this.blinkText = blinkText
+		}
+		this.blinkInterval = setInterval(blink, 500)
+		blink()
 	}
 	/** Destroys the level, releasing any resources used for it. */
 	async dispose(saveChanges = true) {
@@ -367,12 +377,6 @@ class Level extends require("events") {
 			client.defineBlock(block)
 			client.defineBlockExt(block)
 		}
-	}
-	static textSymbols = {
-		pause: "| |",
-		play: ">",
-		fastForward: ">>",
-		rewind: "<<"
 	}
 	static standardBounds = [64, 64, 64]
 }

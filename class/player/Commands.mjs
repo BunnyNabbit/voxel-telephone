@@ -5,6 +5,7 @@ import PushIntegration from "../integrations/PushIntegration.cjs"
 import Help from "../Help.cjs"
 import { RealmManagerLevel } from "../level/RealmManagerLevel.mjs"
 import { invertPromptType } from "../../utils.mjs"
+import { textSymbols } from "../../constants.cjs"
 
 let creationLicenses = {}
 import("../../creationLicenses.mjs").then(module => {
@@ -27,6 +28,7 @@ export class Commands {
 				player.emit("playSound", universe.sounds.deactivateVCR)
 				player.emit("playSound", universe.sounds.gameTrack)
 			})
+			player.space.setBlinkText(false)
 		}, Commands.reasonVcr(false, "Level isn't in VCR mode. /vcr"))
 		universe.registerCommand(["/finish"], async (player) => {
 			if (player.space && player.space.game && !player.space.changeRecord.draining) {
@@ -207,6 +209,7 @@ export class Commands {
 			player.message(`Rewinded. Current actions: ${player.space.changeRecord.actionCount}/${player.space.changeRecord.maxActions}`)
 			player.message(`To commit this state use /commit. use /abort to exit VCR`)
 			player.emit("playSound", universe.sounds.rewind)
+			player.space.setBlinkText(textSymbols.pause, textSymbols.rewind)
 		}, Commands.reasonVcr(false, "Level isn't in VCR mode. /vcr"))
 		universe.registerCommand(["/fastforward", "/ff", "/redo"], async (player, message) => {
 			const count = Math.max(parseInt(message), 0) || 1
@@ -217,6 +220,7 @@ export class Commands {
 			player.message(`Fast-forwarded. Current actions: ${player.space.changeRecord.actionCount}/${player.space.changeRecord.maxActions}`)
 			player.message(`To commit this state use /commit. Use /abort to exit VCR`)
 			player.emit("playSound", universe.sounds.fastForward)
+			player.space.setBlinkText(textSymbols.pause, textSymbols.fastForward)
 		}, Commands.reasonVcr(false, "Level isn't in VCR mode. /vcr"))
 		universe.registerCommand(["/addzone"], async (player, message) => {
 			if (player.space.name.startsWith("game-")) return
