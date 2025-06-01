@@ -1,7 +1,7 @@
-const ViewLevel = require("./ViewLevel.cjs")
-const templates = require("./templates.cjs")
+import { ViewLevel } from "./ViewLevel.mjs"
+import { templates } from "./templates.mjs"
 
-class RealmManagerLevel extends ViewLevel {
+export class RealmManagerLevel extends ViewLevel {
 	constructor(bounds, blocks, viewData = {}, cursor) {
 		super(bounds, blocks, viewData, cursor)
 		this.on("click", async (player, click) => {
@@ -75,5 +75,3 @@ class RealmManagerLevel extends ViewLevel {
 		}
 	}
 }
-
-module.exports = RealmManagerLevel

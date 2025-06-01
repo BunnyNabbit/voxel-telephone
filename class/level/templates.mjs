@@ -1,6 +1,8 @@
-const path = require('path')
-const Level = require("./Level.cjs")
-const ChangeRecord = require("./changeRecord/ChangeRecord.cjs")
+import path from 'path'
+import Level from "./Level.cjs"
+import { ChangeRecord } from "./changeRecord/ChangeRecord.mjs"
+import { getAbsolutePath } from "esm-path"
+const __dirname = getAbsolutePath(import.meta.url)
 
 function empty(bounds) {
 	return Buffer.alloc(bounds[0] * bounds[1] * bounds[2])
@@ -29,7 +31,7 @@ function voxelRecordTemplate(iconName, bounds = [64, 64, 64]) {
 	}
 }
 
-module.exports = {
+export const templates = {
 	builder: voxelRecordTemplate("voxel-telephone-64"),
 	view: {
 		built: voxelRecordTemplate("view-icon-built"),

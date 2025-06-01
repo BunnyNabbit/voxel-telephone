@@ -1,21 +1,11 @@
-// const { exec } = require('node:child_process')
-// const { Database } = require("../class/Database.mjs")
-// const fs = require('fs')
-// const path = require('path')
-// const exportVox = require("../exportVox.cjs")
-// const Level = require("../class/level/Level.cjs")
-// const ChangeRecord = require("../class/level/changeRecord/ChangeRecord.cjs")
-// const templates = require("../class/level/templates.cjs")
-// const defaultBlockset = require("../6-8-5-rgb.json")
-// const { Jimp } = require("jimp")
 import { exec } from "node:child_process"
 import { Database } from "../class/Database.mjs"
 import fs from "fs"
 import path from "path"
 import exportVox from "../exportVox.cjs"
 import Level from "../class/level/Level.cjs"
-import ChangeRecord from "../class/level/changeRecord/ChangeRecord.cjs"
-import templates from "../class/level/templates.cjs"
+import { ChangeRecord } from "../class/level/changeRecord/ChangeRecord.mjs"
+import { templates } from "../class/level/templates.mjs"
 import defaultBlockset from "../6-8-5-rgb.json" with { type: "json" }
 import { Jimp } from "jimp"
 import { getAbsolutePath } from "esm-path"

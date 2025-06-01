@@ -1,9 +1,9 @@
 import exportLevelAsVox from "../../exportVox.cjs"
-import templates from "../level/templates.cjs"
+import { templates } from "../level/templates.mjs"
 import { Zone } from "../level/Zone.mjs"
 import PushIntegration from "../integrations/PushIntegration.cjs"
 import Help from "../Help.cjs"
-import RealmManagerLevel from "../level/RealmManagerLevel.cjs"
+import { RealmManagerLevel } from "../level/RealmManagerLevel.mjs"
 import { invertPromptType } from "../../utils.mjs"
 
 let creationLicenses = {}
