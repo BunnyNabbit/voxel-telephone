@@ -121,7 +121,7 @@ export class ChangeRecord {
 		const latestKeyframe = await this.keyframeRecord.getLatestKeyframe(maxActions ?? Infinity, level?.template?.iconName ?? "empty")
 		const startingFileOffset = latestKeyframe?.offset ?? 0
 		const startingActionCount = latestKeyframe?.totalActionCount ?? 0
-		const keyframeBufferActionCount = latestKeyframe?.bufferActionCount
+		let keyframeBufferActionCount = latestKeyframe?.bufferActionCount
 		let seeking = false
 		if (latestKeyframe) {
 			seeking = true
@@ -137,8 +137,8 @@ export class ChangeRecord {
 				level.loading = false
 				return false // Stop processing
 			}
-			this.actionCount += 1
 			if (!seeking) {
+				this.actionCount += 1
 				if (actions == 0) {
 					level.rawSetBlock([changes.readUInt8(), changes.readUInt8(), changes.readUInt8()], changes.readUInt8())
 				} else {
@@ -147,6 +147,9 @@ export class ChangeRecord {
 					level.commitAction()
 				}
 			} else {
+				if (actions == 0) {
+					changes.readBuffer(4)
+				}
 				if (bufferActionCount >= keyframeBufferActionCount) {
 					seeking = false // Stop seeking once we reach the keyframe buffer action count
 					restoreWatch.start() // restart stopwatch for keyframe creation
@@ -155,7 +158,7 @@ export class ChangeRecord {
 			// Create a keyframe if enough time has passed since the last one, and we're not stalling or seeking
 			if (!staller && !seeking && restoreWatch.elapsed > ChangeRecord.lagKeyframeTime) {
 				restoreWatch.stop()
-				const keyframeId = await this.keyframeRecord.addKeyframe(currentFileReadOffset, this.actionCount, bufferActionCount, level.template.iconName, level.blocks)
+				const keyframeId = await this.keyframeRecord.addKeyframe(currentFileReadOffset, this.actionCount, bufferActionCount, level?.template?.iconName ?? "empty", level.blocks)
 				console.log(`Created keyframe ${keyframeId} at offset ${currentFileReadOffset} for ${level.template.iconName} after ${restoreWatch.elapsed}ms`)
 				restoreWatch.start()
 			}
@@ -189,14 +192,20 @@ export class ChangeRecord {
 	async commit(toActionCount, level) {
 		if (this.dirty) await this.flushChanges()
 		await this.vhsFh.close()
-	
+
 		const originalPath = join(this.path, "vhs.bin")
 		const originalHandle = await fs.promises.open(originalPath, "r+")
 		const tempHandle = await fs.promises.open(join(this.path, "temp.vhs.bin"), "w+")
 		this.vhsFh = tempHandle // Use the temp file handle for writing
 		const latestKeyframe = await this.keyframeRecord.getLatestKeyframe(toActionCount, level.template.iconName)
-		const startingFileOffset = latestKeyframe?.offset ?? 0
-		const startingActionCount = latestKeyframe?.totalActionCount ?? 0
+		// const startingActionCount = latestKeyframe?.totalActionCount ?? 0 // it's off by one. some where!
+		let startingActionCount = 0
+		let startingFileOffset = 0
+		if (latestKeyframe) {
+			startingFileOffset = latestKeyframe.offset
+			// i suspect it might require actual action start of chunk. derive zhis value from bozh keyframe's totalActionCount and bufferActionCount values
+			startingActionCount = latestKeyframe.totalActionCount - latestKeyframe.bufferActionCount// + 1
+		}
 		const count = await this._processVhsFile(originalHandle, async (actions, commandName, actionBytes, changes) => {
 			if (this.actionCount == toActionCount) {
 				return false // Stop processing
