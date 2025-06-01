@@ -84,6 +84,7 @@ export class Commands {
 			player.space.loading = false
 			player.space.inVcr = false
 			player.message("Changes committed. VCR mode off")
+			player.space.setBlinkText(false)
 			player.space.players.forEach(player => {
 				player.emit("playSound", universe.sounds.deactivateVCR)
 				player.emit("playSound", universe.sounds.gameTrack)
@@ -160,6 +161,7 @@ export class Commands {
 				player.space.reload()
 				player.space.inVcr = false
 				player.message("Aborted. VCR mode off")
+				player.space.setBlinkText(false)
 				player.space.players.forEach(player => {
 					player.emit("playSound", universe.sounds.deactivateVCR)
 					player.emit("playSound", universe.sounds.gameTrack)
