@@ -306,8 +306,15 @@ class KeyframeRecord {
 						if (err) {
 							reject(err)
 						} else {
-							this.db = db
-							resolve(db)
+							// Create index for totalActionCount
+							db.run("CREATE INDEX IF NOT EXISTS idx_keyframes_totalActionCount ON keyframes(totalActionCount)", (err) => {
+								if (err) {
+									reject(err)
+								} else {
+									this.db = db
+									resolve(db)
+								}
+							})
 						}
 					})
 				}
