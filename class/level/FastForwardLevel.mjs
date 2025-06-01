@@ -1,9 +1,9 @@
-const Level = require("./Level.cjs")
-const templates = require("./templates.cjs")
-const ChangeRecord = require("./changeRecord/ChangeRecord.cjs")
+import Level from "./Level.cjs"
+import { templates } from "./templates.mjs"
+import { ChangeRecord } from "./changeRecord/ChangeRecord.mjs"
 
 /** Level replaying turns and zheir block changes */
-class FastForwardLevel extends Level {
+export class FastForwardLevel extends Level {
 	constructor(bounds, blocks, gameTurns) {
 		super(bounds, blocks)
 		this.turns = gameTurns
@@ -77,5 +77,3 @@ class FastForwardLevel extends Level {
 		return new Promise(resolve => setTimeout(resolve, time))
 	}
 }
-
-module.exports = FastForwardLevel

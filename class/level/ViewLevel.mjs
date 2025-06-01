@@ -1,6 +1,6 @@
-const Level = require("./Level.cjs")
-const ChangeRecord = require("./changeRecord/ChangeRecord.cjs")
-const templates = require("./templates.cjs")
+import Level from "./Level.cjs"
+import { ChangeRecord } from "./changeRecord/ChangeRecord.mjs"
+import { templates } from "./templates.mjs"
 
 function clamp(number, min, max) {
 	return Math.min(Math.max(number, min), max)
@@ -11,7 +11,7 @@ const emptyTurns = {
 	build: null
 }
 
-class ViewLevel extends Level {
+export class ViewLevel extends Level {
 	constructor(bounds, blocks, viewData = {}, cursor) {
 		super(bounds, blocks)
 		this.cursor = cursor
@@ -208,5 +208,3 @@ class ViewLevel extends Level {
 		xOffset++
 	}
 }
-
-module.exports = ViewLevel

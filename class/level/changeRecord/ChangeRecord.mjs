@@ -1,13 +1,14 @@
-const promisify = require("node:util").promisify
-const fs = require("fs")
-const SmartBuffer = require("smart-buffer").SmartBuffer
-const zlib = require("zlib")
+import { promisify } from "node:util"
+import fs from "fs"
+import { SmartBuffer } from "smart-buffer"
+import zlib from "zlib"
 const deflate = promisify(zlib.deflate)
 const inflate = promisify(zlib.inflate)
-const trash = import("trash")
-const { join } = require('path')
+import trash from "trash"
+import { join } from 'path'
+
 /** Represents a change record for a level. */
-class ChangeRecord {
+export class ChangeRecord {
 	/**Creates a new ChangeRecord instance.
 	 * @param {string} path - The path to the change record file.
 	 * @param {function} loadedCallback - The callback function to call when file handles are opened.
@@ -177,7 +178,7 @@ class ChangeRecord {
 
 		await this.flushChanges()
 		await oldVhsFh.close()
-		await (await trash).default(oldPath)
+		await trash(oldPath)
 		console.log("committed", count)
 		return count
 
@@ -187,5 +188,3 @@ class ChangeRecord {
 		await this.vhsFh.close()
 	}
 }
-
-module.exports = ChangeRecord
