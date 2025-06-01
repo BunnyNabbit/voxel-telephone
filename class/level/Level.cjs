@@ -298,6 +298,7 @@ class Level extends require("events") {
 	toggleVcr() {
 		this.inVcr = true
 		this.playSound("gameTrackDrone")
+		this.setBlinkText(Level.textSymbols.pause)
 	}
 	userHasPermission(username) {
 		if (this.allowList.length == 0) return true
@@ -308,6 +309,23 @@ class Level extends require("events") {
 		this.players.forEach(player => {
 			player.emit("playSound", player.universe.sounds[soundName])
 		})
+	}
+	/**Sets the text that will blink in the level, or stops blinking if `blinkText` is false.
+	 * @param {string|boolean} blinkText - The text to blink, or `false` to stop blinking.
+	 */
+	setBlinkText(blinkText = false) {
+		clearInterval(this.blinkInterval)
+		if (blinkText === false) return this.blinkText = null
+		let toggle = false
+		this.blinkText = blinkText
+		this.blinkInterval = setInterval(() => {
+			toggle = !toggle
+			let text = " "
+			if (toggle) text = blinkText
+			this.players.forEach(player => {
+				player.message(text, 100)
+			})
+		}, 500)
 	}
 	/** Destroys the level, releasing any resources used for it. */
 	async dispose(saveChanges = true) {
@@ -346,6 +364,12 @@ class Level extends require("events") {
 			client.defineBlock(block)
 			client.defineBlockExt(block)
 		}
+	}
+	static textSymbols = {
+		pause: "| |",
+		play: ">",
+		fastForward: ">>",
+		rewind: "<<"
 	}
 	static standardBounds = [64, 64, 64]
 }
