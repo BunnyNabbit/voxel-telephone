@@ -3,13 +3,19 @@ class Command {
 		this.level = level
 		this.layout = layout
 		this.enums = enums
+		this.rawSet = level.loading
+		this.blocksChanged = 0
 	}
 	setBlock(position, block) {
 		try {
-			if (this.level.loading) {
+			if (this.rawSet) {
 				this.level.rawSetBlock(position, block)
 			} else {
 				this.level.setBlock(position, block, [], false)
+				this.blocksChanged++
+				if (this.blocksChanged > Command.networkedBlockChanges) {
+					this.rawSet = true
+				}
 			}
 		} catch (err) {
 		}
@@ -36,6 +42,19 @@ class Command {
 		})
 		return data
 	}
+	action() {
+		const returnedObject = {
+			requiresRefreshing: this.rawSet,
+			blocksChanged: this.rawSet
+		}
+		this.blocksChanged = 0
+		this.rawSet = this.level.loading
+		return returnedObject
+	}
+	clear() {
+		this.blocksChanged = 0
+	}
+	static networkedBlockChanges = 4096
 }
 
 class Cuboid extends Command {
@@ -79,6 +98,7 @@ class Cuboid extends Command {
 				}
 			}
 		}
+		return super.action()
 	}
 }
 
@@ -97,6 +117,7 @@ class Line extends Command {
 		Line.process(data.start, data.end).forEach(position => {
 			this.setBlock(position, block)
 		})
+		return super.action()
 	}
 	static process(start, end) {
 		const output = []
@@ -150,6 +171,7 @@ class AbnormalTriangle extends Command {
 				this.setBlock(position, block)
 			})
 		})
+		return super.action()
 	}
 }
 
@@ -180,6 +202,7 @@ class SphereSlow extends Command {
 				}
 			}
 		}
+		return super.action()
 	}
 }
 

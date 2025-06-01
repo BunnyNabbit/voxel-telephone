@@ -1,16 +1,16 @@
 import Server from "classicborne-server-protocol"
 import Level from "../level/Level.cjs"
-import ViewLevel from "../level/ViewLevel.cjs"
+import { ViewLevel } from "../level/ViewLevel.mjs"
 import HubLevel from "../level/HubLevel.cjs"
-import FastForwardLevel from "../level/FastForwardLevel.cjs"
+import { FastForwardLevel } from "../level/FastForwardLevel.mjs"
 import GlobalCommandRegistry from "../GlobalCommandRegistry.cjs"
-import ChangeRecord from "../level/changeRecord/ChangeRecord.cjs"
+import { ChangeRecord } from "../level/changeRecord/ChangeRecord.mjs"
 import NullChangeRecord from "../level/changeRecord/NullChangeRecord.cjs"
 import defaultBlockset from "../../6-8-5-rgb.json" with { type: "json" }
 import { Database } from "../Database.mjs"
 import Heartbeat from "./Heartbeat.cjs"
-import templates from "../level/templates.cjs"
-import { Commands } from "../../commands.mjs"
+import { templates } from "../level/templates.mjs"
+import { Commands } from "../player/Commands.mjs"
 import cefSounds from "../../cefSounds.cjs"
 import { Player } from "../player/Player.mjs"
 import Drone from "../level/drone/Drone.cjs"
@@ -18,6 +18,7 @@ import Ego from "../level/drone/Ego.cjs"
 import PushIntegration from "../integrations/PushIntegration.cjs"
 import { EventEmitter } from "events"
 import RealmLevel from "../level/RealmLevel.cjs"
+import { invertPromptType, randomIntFromInterval } from "../../utils.mjs"
 
 const builderDefaults = {
 	template: templates.builder
@@ -27,13 +28,6 @@ const describeDefaults = {
 	allowList: ["not a name"]
 }
 
-function randomIntFromInterval(min, max) {
-	return Math.floor(Math.random() * (max - min + 1) + min)
-}
-function invertPromptType(promptType) {
-	if (promptType == "description") return "build"
-	return "description"
-}
 export class Universe extends EventEmitter {
 	constructor(serverConfiguration) {
 		super()
