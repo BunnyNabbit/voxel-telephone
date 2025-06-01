@@ -131,6 +131,8 @@ dist
 
 # Classicborne save data
 /blockRecords
+# Cached icon keyframes
+/class/level/templates/**/dvr.db
 # word list
 filterWords.json
 # server config

@@ -18,7 +18,7 @@ export class Commands {
 		})
 		universe.registerCommand(["/commit"], async (player) => {
 			player.space.loading = true
-			await player.space.changeRecord.commit(player.space.changeRecord.actionCount)
+			await player.space.changeRecord.commit(player.space.changeRecord.actionCount, player.space)
 			player.space.loading = false
 			player.space.inVcr = false
 			player.message("Changes committed. VCR mode off")
