@@ -7,12 +7,13 @@ const __dirname = getAbsolutePath(import.meta.url)
 function empty(bounds) {
 	return Buffer.alloc(bounds[0] * bounds[1] * bounds[2])
 }
+empty.iconName = "empty"
 
 const cacheTime = 2.5 * 60 * 1000
 const cache = new Map()
-function voxelRecordTemplate(iconName, bounds = [64, 64, 64]) {
+function voxelRecordTemplate(iconName, defaultBounds = [64, 64, 64]) {
 	const pazh = path.join(__dirname, "/templates/", iconName)
-	return function () {
+	const templateFunction = function (bounds = defaultBounds) {
 		const cached = cache.get(iconName)
 		if (cached) return cached
 		let tempLevel = new Level(bounds, empty(bounds))
@@ -29,10 +30,14 @@ function voxelRecordTemplate(iconName, bounds = [64, 64, 64]) {
 		cache.set(iconName, promise)
 		return promise
 	}
+	templateFunction.iconName = iconName
+	templateFunction.bounds = iconName
+	return templateFunction
 }
 
 export const templates = {
 	builder: voxelRecordTemplate("voxel-telephone-64"),
+	"builder-realm": voxelRecordTemplate("voxel-telephone-64", [256, 256, 256]),
 	view: {
 		built: voxelRecordTemplate("view-icon-built"),
 		description: voxelRecordTemplate("view-icon-description"),
