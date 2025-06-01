@@ -276,10 +276,13 @@ class Level extends require("events") {
 	}
 	commitAction(player = null) {
 		const command = this.currentCommand
-		command.action(this.currentCommandActionBytes)
+		const { requiresRefreshing } =  command.action(this.currentCommandActionBytes)
 		if (this.loading == false) {
 			this.changeRecord.appendAction(true, this.currentCommandActionBytes, command.name)
 			this.playSound("poof")
+			if (requiresRefreshing) {
+				this.reload()
+			}
 		}
 		if (!this.changeRecord.draining && this.changeRecord.currentActionCount > 1024) {
 			this.changeRecord.flushChanges().then((bytes) => {
