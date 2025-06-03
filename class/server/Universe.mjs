@@ -104,13 +104,13 @@ export class Universe extends EventEmitter {
 			if (!this.server.players.some(player => player.netId == i)) {
 				player.netId = i
 				this.server.players.forEach(otherPlayer => {
-					player.client.addPlayerName(otherPlayer.netId, otherPlayer.username, `&7${otherPlayer.username}`)
+					player.client.addPlayerName(otherPlayer.netId, otherPlayer.username, `&7${otherPlayer.username}`, "Voxel Telephone", 1)
 				})
 				this.server.players.push(player)
-				player.client.addPlayerName(0xff, player.username, `&7${player.username}`)
+				player.client.addPlayerName(0xff, player.username, `&7${player.username}`, "Voxel Telephone", 1)
 				this.server.players.forEach(anyPlayer => {
 					if (anyPlayer != player) {
-						anyPlayer.client.addPlayerName(i, player.username, `&7${player.username}`)
+						anyPlayer.client.addPlayerName(i, player.username, `&7${player.username}`, "Voxel Telephone", 1)
 					}
 				})
 				this.emit("playerAdded", player)
