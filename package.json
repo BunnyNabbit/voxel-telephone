@@ -10,7 +10,7 @@
   "license": "MIT",
   "repository": "github:BunnyNabbit/voxel-telephone",
   "dependencies": {
-    "@slack/web-api": "^7.9.1",
+    "@slack/web-api": "^7.9.2",
     "axios": "^0.30.0",
     "chunked-vox": "^1.0.0",
     "classicborne-server-protocol": "^0.3.3",
@@ -26,8 +26,8 @@
     "trash": "^8.1.1"
   },
   "devDependencies": {
-    "@eslint/js": "^9.26.0",
-    "eslint": "^9.26.0",
+    "@eslint/js": "^9.28.0",
+    "eslint": "^9.28.0",
     "globals": "^15.15.0"
   }
 }
