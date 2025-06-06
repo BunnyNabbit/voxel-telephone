@@ -18,6 +18,9 @@ class Command {
 				}
 			}
 		} catch (err) {
+			if (this.level.logErrors) {
+				console.error(`Error setting block at ${position}:`, err)
+			}
 		}
 	}
 	parseBytes(actionBytes) {
