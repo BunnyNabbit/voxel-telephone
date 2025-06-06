@@ -48,7 +48,7 @@ class Command {
 	action() {
 		const returnedObject = {
 			requiresRefreshing: this.rawSet,
-			blocksChanged: this.rawSet
+			blocksChanged: this.blocksChanged
 		}
 		this.blocksChanged = 0
 		this.rawSet = this.level.loading
