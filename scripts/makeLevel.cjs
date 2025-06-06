@@ -20,6 +20,9 @@ function createNewGame(startingSentence, username) {
 			depth: 0
 		}
 		gameCollection.insert(document, (err) => {
+			if (err) {
+				return console.error("Error while creating new game", err)
+			}
 			resolve(document)
 		})
 	})
