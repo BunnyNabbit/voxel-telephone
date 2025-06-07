@@ -166,7 +166,7 @@ export class Universe extends EventEmitter {
 	async loadLevel(spaceName, defaults = {}) {
 		const bounds = defaults.bounds ?? [64, 64, 64]
 		const template = defaults.template ?? templates.empty
-		const templateBlocks = Buffer.from(await template(bounds))
+		const templateBlocks = Buffer.from(await template.generate(bounds))
 		const cached = this.levels.get(spaceName)
 		if (cached) return cached
 		const promise = new Promise(resolve => {

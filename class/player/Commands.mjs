@@ -96,7 +96,7 @@ export class Commands {
 		universe.registerCommand(["/abort"], async (player) => {
 			if (player.space.loading) return player.message("Please wait")
 			if (player.space.inVcr) {
-				player.space.blocks = Buffer.from(await player.space.template(player.space.bounds))
+				player.space.blocks = Buffer.from(await player.space.template.generate(player.space.bounds))
 				await player.space.changeRecord.restoreBlockChangesToLevel(player.space)
 				player.space.reload()
 				player.space.inVcr = false
@@ -189,7 +189,7 @@ export class Commands {
 			if (player.space.loading) return player.message("Level is busy seeking. Try again later")
 			if (player.space.changeRecord.dirty) await player.space.changeRecord.flushChanges()
 			player.space.template = template
-			player.space.blocks = Buffer.from(await player.space.template(player.space.bounds))
+			player.space.blocks = Buffer.from(await player.space.template.generate(player.space.bounds))
 			await player.space.changeRecord.restoreBlockChangesToLevel(player.space, Math.max(player.space.changeRecord.actionCount, 1))
 			player.space.reload()
 			player.emit("playSound", universe.sounds.deactivateVCR)
@@ -203,7 +203,7 @@ export class Commands {
 		universe.registerCommand(["/rewind", "/rw", "/undo"], async (player, message) => {
 			const count = Math.max(parseInt(message), 0) || 1
 			if (player.space.loading) return player.message("Level is busy seeking. Try again later")
-			player.space.blocks = Buffer.from(await player.space.template(player.space.bounds))
+			player.space.blocks = Buffer.from(await player.space.template.generate(player.space.bounds))
 			await player.space.changeRecord.restoreBlockChangesToLevel(player.space, Math.max(player.space.changeRecord.actionCount - count, 1))
 			player.space.reload()
 			player.message(`Rewinded. Current actions: ${player.space.changeRecord.actionCount}/${player.space.changeRecord.maxActions}`)
@@ -214,7 +214,7 @@ export class Commands {
 		universe.registerCommand(["/fastforward", "/ff", "/redo"], async (player, message) => {
 			const count = Math.max(parseInt(message), 0) || 1
 			if (player.space.loading) return player.message("Level is busy seeking. Try again later")
-			player.space.blocks = Buffer.from(await player.space.template(player.space.bounds))
+			player.space.blocks = Buffer.from(await player.space.template.generate(player.space.bounds))
 			await player.space.changeRecord.restoreBlockChangesToLevel(player.space, Math.min(player.space.changeRecord.actionCount + count, player.space.changeRecord.maxActions))
 			player.space.reload()
 			player.message(`Fast-forwarded. Current actions: ${player.space.changeRecord.actionCount}/${player.space.changeRecord.maxActions}`)
