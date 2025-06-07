@@ -52,6 +52,10 @@ class VoxelRecordTemplate extends BaseTemplate {
 		VoxelRecordTemplate.cache.set(cacheKey, promise)
 		return promise
 	}
+	/**Get a string key for level bounds.
+	 * @param {number[]} bounds - The bounds to generate a key for.
+	 * @returns {string} The string key for the bounds.
+	 */
 	static getBoundsKey(bounds) {
 		return bounds.join(".")
 	}
