@@ -1,8 +1,8 @@
 const textSymbols = {
-	pause: "| |",
-	play: ">",
-	fastForward: ">>",
-	rewind: "<<"
+	pause: "▌▌",
+	play: "►",
+	fastForward: "►►",
+	rewind: "◄◄",
 }
 
 module.exports = {
