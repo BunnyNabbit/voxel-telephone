@@ -108,7 +108,7 @@ export class ViewLevel extends Level {
 				const previewLevel = game.length == 16 || this.viewData.viewAll
 				const isOnlyDescription = !game[turnIndex + 1]
 				if (previewLevel && !isOnlyDescription) {
-					let previewLevel = new Level([64, 64, 64], templates.empty([64, 64, 64]))
+					let previewLevel = new Level([64, 64, 64], templates.empty.generate([64, 64, 64]))
 					let changeRecordPromise = new Promise(resolve => {
 						previewLevel.changeRecord = new ChangeRecord(`./blockRecords/game-${turn.next}/`, async () => {
 							await previewLevel.changeRecord.restoreBlockChangesToLevel(previewLevel)

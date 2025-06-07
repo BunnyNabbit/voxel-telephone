@@ -118,7 +118,7 @@ export class ChangeRecord {
 	 */
 	async restoreBlockChangesToLevel(level, maxActions, staller) {
 		level.loading = true
-		const latestKeyframe = await this.keyframeRecord.getLatestKeyframe(maxActions ?? Infinity, level?.template?.iconName ?? "empty")
+		const latestKeyframe = await this.keyframeRecord.getLatestKeyframe(maxActions ?? Infinity, level?.template?.iconName ?? "empty", level.bounds)
 		const startingFileOffset = latestKeyframe?.offset ?? 0
 		const startingActionCount = latestKeyframe?.totalActionCount ?? 0
 		let keyframeBufferActionCount = latestKeyframe?.bufferActionCount
@@ -158,7 +158,7 @@ export class ChangeRecord {
 			// Create a keyframe if enough time has passed since the last one, and we're not stalling or seeking
 			if (!staller && !seeking && restoreWatch.elapsed > ChangeRecord.lagKeyframeTime) {
 				restoreWatch.stop()
-				const keyframeId = await this.keyframeRecord.addKeyframe(currentFileReadOffset, this.actionCount, bufferActionCount, level?.template?.iconName ?? "empty", level.blocks)
+				const keyframeId = await this.keyframeRecord.addKeyframe(currentFileReadOffset, this.actionCount, bufferActionCount, level?.template?.iconName ?? "empty", level.blocks, level.bounds)
 				console.log(`Created keyframe ${keyframeId} at offset ${currentFileReadOffset} for ${level.template.iconName} after ${restoreWatch.elapsed}ms`)
 				restoreWatch.start()
 			}
@@ -197,7 +197,7 @@ export class ChangeRecord {
 		const originalHandle = await fs.promises.open(originalPath, "r+")
 		const tempHandle = await fs.promises.open(join(this.path, "temp.vhs.bin"), "w+")
 		this.vhsFh = tempHandle // Use the temp file handle for writing
-		const latestKeyframe = await this.keyframeRecord.getLatestKeyframe(toActionCount, level.template.iconName)
+		const latestKeyframe = await this.keyframeRecord.getLatestKeyframe(toActionCount, level.template.iconName, level.bounds)
 		// const startingActionCount = latestKeyframe?.totalActionCount ?? 0 // it's off by one. some where!
 		let startingActionCount = 0
 		let startingFileOffset = 0
@@ -326,14 +326,15 @@ class KeyframeRecord {
 	 * @param {number} actionCount - The action count at this keyframe.
 	 * @param {string} template - The template associated with this keyframe.
 	 * @param {Buffer} voxelData - The level voxel data at this keyframe.
+	 * @param {number[]} bounds - The bounds of the level.
 	 * @param {string} [levelData="{}"] - Optional level data in JSON format.
 	 * @returns {Promise<number>} The ID of the newly created keyframe.
 	 */
-	async addKeyframe(offset, totalActionCount, bufferActionCount, template, voxelData, levelData = "{}") {
+	async addKeyframe(offset, totalActionCount, bufferActionCount, template, voxelData, bounds, levelData = "{}") {
 		await this.ready
 		const compressedVoxelData = await deflate(voxelData)
 		return new Promise((resolve, reject) => {
-			this.db.run("INSERT INTO keyframes (offset, totalActionCount, bufferActionCount, template, voxelData, levelData) VALUES (?, ?, ?, ?, ?, ?)", [offset, totalActionCount, bufferActionCount, template, compressedVoxelData, levelData], function (err) {
+			this.db.run("INSERT INTO keyframes (offset, totalActionCount, bufferActionCount, template, voxelData, levelData) VALUES (?, ?, ?, ?, ?, ?)", [offset, totalActionCount, bufferActionCount, template + KeyframeRecord.getBoundsKey(bounds), compressedVoxelData, levelData], function (err) {
 				if (err) {
 					reject(err)
 				} else {
@@ -345,12 +346,13 @@ class KeyframeRecord {
 	/**Gets the latest keyframe before a given action count for a specific template.
 	 * @param {number} beforeActionCount - The action count to search before.
 	 * @param {string} template - The template to filter by.
+	 * @param {number[]} bounds - The bounds of the level.
 	 * @returns {Promise<object|null>} The latest keyframe record or null if not found.
 	 */
-	async getLatestKeyframe(beforeActionCount, template) {
+	async getLatestKeyframe(beforeActionCount, template, bounds) {
 		await this.ready
 		return new Promise((resolve, reject) => {
-			this.db.get("SELECT * FROM keyframes WHERE totalActionCount <= ? AND template = ? ORDER BY totalActionCount DESC LIMIT 1", [beforeActionCount, template], (err, row) => {
+			this.db.get("SELECT * FROM keyframes WHERE totalActionCount <= ? AND template = ? ORDER BY totalActionCount DESC LIMIT 1", [beforeActionCount, template + KeyframeRecord.getBoundsKey(bounds)], (err, row) => {
 				if (err) {
 					reject(err)
 				} else {
@@ -404,5 +406,12 @@ class KeyframeRecord {
 				}
 			})
 		})
+	}
+	/**Get a string key for level bounds.
+	 * @param {number[]} bounds - The bounds to generate a key for.
+	 * @returns {string} The string key for the bounds.
+	 */
+	static getBoundsKey(bounds) {
+		return bounds.join(".")
 	}
 }
