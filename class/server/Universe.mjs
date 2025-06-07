@@ -48,7 +48,6 @@ export class Universe extends EventEmitter {
 			this.heartbeat = new Heartbeat(`https://www.classicube.net/server/heartbeat/`, this)
 		}
 		if (this.serverConfiguration.sounds.enabled) {
-			// const SoundServer = require("./SoundServer.cjs")
 			import(`./SoundServer.cjs`).then(SoundServer => {
 				SoundServer = SoundServer.default
 				this.soundServer = new SoundServer(this)
