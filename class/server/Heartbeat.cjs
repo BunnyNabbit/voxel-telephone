@@ -17,12 +17,13 @@ class Heartbeat {
 		this.postHeartbeat()
 		console.log(this.softwareName)
 	}
-	postHeartbeat() {
+	async postHeartbeat() {
 		let playerCount = Math.min(this.universe.server.players.length, 32)
 		if (this.forceZero) playerCount = 0
 		const pingURL = this.urlBase
+		const gameCount = await this.universe.db.getOngoingGameCount()
 		const form = {
-			name: this.universe.serverConfiguration.serverName,
+			name: `${this.universe.serverConfiguration.serverName} (${gameCount} ongoing games)`,
 			port: this.universe.serverConfiguration.port.toString(),
 			users: playerCount.toString(),
 			max: "64",
