@@ -652,4 +652,18 @@ export class Database {
 		"we",
 		"to"
 	]
+	/**Counts the number of ongoing games in the database.
+	 * @returns {Promise<number>} A promise that resolves to the count of ongoing games.
+	 */
+	getOngoingGameCount() {
+		return new Promise(resolve => {
+			this.gameCollection.count({ active: true }, (err, count) => {
+				if (err) {
+					console.error("Error counting ongoing games:", err)
+					return resolve(0)
+				}
+				resolve(count)
+			})
+		})
+	}
 }
