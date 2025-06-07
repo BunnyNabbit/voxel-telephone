@@ -1,4 +1,7 @@
 # Voxel Telephone
+![Open GitHub issues badge](https://img.shields.io/github/issues/bunnynabbit/voxel-telephone)
+![GitHub Repo stars badge](https://img.shields.io/github/stars/bunnynabbit/voxel-telephone)
+
 A telephone game about repeatedly describing and building. How can misinterpretations form throughout a game? Designed for the ClassiCube client.
 
 ![A gallery featuring rows of played games, some finished and some unfinished. The player is looking at a game's final build which was described as a "computer chip". Previous iterations do not look the final build which includes builds described as "a nuke exploding" and "old game console".](https://github.com/user-attachments/assets/1ddcf118-f053-4874-9670-353bb2fc5c66)
