@@ -83,7 +83,7 @@ export class ViewLevel extends Level {
 		const lastBlockBuffer = Buffer.from(this.blocks)
 		const games = await this.getGames()
 		this.games = games
-		this.blocks = template(this.bounds)
+		this.blocks = template.generate(this.bounds)
 		this.createBorders()
 		if (games.length >= 9) {
 			if (this.viewData.mode == "user") {
@@ -191,7 +191,7 @@ export class ViewLevel extends Level {
 		if (Buffer.isBuffer(template)) {
 			voxels = template
 		} else {
-			voxels = await template([64, 64, 64])
+			voxels = await template.generate([64, 64, 64])
 		}
 		const zBlockOffset = zOffset * 64
 		const xBlockOffset = xOffset * 64

@@ -31,7 +31,7 @@ export class RealmManagerLevel extends ViewLevel {
 
 	async reloadView(template) {
 		const lastBlockBuffer = Buffer.from(this.blocks)
-		this.blocks = template(this.bounds)
+		this.blocks = template.generate(this.bounds)
 		this.createBorders()
 		const games = await this.universe.db.getRealmGrid(this.viewData.player, this.cursor)
 		this.games = games

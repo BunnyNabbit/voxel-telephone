@@ -59,7 +59,7 @@ export default class SpotvoxRenderer {
 
 	exportVox(changeRecordPath, outputPath) {
 		return new Promise((resolve) => {
-			let exportLevel = new Level([64, 64, 64], templates.empty([64, 64, 64]))
+			let exportLevel = new Level([64, 64, 64], templates.empty.generate([64, 64, 64]))
 			exportLevel.blockset = defaultBlockset
 			exportLevel.changeRecord = new ChangeRecord(changeRecordPath, async () => {
 				await exportLevel.changeRecord.restoreBlockChangesToLevel(exportLevel)
