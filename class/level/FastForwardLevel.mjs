@@ -70,7 +70,7 @@ export class FastForwardLevel extends Level {
 		}
 	}
 	clearLevel() {
-		this.blocks = templates.empty(Level.standardBounds)
+		this.blocks = templates.empty.generate(Level.standardBounds)
 		this.reload()
 	}
 	static sleep(time) {
