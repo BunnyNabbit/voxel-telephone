@@ -4,6 +4,7 @@ const { DragonMark, Heading, Paragraph, Text, InlineCode, Image } = require("./D
 const Level = require("./level/Level.cjs")
 
 class Category {
+
 	constructor(name) {
 		this.name = name
 		this.documents = []
@@ -17,6 +18,7 @@ class Category {
 }
 
 class TopicHelp {
+
 	constructor(name, title, help, category) {
 		this.type = "topic"
 		this.name = name
@@ -32,6 +34,7 @@ class TopicHelp {
 }
 
 class CommandHelp extends TopicHelp {
+
 	constructor(name, title, help, category) {
 		super(name, title, help, category)
 		this.type = "command"
@@ -201,7 +204,7 @@ class Help {
 		if (limit && limit <= 0) return []
 		let results = []
 		const list = await fs.promises.readdir(dir)
-		var pending = list.length
+		let pending = list.length
 
 		if (!pending) return results
 

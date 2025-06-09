@@ -2,6 +2,7 @@ import { ViewLevel } from "./ViewLevel.mjs"
 import { templates } from "./templates.mjs"
 
 export class RealmManagerLevel extends ViewLevel {
+
 	constructor(bounds, blocks, viewData = {}, cursor) {
 		super(bounds, blocks, viewData, cursor)
 		this.on("click", async (player, click) => {
@@ -60,6 +61,7 @@ export class RealmManagerLevel extends ViewLevel {
 		}
 		if (lastBlockBuffer.compare(this.blocks)) this.reload()
 	}
+
 	displaySelectedTurns(player) {
 		if (player.selectedTurns.description) {
 			let attribution = ""

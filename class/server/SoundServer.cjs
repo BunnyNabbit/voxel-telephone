@@ -1,5 +1,6 @@
 const crypto = require("crypto")
 class SoundEvent {
+
 	constructor(soundData, cursor) {
 		this.data = soundData
 		this.cursor = cursor
@@ -7,6 +8,7 @@ class SoundEvent {
 }
 
 class SoundTransmitter extends require("events") {
+
 	constructor(player) {
 		super()
 		this.currentTrack = null
@@ -74,6 +76,7 @@ class SoundTransmitter extends require("events") {
 			}, 5000)
 		}
 	}
+
 	canPlay(sound) {
 		if (sound.stop) return true
 		if (sound.loop && this.configuration.cefMusic) return true
@@ -98,6 +101,7 @@ class SoundTransmitter extends require("events") {
 
 
 class SoundServer extends require("events") {
+
 	constructor(universe) {
 		super()
 		this.keySoundTransmitters = new Map()

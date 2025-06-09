@@ -1,5 +1,5 @@
 function componentToHex(component) {
-	var hex = component.toString(16).toUpperCase()
+	const hex = component.toString(16).toUpperCase()
 	return hex.length == 1 ? "0" + hex : hex
 }
 
@@ -10,6 +10,7 @@ const Ego = require("./drone/Ego.cjs")
 
 class Level extends require("events") {
 	static commands = levelCommands
+
 	constructor(bounds, blocks) {
 		super()
 		this.players = []
@@ -30,12 +31,14 @@ class Level extends require("events") {
 			}
 		})
 	}
+
 	messageAll(message, types = [0]) {
 		this.players.forEach(player => {
 			player.message(message, types)
 		})
 		this.playSound("toggle")
 	}
+
 	sendDrones(player) {
 		this.drones.forEach(drone => {
 			player.droneTransmitter.addDrone(drone)
@@ -70,6 +73,7 @@ class Level extends require("events") {
 		})
 		this.drones.add(drone)
 	}
+
 	addPlayer(player, position = [0, 0, 0], orientation = [0, 0]) {
 		this.emit("playerAdded", player)
 		player.space = this
@@ -80,6 +84,7 @@ class Level extends require("events") {
 		this.addDrone(drone)
 		this.players.push(player)
 	}
+
 	loadPlayer(player, position = [0, 0, 0], orientation = [0, 0]) {
 		player.client.loadLevel(this.blocks, this.bounds[0], this.bounds[1], this.bounds[2], false, () => {
 			player.client.setClickDistance(10000)
@@ -96,6 +101,7 @@ class Level extends require("events") {
 			player.client.configureSpawnExt(-1, player.authInfo.username, position[0], position[1], position[2], orientation[0], orientation[1], player.authInfo.username)
 		})
 	}
+
 	reload() {
 		this.players.forEach(player => {
 			const reloadedPosition = Array.from(player.position)
@@ -105,6 +111,7 @@ class Level extends require("events") {
 			player.droneTransmitter.resendDrones()
 		})
 	}
+
 	setBlock(position, block, excludePlayers = [], saveToRecord = true) {
 		this.blocks.writeUInt8(block, position[0] + this.bounds[0] * (position[2] + this.bounds[2] * position[1]))
 		// callback(block, position[0], position[1], position[2])
@@ -122,12 +129,15 @@ class Level extends require("events") {
 			}
 		}
 	}
+
 	rawSetBlock(position, block) {
 		this.blocks.writeUInt8(block, position[0] + this.bounds[0] * (position[2] + this.bounds[2] * position[1]))
 	}
+
 	getBlock(position) {
 		return this.blocks.readUInt8(position[0] + this.bounds[0] * (position[2] + this.bounds[2] * position[1]))
 	}
+
 	interpretCommand(command = "cuboid 1", player = null, actionBytes = []) { // i.e: cuboid 1
 		// consider: if the block set has names, user could refer to blocks by name and not just id.
 		const commandClass = Level.getCommandClassFromName(command)
@@ -148,6 +158,7 @@ class Level extends require("events") {
 			this.messageAll(`Unable to find command with name ${commandName} for level ${this.name}`)
 		}
 	}
+
 	inferCurrentCommand(providedData = null, player = null) {
 		const currentType = this.currentCommand.layout[this.currentCommandLayoutIndex]
 		if (currentType == null) {
@@ -190,6 +201,7 @@ class Level extends require("events") {
 		}
 		this.messageAll(`Command needs ${currentType}, and it doesn't seem implemented :(`)
 	}
+
 	static getCommandClassFromName(command) {
 		command = command.split(" ")
 		const commandName = command[0].toLowerCase()
@@ -199,11 +211,13 @@ class Level extends require("events") {
 		}
 		return commandClass
 	}
+
 	withinLevelBounds(position) {
 		if (position[0] < 0 || position[1] < 0 || position[2] < 0) return false
 		if (position[0] >= this.bounds[0] || position[1] >= this.bounds[1] || position[2] >= this.bounds[2]) return false
 		return true
 	}
+	
 	processCommandArguments(splitCommand, player) {
 		let currentIndex = 0
 		const incrementIndex = (commandIndex = 1) => {
@@ -275,6 +289,7 @@ class Level extends require("events") {
 		}
 		this.inferCurrentCommand(null, player)
 	}
+
 	commitAction(player = null) {
 		const command = this.currentCommand
 		const { requiresRefreshing } = command.action(this.currentCommandActionBytes)
@@ -299,21 +314,25 @@ class Level extends require("events") {
 			this.blocking = false
 		}
 	}
+
 	toggleVcr() {
 		this.inVcr = true
 		this.playSound("gameTrackDrone")
 		this.setBlinkText(textSymbols.pause)
 	}
+
 	userHasPermission(username) {
 		if (this.allowList.length == 0) return true
 		if (this.allowList.includes(username)) return true
 		return false
 	}
+
 	playSound(soundName) {
 		this.players.forEach(player => {
 			player.emit("playSound", player.universe.sounds[soundName])
 		})
 	}
+
 	/**Sets the text that will blink in the level, or stops blinking if `blinkText` is false.
 	 * @param {string|boolean} blinkText - The text to blink, or `false` to stop blinking.
 	 * @param {string} [subliminalText] - Optional subliminal text to display when blinking.
@@ -349,6 +368,7 @@ class Level extends require("events") {
 		this.emit("unloaded")
 		this.removeAllListeners()
 	}
+	
 	static sendBlockset(client, blockset) {
 		for (let i = 0; i < 255; i++) {
 			let walkSound = 5

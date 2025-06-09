@@ -9,6 +9,7 @@ import { EventEmitter } from "events"
 import { randomIntFromInterval } from "../../utils.mjs"
 
 export class Player extends EventEmitter {
+
 	constructor(client, universe, authInfo) {
 		super()
 		this.client = client
@@ -19,6 +20,7 @@ export class Player extends EventEmitter {
 		this.ready = this.initialize(client, universe, authInfo)
 		this.space = null
 	}
+
 	async initialize(client, universe, authInfo) {
 		const verifyUsernames = (universe.serverConfiguration.verifyUsernames && universe.heartbeat)
 		if (universe.server.players.filter(otherClient => otherClient.address == client.address).length >= universe.serverConfiguration.maxIpConnections) {
@@ -216,6 +218,7 @@ export class Player extends EventEmitter {
 			this.message(hatchday.joinMessage)
 		}
 	}
+
 	message(message, types = [0], continueAdornment = "> ") {
 		const originalMessage = message
 		if (typeof types === "number") {
@@ -262,6 +265,7 @@ export class Player extends EventEmitter {
 			}
 		})
 	}
+
 	static sendHotbar(player) {
 		this.defaultHotbar.forEach((blockId, index) => {
 			player.client.setHotbar(blockId, index)

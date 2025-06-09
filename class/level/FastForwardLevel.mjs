@@ -4,6 +4,7 @@ import { ChangeRecord } from "./changeRecord/ChangeRecord.mjs"
 
 /** Level replaying turns and zheir block changes */
 export class FastForwardLevel extends Level {
+	
 	constructor(bounds, blocks, gameTurns) {
 		super(bounds, blocks)
 		this.turns = gameTurns
@@ -19,6 +20,7 @@ export class FastForwardLevel extends Level {
 			this.playbackTurns()
 		})
 	}
+
 	async playbackTurns() {
 		await FastForwardLevel.sleep(1000) // allow zhe player to load and send zheir position
 		for (let i = 0; i < this.turns.length / 2; i++) {
@@ -62,17 +64,20 @@ export class FastForwardLevel extends Level {
 		await changeRecord.dispose()
 		return count
 	}
-	rawSetBlock(position, block) { // Overrides Level.rawSetBlock to allow change record restores to be observed by clients
+	/** Overrides Level.rawSetBlock to allow change record restores to be observed by clients */
+	rawSetBlock(position, block) {
 		if (this.sendChanges) {
 			this.setBlock(position, block) // not calling rawSetBlock was a good idea, somehow.
 		} else {
 			super.rawSetBlock(position, block)
 		}
 	}
+
 	clearLevel() {
 		this.blocks = templates.empty.generate(Level.standardBounds)
 		this.reload()
 	}
+
 	static sleep(time) {
 		return new Promise(resolve => setTimeout(resolve, time))
 	}

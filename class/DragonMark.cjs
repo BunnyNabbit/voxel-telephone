@@ -1,8 +1,10 @@
 class BaseElement {
+
 	constructor() {
 		this.type = "base"
 		this.content = []
 	}
+
 	addElement(element) {
 		if (element instanceof BaseElement) {
 			this.content.push(element)
@@ -13,6 +15,7 @@ class BaseElement {
 }
 
 class Paragraph extends BaseElement {
+
 	constructor() {
 		super()
 		this.type = "paragraph"
@@ -20,6 +23,7 @@ class Paragraph extends BaseElement {
 }
 
 class Heading extends BaseElement {
+
 	constructor(level) {
 		super()
 		this.type = "heading"
@@ -28,6 +32,7 @@ class Heading extends BaseElement {
 }
 
 class Text extends BaseElement {
+
 	constructor(text = "") {
 		super()
 		this.type = "text"
@@ -36,6 +41,7 @@ class Text extends BaseElement {
 }
 
 class InlineCode extends BaseElement {
+
 	constructor() {
 		super()
 		this.type = "inlineCode"
@@ -43,6 +49,7 @@ class InlineCode extends BaseElement {
 }
 
 class Image extends BaseElement {
+
 	constructor() {
 		super()
 		this.type = "image"
@@ -92,7 +99,7 @@ class DragonMark {
 							codeBlock.content += line[i]
 						}
 						paragraph.addElement(codeBlock)
-					}  else if (char === "!" && line[i + 1] === "[") {
+					} else if (char === "!" && line[i + 1] === "[") {
 						i += 2 // Skip the "!["
 						const image = new Image()
 						while (line[i] !== "]" && i < line.length) {

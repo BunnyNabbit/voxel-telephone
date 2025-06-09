@@ -1,4 +1,5 @@
 export class UserRecord {
+
 	constructor(player, data) {
 		this.player = player
 		this.username = player.authInfo.username
@@ -9,6 +10,7 @@ export class UserRecord {
 			this.save()
 		})
 	}
+
 	static getDefaultRecord(username) {
 		return {
 			_id: username,
@@ -28,6 +30,7 @@ export class UserRecord {
 			firstJoin: new Date()
 		}
 	}
+
 	static updateData(data) {
 		if (data.dataVersion == 1) {
 			// adds configuration
@@ -38,12 +41,14 @@ export class UserRecord {
 			data.dataVersion = 2
 		}
 	}
+
 	async get() {
 		const data = await this.data
 		// update it if it is outdated
 		UserRecord.updateData(data)
 		return data
 	}
+
 	async save() {
 		UserRecord.orphans.add(this.player.username)
 		await this.data

@@ -1,12 +1,15 @@
 const Level = require("./Level.cjs")
 
 class Count {
+
 	constructor() {
 		this.map = new Map()
 	}
+
 	increment(key) {
 		this.map.set(key, (this.map.get(key) || 0) + 1)
 	}
+
 	getMostFrequent() {
 		let maxCount = 0
 		let mostFrequent = null
@@ -21,6 +24,7 @@ class Count {
 }
 
 class RealmLevel extends Level {
+
 	constructor(bounds, blocks, realmDocument) {
 		super(bounds, blocks)
 		this.realmDocument = realmDocument

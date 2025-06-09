@@ -2,6 +2,7 @@ const { WebClient } = require('@slack/web-api')
 const PushIntegration = require("./PushIntegration.cjs")
 
 class Slack extends PushIntegration {
+
 	constructor(interests, authData, universe) {
 		super(interests, universe)
 		this.client = new WebClient(authData.token)

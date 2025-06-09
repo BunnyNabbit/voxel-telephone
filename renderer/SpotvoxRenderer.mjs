@@ -25,6 +25,7 @@ const __dirname = getAbsolutePath(import.meta.url)
 
 /** Represents a MagicaVoxel .vox renderer using Spotvox. */
 export default class SpotvoxRenderer {
+
 	constructor(serverConfiguration, db) {
 		this.serverConfiguration = serverConfiguration
 		this.db = db ?? new Database(serverConfiguration)

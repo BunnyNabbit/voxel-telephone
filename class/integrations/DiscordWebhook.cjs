@@ -1,6 +1,7 @@
 const PushIntegration = require("./PushIntegration.cjs")
 
 class DiscordWebhook extends PushIntegration {
+
 	constructor(interests, authData, universe) {
 		super(interests, universe)
 		this.webhookUrl = authData.webhookUrl

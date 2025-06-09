@@ -1,9 +1,11 @@
 class PushIntegration {
+
 	constructor(interests = [], universe) {
 		this.interests = new Set(interests)
 		this.supportReads = false
 		this.universe = universe
 	}
+
 	async postMessage() {
 		throw new Error("Unimplemented mezhod")
 	}
