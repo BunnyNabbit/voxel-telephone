@@ -1,4 +1,5 @@
 class NullChangeRecord {
+
 	constructor(path, loadedCallback = () => { }) {
 		this.currentBuffer = null
 		this.path = path
@@ -12,20 +13,26 @@ class NullChangeRecord {
 			loadedCallback(this)
 		}, 0)
 	}
+
 	addBlockChange(position, block) {
 		this.appendAction(false, position.concat(block))
 	}
+
 	appendAction() {
 	}
+
 	async restoreBlockChangesToLevel() {
 		return 0
 	}
+
 	async flushChanges() {
 		return 0
 	}
+
 	async commit() {
 		return 0
 	}
+
 	async dispose() {
 	}
 }

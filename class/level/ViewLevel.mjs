@@ -12,6 +12,7 @@ const emptyTurns = {
 }
 
 export class ViewLevel extends Level {
+
 	constructor(bounds, blocks, viewData = {}, cursor) {
 		super(bounds, blocks)
 		this.cursor = cursor
@@ -55,6 +56,7 @@ export class ViewLevel extends Level {
 		})
 		this.viewData = viewData
 	}
+
 	getTurnsInGrid(x, y) {
 		y = y * 2
 		const game = this.games[x]
@@ -70,6 +72,7 @@ export class ViewLevel extends Level {
 			}
 		}
 	}
+
 	getGames() {
 		if (this.viewData.mode == "user") {
 			return this.universe.db.getUserGrid(this.viewData.username, this.cursor)
@@ -79,6 +82,7 @@ export class ViewLevel extends Level {
 		}
 		return this.universe.db.getGames(this.cursor)
 	}
+
 	async reloadView(template) {
 		const lastBlockBuffer = Buffer.from(this.blocks)
 		const games = await this.getGames()
@@ -151,6 +155,7 @@ export class ViewLevel extends Level {
 		}
 		if (lastBlockBuffer.compare(this.blocks)) this.reload()
 	}
+
 	createBorders() {
 		for (let x = 0; x < 8; x++) {
 			for (let z = 0; z < 8; z++) {

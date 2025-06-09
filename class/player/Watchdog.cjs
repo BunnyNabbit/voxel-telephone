@@ -1,4 +1,5 @@
 class Watchdog {
+
    constructor(player) {
       this.interval = setInterval(() => {
          this.currentRate = 0
@@ -7,6 +8,7 @@ class Watchdog {
       this.limit = 382
       this.player = player
    }
+
    rateOperation(amount = 1) {
       this.currentRate += amount
       if (this.currentRate > this.limit) {
@@ -15,6 +17,7 @@ class Watchdog {
       }
       return false
    }
+
    destroy() {
       clearInterval(this.interval)
    }

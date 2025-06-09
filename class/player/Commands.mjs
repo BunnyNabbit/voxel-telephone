@@ -13,6 +13,7 @@ import("../../creationLicenses.mjs").then(module => {
 })
 
 export class Commands {
+
 	static register(universe) {
 		universe.registerCommand(["/rules"], (player) => {
 			universe.commandRegistry.attemptCall(player, `/help rules`)
@@ -381,6 +382,7 @@ export class Commands {
 
 		Help.register(universe)
 	}
+
 	static reasonVcr(matchValue, message) {
 		return function (player) {
 			if (player.space.inVcr == matchValue) {
@@ -390,6 +392,7 @@ export class Commands {
 			return true
 		}
 	}
+
 	static reasonHasPermission(matchValue, message = "You don't have permission to build in this level!") {
 		return function (player) {
 			if (player.space.userHasPermission(player.username) == matchValue) {
@@ -399,6 +402,7 @@ export class Commands {
 			return true
 		}
 	}
+
 	static reasonHasUserPermission(matchValue, message = "You don't have permission to use this command!") {
 		return async function (player) {
 			const userRecord = await player.userRecord.get()
@@ -409,6 +413,7 @@ export class Commands {
 			return false
 		}
 	}
+
 	static reasonLevelBlocking(matchValue, message) {
 		return function (player) {
 			if (player.space.blocking == matchValue) {
@@ -418,6 +423,7 @@ export class Commands {
 			return true
 		}
 	}
+
 	static reasonVcrDraining(matchValue, message = "VCR is busy. Try again later?") {
 		return function (player) {
 			if (player.space.changeRecord.draining == matchValue) {
@@ -427,6 +433,7 @@ export class Commands {
 			return true
 		}
 	}
+
 	static makeMultiValidator(reasons = []) {
 		return async function (player, str) {
 			for (const reason of reasons) {

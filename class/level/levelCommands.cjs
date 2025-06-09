@@ -1,4 +1,5 @@
 class Command {
+
 	constructor(layout, level, enums = {}) {
 		this.level = level
 		this.layout = layout
@@ -6,6 +7,7 @@ class Command {
 		this.rawSet = level.loading
 		this.blocksChanged = 0
 	}
+
 	setBlock(position, block) {
 		try {
 			if (this.rawSet) {
@@ -23,6 +25,7 @@ class Command {
 			}
 		}
 	}
+
 	parseBytes(actionBytes) {
 		const data = {}
 		let indexOffset = 0
@@ -45,6 +48,7 @@ class Command {
 		})
 		return data
 	}
+
 	action() {
 		const returnedObject = {
 			requiresRefreshing: this.rawSet,
@@ -54,6 +58,7 @@ class Command {
 		this.rawSet = this.level.loading
 		return returnedObject
 	}
+
 	clear() {
 		this.blocksChanged = 0
 	}
@@ -64,11 +69,13 @@ class Cuboid extends Command {
 	name = "cuboid"
 	static help = ["Makes a cuboid on two positions.", "If no arguments are added, block is inferred from your current hand and the server will ask for the block positions interactively."]
 	static aliases = ["z"]
+
 	constructor(level) {
 		super(["block:block", "&enum:mode", "position:position1", "position:position2"], level, {
 			mode: ["solid", "hollow", "walls", "holes"]
 		})
 	}
+
 	action(data) {
 		data = this.parseBytes(data)
 		const min = [0, 1, 2].map(index => Math.min(data.position1[index], data.position2[index]))
@@ -109,9 +116,11 @@ class Line extends Command {
 	name = "Line"
 	static help = ["Makes a line between two points.", "If no arguments are added, block is inferred from your current hand and the server will ask for the block positions interactively."]
 	static aliases = ["l", "ln"]
+
 	constructor(level) {
 		super(["block:block", "position:start", "position:end"], level)
 	}
+
 	action(data) {
 		// Parse the data using the command's layout.
 		data = this.parseBytes(data)
@@ -122,6 +131,7 @@ class Line extends Command {
 		})
 		return super.action()
 	}
+
 	static process(start, end) {
 		const output = []
 		// Calculate the differences between the start and end positions.
@@ -146,9 +156,11 @@ class AbnormalTriangle extends Command {
 	name = "AbnormalTriangle"
 	static help = ["Makes a triangle from three points. The resulting triangle may have holes", "If no arguments are added, block is inferred from your current hand and the server will ask for the block positions interactively."]
 	static aliases = ["triangle", "tri"]
+
 	constructor(level) {
 		super(["block:block", "position:position1", "position:position2", "position:position3"], level)
 	}
+
 	action(data) {
 		data = this.parseBytes(data)
 		const block = data.block
@@ -182,11 +194,13 @@ class SphereSlow extends Command {
 	name = "SphereSlow"
 	static help = ["Makes a sphere from a center point and a radius.", "If no arguments are added, block is inferred from your current hand and the server will ask for the block positions interactively."]
 	static aliases = ["sphere", "sp"]
+
 	constructor(level) {
 		super(["block:block", "&enum:mode", "position:center", "position:offset"], level, {
 			mode: ["solid"]
 		})
 	}
+
 	action(data) {
 		data = this.parseBytes(data)
 		const block = data.block

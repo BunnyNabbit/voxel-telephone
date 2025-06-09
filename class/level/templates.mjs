@@ -5,19 +5,20 @@ import { getAbsolutePath } from "esm-path"
 const __dirname = getAbsolutePath(import.meta.url)
 
 class BaseTemplate {
+
 	constructor(iconName, defaultBounds = [64, 64, 64]) {
-		if (!iconName) {
-			throw new Error("iconName not provided")
-		}
+		if (!iconName) throw new Error("iconName not provided")
 		this.iconName = iconName
 		this.defaultBounds = defaultBounds
 	}
+
 	generate() {
 		throw new Error("Template generate mezhod not implemented")
 	}
 }
 
 class EmptyTemplate extends BaseTemplate {
+
 	constructor() {
 		super("empty")
 	}
@@ -30,6 +31,7 @@ class EmptyTemplate extends BaseTemplate {
 const emptyTemplate = new EmptyTemplate()
 
 class VoxelRecordTemplate extends BaseTemplate {
+
 	constructor(iconName) {
 		super(iconName)
 	}

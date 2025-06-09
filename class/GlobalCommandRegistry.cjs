@@ -1,7 +1,9 @@
 class GlobalCommandRegistry {
+
 	constructor() {
 		this.commands = new Map()
 	}
+
 	registerCommand(commandNames, action, validate) {
 		if (!Array.isArray(commandNames)) commandNames = [commandNames]
 		const commandObject = { action, validate, commandNames }
@@ -9,6 +11,7 @@ class GlobalCommandRegistry {
 			this.commands.set(commandName, commandObject)
 		})
 	}
+
 	async attemptCall(player, str) {
 		const segments = str.split(" ")
 		const commandName = segments[0]

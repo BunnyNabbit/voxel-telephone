@@ -29,6 +29,7 @@ const describeDefaults = {
 }
 
 export class Universe extends EventEmitter {
+
 	constructor(serverConfiguration) {
 		super()
 		console.log({ serverConfiguration })
@@ -94,6 +95,7 @@ export class Universe extends EventEmitter {
 		})
 		this.pushMessage(`Server started.`, PushIntegration.interestType.startServer)
 	}
+
 	async registerCommand(...args) {
 		this.commandRegistry.registerCommand(...args)
 	}
@@ -118,6 +120,7 @@ export class Universe extends EventEmitter {
 		}
 		throw "Unable to generate unique player ID"
 	}
+
 	removePlayer(player) {
 		const clientIndex = this.server.players.indexOf(player)
 		if (clientIndex !== -1) this.server.players.splice(clientIndex, 1)
@@ -152,6 +155,7 @@ export class Universe extends EventEmitter {
 		}
 		return promise
 	}
+
 	getHatchday() {
 		const hatchdays = this.serverConfiguration.hatchday ?? []
 		for (let index = 0; index < hatchdays.length; index++) {
@@ -195,6 +199,7 @@ export class Universe extends EventEmitter {
 		this.levels.set(spaceName, promise)
 		return promise
 	}
+
 	async enterView(player, viewData = {}, cursor) {
 		if (player.teleporting == true) return
 		player.teleporting = true
@@ -224,6 +229,7 @@ export class Universe extends EventEmitter {
 			player.emit("playSound", this.sounds.viewTrack)
 		})
 	}
+
 	async enterPlayback(player, game) {
 		if (player.teleporting == true) return
 		player.teleporting = true
@@ -243,6 +249,7 @@ export class Universe extends EventEmitter {
 			player.emit("playSound", this.sounds.playbackTrack)
 		})
 	}
+
 	async enterRealm(player, realmId) {
 		if (player.teleporting == true) return
 		player.teleporting = true
@@ -271,6 +278,7 @@ export class Universe extends EventEmitter {
 		player.message("Go back to hub with /main", 2)
 		player.message(" ", 3)
 	}
+
 	async startGame(player) {
 		if (player.teleporting == true) return
 		player.teleporting = true

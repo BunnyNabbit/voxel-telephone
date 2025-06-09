@@ -4,6 +4,7 @@ import { UserRecord } from "./player/UserRecord.mjs"
 import { randomIntFromInterval } from "../utils.mjs"
 
 export class Database {
+
 	constructor(serverConfiguration) {
 		this.gameCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephone")
 		this.downloadsCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephoneDownloads")
@@ -17,6 +18,7 @@ export class Database {
 		this.realmCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephoneRealms")
 		this.playerReserved = new Map()
 	}
+
 	findActiveGames(username, levels) {
 		return new Promise(resolve => {
 			const games = []

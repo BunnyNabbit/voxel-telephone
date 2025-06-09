@@ -5,6 +5,7 @@ const fs = require("fs")
 const { join } = require('node:path')
 
 class Heartbeat {
+
 	constructor(urlBase, universe) {
 		this.universe = universe
 		this.salt = crypto.randomBytes(192).toString("base64url")
@@ -17,6 +18,7 @@ class Heartbeat {
 		this.postHeartbeat()
 		console.log(this.softwareName)
 	}
+
 	async postHeartbeat() {
 		let playerCount = Math.min(this.universe.server.players.length, 32)
 		if (this.forceZero) playerCount = 0
@@ -39,7 +41,7 @@ class Heartbeat {
 			console.log(err)
 		})
 	}
-	// https://stackoverflow.com/a/56975550
+	/** @see https://stackoverflow.com/a/56975550 */
 	static getGitHash() {
 		const rev = fs.readFileSync(join(__dirname, "../../.git/HEAD")).toString().trim().split(/.*[: ]/).slice(-1)[0]
 		if (rev.indexOf('/') === -1) {
