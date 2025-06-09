@@ -151,7 +151,7 @@ class Level extends require("events") {
 			if (splitCommand.length) {
 				this.processCommandArguments(splitCommand, player)
 			} else {
-				this.inferCurrentCommand(null, player)
+				this.inferCurrentCommand(player?.getInferredData(), player)
 			}
 		} else if (command) {
 			const commandName = command.toLowerCase()
@@ -173,29 +173,26 @@ class Level extends require("events") {
 		const type = currentType.split(":")[0]
 
 		if (type == "block") {
-			// if it is the first, infer by block being held by player. if the player somehow doesn't exist, assume air (0)
-			// to consider: maybe instead of being the first, could be inferred by the layout type modifier instead.
-			if (this.currentCommandLayoutIndex == 0) {
-				let heldBlock = 0
-				if (this.players[0]) {
-					heldBlock = this.players[0].heldBlock
-				}
+			if (providedData?.block != null) {
+				this.currentCommandActionBytes.push(providedData.block)
 				this.currentCommandLayoutIndex++
-				this.currentCommandActionBytes.push(heldBlock)
-				return this.inferCurrentCommand(null, player)
+				this.inferCurrentCommand(null, player)
+				return true
+			} else {
+				if (!this.loading) this.messageAll(`Place a block to use for ${currentType}. Break for air.`)
+				return
 			}
 		}
 		if (type == "position") {
-			if (Array.isArray(providedData) && providedData.length == 3) {
-				this.currentCommandActionBytes.push(providedData[0])
-				this.currentCommandActionBytes.push(providedData[1])
-				this.currentCommandActionBytes.push(providedData[2])
+			if (Array.isArray(providedData?.position) && providedData.position.length == 3) {
+				this.currentCommandActionBytes.push(providedData.position[0])
+				this.currentCommandActionBytes.push(providedData.position[1])
+				this.currentCommandActionBytes.push(providedData.position[2])
 				this.currentCommandLayoutIndex++
 				this.inferCurrentCommand(null, player)
-				return "inferred position"
+				return true
 			} else {
-				if (!this.loading)
-					this.messageAll(`Place or break a block to mark the position for ${currentType}`)
+				if (!this.loading) this.messageAll(`Place or break a block to mark the position for ${currentType}`)
 				return
 			}
 		}
@@ -217,7 +214,7 @@ class Level extends require("events") {
 		if (position[0] >= this.bounds[0] || position[1] >= this.bounds[1] || position[2] >= this.bounds[2]) return false
 		return true
 	}
-	
+
 	processCommandArguments(splitCommand, player) {
 		let currentIndex = 0
 		const incrementIndex = (commandIndex = 1) => {
@@ -368,7 +365,7 @@ class Level extends require("events") {
 		this.emit("unloaded")
 		this.removeAllListeners()
 	}
-	
+
 	static sendBlockset(client, blockset) {
 		for (let i = 0; i < 255; i++) {
 			let walkSound = 5

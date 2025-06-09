@@ -126,7 +126,7 @@ export class Player extends EventEmitter {
 			}
 			if (this.space.blocking) {
 				this.client.setBlock(this.space.getBlock(operationPosition), operationPosition[0], operationPosition[1], operationPosition[2])
-				if (this.space.inferCurrentCommand(operationPosition, this) !== "inferred position") {
+				if (!this.space.inferCurrentCommand(this.getInferredData(operationPosition, block), this)) {
 					this.message("Unable to place block. Command in level is expecting additional arguments")
 				}
 				return
@@ -264,6 +264,18 @@ export class Player extends EventEmitter {
 				this.client.message(originalMessage, type)
 			}
 		})
+	}
+
+	getInferredData(position, block) {
+		return {
+			position: position ?? this.getBlockPosition(),
+			orientation: this.orientation,
+			block: block ?? this.heldBlock,
+		}
+	}
+
+	getBlockPosition() {
+		return this.position.map((value, index) => Math.min(Math.max(Math.floor(value), 0), this.space.bounds[index] - 1))
 	}
 
 	static sendHotbar(player) {

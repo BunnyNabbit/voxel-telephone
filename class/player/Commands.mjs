@@ -119,7 +119,7 @@ export class Commands {
 			}
 		}, Commands.reasonHasPermission(false, "You don't have permission to build in this level!"))
 		universe.registerCommand(["/mark"], async (player) => {
-			player.space.inferCurrentCommand(player.position.map((value, index) => Math.min(Math.max(Math.floor(value), 0), player.space.bounds[index] - 1)), player)
+			player.space.inferCurrentCommand(player.getInferredData(), player)
 		}, Commands.makeMultiValidator([Commands.reasonHasPermission(false), Commands.reasonLevelBlocking(false, "There are no current commands being run on the level")]))
 		universe.registerCommand(["/paint", "/p"], async (player) => {
 			player.paintMode = !player.paintMode
