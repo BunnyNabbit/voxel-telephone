@@ -223,6 +223,39 @@ class SphereSlow extends Command {
 	}
 }
 
+class Replace extends Command {
+	name = "Replace"
+	static aliases = ["r"]
+
+	constructor(level) {
+		super(["block:replaceBlock", "block:findBlock", "position:position1", "position:position2"], level)
+	}
+
+	action(data) {
+		data = this.parseBytes(data)
+		const min = [0, 1, 2].map(index => Math.min(data.position1[index], data.position2[index]))
+		const max = [0, 1, 2].map(index => Math.max(data.position1[index], data.position2[index]))
+		const replaceBlock = data.replaceBlock
+		for (let x = min[0]; x <= max[0]; x++) {
+			for (let y = min[1]; y <= max[1]; y++) {
+				for (let z = min[2]; z <= max[2]; z++) {
+					const currentBlock = this.level.getBlock([x, y, z])
+					if (currentBlock === data.findBlock) {
+						this.setBlock([x, y, z], replaceBlock)
+					}
+				}
+			}
+		}
+		return super.action()
+	}
+}
+
 module.exports = {
-	commands: [Cuboid, Line, AbnormalTriangle, SphereSlow]
+	commands: [
+		Cuboid,
+		Line,
+		AbnormalTriangle,
+		SphereSlow,
+		Replace,
+	]
 }
