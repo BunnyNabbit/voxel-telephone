@@ -11,7 +11,7 @@ import { Database } from "../Database.mjs"
 import Heartbeat from "./Heartbeat.cjs"
 import { templates } from "../level/templates.mjs"
 import { Commands } from "../player/Commands.mjs"
-import cefSounds from "../../cefSounds.cjs"
+import CefSounds from "../cefSounds.cjs"
 import { Player } from "../player/Player.mjs"
 import Drone from "../level/drone/Drone.cjs"
 import Ego from "../level/drone/Ego.cjs"
@@ -42,7 +42,7 @@ export class Universe extends EventEmitter {
 			version: 1
 		})
 		this.db = new Database(this.serverConfiguration)
-		this.sounds = cefSounds()
+		this.sounds = new CefSounds().sounds
 
 		if (this.serverConfiguration.postToMainServer) {
 			this.heartbeat = new Heartbeat(`https://www.classicube.net/server/heartbeat/`, this)
