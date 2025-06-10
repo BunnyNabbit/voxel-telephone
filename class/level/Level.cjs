@@ -305,7 +305,7 @@ class Level extends require("events") {
 		if (player && player.repeatMode) {
 			this.currentCommandLayoutIndex = 0
 			this.currentCommandActionBytes = []
-			this.inferCurrentCommand(null, player) // FIXME: possible infinite loop if no command layout exists. check for &
+			this.inferCurrentCommand(player.getInferredData(), player) // FIXME: possible infinite loop if no command layout exists. check for &
 		} else {
 			this.currentCommand = null
 			this.blocking = false
