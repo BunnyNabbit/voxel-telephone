@@ -54,14 +54,10 @@ export class Database {
 	getGames(cursor, limit = 9, onlyCompleted) {
 		return new Promise(resolve => {
 			const findDocument = {
-				depth: 0
+				depth: 0,
 			}
-			if (cursor) {
-				findDocument._id = { $lt: cursor }
-			}
-			if (onlyCompleted) {
-				findDocument.depth = 15
-			}
+			if (cursor) findDocument._id = { $lt: cursor }
+			if (onlyCompleted) findDocument.depth = 15
 			this.gameCollection.find(findDocument).sort({ _id: -1 }).limit(limit, async (err, games) => {
 				let promises = []
 				games.forEach(game => {
@@ -75,9 +71,7 @@ export class Database {
 	getUserGrid(username, cursor) {
 		return new Promise(resolve => {
 			const findDocument = { promptType: "build", creators: username }
-			if (cursor) {
-				findDocument._id = { $lt: cursor }
-			}
+			if (cursor) findDocument._id = { $lt: cursor }
 			this.gameCollection.find(findDocument).sort({ _id: -1 }).limit(65, async (err, buildTurns) => {
 				let promises = []
 				buildTurns.forEach(buildTurn => { // get zhe previous turn which is zhe description
@@ -106,9 +100,7 @@ export class Database {
 	getLicensedGrid(cursor) {
 		return new Promise(resolve => {
 			const findDocument = { promptType: "build", licenses: { $exists: true } }
-			if (cursor) {
-				findDocument._id = { $lt: cursor }
-			}
+			if (cursor) findDocument._id = { $lt: cursor }
 			this.gameCollection.find(findDocument).sort({ _id: -1 }).limit(65, async (err, buildTurns) => {
 				let promises = []
 				buildTurns.forEach(buildTurn => {
@@ -137,9 +129,7 @@ export class Database {
 	getPurgedGrid(cursor) {
 		return new Promise(resolve => {
 			const findDocument = {}
-			if (cursor) {
-				findDocument._id = { $lt: cursor }
-			}
+			if (cursor) findDocument._id = { $lt: cursor }
 			this.purgedCollection.find(findDocument).sort({ _id: -1 }).limit(65, async (err, purgedTurns) => {
 				const grid = []
 				let currentColumn = []
@@ -199,7 +189,7 @@ export class Database {
 				promptType: "description",
 				next: gameNextId,
 				parent: "self",
-				depth: 0
+				depth: 0,
 			}
 			this.gameCollection.insert(document, (err) => {
 				resolve(document)
@@ -271,14 +261,10 @@ export class Database {
 					creators: [],
 					next: gameNextId,
 					parent: originalDocument._id,
-					depth: originalDocument.depth + 1
+					depth: originalDocument.depth + 1,
 				}
-				if (username) {
-					document.creators.push(username)
-				}
-				if (document.depth == 15) {
-					document.active = false
-				}
+				if (username) document.creators.push(username)
+				if (document.depth == 15) document.active = false
 				if (promptType == "description") {
 					document.prompt = description
 					document.promptType = "description"
@@ -421,7 +407,7 @@ export class Database {
 				end: new Date(Date.now() + configuration.duration),
 				start: new Date(),
 				acknowledged: false,
-				type: configuration.type
+				type: configuration.type,
 			}
 			this.banCollection.insert(document, (err) => {
 				resolve()
@@ -436,8 +422,8 @@ export class Database {
 				findDocument = {
 					$or: [
 						{ username, end: { $gt: new Date() } },
-						{ username, acknowledged: true }
-					]
+						{ username, acknowledged: true },
+					],
 				}
 			} else {
 				findDocument = { username }
@@ -591,7 +577,7 @@ export class Database {
 			const document = {
 				_id: realmId,
 				ownedBy: username,
-				realmName: Database.generateName()
+				realmName: Database.generateName(),
 			}
 			this.realmCollection.insert(document, (err) => {
 				if (err) {
@@ -625,9 +611,7 @@ export class Database {
 	saveRealmPreview(realmId, blocks) {
 		return new Promise(resolve => {
 			this.realmCollection.update({ _id: realmId }, { $set: { preview: blocks } }, (err) => {
-				if (err) {
-					console.error("Error saving realm preview:", err)
-				}
+				if (err) console.error("Error saving realm preview:", err)
 				resolve()
 			})
 		})

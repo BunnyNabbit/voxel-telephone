@@ -40,9 +40,7 @@ class SoundTransmitter extends require("events") {
 				})
 			} else {
 				// resend current track
-				if (this.currentTrack) {
-					this.enqueueEvent(this.currentTrack.data)
-				}
+				if (this.currentTrack) this.enqueueEvent(this.currentTrack.data)
 			}
 		})
 	}

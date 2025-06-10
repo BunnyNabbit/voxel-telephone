@@ -49,5 +49,5 @@ export default {
 		attribution: true,
 		icon: "oga.webp",
 		iconClass: "license-icon-square"
-	})
+	}),
 }

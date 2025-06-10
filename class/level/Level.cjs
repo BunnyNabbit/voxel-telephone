@@ -116,9 +116,7 @@ class Level extends require("events") {
 		this.blocks.writeUInt8(block, position[0] + this.bounds[0] * (position[2] + this.bounds[2] * position[1]))
 		// callback(block, position[0], position[1], position[2])
 		this.players.forEach(player => {
-			if (!excludePlayers.includes(player)) {
-				player.client.setBlock(block, position[0], position[1], position[2])
-			}
+			if (!excludePlayers.includes(player)) player.client.setBlock(block, position[0], position[1], position[2])
 		})
 		if (saveToRecord) {
 			this.changeRecord.addBlockChange(position, block)
@@ -161,9 +159,7 @@ class Level extends require("events") {
 
 	inferCurrentCommand(providedData = null, player = null) {
 		const currentType = this.currentCommand.layout[this.currentCommandLayoutIndex]
-		if (currentType == null) {
-			return this.commitAction(player)
-		}
+		if (currentType == null) return this.commitAction(player)
 		if (currentType.startsWith("&")) {
 			// TODO: infer byte type size: i.e: the zero element is a position, and would need three action bytes.
 			this.currentCommandLayoutIndex++
@@ -203,9 +199,7 @@ class Level extends require("events") {
 		command = command.split(" ")
 		const commandName = command[0].toLowerCase()
 		let commandClass = Level.commands.find(otherCommand => otherCommand.name.toLowerCase() == commandName)
-		if (!commandClass) {
-			commandClass = Level.commands.find(otherCommand => otherCommand.aliases.includes(commandName))
-		}
+		if (!commandClass) commandClass = Level.commands.find(otherCommand => otherCommand.aliases.includes(commandName))
 		return commandClass
 	}
 
@@ -273,9 +267,7 @@ class Level extends require("events") {
 				const index = this.currentCommand.enums[enumName].findIndex((value) => { // find index by enum name
 					return value == enumValue
 				})
-				if (index == -1) {
-					break
-				}
+				if (index == -1) break
 				this.currentCommandActionBytes.push(index)
 				incrementIndex()
 				continue
@@ -293,9 +285,7 @@ class Level extends require("events") {
 		if (this.loading == false) {
 			this.changeRecord.appendAction(true, this.currentCommandActionBytes, command.name)
 			this.playSound("poof")
-			if (requiresRefreshing) {
-				this.reload()
-			}
+			if (requiresRefreshing) this.reload()
 		}
 		if (!this.changeRecord.draining && this.changeRecord.currentActionCount > 1024) {
 			this.changeRecord.flushChanges().then((bytes) => {

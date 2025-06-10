@@ -25,9 +25,7 @@ export class ChangeRecord {
 		this.actionCount = 0
 		this.currentActionCount = 0
 		// fs.mkd
-		if (!fs.existsSync(path)) {
-			fs.mkdirSync(path)
-		}
+		if (!fs.existsSync(path)) fs.mkdirSync(path)
 		this.keyframeRecord = new KeyframeRecord(join(path, "/dvr.db"))
 		Promise.all([fs.promises.open(join(path + "/vhs.bin"), "a+")], this.keyframeRecord.ready).then((values) => {
 			this.vhsFh = values[0]
@@ -101,9 +99,7 @@ export class ChangeRecord {
 				}
 
 				const exit = await processor(actions, commandName, actionBytes, changes, currentFileReadOffset, bufferActionCount)
-				if (!exit) {
-					return this.actionCount // Allow early exit
-				}
+				if (!exit) return this.actionCount // Allow early exit
 			}
 
 			currentFileReadOffset += bufferLength + 4
@@ -130,9 +126,7 @@ export class ChangeRecord {
 		}
 		let restoreWatch = new Stopwatch(true)
 		const count = await this._processVhsFile(this.vhsFh, async (actions, commandName, actionBytes, changes, currentFileReadOffset, bufferActionCount) => {
-			if (staller) {
-				await staller()
-			}
+			if (staller) await staller()
 			if (maxActions && this.actionCount == maxActions) {
 				level.loading = false
 				return false // Stop processing
@@ -147,9 +141,7 @@ export class ChangeRecord {
 					level.commitAction()
 				}
 			} else {
-				if (actions == 0) {
-					changes.readBuffer(4)
-				}
+				if (actions == 0) changes.readBuffer(4)
 				if (bufferActionCount >= keyframeBufferActionCount) {
 					seeking = false // Stop seeking once we reach the keyframe buffer action count
 					restoreWatch.start() // restart stopwatch for keyframe creation

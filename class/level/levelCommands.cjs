@@ -15,14 +15,10 @@ class Command {
 			} else {
 				this.level.setBlock(position, block, [], false)
 				this.blocksChanged++
-				if (this.blocksChanged > Command.networkedBlockChanges) {
-					this.rawSet = true
-				}
+				if (this.blocksChanged > Command.networkedBlockChanges) this.rawSet = true
 			}
 		} catch (err) {
-			if (this.level.logErrors) {
-				console.error(`Error setting block at ${position}:`, err)
-			}
+			if (this.level.logErrors) console.error(`Error setting block at ${position}:`, err)
 		}
 	}
 
@@ -90,19 +86,13 @@ class Cuboid extends Command {
 							this.setBlock([x, y, z], block)
 							break
 						case "hollow":
-							if (x === min[0] || x === max[0] || y === min[1] || y === max[1] || z === min[2] || z === max[2]) {
-								this.setBlock([x, y, z], block)
-							}
+							if (x === min[0] || x === max[0] || y === min[1] || y === max[1] || z === min[2] || z === max[2]) this.setBlock([x, y, z], block)
 							break
 						case "walls":
-							if (x === min[0] || x === max[0] || z === min[2] || z === max[2]) {
-								this.setBlock([x, y, z], block)
-							}
+							if (x === min[0] || x === max[0] || z === min[2] || z === max[2]) this.setBlock([x, y, z], block)
 							break
 						case "holes":
-							if ((x + y + z) % 2 === 0) {
-								this.setBlock([x, y, z], block)
-							}
+							if ((x + y + z) % 2 === 0) this.setBlock([x, y, z], block)
 							break
 					}
 				}
@@ -210,12 +200,8 @@ class SphereSlow extends Command {
 			for (let y = -radius; y <= radius; y++) {
 				for (let z = -radius; z <= radius; z++) {
 					// check if within this.level.bounds
-					if (!this.level.withinLevelBounds([center[0] + x, center[1] + y, center[2] + z])) {
-						continue
-					}
-					if (x * x + y * y + z * z <= radius * radius) {
-						this.setBlock([center[0] + x, center[1] + y, center[2] + z], block)
-					}
+					if (!this.level.withinLevelBounds([center[0] + x, center[1] + y, center[2] + z])) continue
+					if (x * x + y * y + z * z <= radius * radius) this.setBlock([center[0] + x, center[1] + y, center[2] + z], block)
 				}
 			}
 		}
@@ -240,9 +226,7 @@ class Replace extends Command {
 			for (let y = min[1]; y <= max[1]; y++) {
 				for (let z = min[2]; z <= max[2]; z++) {
 					const currentBlock = this.level.getBlock([x, y, z])
-					if (currentBlock === data.findBlock) {
-						this.setBlock([x, y, z], replacementBlock)
-					}
+					if (currentBlock === data.findBlock) this.setBlock([x, y, z], replacementBlock)
 				}
 			}
 		}

@@ -11,9 +11,7 @@ class Category {
 	}
 	displayHelpToPlayer(player) {
 		player.message(`&cCategory&f: ${this.name}`)
-		if (this.documents.length) {
-			player.message(`${this.documents.join(", ")}`)
-		}
+		if (this.documents.length) player.message(`${this.documents.join(", ")}`)
 	}
 }
 
@@ -66,28 +64,17 @@ class Help {
 		}
 		argument = argument.toLowerCase().split(" ")[0]
 		const topic = this.data.topics.get(argument)
-		if (topic) {
-			topic.displayHelpToPlayer(player)
-			return
-		}
+		if (topic) return topic.displayHelpToPlayer(player)
 		const command = universe.commandRegistry.commands.get("/" + argument) || universe.commandRegistry.commands.get(argument) || Level.getCommandClassFromName(argument.replace("/", ""))
 		if (command) {
 			const commandHelp = this.data.commands.get((command.name && "/" + command.name.toLowerCase()) || command.commandNames[0])
-			if (!commandHelp) {
-				player.message(`Command exists but unable to find help document for it.`)
-				return
-			}
+			if (!commandHelp) return player.message(`Command exists but unable to find help document for it.`)
 			commandHelp.displayHelpToPlayer(player)
-			if (displayLink) {
-				player.message(`&eHelp documentation is available on the web. ${universe.serverConfiguration.website.baseURL}help`)
-			}
+			if (displayLink) player.message(`&eHelp documentation is available on the web. ${universe.serverConfiguration.website.baseURL}help`)
 			return
 		}
 		const category = this.data.categories.get(argument)
-		if (category) {
-			category.displayHelpToPlayer(player)
-			return
-		}
+		if (category) return category.displayHelpToPlayer(player)
 		player.message(`Unable to find help document for ${argument}.`)
 	}
 	/**Parses the markdown content into Minecraft classic text format.
@@ -156,9 +143,7 @@ class Help {
 				}
 
 				if (category) {
-					if (!categories.has(category)) {
-						categories.set(category, new Category(category[0].toUpperCase() + category.slice(1)))
-					}
+					if (!categories.has(category)) categories.set(category, new Category(category[0].toUpperCase() + category.slice(1)))
 					categories.get(category).documents.push(parsed.heading)
 				}
 			}

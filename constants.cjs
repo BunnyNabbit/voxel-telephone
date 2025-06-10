@@ -6,5 +6,5 @@ const textSymbols = {
 }
 
 module.exports = {
-	textSymbols
+	textSymbols,
 }

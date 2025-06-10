@@ -4,16 +4,12 @@ class HubLevel extends Level {
 	constructor(bounds, blocks, name, db) {
 		super(bounds, blocks)
 		this.on("playerRemoved", async () => {
-			if (this.players.length == 0 && !this.changeRecord.draining && this.changeRecord.dirty) {
-				await this.changeRecord.flushChanges()
-			}
+			if (this.players.length == 0 && !this.changeRecord.draining && this.changeRecord.dirty) await this.changeRecord.flushChanges()
 		})
 		this.portals = []
 		db.getPortals(name).then(zones => {
 			zones.forEach(zone => {
-				if (zone.globalCommand.startsWith("spawnZone")) {
-					zone.spawnZone = true
-				}
+				if (zone.globalCommand.startsWith("spawnZone")) zone.spawnZone = true
 				this.portals.push(zone)
 			})
 		})
