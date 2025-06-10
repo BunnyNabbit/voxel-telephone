@@ -275,7 +275,7 @@ export class Player extends EventEmitter {
 	}
 
 	getBlockPosition() {
-		return this.position.map((value, index) => Math.min(Math.max(Math.floor(value), 0), this.space.bounds[index] - 1))
+		return [0, -1, 0].map((offset, index) => this.position[index] + offset).map((value, index) => Math.min(Math.max(Math.floor(value), 0), this.space.bounds[index] - 1))
 	}
 
 	static sendHotbar(player) {

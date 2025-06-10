@@ -149,7 +149,7 @@ export class Commands {
 		})
 		universe.registerCommand(["/place", "/pl"], async (player) => {
 			if (player.watchdog.rateOperation(1)) return
-			const operationPosition = [0, -1, 0].map((offset, index) => player.position[index] + offset).map((value, index) => Math.min(Math.max(Math.floor(value), 0), player.space.bounds[index] - 1))
+			const operationPosition = player.getBlockPosition()
 			let block = player.heldBlock
 			player.space.setBlock(operationPosition, block)
 		}, Commands.makeMultiValidator([Commands.reasonHasPermission(false), Commands.reasonVcr(true, "Unable to place block. Level is in VCR mode"), Commands.reasonLevelBlocking(true, "Unable to place block. Command in level is expecting additional arguments")]))
