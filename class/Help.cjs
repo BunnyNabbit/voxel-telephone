@@ -122,18 +122,14 @@ class Help {
 		for (const file of files) {
 			if (path.extname(file) === ".md") {
 				const name = path.basename(file, ".md")
-				if (name == "index") { // category
-					continue
-				}
+				if (name == "index") continue // category
 				const content = await fs.promises.readFile(file, "utf-8")
 				const parsed = Help.parseMarkdownToClassicText(content, {
 					fullImageURLs,
 					baseURL
 				})
 				let category = path.basename(path.dirname(file))
-				if (category == "help") {
-					category = null
-				}
+				if (category == "help") category = null
 
 				if (name.startsWith("cmd-") || name.startsWith("build-cmd-")) {
 					const commandName = "/" + name.replace("cmd-", "").replace("build-", "")

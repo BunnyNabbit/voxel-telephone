@@ -5,9 +5,7 @@ import("nbt").then(module => {
 	const nbt = module.default
 	const palette = []
 	nbt.parse(fs.readFileSync(`../voxel-telephone-64.cw`), async (error, data) => {
-		if (error) {
-			return console.error("Error while decoding NBT data.", error)
-		}
+		if (error) return console.error("Error while decoding NBT data.", error)
 		Object.values(data.value.Metadata.value.CPE.value.BlockDefinitions.value).reverse().forEach(blockDefinition => {
 			const element = [1, 2, 3].map((value) => blockDefinition.value.Fog.value[value])
 			element.push(blockDefinition.value.BlockDraw.value)
