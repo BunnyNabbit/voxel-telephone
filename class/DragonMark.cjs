@@ -70,9 +70,7 @@ class DragonMark {
 		text = DragonMark.normalizeLineEndings(text)
 		const structure = []
 		const sections = text.split("---")
-		if (sections.length < 3) {
-			throw new Error("Input text does not contain the expected structure with '---'")
-		}
+		if (sections.length < 3) throw new Error("Input text does not contain the expected structure with '---'")
 		const lines = sections[2].split("\n")
 		lines.forEach((line) => {
 			line = line.trim()
@@ -80,9 +78,7 @@ class DragonMark {
 				const level = line.match(/^#+/)[0].length
 				const heading = new Heading(level)
 				const headingText = line.slice(level).trim()
-				if (headingText) {
-					heading.addElement(new Text(headingText))
-				}
+				if (headingText) heading.addElement(new Text(headingText))
 				structure.push(heading)
 			} else if (line) {
 				const paragraph = new Paragraph()
@@ -117,9 +113,7 @@ class DragonMark {
 						currentText.content += char
 					}
 				}
-				if (currentText.content) {
-					paragraph.addElement(currentText)
-				}
+				if (currentText.content) paragraph.addElement(currentText)
 				structure.push(paragraph)
 			}
 		})

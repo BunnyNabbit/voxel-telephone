@@ -33,17 +33,11 @@ export class Commands {
 		}, Commands.reasonVcr(false, "Level isn't in VCR mode. /vcr"))
 		universe.registerCommand(["/finish"], async (player) => {
 			if (player.space && player.space.game && !player.space.changeRecord.draining) {
-				if (player.space.inVcr) {
-					player.message("Hold up! Did you mean to use /abort instead? Exit out of VCR to if you intend to submit your game.")
-					return
-				}
+				if (player.space.inVcr) return player.message("Hold up! Did you mean to use /abort instead? Exit out of VCR to if you intend to submit your game.")
 				const gameType = invertPromptType(player.space.game.promptType)
 				console.log(gameType)
 				if (gameType == "build") {
-					if (player.space.changeRecord.actionCount == 0) {
-						player.message("There is nothing. Build the prompt you are given!")
-						return
-					}
+					if (player.space.changeRecord.actionCount == 0) return player.message("There is nothing. Build the prompt you are given!")
 					universe.pushMessage(`${player.authInfo.username} finished a turn (Build)`, PushIntegration.interestType.gameProgression)
 					universe.server.players.forEach(otherPlayer => {
 						otherPlayer.emit("playSound", player.universe.sounds.complete)
@@ -61,10 +55,7 @@ export class Commands {
 					universe.db.addInteraction(player.authInfo.username, player.space.game.next, "built")
 					exportLevelAsVox(player.space)
 				} else { // describe
-					if (!player.currentDescription) {
-						player.message("You currently have no description for this build. Write something in chat first!")
-						return
-					}
+					if (!player.currentDescription) return player.message("You currently have no description for this build. Write something in chat first!")
 					universe.db.addInteraction(player.authInfo.username, player.space.game._id, "described")
 					universe.pushMessage(`${player.authInfo.username} finished a turn (Describe)`, PushIntegration.interestType.gameProgression)
 					universe.server.players.forEach(otherPlayer => {
@@ -326,18 +317,14 @@ export class Commands {
 					player.message("Current licenses:")
 					licenses.forEach(license => {
 						const licenseData = creationLicenses[license]
-						if (licenseData) {
-							player.message(`- ${licenseData.name} (${license})`)
-						}
+						if (licenseData) player.message(`- ${licenseData.name} (${license})`)
 					})
 				}
 				return
 			}
 			licenseName = licenseName.toUpperCase()
 			if (!creationLicenses[licenseName]) {
-				if (licenseName.length) {
-					player.message("Unknown license.")
-				}
+				if (licenseName.length) player.message("Unknown license.")
 				universe.commandRegistry.attemptCall(player, `/help license`)
 				return
 			}
@@ -345,17 +332,11 @@ export class Commands {
 			// check ownership
 			const buildTurn = selectedTurns.build
 			if (!buildTurn) return player.message("No build selected.")
-			if (!buildTurn.creators.includes(player.authInfo.username)) {
-				player.message("You are not the owner of this build.")
-				return
-			}
+			if (!buildTurn.creators.includes(player.authInfo.username)) return player.message("You are not the owner of this build.")
 			const license = creationLicenses[licenseName]
 			// check if license already exists
 			const exists = (buildTurn.licenses ?? []).includes(licenseName)
-			if (exists) {
-				player.message("License already exists.")
-				return
-			}
+			if (exists) return player.message("License already exists.")
 			universe.db.addTurnLicense(buildTurn._id, licenseName, license.licenseData).then(() => {
 				player.message(`Added license ${license.name} to ${selectedTurns.description.prompt}.`)
 				player.space.reloadView(templates.empty)
@@ -363,10 +344,8 @@ export class Commands {
 		})
 
 		universe.registerCommand(["/realm", "/os", "/myrealm"], async (player) => {
-			// if (!argument) {
 			universe.enterView(player, { viewAll: true, mode: "realm", player: player.authInfo.username, levelClass: RealmManagerLevel })
 			return
-			// }
 		})
 
 		function unimplementedCommandHelper(commands, helpTopic) {
@@ -406,9 +385,7 @@ export class Commands {
 	static reasonHasUserPermission(matchValue, message = "You don't have permission to use this command!") {
 		return async function (player) {
 			const userRecord = await player.userRecord.get()
-			if (userRecord.permissions[matchValue]) {
-				return true
-			}
+			if (userRecord.permissions[matchValue]) return true
 			if (message) player.message(message)
 			return false
 		}

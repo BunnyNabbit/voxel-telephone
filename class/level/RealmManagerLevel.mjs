@@ -36,9 +36,7 @@ export class RealmManagerLevel extends ViewLevel {
 		this.createBorders()
 		const games = await this.universe.db.getRealmGrid(this.viewData.player, this.cursor)
 		this.games = games
-		if (games.length >= 9) {
-			this.nextCursor = games[7][15]._id
-		}
+		if (games.length >= 9) this.nextCursor = games[7][15]._id
 
 		for (let gameIndex = 0; gameIndex < 8; gameIndex++) {
 			const game = games[gameIndex]

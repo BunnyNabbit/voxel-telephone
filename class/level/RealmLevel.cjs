@@ -63,9 +63,7 @@ class RealmLevel extends Level {
 								const sZ = (z * 4) + sampleZ
 								const index = sX + bounds * (sZ + bounds * sY)
 								const block = blocks[index]
-								if (block) {
-									sampled.increment(block)
-								}
+								if (block) sampled.increment(block)
 							}
 						}
 					}

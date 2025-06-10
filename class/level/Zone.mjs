@@ -17,9 +17,7 @@ export class Zone {
 
 	static deserialize(data) {
 		const zone = new Zone(data.min, data.max)
-		if (data.globalCommand) {
-			zone.globalCommand = data.globalCommand
-		}
+		if (data.globalCommand) zone.globalCommand = data.globalCommand
 		return zone
 	}
 }

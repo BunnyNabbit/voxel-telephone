@@ -23,12 +23,8 @@ export class Player extends EventEmitter {
 
 	async initialize(client, universe, authInfo) {
 		const verifyUsernames = (universe.serverConfiguration.verifyUsernames && universe.heartbeat)
-		if (universe.server.players.filter(otherClient => otherClient.address == client.address).length >= universe.serverConfiguration.maxIpConnections) {
-			return this.client.disconnect("Too many connections!")
-		}
-		if (universe.server.players.some(otherClient => otherClient.authInfo.username == authInfo.username)) {
-			return this.client.disconnect("Another client already has that name")
-		}
+		if (universe.server.players.filter(otherClient => otherClient.address == client.address).length >= universe.serverConfiguration.maxIpConnections) return this.client.disconnect("Too many connections!")
+		if (universe.server.players.some(otherClient => otherClient.authInfo.username == authInfo.username)) return this.client.disconnect("Another client already has that name")
 		if (verifyUsernames && crypto.createHash("md5").update(universe.heartbeat.salt + authInfo.username).digest("hex") !== authInfo.key) {
 			console.log("Connection failed")
 			this.message("It appears that authorization failed. Are you connecting via the ClassiCube server list? Try refreshing it.")
@@ -39,15 +35,11 @@ export class Player extends EventEmitter {
 			return
 		}
 		if (!authInfo.extensions) return this.client.disconnect("Enable ClassiCube enhanced mode or use other supported client")
-		if (UserRecord.orphans.has(authInfo.username)) {
-			return this.client.disconnect("Orphaned. Rejoin in a few minutes.")
-		}
+		if (UserRecord.orphans.has(authInfo.username)) return this.client.disconnect("Orphaned. Rejoin in a few minutes.")
 		console.log(authInfo.username, "connected")
 		this.client.on("close", () => {
 			this.destroyed = true
-			if (this.space) {
-				this.space.removePlayer(this)
-			}
+			if (this.space) this.space.removePlayer(this)
 			universe.pushMessage(`- ${this.authInfo.username} disconnected`, PushIntegration.interestType.playerConnection)
 			universe.server.players.forEach(otherClient => {
 				otherClient.emit("playSound", universe.sounds.leave)
@@ -100,10 +92,7 @@ export class Player extends EventEmitter {
 			if (this.watchdog.rateOperation()) return
 			if (!this.space) return
 			const operationPosition = [operation.x, operation.y, operation.z]
-			if (operationPosition.some((value, index) => value > this.space.bounds[index] - 1)) {
-				console.log(`Player ${this.authInfo.username} attempted to place a block outside of bounds: ${operationPosition}`)
-				return
-			}
+			if (operationPosition.some((value, index) => value > this.space.bounds[index] - 1)) return console.log(`Player ${this.authInfo.username} attempted to place a block outside of bounds: ${operationPosition}`)
 			let block = operation.type
 			if (!this.space.userHasPermission(this.authInfo.username)) {
 				this.client.setBlock(this.space.getBlock(operationPosition), operationPosition[0], operationPosition[1], operationPosition[2])
@@ -116,9 +105,7 @@ export class Player extends EventEmitter {
 				this.lastClickPosition = operationPosition
 				return
 			}
-			if (operation.mode == 0) {
-				block = 0
-			}
+			if (operation.mode == 0) block = 0
 			if (this.space.inVcr) {
 				this.client.setBlock(this.space.getBlock(operationPosition), operationPosition[0], operationPosition[1], operationPosition[2])
 				this.message("Unable to place block. Level is in VCR mode")
@@ -153,10 +140,7 @@ export class Player extends EventEmitter {
 			if (message.startsWith("/")) {
 				if (!this.space) return
 				if (!this.space.userHasPermission(this.authInfo.username)) return this.message("You don't have permission to build in this level")
-				if (this.space.inVcr) {
-					this.message("Unable to use commands. Level is in VCR mode")
-					return
-				}
+				if (this.space.inVcr) return this.message("Unable to use commands. Level is in VCR mode")
 				this.space.interpretCommand(message.replace("/", ""), this)
 			} else {
 				if (filter.matches(message)) {
@@ -200,30 +184,22 @@ export class Player extends EventEmitter {
 			this.orientation = [orientation.yaw, orientation.pitch]
 			if (this.space) {
 				const controlledDrone = this.space.clientDrones.get(this.client)
-				if (controlledDrone) {
-					controlledDrone.setPosition(position, orientation)
-				}
+				if (controlledDrone) controlledDrone.setPosition(position, orientation)
 				// portal detection
 				this.space.portals.forEach(portal => {
 					if (!portal.spawnZone && portal.intersects(this.position)) {
-						if (portal.globalCommand) {
-							this.universe.commandRegistry.attemptCall(this, portal.globalCommand)
-						}
+						if (portal.globalCommand) this.universe.commandRegistry.attemptCall(this, portal.globalCommand)
 					}
 				})
 			}
 		})
 		const hatchday = universe.getHatchday()
-		if (hatchday) {
-			this.message(hatchday.joinMessage)
-		}
+		if (hatchday) this.message(hatchday.joinMessage)
 	}
 
 	message(message, types = [0], continueAdornment = "> ") {
 		const originalMessage = message
-		if (typeof types === "number") {
-			types = [types]
-		}
+		if (typeof types === "number") types = [types]
 		const maxLength = 64 - continueAdornment.length
 		const messages = []
 		let currentColorCode = ""
@@ -239,17 +215,11 @@ export class Player extends EventEmitter {
 				let splitIndex = message.lastIndexOf(" ", effectiveMaxLength)
 				// Check if the split is within a color code
 				const colorCodeIndex = message.lastIndexOf("&", effectiveMaxLength)
-				if (colorCodeIndex > splitIndex && colorCodeIndex < effectiveMaxLength + 2 && /^[0-9a-f]$/.test(message[colorCodeIndex + 1])) {
-					splitIndex = colorCodeIndex - 1 // Split before the color code, if found within the last couple of chars
-				}
-				if (splitIndex === -1 || splitIndex === 0) {
-					splitIndex = Math.min(effectiveMaxLength, message.length)
-				}
+				if (colorCodeIndex > splitIndex && colorCodeIndex < effectiveMaxLength + 2 && /^[0-9a-f]$/.test(message[colorCodeIndex + 1])) splitIndex = colorCodeIndex - 1 // Split before the color code, if found within the last couple of chars
+				if (splitIndex === -1 || splitIndex === 0) splitIndex = Math.min(effectiveMaxLength, message.length)
 				const currentMessage = (messages.length === 0 ? "" : continueAdornment) + currentColorCode + message.substring(0, splitIndex)
 				const match = message.substring(0, splitIndex).match(/&[0-9a-f](?!.*&[0-9a-f])/)
-				if (match) {
-					currentColorCode = match[0]
-				}
+				if (match) currentColorCode = match[0]
 				messages.push(currentMessage)
 				message = message.substring(splitIndex).trim()
 			}

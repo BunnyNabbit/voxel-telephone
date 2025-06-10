@@ -178,9 +178,7 @@ export class ViewLevel extends Level {
 		if (player.selectedTurns.description) {
 			player.message(player.selectedTurns.description.prompt, 13)
 			let attribution = `Description: ${player.selectedTurns.description.creators.join()}`
-			if (player.selectedTurns.build) {
-				attribution += ` | Build: ${player.selectedTurns.build.creators.join()}`
-			}
+			if (player.selectedTurns.build) attribution += ` | Build: ${player.selectedTurns.build.creators.join()}`
 			player.message(attribution, 12)
 		} else {
 			player.message(" ", [12, 13])

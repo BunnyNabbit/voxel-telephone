@@ -45,9 +45,7 @@ export class Universe extends EventEmitter {
 		this.db = new Database(this.serverConfiguration)
 		this.sounds = new CefSounds().sounds
 
-		if (this.serverConfiguration.postToMainServer) {
-			this.heartbeat = new Heartbeat(`https://www.classicube.net/server/heartbeat/`, this)
-		}
+		if (this.serverConfiguration.postToMainServer) this.heartbeat = new Heartbeat(`https://www.classicube.net/server/heartbeat/`, this)
 		if (this.serverConfiguration.sounds.enabled) {
 			import(`./SoundServer.cjs`).then(SoundServer => {
 				SoundServer = SoundServer.default
@@ -110,9 +108,7 @@ export class Universe extends EventEmitter {
 				this.server.players.push(player)
 				player.client.addPlayerName(0xff, player.username, `&7${player.username}`, "Voxel Telephone", 1)
 				this.server.players.forEach(anyPlayer => {
-					if (anyPlayer != player) {
-						anyPlayer.client.addPlayerName(i, player.username, `&7${player.username}`, "Voxel Telephone", 1)
-					}
+					if (anyPlayer != player) anyPlayer.client.addPlayerName(i, player.username, `&7${player.username}`, "Voxel Telephone", 1)
 				})
 				this.emit("playerAdded", player)
 				return
@@ -188,9 +184,7 @@ export class Universe extends EventEmitter {
 			level.allowList = defaults.allowList ?? []
 			level.universe = this
 			let changeRecordClass = ChangeRecord
-			if (defaults.useNullChangeRecord) {
-				changeRecordClass = NullChangeRecord
-			}
+			if (defaults.useNullChangeRecord) changeRecordClass = NullChangeRecord
 			level.changeRecord = new changeRecordClass(`./blockRecords/${spaceName}/`, async () => {
 				await level.changeRecord.restoreBlockChangesToLevel(level)
 				resolve(level)
