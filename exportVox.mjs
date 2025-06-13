@@ -6,7 +6,7 @@ import fs from "fs"
  * @param {string} [writePath] - The path to write the .vox file to.
  * @return {Promise<void>} - A promise that resolves when the file is written.
  */
-export default async function exportLevelAsVox(level, writePath) {
+export async function exportLevelAsVox(level, writePath) {
 	if (!writePath) writePath = level.changeRecord.path + "preview.vox"
 	return new Promise(resolve => {
 		if (!level.changeRecord) throw new Error("Level is missing change record")
@@ -31,3 +31,5 @@ export default async function exportLevelAsVox(level, writePath) {
 		})
 	})
 }
+
+export default exportLevelAsVox
