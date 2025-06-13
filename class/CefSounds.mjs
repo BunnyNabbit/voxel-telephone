@@ -1,4 +1,4 @@
-class CefSounds {
+export class CefSounds {
 
 	constructor(baseStaticURL = "/audio/") {
 		this.baseStaticURL = baseStaticURL
@@ -50,4 +50,4 @@ class CefSounds {
 	}
 }
 
-module.exports = CefSounds
+export default CefSounds

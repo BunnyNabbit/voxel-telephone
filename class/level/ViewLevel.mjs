@@ -1,4 +1,4 @@
-import Level from "./Level.cjs"
+import Level from "./Level.mjs"
 import { ChangeRecord } from "./changeRecord/ChangeRecord.mjs"
 import { templates } from "./templates.mjs"
 

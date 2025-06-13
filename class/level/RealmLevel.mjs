@@ -1,4 +1,4 @@
-const Level = require("./Level.cjs")
+import { Level } from "./Level.mjs"
 
 class Count {
 
@@ -23,7 +23,7 @@ class Count {
 	}
 }
 
-class RealmLevel extends Level {
+export class RealmLevel extends Level {
 
 	constructor(bounds, blocks, realmDocument) {
 		super(bounds, blocks)
@@ -79,4 +79,4 @@ class RealmLevel extends Level {
 	}
 }
 
-module.exports = RealmLevel
+export default RealmLevel

@@ -1,6 +1,6 @@
-const Level = require("./Level.cjs")
+import { Level } from "./Level.mjs"
 
-class HubLevel extends Level {
+export class HubLevel extends Level {
 	constructor(bounds, blocks, name, db) {
 		super(bounds, blocks)
 		this.on("playerRemoved", async () => {
@@ -23,4 +23,4 @@ class HubLevel extends Level {
 	}
 }
 
-module.exports = HubLevel
+export default HubLevel

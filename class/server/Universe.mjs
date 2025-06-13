@@ -1,23 +1,23 @@
 import Server from "classicborne-server-protocol"
-import Level from "../level/Level.cjs"
+import { Level } from "../level/Level.mjs"
 import { ViewLevel } from "../level/ViewLevel.mjs"
-import HubLevel from "../level/HubLevel.cjs"
+import { HubLevel } from "../level/HubLevel.mjs"
 import { FastForwardLevel } from "../level/FastForwardLevel.mjs"
-import GlobalCommandRegistry from "../GlobalCommandRegistry.cjs"
+import { GlobalCommandRegistry } from "../GlobalCommandRegistry.mjs"
 import { ChangeRecord } from "../level/changeRecord/ChangeRecord.mjs"
-import NullChangeRecord from "../level/changeRecord/NullChangeRecord.cjs"
+import { NullChangeRecord } from "../level/changeRecord/NullChangeRecord.mjs"
 import defaultBlockset from "../../6-8-5-rgb.json" with { type: "json" }
 import { Database } from "../Database.mjs"
-import Heartbeat from "./Heartbeat.cjs"
+import { Heartbeat } from "./Heartbeat.mjs"
 import { templates } from "../level/templates.mjs"
 import { Commands } from "../player/Commands.mjs"
-import CefSounds from "../CefSounds.cjs"
+import { CefSounds } from "../CefSounds.mjs"
 import { Player } from "../player/Player.mjs"
-import Drone from "../level/drone/Drone.cjs"
-import Ego from "../level/drone/Ego.cjs"
-import PushIntegration from "../integrations/PushIntegration.cjs"
+import { Drone } from "../level/drone/Drone.mjs"
+import { Ego } from "../level/drone/Ego.mjs"
+import { PushIntegration } from "../integrations/PushIntegration.mjs"
 import { EventEmitter } from "events"
-import RealmLevel from "../level/RealmLevel.cjs"
+import { RealmLevel } from "../level/RealmLevel.mjs"
 import { invertPromptType, randomIntFromInterval } from "../../utils.mjs"
 
 const builderDefaults = {
@@ -47,7 +47,7 @@ export class Universe extends EventEmitter {
 
 		if (this.serverConfiguration.postToMainServer) this.heartbeat = new Heartbeat(`https://www.classicube.net/server/heartbeat/`, this)
 		if (this.serverConfiguration.sounds.enabled) {
-			import(`./SoundServer.cjs`).then(SoundServer => {
+			import(`./SoundServer.mjs`).then(SoundServer => {
 				SoundServer = SoundServer.default
 				this.soundServer = new SoundServer(this)
 			})
@@ -56,8 +56,7 @@ export class Universe extends EventEmitter {
 		if (this.serverConfiguration.integrations) {
 			this.serverConfiguration.integrations.forEach(async integrationData => {
 				try {
-					// const integrationClass = require(`../integrations/${integrationData.class}.js`)
-					const integrationClass = (await import(`../integrations/${integrationData.class}.cjs`)).default
+					const integrationClass = (await import(`../integrations/${integrationData.class}.mjs`)).default
 					const interests = integrationData.interests.map(interest => PushIntegration.interestType[interest])
 					const integration = new integrationClass(interests, integrationData.authData, this)
 					this.integrations.push(integration)

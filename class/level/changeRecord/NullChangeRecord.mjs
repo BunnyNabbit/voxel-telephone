@@ -1,4 +1,4 @@
-class NullChangeRecord {
+export class NullChangeRecord {
 
 	constructor(path, loadedCallback = () => { }) {
 		this.currentBuffer = null
@@ -37,4 +37,4 @@ class NullChangeRecord {
 	}
 }
 
-module.exports = NullChangeRecord
+export default NullChangeRecord
