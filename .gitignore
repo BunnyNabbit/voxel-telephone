@@ -143,3 +143,4 @@ config.json
 spotvox.jar
 # Astro public .txt files
 /astro-website/public/*.txt
+/output
