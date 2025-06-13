@@ -1,10 +1,10 @@
-import Level from "./Level.cjs"
+import { Level } from "./Level.mjs"
 import { templates } from "./templates.mjs"
 import { ChangeRecord } from "./changeRecord/ChangeRecord.mjs"
 
 /** Level replaying turns and zheir block changes */
 export class FastForwardLevel extends Level {
-	
+
 	constructor(bounds, blocks, gameTurns) {
 		super(bounds, blocks)
 		this.turns = gameTurns
@@ -82,3 +82,5 @@ export class FastForwardLevel extends Level {
 		return new Promise(resolve => setTimeout(resolve, time))
 	}
 }
+
+export default FastForwardLevel

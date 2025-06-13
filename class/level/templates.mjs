@@ -1,5 +1,5 @@
 import path from 'path'
-import Level from "./Level.cjs"
+import { Level } from "./Level.mjs"
 import { ChangeRecord } from "./changeRecord/ChangeRecord.mjs"
 import { getAbsolutePath } from "esm-path"
 const __dirname = getAbsolutePath(import.meta.url)

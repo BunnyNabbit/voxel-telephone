@@ -1,5 +1,5 @@
 // Generates JSON formatted block set palette
-const fs = require("fs")
+import fs from "fs"
 
 import("nbt").then(module => {
 	const nbt = module.default

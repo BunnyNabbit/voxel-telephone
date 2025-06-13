@@ -1,7 +1,7 @@
-const { WebClient } = require('@slack/web-api')
-const PushIntegration = require("./PushIntegration.cjs")
+import { WebClient } from "@slack/web-api"
+import { PushIntegration } from "./PushIntegration.mjs"
 
-class Slack extends PushIntegration {
+export class Slack extends PushIntegration {
 
 	constructor(interests, authData, universe) {
 		super(interests, universe)
@@ -20,4 +20,4 @@ class Slack extends PushIntegration {
 	}
 }
 
-module.exports = Slack
+export default Slack

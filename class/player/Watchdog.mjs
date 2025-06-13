@@ -1,4 +1,4 @@
-class Watchdog {
+export class Watchdog {
 
    constructor(player) {
       this.interval = setInterval(() => {
@@ -23,4 +23,4 @@ class Watchdog {
    }
 }
 
-module.exports = Watchdog
+export default Watchdog

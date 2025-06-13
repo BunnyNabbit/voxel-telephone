@@ -1,11 +1,11 @@
-import exportLevelAsVox from "../../exportVox.cjs"
+import exportLevelAsVox from "../../exportVox.mjs"
 import { templates } from "../level/templates.mjs"
 import { Zone } from "../level/Zone.mjs"
-import PushIntegration from "../integrations/PushIntegration.cjs"
-import Help from "../Help.cjs"
+import PushIntegration from "../integrations/PushIntegration.mjs"
+import { Help } from "../Help.mjs"
 import { RealmManagerLevel } from "../level/RealmManagerLevel.mjs"
 import { invertPromptType } from "../../utils.mjs"
-import { textSymbols } from "../../constants.cjs"
+import { textSymbols } from "../../constants.mjs"
 
 let creationLicenses = {}
 import("../../creationLicenses.mjs").then(module => {

@@ -3,12 +3,13 @@ function componentToHex(component) {
 	return hex.length == 1 ? "0" + hex : hex
 }
 
-const levelCommands = require("./levelCommands.cjs").commands
-const { textSymbols } = require("../../constants.cjs")
-const Drone = require("./drone/Drone.cjs")
-const Ego = require("./drone/Ego.cjs")
+import { levelCommands } from "./levelCommands.mjs"
+import { textSymbols } from "../../constants.mjs"
+import { Drone } from "./drone/Drone.mjs"
+import { Ego } from "./drone/Ego.mjs"
+import { EventEmitter } from "events"
 
-class Level extends require("events") {
+export class Level extends EventEmitter {
 	static commands = levelCommands
 
 	constructor(bounds, blocks) {
@@ -387,4 +388,5 @@ class Level extends require("events") {
 	}
 	static standardBounds = [64, 64, 64]
 }
-module.exports = Level
+
+export default Level
