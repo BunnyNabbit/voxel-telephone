@@ -17,7 +17,7 @@
     "chunked-vox": "^1.0.0",
     "classicborne-server-protocol": "^0.4.0",
     "esm-path": "^1.0.1",
-    "express": "^4.21.2",
+    "express": "^5.1.0",
     "jimp": "^1.6.0",
     "mongojs": "^3.1.0",
     "nbt": "^0.8.1",
@@ -25,7 +25,7 @@
     "smart-buffer": "^4.2.0",
     "socket.io": "^4.8.1",
     "sqlite3": "^5.1.7",
-    "trash": "^8.1.1"
+    "trash": "^9.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.28.0",
