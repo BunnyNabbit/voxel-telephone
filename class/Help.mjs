@@ -1,9 +1,11 @@
-const fs = require("fs")
-const path = require("path")
-const { DragonMark, Heading, Paragraph, Text, InlineCode, Image } = require("./DragonMark.cjs")
-const Level = require("./level/Level.cjs")
+import fs from "fs"
+import path from "path"
+import { DragonMark, Heading, Paragraph, Text, InlineCode, Image } from "./DragonMark.mjs"
+import { Level } from "./level/Level.mjs"
+import { getAbsolutePath } from "esm-path"
+const __dirname = getAbsolutePath(import.meta.url)
 
-class Category {
+export class Category {
 
 	constructor(name) {
 		this.name = name
@@ -15,7 +17,7 @@ class Category {
 	}
 }
 
-class TopicHelp {
+export class TopicHelp {
 
 	constructor(name, title, help, category) {
 		this.type = "topic"
@@ -31,7 +33,7 @@ class TopicHelp {
 	}
 }
 
-class CommandHelp extends TopicHelp {
+export class CommandHelp extends TopicHelp {
 
 	constructor(name, title, help, category) {
 		super(name, title, help, category)
@@ -39,7 +41,7 @@ class CommandHelp extends TopicHelp {
 	}
 }
 
-class Help {
+export class Help {
 	/**Creates an instance of the Help class.
 	 * @param {Universe} universe - The universe object to interact with.
 	 */
@@ -215,4 +217,4 @@ class Help {
 	}
 }
 
-module.exports = Help
+export default Help

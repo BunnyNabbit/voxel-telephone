@@ -1,10 +1,10 @@
-import filter from "../../filter.cjs"
+import filter from "../../filter.mjs"
 import crypto from "crypto"
-import Watchdog from "./Watchdog.cjs"
-import DroneTransmitter from "../level/drone/DroneTransmitter.cjs"
+import { Watchdog } from "./Watchdog.mjs"
+import { DroneTransmitter } from "../level/drone/DroneTransmitter.mjs"
 import { UserRecord } from "./UserRecord.mjs"
 import { templates } from "../level/templates.mjs"
-import PushIntegration from "../integrations/PushIntegration.cjs"
+import { PushIntegration } from "../integrations/PushIntegration.mjs"
 import { EventEmitter } from "events"
 import { randomIntFromInterval } from "../../utils.mjs"
 
@@ -143,7 +143,7 @@ export class Player extends EventEmitter {
 				if (this.space.inVcr) return this.message("Unable to use commands. Level is in VCR mode")
 				this.space.interpretCommand(message.replace("/", ""), this)
 			} else {
-				if (filter.matches(message)) {
+				if (filter(message)) {
 					const filterMessages = universe.serverConfiguration.replacementMessages
 					universe.server.players.forEach(otherClient => otherClient.message(`&7${this.authInfo.username}: &f${filterMessages[randomIntFromInterval(0, filterMessages.length - 1)]}`))
 					return

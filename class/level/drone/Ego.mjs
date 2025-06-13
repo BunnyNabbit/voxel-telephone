@@ -1,5 +1,5 @@
 /** Represents a drone's appearance. */
-class Ego {
+export class Ego {
 
 	constructor(ego = {}) {
 		this.name = ego.name || ""
@@ -31,4 +31,4 @@ class Ego {
 	}
 }
 
-module.exports = Ego
+export default Ego

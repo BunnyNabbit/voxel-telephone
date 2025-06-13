@@ -1,6 +1,6 @@
-const PushIntegration = require("./PushIntegration.cjs")
+import { PushIntegration } from "./PushIntegration.mjs"
 
-class DiscordWebhook extends PushIntegration {
+export class DiscordWebhook extends PushIntegration {
 
 	constructor(interests, authData, universe) {
 		super(interests, universe)
@@ -29,4 +29,4 @@ class DiscordWebhook extends PushIntegration {
 	}
 }
 
-module.exports = DiscordWebhook
+export default DiscordWebhook

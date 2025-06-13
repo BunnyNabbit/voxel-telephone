@@ -1,4 +1,12 @@
-const crypto = require("crypto")
+import crypto from "crypto"
+import { EventEmitter } from "events"
+import express from "express"
+import { join } from "node:path"
+import { createServer } from "node:http"
+import { Server } from "socket.io"
+import { getAbsolutePath } from "esm-path"
+const __dirname = getAbsolutePath(import.meta.url)
+
 class SoundEvent {
 
 	constructor(soundData, cursor) {
@@ -7,7 +15,7 @@ class SoundEvent {
 	}
 }
 
-class SoundTransmitter extends require("events") {
+class SoundTransmitter extends EventEmitter {
 
 	constructor(player) {
 		super()
@@ -97,8 +105,7 @@ class SoundTransmitter extends require("events") {
 	}
 }
 
-
-class SoundServer extends require("events") {
+export class SoundServer extends EventEmitter {
 
 	constructor(universe) {
 		super()
@@ -117,10 +124,6 @@ class SoundServer extends require("events") {
 				player.message("Use &a/setting music off &fto disable music")
 			}
 		})
-		const express = require('express')
-		const { createServer } = require('node:http')
-		const { join } = require('node:path')
-		const { Server } = require('socket.io')
 
 		const app = express()
 		const server = createServer(app)
@@ -139,4 +142,4 @@ class SoundServer extends require("events") {
 	}
 }
 
-module.exports = SoundServer
+export default SoundServer

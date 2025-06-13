@@ -1,7 +1,8 @@
+import { EventEmitter } from "events"
 /** @typedef {import("classicborne-server-protocol/class/Client.cjs").Client} Client */
-/** @typedef {import("./Drone.cjs")} Drone */
+/** @typedef {import("./Drone.mjs").default} Drone */
 /** Represents a drone transmitter for replicating drones to a player's client. */
-class DroneTransmitter extends require("events") {
+export class DroneTransmitter extends EventEmitter {
 	/**Creates a new DroneTransmitter instance.
 	 * @param {Client} client - The client instance to use for sending data.
 	 */
@@ -93,4 +94,4 @@ class DroneTransmitter extends require("events") {
 	}
 }
 
-module.exports = DroneTransmitter
+export default DroneTransmitter
