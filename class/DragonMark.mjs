@@ -1,4 +1,4 @@
-class BaseElement {
+export class BaseElement {
 
 	constructor() {
 		this.type = "base"
@@ -14,7 +14,7 @@ class BaseElement {
 	}
 }
 
-class Paragraph extends BaseElement {
+export class Paragraph extends BaseElement {
 
 	constructor() {
 		super()
@@ -22,7 +22,7 @@ class Paragraph extends BaseElement {
 	}
 }
 
-class Heading extends BaseElement {
+export class Heading extends BaseElement {
 
 	constructor(level) {
 		super()
@@ -31,7 +31,7 @@ class Heading extends BaseElement {
 	}
 }
 
-class Text extends BaseElement {
+export class Text extends BaseElement {
 
 	constructor(text = "") {
 		super()
@@ -40,7 +40,7 @@ class Text extends BaseElement {
 	}
 }
 
-class InlineCode extends BaseElement {
+export class InlineCode extends BaseElement {
 
 	constructor() {
 		super()
@@ -48,7 +48,7 @@ class InlineCode extends BaseElement {
 	}
 }
 
-class Image extends BaseElement {
+export class Image extends BaseElement {
 
 	constructor() {
 		super()
@@ -61,7 +61,7 @@ class Image extends BaseElement {
 }
 
 /** Basic Markdown parser namespace */
-class DragonMark {
+export class DragonMark {
 	/**Parses the given text and returns a structure array.
 	 * @param {string} text - The text to parse.
 	 * @returns {Array} - The parsed structure array.
@@ -128,12 +128,4 @@ class DragonMark {
 	}
 }
 
-module.exports = {
-	DragonMark,
-	BaseElement,
-	Paragraph,
-	Heading,
-	Text,
-	InlineCode,
-	Image
-}
+export default DragonMark

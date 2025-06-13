@@ -1,4 +1,4 @@
-class PushIntegration {
+export class PushIntegration {
 
 	constructor(interests = [], universe) {
 		this.interests = new Set(interests)
@@ -17,4 +17,4 @@ class PushIntegration {
 	}
 }
 
-module.exports = PushIntegration
+export default PushIntegration

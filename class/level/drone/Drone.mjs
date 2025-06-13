@@ -1,6 +1,7 @@
-const Ego = require("./Ego.cjs")
+import { Ego } from "./Ego.mjs"
+import { EventEmitter } from "events"
 /** Represents a drone entity for replicating character and positions of player and non-player entities.. */
-class Drone extends require("events") {
+export class Drone extends EventEmitter {
 	/**Creates a new drone instance.
 	 * @param {Ego} ego - The drone's appearance.
 	 */
@@ -29,4 +30,4 @@ class Drone extends require("events") {
 	}
 }
 
-module.exports = Drone
+export default Drone

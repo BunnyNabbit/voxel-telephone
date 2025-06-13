@@ -1,12 +1,12 @@
-const { VoxelModelWriter } = require("chunked-vox")
-const fs = require("fs")
+import { VoxelModelWriter } from "chunked-vox"
+import fs from "fs"
 
 /**Export a level as a .vox file.
  * @param {Level} level - The level to export.
  * @param {string} [writePath] - The path to write the .vox file to.
  * @return {Promise<void>} - A promise that resolves when the file is written.
  */
-async function exportLevelAsVox(level, writePath) {
+export default async function exportLevelAsVox(level, writePath) {
 	if (!writePath) writePath = level.changeRecord.path + "preview.vox"
 	return new Promise(resolve => {
 		if (!level.changeRecord) throw new Error("Level is missing change record")
@@ -31,5 +31,3 @@ async function exportLevelAsVox(level, writePath) {
 		})
 	})
 }
-
-module.exports = exportLevelAsVox

@@ -2,8 +2,8 @@ import { exec } from "node:child_process"
 import { Database } from "../class/Database.mjs"
 import fs from "fs"
 import path from "path"
-import exportVox from "../exportVox.cjs"
-import Level from "../class/level/Level.cjs"
+import { exportLevelAsVox } from "../exportVox.mjs"
+import { Level } from "../class/level/Level.mjs"
 import { ChangeRecord } from "../class/level/changeRecord/ChangeRecord.mjs"
 import { templates } from "../class/level/templates.mjs"
 import defaultBlockset from "../6-8-5-rgb.json" with { type: "json" }
@@ -24,7 +24,7 @@ const __dirname = getAbsolutePath(import.meta.url)
 // we only need Copter/size8blocky/Copter_angle0.png. delete the folder after getting it
 
 /** Represents a MagicaVoxel .vox renderer using Spotvox. */
-export default class SpotvoxRenderer {
+export class SpotvoxRenderer {
 
 	constructor(serverConfiguration, db) {
 		this.serverConfiguration = serverConfiguration
@@ -64,7 +64,7 @@ export default class SpotvoxRenderer {
 			exportLevel.blockset = defaultBlockset
 			exportLevel.changeRecord = new ChangeRecord(changeRecordPath, async () => {
 				await exportLevel.changeRecord.restoreBlockChangesToLevel(exportLevel)
-				exportVox(exportLevel, outputPath).then((voxData) => {
+				exportLevelAsVox(exportLevel, outputPath).then((voxData) => {
 					exportLevel.dispose()
 					resolve(voxData)
 				})
@@ -170,7 +170,6 @@ export default class SpotvoxRenderer {
 	}
 }
 
-// const serverConfiguration = require('../config.json')
 import serverConfiguration from '../config.json' with { type: 'json' }
 const renderer = new SpotvoxRenderer(serverConfiguration);
 (async function main() {
@@ -179,3 +178,5 @@ const renderer = new SpotvoxRenderer(serverConfiguration);
 		await new Promise(resolve => setTimeout(resolve, 5000))
 	}
 })()
+
+export default SpotvoxRenderer

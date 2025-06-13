@@ -1,7 +1,7 @@
 // Creates games to populate the server with playable games.
 
-const serverConfiguration = require("../config.json")
-const mongojs = require("mongojs")
+import serverConfiguration from '../config.json' with { type: 'json' } 
+import mongojs from "mongojs"
 const gameCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephone")
 
 function createNewGame(startingSentence, username) {

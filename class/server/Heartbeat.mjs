@@ -1,10 +1,10 @@
-const qs = require("qs")
-const axios = require("axios")
-const crypto = require("crypto")
-const fs = require("fs")
-const { join } = require('node:path')
+import qs from "qs"
+import axios from "axios"
+import crypto from "crypto"
+import fs from "fs"
+import { join } from "path"
 
-class Heartbeat {
+export class Heartbeat {
 
 	constructor(urlBase, universe) {
 		this.universe = universe
@@ -52,4 +52,4 @@ class Heartbeat {
 	}
 }
 
-module.exports = Heartbeat
+export default Heartbeat

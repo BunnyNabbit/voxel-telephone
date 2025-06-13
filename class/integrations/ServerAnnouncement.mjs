@@ -1,6 +1,6 @@
-const PushIntegration = require("./PushIntegration.cjs")
+import { PushIntegration } from "./PushIntegration.mjs"
 
-class ServerAnnouncement extends PushIntegration {
+export class ServerAnnouncement extends PushIntegration {
 
 	constructor(interests, authData, universe) {
 		super(interests, universe)
@@ -13,4 +13,4 @@ class ServerAnnouncement extends PushIntegration {
 	}
 }
 
-module.exports = ServerAnnouncement
+export default ServerAnnouncement

@@ -1,4 +1,4 @@
-class GlobalCommandRegistry {
+export class GlobalCommandRegistry {
 
 	constructor() {
 		this.commands = new Map()
@@ -34,4 +34,5 @@ class GlobalCommandRegistry {
 		return false
 	}
 }
-module.exports = GlobalCommandRegistry
+
+export default GlobalCommandRegistry

@@ -234,12 +234,12 @@ class Replace extends Command {
 	}
 }
 
-module.exports = {
-	commands: [
-		Cuboid,
-		Line,
-		AbnormalTriangle,
-		SphereSlow,
-		Replace,
-	]
-}
+export const levelCommands = [
+	Cuboid,
+	Line,
+	AbnormalTriangle,
+	SphereSlow,
+	Replace,
+]
+
+export default levelCommands
