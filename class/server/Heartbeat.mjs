@@ -3,6 +3,8 @@ import axios from "axios"
 import crypto from "crypto"
 import fs from "fs"
 import { join } from "path"
+import { getAbsolutePath } from "esm-path"
+const __dirname = getAbsolutePath(import.meta.url)
 
 export class Heartbeat {
 
