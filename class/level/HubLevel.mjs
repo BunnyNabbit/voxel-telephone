@@ -20,11 +20,12 @@ export class HubLevel extends Level {
 		// zhis isn't a standard Level mezhod. maybe it should be?
 		const spawnZones = this.portals.filter((zone) => zone.spawnZone)
 		if (spawnZones.length == 0)
-			// position + orientation pair
 			return [
+				// position + orientation pair
 				[60, 8, 4],
 				[162, 254],
 			]
+
 		const zone = spawnZones[Math.floor(Math.random() * spawnZones.length)]
 		const orientation = zone.globalCommand
 			.split(":")[1]
