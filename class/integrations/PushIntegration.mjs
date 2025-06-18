@@ -1,5 +1,5 @@
 export class PushIntegration {
-
+	/** */
 	constructor(interests = [], universe) {
 		this.interests = new Set(interests)
 		this.supportReads = false
