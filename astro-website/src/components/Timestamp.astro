@@ -1,6 +1,6 @@
 ---
-const date = Astro.props.date;
-const includeTime = Astro.props.includeTime ?? false;
+const date = Astro.props.date
+const includeTime = Astro.props.includeTime ?? false
 ---
 
 <style>
@@ -8,14 +8,12 @@ const includeTime = Astro.props.includeTime ?? false;
 		font-size: 0.8em;
 	}
 </style>
-<span class="timestamp">{
+<span class="timestamp"
+	>{
 		date.toLocaleDateString("en-US", {
 			year: "numeric",
 			month: "short",
 			day: "numeric",
 		})
-	}{
-		includeTime &&
-			` ${date.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}`
-	}</span
+	}{includeTime && ` ${date.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}`}</span
 >

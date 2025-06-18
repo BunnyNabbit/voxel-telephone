@@ -1,12 +1,12 @@
 ---
-import ContentPage from "../../layouts/ContentPage.astro";
-import { database } from "../../shared/db.mjs";
-import LicenseIcons from "../../components/LicenseIcons.astro";
-import Timestamp from "../../components/Timestamp.astro";
+import ContentPage from "../../layouts/ContentPage.astro"
+import { database } from "../../shared/db.mjs"
+import LicenseIcons from "../../components/LicenseIcons.astro"
+import Timestamp from "../../components/Timestamp.astro"
 // @ts-ignore
-import { ObjectId } from "mongojs";
-const id = new ObjectId(Astro.params.id);
-const buildTurn = await database.getTurn(id);
+import { ObjectId } from "mongojs"
+const id = new ObjectId(Astro.params.id)
+const buildTurn = await database.getTurn(id)
 if (
 	// make sure the turn is a build turn and is licensed
 	!buildTurn ||
@@ -14,49 +14,30 @@ if (
 	!buildTurn.licenses ||
 	buildTurn.licenses.length === 0
 ) {
-	Astro.response.status = 404;
+	Astro.response.status = 404
 	return new Response("Not Found", {
 		status: 404,
-	});
+	})
 }
-const game = await database.getGame(buildTurn.root);
-const buildIndex = game.findIndex(
-	(turn: { _id: ObjectId }) => `${turn._id}` == `${id}`,
-);
-const descriptionTurn = game[buildIndex - 1];
+const game = await database.getGame(buildTurn.root)
+const buildIndex = game.findIndex((turn: { _id: ObjectId }) => `${turn._id}` == `${id}`)
+const descriptionTurn = game[buildIndex - 1]
 let ogImage = {
 	url: `/image/${id}`,
 	alt: descriptionTurn.prompt,
-};
+}
 ---
 
-<ContentPage
-	title={descriptionTurn.prompt}
-	canon={`/model/${Astro.params.id}`}
-	description={`Download ${descriptionTurn.prompt} by ${buildTurn.creators[0]}`}
-	ogImage={ogImage}
->
-	<img
-		src={`/image/${buildTurn._id}`}
-		alt={descriptionTurn.prompt}
-		height="150"
-	/>
+<ContentPage title={descriptionTurn.prompt} canon={`/model/${Astro.params.id}`} description={`Download ${descriptionTurn.prompt} by ${buildTurn.creators[0]}`} {ogImage}>
+	<img src={`/image/${buildTurn._id}`} alt={descriptionTurn.prompt} height="150" />
 	<p>
-		Created by <a href={`/player/${buildTurn.creators[0]}`}
-			>{buildTurn.creators[0]}</a
-		>
+		Created by <a href={`/player/${buildTurn.creators[0]}`}>{buildTurn.creators[0]}</a>
 		{(<Timestamp date={buildTurn.next.getTimestamp()} />)}.
 	</p>
 	<h2>Downloads</h2>
 	<ul>
 		<li>
-			<a
-				href={`/download/vox/${buildTurn._id}`}
-				class="button"
-				rel="nofollow"
-			>
-				Download .vox</a
-			>
+			<a href={`/download/vox/${buildTurn._id}`} class="button" rel="nofollow"> Download .vox</a>
 		</li>
 	</ul>
 	<h2>Licenses</h2>

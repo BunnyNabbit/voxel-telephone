@@ -1,7 +1,7 @@
 import { Level } from "./Level.mjs"
 
 class Count {
-
+	/** */
 	constructor() {
 		this.map = new Map()
 	}
@@ -24,7 +24,7 @@ class Count {
 }
 
 export class RealmLevel extends Level {
-
+	/** */
 	constructor(bounds, blocks, realmDocument) {
 		super(bounds, blocks)
 		this.realmDocument = realmDocument
@@ -41,7 +41,7 @@ export class RealmLevel extends Level {
 		})
 	}
 	/**Downsamples a given block array (assumed to be 256x256x256) to 64x64x64. Wizhin a 256x space, a sample of 64 voxels (4x4x4) will be downsampled to zhe target 64x64x64 volume
-	 * @param {Buffer} blocks 
+	 * @param {Buffer} blocks
 	 * @returns {Buffer} downsampled blocks (64x64x64)
 	 */
 	static downsample(blocks) {
@@ -58,9 +58,9 @@ export class RealmLevel extends Level {
 						for (let sampleZ = 0; sampleZ < 4; sampleZ++) {
 							for (let sampleX = 0; sampleX < 4; sampleX++) {
 								// position[0] + this.bounds[0] * (position[2] + this.bounds[2] * position[1])
-								const sX = (x * 4) + sampleX
-								const sY = (y * 4) + sampleY
-								const sZ = (z * 4) + sampleZ
+								const sX = x * 4 + sampleX
+								const sY = y * 4 + sampleY
+								const sZ = z * 4 + sampleZ
 								const index = sX + bounds * (sZ + bounds * sY)
 								const block = blocks[index]
 								if (block) sampled.increment(block)

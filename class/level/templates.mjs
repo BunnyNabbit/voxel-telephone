@@ -1,11 +1,11 @@
-import path from 'path'
+import path from "path"
 import { Level } from "./Level.mjs"
 import { ChangeRecord } from "./changeRecord/ChangeRecord.mjs"
 import { getAbsolutePath } from "esm-path"
 const __dirname = getAbsolutePath(import.meta.url)
 
 class BaseTemplate {
-
+	/** */
 	constructor(iconName, defaultBounds = [64, 64, 64]) {
 		if (!iconName) throw new Error("iconName not provided")
 		this.iconName = iconName
@@ -18,7 +18,7 @@ class BaseTemplate {
 }
 
 class EmptyTemplate extends BaseTemplate {
-
+	/** */
 	constructor() {
 		super("empty")
 	}
@@ -31,7 +31,7 @@ class EmptyTemplate extends BaseTemplate {
 const emptyTemplate = new EmptyTemplate()
 
 class VoxelRecordTemplate extends BaseTemplate {
-
+	/** */
 	constructor(iconName) {
 		super(iconName)
 	}
@@ -41,7 +41,7 @@ class VoxelRecordTemplate extends BaseTemplate {
 		const cached = VoxelRecordTemplate.cache.get(cacheKey)
 		if (cached) return cached
 		let tempLevel = new Level(bounds, emptyTemplate.generate(bounds))
-		const promise = new Promise(resolve => {
+		const promise = new Promise((resolve) => {
 			tempLevel.changeRecord = new ChangeRecord(path.join(__dirname, "/templates/", this.iconName), async () => {
 				await tempLevel.changeRecord.restoreBlockChangesToLevel(tempLevel)
 				tempLevel.dispose()
@@ -80,5 +80,5 @@ export const templates = {
 		modeNull: new VoxelRecordTemplate("view-mode-null"),
 		createRealm: new VoxelRecordTemplate("view-icon-create-realm"),
 	},
-	empty: emptyTemplate
+	empty: emptyTemplate,
 }

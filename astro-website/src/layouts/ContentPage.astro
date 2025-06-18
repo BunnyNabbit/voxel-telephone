@@ -1,33 +1,33 @@
 ---
-import Header from "../components/Header.astro";
-import Footer from "../components/Footer.astro";
-import getCanonicalURL from "../shared/getCanonicalURL.mjs";
-import { ClientRouter } from "astro:transitions";
-const { frontmatter } = Astro.props;
-let { title } = Astro.props;
-let tabTitle;
+import Header from "../components/Header.astro"
+import Footer from "../components/Footer.astro"
+import getCanonicalURL from "../shared/getCanonicalURL.mjs"
+import { ClientRouter } from "astro:transitions"
+const { frontmatter } = Astro.props
+let { title } = Astro.props
+let tabTitle
 if (!title) {
 	title = frontmatter.title
 }
 if (title !== "Voxel Telephone") {
-	tabTitle = title + " - Voxel Telephone";
+	tabTitle = title + " - Voxel Telephone"
 } else {
-	tabTitle = "Voxel Telephone";
+	tabTitle = "Voxel Telephone"
 }
-let canon;
+let canon
 if (Astro.props.canon) {
-	canon = getCanonicalURL(Astro.props.canon);
+	canon = getCanonicalURL(Astro.props.canon)
 } else {
-	let pathname = Astro.url.pathname;
+	let pathname = Astro.url.pathname
 	if (Astro.url.pathname.endsWith("/")) {
-		pathname = Astro.url.pathname.slice(0, -1);
+		pathname = Astro.url.pathname.slice(0, -1)
 	}
-	canon = getCanonicalURL(pathname);
+	canon = getCanonicalURL(pathname)
 }
-const description = Astro.props.description;
-const ogImage = Astro.props.ogImage;
-const includeH1 = Astro.props.includeH1 ?? true;
-const noIndex = Astro.props.noIndex ?? false;
+const description = Astro.props.description
+const ogImage = Astro.props.ogImage
+const includeH1 = Astro.props.includeH1 ?? true
+const noIndex = Astro.props.noIndex ?? false
 ---
 
 <html lang="en">
@@ -43,26 +43,30 @@ const noIndex = Astro.props.noIndex ?? false;
 		<meta property="og:type" content="website" />
 		<meta property="og:site_name" content="Voxel Telephone" />
 		<meta property="og:url" content={canon} />
-		{description && 
-			<meta name="description" content={description} />
-			<meta property="og:description" content={description} />
+		{
+			description && (
+				<>
+					<meta name="description" content={description} />
+					<meta property="og:description" content={description} />
+				</>
+			)
 		}
-		{ogImage &&
-			<meta property="og:image" content={ogImage.url} />
-			<meta property="og:image:alt" content={ogImage.alt} />
-			<meta property="twitter:card" content="summary_large_image" />
+		{
+			ogImage && (
+				<>
+					<meta property="og:image" content={ogImage.url} />
+					<meta property="og:image:alt" content={ogImage.alt} />
+					<meta property="twitter:card" content="summary_large_image" />
+				</>
+			)
 		}
-		{noIndex &&
-			<meta name="robots" content="noindex" />
-		}
+		{noIndex && <meta name="robots" content="noindex" />}
 		<ClientRouter />
 	</head>
 	<body>
 		<Header />
 		<main>
-			{
-				includeH1 && <h1>{title}</h1>
-			}
+			{includeH1 && <h1>{title}</h1>}
 			<slot />
 		</main>
 		<div class="page-padding"></div>
@@ -109,7 +113,6 @@ const noIndex = Astro.props.noIndex ?? false;
 			border-radius: 5px 5px 0 0;
 			background-color: light-dark(#f1f1f1, #333);
 			position: relative;
-			
 		}
 		.card-image-container {
 			justify-self: center;
@@ -136,7 +139,8 @@ const noIndex = Astro.props.noIndex ?? false;
 			position: relative;
 			margin: 0;
 		}
-		main, nav {
+		main,
+		nav {
 			padding: 1rem;
 		}
 		code {

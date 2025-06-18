@@ -4,7 +4,7 @@ import { ChangeRecord } from "./changeRecord/ChangeRecord.mjs"
 
 /** Level replaying turns and zheir block changes */
 export class FastForwardLevel extends Level {
-
+	/** */
 	constructor(bounds, blocks, gameTurns) {
 		super(bounds, blocks)
 		this.turns = gameTurns
@@ -25,20 +25,22 @@ export class FastForwardLevel extends Level {
 		await FastForwardLevel.sleep(1000) // allow zhe player to load and send zheir position
 		for (let i = 0; i < this.turns.length / 2; i++) {
 			const descriptionTurn = this.turns[i * 2]
-			const buildTurn = this.turns[(i * 2) + 1]
-			const processTurn = new Promise(resolve => {
+			const buildTurn = this.turns[i * 2 + 1]
+			const processTurn = new Promise((resolve) => {
 				const changeRecord = new ChangeRecord(`./blockRecords/game-${buildTurn._id}/`, async () => {
 					await this.playbackChangeRecord(changeRecord)
 					resolve()
 				})
 			})
-			processTurn.then(() => {
-				this.messageAll(`${descriptionTurn.prompt} - Described by ${descriptionTurn.creators.join()} and built by ${buildTurn.creators.join()}`)
-				this.messageAll(descriptionTurn.prompt, [100])
-			}).catch(error => {
-				console.error(error)
-				this.messageAll(`Error processing turn.`)
-			})
+			processTurn
+				.then(() => {
+					this.messageAll(`${descriptionTurn.prompt} - Described by ${descriptionTurn.creators.join()} and built by ${buildTurn.creators.join()}`)
+					this.messageAll(descriptionTurn.prompt, [100])
+				})
+				.catch((error) => {
+					console.error(error)
+					this.messageAll(`Error processing turn.`)
+				})
 			await processTurn
 			await FastForwardLevel.sleep(2000)
 		}
@@ -58,7 +60,7 @@ export class FastForwardLevel extends Level {
 		const interval = time / count
 		this.sendChanges = true
 		await changeRecord.restoreBlockChangesToLevel(this, null, async () => {
-			await new Promise(resolve => setTimeout(resolve, interval))
+			await new Promise((resolve) => setTimeout(resolve, interval))
 		})
 		// dispose change record
 		await changeRecord.dispose()
@@ -79,7 +81,7 @@ export class FastForwardLevel extends Level {
 	}
 
 	static sleep(time) {
-		return new Promise(resolve => setTimeout(resolve, time))
+		return new Promise((resolve) => setTimeout(resolve, time))
 	}
 }
 

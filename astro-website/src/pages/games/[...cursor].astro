@@ -1,9 +1,9 @@
 ---
-import ContentPage from "../../layouts/ContentPage.astro";
-import Games from "../../components/Games.astro";
-const cursor = Astro.params.cursor;
+import ContentPage from "../../layouts/ContentPage.astro"
+import Games from "../../components/Games.astro"
+const cursor = Astro.params.cursor
 ---
 
 <ContentPage title="Games" description="Games played on Voxel Telephone.">
-	<Games cursor={cursor} pagination={true} games={21} />
+	<Games {cursor} pagination={true} games={21} />
 </ContentPage>

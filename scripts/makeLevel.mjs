@@ -1,11 +1,11 @@
 // Creates games to populate the server with playable games.
 
-import serverConfiguration from '../config.json' with { type: 'json' } 
+import serverConfiguration from "../config.json" with { type: "json" }
 import mongojs from "mongojs"
 const gameCollection = mongojs(serverConfiguration.dbName).collection("voxelTelephone")
 
 function createNewGame(startingSentence, username) {
-	return new Promise(resolve => {
+	return new Promise((resolve) => {
 		const gameId = new mongojs.ObjectID()
 		const gameNextId = new mongojs.ObjectID()
 		const document = {
@@ -17,7 +17,7 @@ function createNewGame(startingSentence, username) {
 			promptType: "description",
 			next: gameNextId,
 			parent: "self",
-			depth: 0
+			depth: 0,
 		}
 		gameCollection.insert(document, (err) => {
 			if (err) return console.error("Error while creating new game", err)

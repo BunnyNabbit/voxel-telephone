@@ -6,7 +6,8 @@ await esbuild.build({
 	bundle: true,
 	platform: "node",
 	packages: "bundle",
-	external: [ // use of import.meta.url
+	external: [
+		// use of import.meta.url
 		"./filter.mjs",
 		"./class/level/templates.mjs",
 		"./class/server/Heartbeat.mjs",

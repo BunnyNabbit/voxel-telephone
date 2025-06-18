@@ -1,6 +1,6 @@
 /** Represents a drone's appearance. */
 export class Ego {
-
+	/** */
 	constructor(ego = {}) {
 		this.name = ego.name || ""
 		this.scale = ego.scale || [1, 1, 1]

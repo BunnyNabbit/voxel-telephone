@@ -8,11 +8,11 @@ import fs from "fs"
  */
 export async function exportLevelAsVox(level, writePath) {
 	if (!writePath) writePath = level.changeRecord.path + "preview.vox"
-	return new Promise(resolve => {
+	return new Promise((resolve) => {
 		if (!level.changeRecord) throw new Error("Level is missing change record")
 		// assuming exactly 255 entries in block set
 		const palette = []
-		level.blockset.forEach(element => {
+		level.blockset.forEach((element) => {
 			palette.push(element)
 		})
 		palette.push([0, 0, 0]) // air

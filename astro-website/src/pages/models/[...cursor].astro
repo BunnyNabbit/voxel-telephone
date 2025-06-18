@@ -1,43 +1,32 @@
 ---
-import ContentPage from "../../layouts/ContentPage.astro";
-import Turn from "../../components/Turn.astro";
-import { database } from "../../shared/db.mjs";
+import ContentPage from "../../layouts/ContentPage.astro"
+import Turn from "../../components/Turn.astro"
+import { database } from "../../shared/db.mjs"
 // @ts-ignore
-import { ObjectId } from "mongojs";
-let cursor, nextCursor;
+import { ObjectId } from "mongojs"
+let cursor, nextCursor
 if (Astro.params.cursor) {
-	cursor = new ObjectId(Astro.params.cursor);
+	cursor = new ObjectId(Astro.params.cursor)
 }
-let licensedGrid = [];
-licensedGrid = await database.getLicensedGrid(cursor);
-licensedGrid = licensedGrid.flat(1);
+let licensedGrid = []
+licensedGrid = await database.getLicensedGrid(cursor)
+licensedGrid = licensedGrid.flat(1)
 if (licensedGrid.length == 65 * 2) {
-	nextCursor = licensedGrid[licensedGrid.length - 3]._id;
-	licensedGrid.pop();
-	licensedGrid.pop();
+	nextCursor = licensedGrid[licensedGrid.length - 3]._id
+	licensedGrid.pop()
+	licensedGrid.pop()
 }
 ---
 
-<ContentPage
-	title="Models"
-	description="Free downloadable 3D voxel models in MagicaVoxel format."
->
+<ContentPage title="Models" description="Free downloadable 3D voxel models in MagicaVoxel format.">
 	<p>Free downloadable 3D voxel models in MagicaVoxel format.</p>
 	<div class="flex-container">
 		{
 			licensedGrid.map((turn: any, index: number) => {
 				if (turn.promptType === "description") {
-					return null;
+					return null
 				}
-				return (
-					<Turn
-						description={licensedGrid[index - 1]}
-						build={turn}
-						rootId={turn.root}
-						anchor={`#${turn.depth}`}
-						asModel={true}
-					/>
-				);
+				return <Turn description={licensedGrid[index - 1]} build={turn} rootId={turn.root} anchor={`#${turn.depth}`} asModel={true} />
 			})
 		}
 	</div>
