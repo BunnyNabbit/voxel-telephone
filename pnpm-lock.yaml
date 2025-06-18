@@ -63,6 +63,9 @@ importers:
       globals:
         specifier: ^15.15.0
         version: 15.15.0
+      prettier-plugin-drone-class:
+        specifier: ^0.0.1
+        version: 0.0.1
 
 packages:
 
@@ -1776,6 +1779,14 @@ packages:
   prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
+
+  prettier-plugin-drone-class@0.0.1:
+    resolution: {integrity: sha512-FwIN+AQUFJiX+wCxZqS0EhPuHDjEHGeiE12Jj90c38sipHza8x4qDEklhD3DrX4TpDD+X7sX8yw1mbVdyQ3THg==}
+
+  prettier@3.5.3:
+    resolution: {integrity: sha512-QQtaxnoDJeAkDvDKWCLiwIXkTgRhwYDEQCghU9Z6q03iyek/rxRh/2lC3HB7P8sWT2xC/y5JDctPLBIGzHKbhw==}
+    engines: {node: '>=14'}
+    hasBin: true
 
   process-nextick-args@2.0.1:
     resolution: {integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==}
@@ -4166,6 +4177,17 @@ snapshots:
       tunnel-agent: 0.6.0
 
   prelude-ls@1.2.1: {}
+
+  prettier-plugin-drone-class@0.0.1:
+    dependencies:
+      '@babel/generator': 7.27.5
+      '@babel/parser': 7.27.5
+      '@babel/traverse': 7.27.4
+      prettier: 3.5.3
+    transitivePeerDependencies:
+      - supports-color
+
+  prettier@3.5.3: {}
 
   process-nextick-args@2.0.1: {}
 
