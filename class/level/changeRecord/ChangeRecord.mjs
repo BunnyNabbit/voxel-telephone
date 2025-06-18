@@ -5,7 +5,7 @@ import zlib from "zlib"
 const deflate = promisify(zlib.deflate)
 const inflate = promisify(zlib.inflate)
 import trash from "trash"
-import { join } from 'path'
+import { join } from "path"
 import sqlite3 from "sqlite3"
 const { Database, OPEN_READWRITE, OPEN_CREATE } = sqlite3.verbose()
 
@@ -15,7 +15,7 @@ export class ChangeRecord {
 	 * @param {string} path - The path to the change record file.
 	 * @param {function} loadedCallback - The callback function to call when file handles are opened.
 	 */
-	constructor(path, loadedCallback = () => { }) {
+	constructor(path, loadedCallback = () => {}) {
 		this.currentBuffer = new SmartBuffer()
 		this.path = path
 		this.draining = false
@@ -48,16 +48,18 @@ export class ChangeRecord {
 		this.actionCount += 1
 		this.currentActionCount += 1
 		this.dirty = true
-		if (isCommand) { // contains command data. will contain positions and a string that is the full command. this action is variable
+		if (isCommand) {
+			// contains command data. will contain positions and a string that is the full command. this action is variable
 			this.currentBuffer.writeUInt8(actionBytes.length)
 			this.currentBuffer.writeStringNT(commandString)
-			actionBytes.forEach(byte => {
+			actionBytes.forEach((byte) => {
 				this.currentBuffer.writeUInt8(byte)
 			})
-		} else { // single block change
+		} else {
+			// single block change
 			this.currentBuffer.writeUInt8(0) // action code
 			if (actionBytes.length !== 4) throw "For a single block change, the actionBytes array must have four numbers in the 0-255 range."
-			actionBytes.forEach(byte => {
+			actionBytes.forEach((byte) => {
 				this.currentBuffer.writeUInt8(byte)
 			})
 		}
@@ -125,37 +127,42 @@ export class ChangeRecord {
 			level.blocks = inflatedVoxelData
 		}
 		let restoreWatch = new Stopwatch(true)
-		const count = await this._processVhsFile(this.vhsFh, async (actions, commandName, actionBytes, changes, currentFileReadOffset, bufferActionCount) => {
-			if (staller) await staller()
-			if (maxActions && this.actionCount == maxActions) {
-				level.loading = false
-				return false // Stop processing
-			}
-			if (!seeking) {
-				this.actionCount += 1
-				if (actions == 0) {
-					level.rawSetBlock([changes.readUInt8(), changes.readUInt8(), changes.readUInt8()], changes.readUInt8())
+		const count = await this._processVhsFile(
+			this.vhsFh,
+			async (actions, commandName, actionBytes, changes, currentFileReadOffset, bufferActionCount) => {
+				if (staller) await staller()
+				if (maxActions && this.actionCount == maxActions) {
+					level.loading = false
+					return false // Stop processing
+				}
+				if (!seeking) {
+					this.actionCount += 1
+					if (actions == 0) {
+						level.rawSetBlock([changes.readUInt8(), changes.readUInt8(), changes.readUInt8()], changes.readUInt8())
+					} else {
+						level.interpretCommand(commandName)
+						level.currentCommandActionBytes = actionBytes
+						level.commitAction()
+					}
 				} else {
-					level.interpretCommand(commandName)
-					level.currentCommandActionBytes = actionBytes
-					level.commitAction()
+					if (actions == 0) changes.readBuffer(4)
+					if (bufferActionCount >= keyframeBufferActionCount) {
+						seeking = false // Stop seeking once we reach the keyframe buffer action count
+						restoreWatch.start() // restart stopwatch for keyframe creation
+					}
 				}
-			} else {
-				if (actions == 0) changes.readBuffer(4)
-				if (bufferActionCount >= keyframeBufferActionCount) {
-					seeking = false // Stop seeking once we reach the keyframe buffer action count
-					restoreWatch.start() // restart stopwatch for keyframe creation
+				// Create a keyframe if enough time has passed since the last one, and we're not stalling or seeking
+				if (!staller && !seeking && restoreWatch.elapsed > ChangeRecord.lagKeyframeTime) {
+					restoreWatch.stop()
+					const keyframeId = await this.keyframeRecord.addKeyframe(currentFileReadOffset, this.actionCount, bufferActionCount, level?.template?.iconName ?? "empty", level.blocks, level.bounds)
+					console.log(`Created keyframe ${keyframeId} at offset ${currentFileReadOffset} for ${level.template.iconName} after ${restoreWatch.elapsed}ms`)
+					restoreWatch.start()
 				}
-			}
-			// Create a keyframe if enough time has passed since the last one, and we're not stalling or seeking
-			if (!staller && !seeking && restoreWatch.elapsed > ChangeRecord.lagKeyframeTime) {
-				restoreWatch.stop()
-				const keyframeId = await this.keyframeRecord.addKeyframe(currentFileReadOffset, this.actionCount, bufferActionCount, level?.template?.iconName ?? "empty", level.blocks, level.bounds)
-				console.log(`Created keyframe ${keyframeId} at offset ${currentFileReadOffset} for ${level.template.iconName} after ${restoreWatch.elapsed}ms`)
-				restoreWatch.start()
-			}
-			return true // Continue processing
-		}, startingFileOffset, startingActionCount)
+				return true // Continue processing
+			},
+			startingFileOffset,
+			startingActionCount
+		)
 		level.loading = false
 		console.log("loaded", count)
 		return count
@@ -196,20 +203,25 @@ export class ChangeRecord {
 		if (latestKeyframe) {
 			startingFileOffset = latestKeyframe.offset
 			// i suspect it might require actual action start of chunk. derive zhis value from bozh keyframe's totalActionCount and bufferActionCount values
-			startingActionCount = latestKeyframe.totalActionCount - latestKeyframe.bufferActionCount// + 1
+			startingActionCount = latestKeyframe.totalActionCount - latestKeyframe.bufferActionCount // + 1
 		}
-		const count = await this._processVhsFile(originalHandle, async (actions, commandName, actionBytes, changes) => {
-			if (this.actionCount == toActionCount) {
-				return false // Stop processing
-			}
-			// this.actionCount += 1  Increment in _processVhsFile now
-			if (actions == 0) {
-				this.addBlockChange([changes.readUInt8(), changes.readUInt8(), changes.readUInt8()], changes.readUInt8())
-			} else {
-				this.appendAction(true, actionBytes, commandName)
-			}
-			return true // Continue processing
-		}, startingFileOffset, startingActionCount)
+		const count = await this._processVhsFile(
+			originalHandle,
+			async (actions, commandName, actionBytes, changes) => {
+				if (this.actionCount == toActionCount) {
+					return false // Stop processing
+				}
+				// this.actionCount += 1  Increment in _processVhsFile now
+				if (actions == 0) {
+					this.addBlockChange([changes.readUInt8(), changes.readUInt8(), changes.readUInt8()], changes.readUInt8())
+				} else {
+					this.appendAction(true, actionBytes, commandName)
+				}
+				return true // Continue processing
+			},
+			startingFileOffset,
+			startingActionCount
+		)
 
 		// flush changes to temp handle
 		await this.flushChanges()

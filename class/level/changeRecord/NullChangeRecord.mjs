@@ -1,6 +1,6 @@
 export class NullChangeRecord {
-
-	constructor(path, loadedCallback = () => { }) {
+	/** */
+	constructor(path, loadedCallback = () => {}) {
 		this.currentBuffer = null
 		this.path = path
 		this.draining = false
@@ -18,8 +18,7 @@ export class NullChangeRecord {
 		this.appendAction(false, position.concat(block))
 	}
 
-	appendAction() {
-	}
+	appendAction() {}
 
 	async restoreBlockChangesToLevel() {
 		return 0
@@ -33,8 +32,7 @@ export class NullChangeRecord {
 		return 0
 	}
 
-	async dispose() {
-	}
+	async dispose() {}
 }
 
 export default NullChangeRecord
