@@ -1,6 +1,7 @@
 ---
 import { getCollection, render, getEntry } from "astro:content";
 import ContentPage from "../../../layouts/ContentPage.astro";
+import WikiLinks from "../../../components/WikiLinks.astro";
 export const prerender = true;
 export async function getStaticPaths() {
 	const posts = await getCollection("help");
@@ -45,10 +46,6 @@ if (post.data.image) {
 	ogImage={image}
 	noIndex={post.data.noIndex}
 >
+	<WikiLinks category={categoryPost} post={post} />
 	<Content />
-	<p>
-		Category: <a href={`/help/${categoryPost.id}`}
-			>{categoryPost.data.title}</a
-		>
-	</p>
 </ContentPage>
