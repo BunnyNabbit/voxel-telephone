@@ -1,5 +1,5 @@
 export class UserRecord {
-
+	/** */
 	constructor(player, data) {
 		this.player = player
 		this.username = player.authInfo.username
@@ -24,10 +24,10 @@ export class UserRecord {
 			},
 			configuration: {
 				cefMusic: true,
-				cefSounds: true
+				cefSounds: true,
 			},
 			lastJoin: new Date(),
-			firstJoin: new Date()
+			firstJoin: new Date(),
 		}
 	}
 
@@ -36,7 +36,7 @@ export class UserRecord {
 			// adds configuration
 			data.configuration = {
 				cefMusic: true,
-				cefSounds: true
+				cefSounds: true,
 			}
 			data.dataVersion = 2
 		}

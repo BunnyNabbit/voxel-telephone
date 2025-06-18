@@ -1,5 +1,5 @@
 export class GlobalCommandRegistry {
-
+	/** */
 	constructor() {
 		this.commands = new Map()
 	}
@@ -7,7 +7,7 @@ export class GlobalCommandRegistry {
 	registerCommand(commandNames, action, validate) {
 		if (!Array.isArray(commandNames)) commandNames = [commandNames]
 		const commandObject = { action, validate, commandNames }
-		commandNames.forEach(commandName => {
+		commandNames.forEach((commandName) => {
 			this.commands.set(commandName, commandObject)
 		})
 	}
@@ -18,7 +18,7 @@ export class GlobalCommandRegistry {
 		segments.shift()
 		const remainingString = segments.join(" ")
 		const command = this.commands.get(commandName)
-		if (command && (!command.validate || await command.validate(player, remainingString))) {
+		if (command && (!command.validate || (await command.validate(player, remainingString)))) {
 			try {
 				await command.action(player, remainingString)
 			} catch (err) {
@@ -27,7 +27,8 @@ export class GlobalCommandRegistry {
 				player.emit("playSound", player.universe.sounds.invalid)
 			}
 			return true
-		} else if (command) { // didn't pass validation, but a command was found.
+		} else if (command) {
+			// didn't pass validation, but a command was found.
 			player.emit("playSound", player.universe.sounds.invalid)
 			return true
 		}

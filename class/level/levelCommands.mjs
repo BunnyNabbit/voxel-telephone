@@ -1,5 +1,4 @@
 class Command {
-
 	constructor(layout, level, enums = {}) {
 		this.level = level
 		this.layout = layout
@@ -32,11 +31,8 @@ class Command {
 			if (type.includes("enum")) {
 				data[name] = this.enums[name][actionBytes[index + indexOffset]]
 			} else if (type.includes("position")) {
-				data[name] = [
-					actionBytes[index + indexOffset],
-					actionBytes[index + indexOffset + 1],
-					actionBytes[index + indexOffset + 2]
-				]
+				data[name] = [actionBytes[index + indexOffset], actionBytes[index + indexOffset + 1], actionBytes[index + indexOffset + 2]]
+
 				indexOffset += 2
 			} else {
 				data[name] = actionBytes[index + indexOffset]
@@ -48,7 +44,7 @@ class Command {
 	action() {
 		const returnedObject = {
 			requiresRefreshing: this.rawSet,
-			blocksChanged: this.blocksChanged
+			blocksChanged: this.blocksChanged,
 		}
 		this.blocksChanged = 0
 		this.rawSet = this.level.loading
@@ -68,14 +64,14 @@ class Cuboid extends Command {
 
 	constructor(level) {
 		super(["block:block", "&enum:mode", "position:position1", "position:position2"], level, {
-			mode: ["solid", "hollow", "walls", "holes"]
+			mode: ["solid", "hollow", "walls", "holes"],
 		})
 	}
 
 	action(data) {
 		data = this.parseBytes(data)
-		const min = [0, 1, 2].map(index => Math.min(data.position1[index], data.position2[index]))
-		const max = [0, 1, 2].map(index => Math.max(data.position1[index], data.position2[index]))
+		const min = [0, 1, 2].map((index) => Math.min(data.position1[index], data.position2[index]))
+		const max = [0, 1, 2].map((index) => Math.max(data.position1[index], data.position2[index]))
 		const block = data.block
 		const mode = data.mode
 		for (let x = min[0]; x <= max[0]; x++) {
@@ -116,7 +112,7 @@ class Line extends Command {
 		data = this.parseBytes(data)
 		// Get the block ID from the parsed data.
 		const block = data.block
-		Line.process(data.start, data.end).forEach(position => {
+		Line.process(data.start, data.end).forEach((position) => {
 			this.setBlock(position, block)
 		})
 		return super.action()
@@ -132,11 +128,11 @@ class Line extends Command {
 		let steps = Math.max(Math.abs(dx), Math.abs(dy), Math.abs(dz))
 		// Iterate over the number of steps, calculating the position of each block in the line.
 		for (let i = 0; i <= steps; i++) {
-			const x = start[0] + dx * i / steps
-			const y = start[1] + dy * i / steps
-			const z = start[2] + dz * i / steps
+			const x = start[0] + (dx * i) / steps
+			const y = start[1] + (dy * i) / steps
+			const z = start[2] + (dz * i) / steps
 			// Set the block at the calculated position.
-			output.push([x, y, z].map(value => Math.floor(value)))
+			output.push([x, y, z].map((value) => Math.floor(value)))
 		}
 		return output
 	}
@@ -158,21 +154,19 @@ class AbnormalTriangle extends Command {
 		function lineProcess(start, end) {
 			return {
 				positions: Line.process(start, end),
-				start, end
+				start,
+				end,
 			}
 		}
-		const lines = [
-			lineProcess(data.position1, data.position2),
-			lineProcess(data.position2, data.position3),
-			lineProcess(data.position3, data.position1)
-		]
+		const lines = [lineProcess(data.position1, data.position2), lineProcess(data.position2, data.position3), lineProcess(data.position3, data.position1)]
+
 		// Find longest line to fill the triangle from
 		const longestLine = lines.slice().sort((a, b) => b.positions.length - a.positions.length)[0]
 		// Find end point, which is a point not used by the longest line
-		const triangleEndPoint = positions.find(position => !(longestLine.start == position || longestLine.end == position))
+		const triangleEndPoint = positions.find((position) => !(longestLine.start == position || longestLine.end == position))
 		// Draw from longest line to end point
-		longestLine.positions.forEach(position => {
-			Line.process(position, triangleEndPoint).forEach(position => {
+		longestLine.positions.forEach((position) => {
+			Line.process(position, triangleEndPoint).forEach((position) => {
 				this.setBlock(position, block)
 			})
 		})
@@ -187,7 +181,7 @@ class SphereSlow extends Command {
 
 	constructor(level) {
 		super(["block:block", "&enum:mode", "position:center", "position:offset"], level, {
-			mode: ["solid"]
+			mode: ["solid"],
 		})
 	}
 
@@ -219,8 +213,8 @@ class Replace extends Command {
 
 	action(data) {
 		data = this.parseBytes(data)
-		const min = [0, 1, 2].map(index => Math.min(data.position1[index], data.position2[index]))
-		const max = [0, 1, 2].map(index => Math.max(data.position1[index], data.position2[index]))
+		const min = [0, 1, 2].map((index) => Math.min(data.position1[index], data.position2[index]))
+		const max = [0, 1, 2].map((index) => Math.max(data.position1[index], data.position2[index]))
 		const replacementBlock = data.replacementBlock
 		for (let x = min[0]; x <= max[0]; x++) {
 			for (let y = min[1]; y <= max[1]; y++) {
@@ -234,12 +228,6 @@ class Replace extends Command {
 	}
 }
 
-export const levelCommands = [
-	Cuboid,
-	Line,
-	AbnormalTriangle,
-	SphereSlow,
-	Replace,
-]
+export const levelCommands = [Cuboid, Line, AbnormalTriangle, SphereSlow, Replace]
 
 export default levelCommands

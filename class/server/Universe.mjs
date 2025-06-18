@@ -21,15 +21,15 @@ import { RealmLevel } from "../level/RealmLevel.mjs"
 import { invertPromptType, randomIntFromInterval } from "../../utils.mjs"
 
 const builderDefaults = {
-	template: templates.builder
+	template: templates.builder,
 }
 const describeDefaults = {
 	template: templates.empty,
-	allowList: ["not a name"]
+	allowList: ["not a name"],
 }
 
 export class Universe extends EventEmitter {
-
+	/** */
 	constructor(serverConfiguration) {
 		super()
 		console.log({ serverConfiguration })
@@ -40,24 +40,24 @@ export class Universe extends EventEmitter {
 		this.server.players = []
 		this.server.extensions.push({
 			name: "MessageTypes",
-			version: 1
+			version: 1,
 		})
 		this.db = new Database(this.serverConfiguration)
 		this.sounds = new CefSounds().sounds
 
 		if (this.serverConfiguration.postToMainServer) this.heartbeat = new Heartbeat(`https://www.classicube.net/server/heartbeat/`, this)
 		if (this.serverConfiguration.sounds.enabled) {
-			import(`./SoundServer.mjs`).then(SoundServer => {
+			import(`./SoundServer.mjs`).then((SoundServer) => {
 				SoundServer = SoundServer.default
 				this.soundServer = new SoundServer(this)
 			})
 		}
 		this.integrations = []
 		if (this.serverConfiguration.integrations) {
-			this.serverConfiguration.integrations.forEach(async integrationData => {
+			this.serverConfiguration.integrations.forEach(async (integrationData) => {
 				try {
 					const integrationClass = (await import(`../integrations/${integrationData.class}.mjs`)).default
-					const interests = integrationData.interests.map(interest => PushIntegration.interestType[interest])
+					const interests = integrationData.interests.map((interest) => PushIntegration.interestType[interest])
 					const integration = new integrationClass(interests, integrationData.authData, this)
 					this.integrations.push(integration)
 				} catch (error) {
@@ -74,7 +74,7 @@ export class Universe extends EventEmitter {
 			}
 			const category = this.serverConfiguration.announcements.messages[weightedIndex[randomIntFromInterval(0, weightedIndex.length - 1)]]
 			const message = category[randomIntFromInterval(0, category.length - 1)]
-			this.server.players.forEach(player => {
+			this.server.players.forEach((player) => {
 				player.message(message, 0, "> ")
 			})
 		}, this.serverConfiguration.announcements.interval)
@@ -99,14 +99,14 @@ export class Universe extends EventEmitter {
 
 	addPlayer(player) {
 		for (let i = 0; i < 127; i++) {
-			if (!this.server.players.some(player => player.netId == i)) {
+			if (!this.server.players.some((player) => player.netId == i)) {
 				player.netId = i
-				this.server.players.forEach(otherPlayer => {
+				this.server.players.forEach((otherPlayer) => {
 					player.client.addPlayerName(otherPlayer.netId, otherPlayer.username, `&7${otherPlayer.username}`, "Voxel Telephone", 1)
 				})
 				this.server.players.push(player)
-				player.client.addPlayerName(0xff, player.username, `&7${player.username}`, "Voxel Telephone", 1)
-				this.server.players.forEach(anyPlayer => {
+				player.client.addPlayerName(255, player.username, `&7${player.username}`, "Voxel Telephone", 1)
+				this.server.players.forEach((anyPlayer) => {
 					if (anyPlayer != player) anyPlayer.client.addPlayerName(i, player.username, `&7${player.username}`, "Voxel Telephone", 1)
 				})
 				this.emit("playerAdded", player)
@@ -119,7 +119,7 @@ export class Universe extends EventEmitter {
 	removePlayer(player) {
 		const clientIndex = this.server.players.indexOf(player)
 		if (clientIndex !== -1) this.server.players.splice(clientIndex, 1)
-		this.server.players.forEach(ozherPlayer => {
+		this.server.players.forEach((ozherPlayer) => {
 			ozherPlayer.client.removePlayerName(player.netId)
 		})
 		this.emit("playerRemoved", player)
@@ -129,20 +129,21 @@ export class Universe extends EventEmitter {
 		const hatchday = this.getHatchday()
 		let hubName
 		if (player) {
-			hubName = forcedHubName || (await player.userRecord.get()).defaultHub || ((hatchday && hatchday.hubName) || this.serverConfiguration.hubName)
-		} else { // being used as a preloader
+			hubName = forcedHubName || (await player.userRecord.get()).defaultHub || (hatchday && hatchday.hubName) || this.serverConfiguration.hubName
+		} else {
+			// being used as a preloader
 			hubName = forcedHubName || this.serverConfiguration.hubName
 		}
 		const promise = this.loadLevel(hubName, {
 			template: templates.empty,
 			allowList: this.serverConfiguration.hubEditors,
 			levelClass: HubLevel,
-			arguments: [hubName, this.db]
+			arguments: [hubName, this.db],
 		})
 		if (player) {
 			player.message("Hub", 1)
 			player.message(" ", [2, 3])
-			promise.then(level => {
+			promise.then((level) => {
 				const spawn = level.getSpawnPosition()
 				level.addPlayer(player, spawn[0], spawn[1])
 				player.emit("playSound", (hatchday && this.sounds[hatchday.hubTrack]) || this.sounds.hubTrack)
@@ -167,7 +168,7 @@ export class Universe extends EventEmitter {
 		const templateBlocks = Buffer.from(await template.generate(bounds))
 		const cached = this.levels.get(spaceName)
 		if (cached) return cached
-		const promise = new Promise(resolve => {
+		const promise = new Promise((resolve) => {
 			const levelClass = defaults.levelClass ?? Level
 			const level = new levelClass(bounds, templateBlocks, ...(defaults.arguments ?? []))
 			level.template = template
@@ -177,7 +178,7 @@ export class Universe extends EventEmitter {
 				sidesId: 7,
 				edgeId: 250,
 				edgeHeight: 0,
-				cloudsHeight: 256
+				cloudsHeight: 256,
 			}
 			level.texturePackUrl = defaults.texturePackUrl ?? this.serverConfiguration.texturePackUrl
 			level.allowList = defaults.allowList ?? []
@@ -210,12 +211,12 @@ export class Universe extends EventEmitter {
 			arguments: [viewData, cursor],
 			bounds: [576, 64, 512],
 			allowList: ["not a name"],
-			template: templates.empty
+			template: templates.empty,
 		})
 		player.message("View", 1)
 		player.message("Go back to hub with /main", 2)
 		player.message("Noclip past level borders to view next page", 3)
-		promise.then(async level => {
+		promise.then(async (level) => {
 			await level.reloadView(templates.empty)
 			level.addPlayer(player, [60, 8, 4], [162, 254])
 			player.teleporting = false
@@ -231,12 +232,12 @@ export class Universe extends EventEmitter {
 			useNullChangeRecord: true,
 			levelClass: FastForwardLevel,
 			allowList: ["not a name"],
-			arguments: [game]
+			arguments: [game],
 		})
 		player.message("Playback", 1)
 		player.message("Go back to hub with /main", 2)
 		player.message(" ", 3)
-		promise.then(level => {
+		promise.then((level) => {
 			level.addPlayer(player, [40, 10, 60])
 			player.teleporting = false
 			player.emit("playSound", this.sounds.playbackTrack)
@@ -260,9 +261,9 @@ export class Universe extends EventEmitter {
 			arguments: [realmDocument],
 			bounds: [256, 256, 256],
 			template: templates.empty,
-			allowList: [realmDocument.ownedBy]
+			allowList: [realmDocument.ownedBy],
 		})
-		promise.then(level => {
+		promise.then((level) => {
 			level.addPlayer(player, [40, 10, 31])
 			player.teleporting = false
 			player.emit("playSound", this.sounds.gameTrack)
@@ -292,10 +293,13 @@ export class Universe extends EventEmitter {
 				this.loadLevel(`game-${game.next}`, builderDefaults).then((level) => {
 					if (!level.eventsAttached) {
 						level.eventsAttached = true
-						const floorDrone = new Drone(new Ego({ // represents zhe level's floor. drone is set below zhe level's transparent floor.
-							scale: [128, 0.8, 128],
-							skin: this.serverConfiguration.floorTextureUrl
-						}))
+						const floorDrone = new Drone(
+							new Ego({
+								// represents zhe level's floor. drone is set below zhe level's transparent floor.
+								scale: [128, 0.8, 128],
+								skin: this.serverConfiguration.floorTextureUrl,
+							})
+						)
 						level.addDrone(floorDrone)
 						floorDrone.setPosition({ x: 32, y: 0, z: 32 }, { yaw: 0, pitch: 0 })
 						level.on("playerRemoved", async (client) => {
@@ -336,12 +340,13 @@ export class Universe extends EventEmitter {
 				player.message("==== Describe what this build is ====")
 				player.message("Describe the build - Enter your description in chat", 100)
 				player.message("Enter your description in chat", 1)
-				player.message("* Do not comment on the quality. i.e: \"poorly built cat\". Describe as you see it.",)
-				player.message(`* Describe as you interpret the build. Do not intentionally derail games!`,)
+				player.message('* Do not comment on the quality. i.e: "poorly built cat". Describe as you see it.')
+				player.message(`* Describe as you interpret the build. Do not intentionally derail games!`)
 				player.message("Enter your description in chat")
 				player.message(`To skip, use /skip`)
 				player.message("Use /report if the build is inappropriate")
-				this.loadLevel(`game-${game._id}`, describeDefaults).then((level) => { // TODO: position
+				this.loadLevel(`game-${game._id}`, describeDefaults).then((level) => {
+					// TODO: position
 					level.on("playerRemoved", async () => {
 						level.dispose()
 						this.levels.delete(level.name)
@@ -352,7 +357,6 @@ export class Universe extends EventEmitter {
 					player.emit("playSound", this.sounds.gameTrack)
 				})
 			}
-
 		} else {
 			await this.gotoHub(player)
 			if (this.canCreateCooldown.has(player.authInfo.username) == false) {
@@ -373,10 +377,12 @@ export class Universe extends EventEmitter {
 	}
 
 	pushMessage(message, interest) {
-		this.integrations.filter(integration => integration.interests.has(interest)).forEach(integration => {
-			integration.postMessage(message).catch(err => {
-				console.warn("Failed to post message", err)
+		this.integrations
+			.filter((integration) => integration.interests.has(interest))
+			.forEach((integration) => {
+				integration.postMessage(message).catch((err) => {
+					console.warn("Failed to post message", err)
+				})
 			})
-		})
 	}
 }

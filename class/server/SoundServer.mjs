@@ -8,7 +8,7 @@ import { getAbsolutePath } from "esm-path"
 const __dirname = getAbsolutePath(import.meta.url)
 
 class SoundEvent {
-
+	/** */
 	constructor(soundData, cursor) {
 		this.data = soundData
 		this.cursor = cursor
@@ -16,7 +16,7 @@ class SoundEvent {
 }
 
 class SoundTransmitter extends EventEmitter {
-
+	/** */
 	constructor(player) {
 		super()
 		this.currentTrack = null
@@ -37,14 +37,14 @@ class SoundTransmitter extends EventEmitter {
 		})
 		this.configuration = {
 			cefMusic: false,
-			cefSounds: false
+			cefSounds: false,
 		}
 		player.on("configuration", (configuration) => {
 			this.configuration = configuration
 			if (!configuration.cefMusic) {
 				this.enqueueEvent({
 					loop: true,
-					stop: true
+					stop: true,
 				})
 			} else {
 				// resend current track
@@ -62,7 +62,7 @@ class SoundTransmitter extends EventEmitter {
 		const event = new SoundEvent(sound, this.eventCursor)
 		this.eventCursor++
 		if (this.canPlay(sound)) {
-			this.sockets.forEach(socket => {
+			this.sockets.forEach((socket) => {
 				socket.emit("playSound", event)
 			})
 		}
@@ -92,7 +92,7 @@ class SoundTransmitter extends EventEmitter {
 
 	attach(socket, cursor) {
 		this.sockets.add(socket)
-		this.eventQueue.forEach(event => {
+		this.eventQueue.forEach((event) => {
 			console.log(event.cursor, cursor, event.cursor > cursor)
 			if (this.canPlay(event.data) && (event.cursor > cursor || event.data.loop)) {
 				socket.emit("playSound", event)
@@ -106,7 +106,7 @@ class SoundTransmitter extends EventEmitter {
 }
 
 export class SoundServer extends EventEmitter {
-
+	/** */
 	constructor(universe) {
 		super()
 		this.keySoundTransmitters = new Map()
@@ -128,9 +128,9 @@ export class SoundServer extends EventEmitter {
 		const app = express()
 		const server = createServer(app)
 		const io = new Server(server)
-		app.use('/', express.static(join(__dirname, '../../static')))
+		app.use("/", express.static(join(__dirname, "../../static")))
 
-		io.on('connection', (socket) => {
+		io.on("connection", (socket) => {
 			if (socket.handshake.auth.key) {
 				const soundTransmitter = this.keySoundTransmitters.get(socket.handshake.auth.key)
 				if (!soundTransmitter || typeof socket.handshake.auth.cursor !== "number") return socket.disconnect(true)

@@ -7,11 +7,11 @@ let filterWords = []
 let blockedWords = new RegExp(filterWords.join("|"), "i")
 
 fs.readFile(join(__dirname, "filterWords.json"), "utf-8")
-	.then(data => {
+	.then((data) => {
 		filterWords = JSON.parse(data)
 		blockedWords = new RegExp(filterWords.join("|"), "i")
 	})
-	.catch(err => {
+	.catch((err) => {
 		filterWords = []
 		console.warn("filterWords.json appears to be missing. Loading without any bad words.", err)
 	})

@@ -2,7 +2,7 @@ import { ViewLevel } from "./ViewLevel.mjs"
 import { templates } from "./templates.mjs"
 
 export class RealmManagerLevel extends ViewLevel {
-
+	/** */
 	constructor(bounds, blocks, viewData = {}, cursor) {
 		super(bounds, blocks, viewData, cursor)
 		this.on("click", async (player, click) => {
@@ -50,8 +50,9 @@ export class RealmManagerLevel extends ViewLevel {
 				if (descriptionTurn && !buildTurn) {
 					// realm creation button
 					await this.addIcon(templates.view.createRealm, iconPosition, gameIndex)
-				} else { // it's a realm
-					this.addIcon((buildTurn?.preview?.buffer) ?? Buffer.alloc(64 * 64 * 64), iconPosition, gameIndex)
+				} else {
+					// it's a realm
+					this.addIcon(buildTurn?.preview?.buffer ?? Buffer.alloc(64 * 64 * 64), iconPosition, gameIndex)
 					delete buildTurn.preview // remove large buffer from memory
 				}
 				iconPosition++
@@ -66,7 +67,8 @@ export class RealmManagerLevel extends ViewLevel {
 			player.message(player.selectedTurns.description.prompt, 13)
 			if (player.selectedTurns.build) {
 				attribution += `By: ${player.selectedTurns.build.ownedBy}`
-			} else { // it's a realm create button.
+			} else {
+				// it's a realm create button.
 				attribution += "Double click icon to begin."
 			}
 			player.message(attribution, 12)

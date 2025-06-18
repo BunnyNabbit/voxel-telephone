@@ -1,10 +1,10 @@
 ---
-import { getCollection, render, getEntry } from "astro:content";
-import ContentPage from "../../../layouts/ContentPage.astro";
-import WikiLinks from "../../../components/WikiLinks.astro";
-export const prerender = true;
+import { getCollection, render, getEntry } from "astro:content"
+import ContentPage from "../../../layouts/ContentPage.astro"
+import WikiLinks from "../../../components/WikiLinks.astro"
+export const prerender = true
 export async function getStaticPaths() {
-	const posts = await getCollection("help");
+	const posts = await getCollection("help")
 	return posts.map((post) => {
 		return {
 			params: {
@@ -13,39 +13,33 @@ export async function getStaticPaths() {
 				category: post.id.split("/")[0] || "none",
 			},
 			props: { post },
-		};
-	});
+		}
+	})
 }
-const { category } = Astro.params;
-const { id } = Astro.params;
+const { category } = Astro.params
+const { id } = Astro.params
 
-let slug = `${category}/${id}`;
+let slug = `${category}/${id}`
 
-const post = await getEntry("help", slug);
-const categoryPost = await getEntry("help", category);
+const post = await getEntry("help", slug)
+const categoryPost = await getEntry("help", category)
 if (!post || !categoryPost) {
 	return new Response(null, {
 		status: 404,
 		statusText: "Not found",
-	});
+	})
 }
-const { Content } = await render(post);
-let image;
+const { Content } = await render(post)
+let image
 if (post.data.image) {
 	image = {
 		url: post.data.image.src,
 		alt: post.data.imageAlt,
-	};
+	}
 }
 ---
 
-<ContentPage
-	title={post.data.title}
-	includeH1={false}
-	description={post.data.summary}
-	ogImage={image}
-	noIndex={post.data.noIndex}
->
-	<WikiLinks category={categoryPost} post={post} />
+<ContentPage title={post.data.title} includeH1={false} description={post.data.summary} ogImage={image} noIndex={post.data.noIndex}>
+	<WikiLinks category={categoryPost} {post} />
 	<Content />
 </ContentPage>

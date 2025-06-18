@@ -8,11 +8,11 @@ function clamp(number, min, max) {
 
 const emptyTurns = {
 	description: null,
-	build: null
+	build: null,
 }
 
 export class ViewLevel extends Level {
-
+	/** */
 	constructor(bounds, blocks, viewData = {}, cursor) {
 		super(bounds, blocks)
 		this.cursor = cursor
@@ -63,12 +63,12 @@ export class ViewLevel extends Level {
 		if (game) {
 			return {
 				description: this.games[x][y],
-				build: this.games[x][y + 1]
+				build: this.games[x][y + 1],
 			}
 		} else {
 			return {
 				description: null,
-				build: null
+				build: null,
 			}
 		}
 	}
@@ -113,7 +113,7 @@ export class ViewLevel extends Level {
 				const isOnlyDescription = !game[turnIndex + 1]
 				if (previewLevel && !isOnlyDescription) {
 					let previewLevel = new Level([64, 64, 64], templates.empty.generate([64, 64, 64]))
-					let changeRecordPromise = new Promise(resolve => {
+					let changeRecordPromise = new Promise((resolve) => {
 						previewLevel.changeRecord = new ChangeRecord(`./blockRecords/game-${turn.next}/`, async () => {
 							await previewLevel.changeRecord.restoreBlockChangesToLevel(previewLevel)
 							previewLevel.dispose()
@@ -173,7 +173,7 @@ export class ViewLevel extends Level {
 	}
 	/**Displays selected turns to the player.
 	 * @param {Player} player - Player to display turns to.
-	*/
+	 */
 	displaySelectedTurns(player) {
 		if (player.selectedTurns.description) {
 			player.message(player.selectedTurns.description.prompt, 13)

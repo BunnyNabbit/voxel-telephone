@@ -34,14 +34,14 @@ export class Level extends EventEmitter {
 	}
 
 	messageAll(message, types = [0]) {
-		this.players.forEach(player => {
+		this.players.forEach((player) => {
 			player.message(message, types)
 		})
 		this.playSound("toggle")
 	}
 
 	sendDrones(player) {
-		this.drones.forEach(drone => {
+		this.drones.forEach((drone) => {
 			player.droneTransmitter.addDrone(drone)
 		})
 	}
@@ -69,7 +69,7 @@ export class Level extends EventEmitter {
 	 * @param {Drone} drone - The drone to be added.
 	 */
 	addDrone(drone) {
-		this.players.forEach(player => {
+		this.players.forEach((player) => {
 			player.droneTransmitter.addDrone(drone)
 		})
 		this.drones.add(drone)
@@ -87,24 +87,32 @@ export class Level extends EventEmitter {
 	}
 
 	loadPlayer(player, position = [0, 0, 0], orientation = [0, 0]) {
-		player.client.loadLevel(this.blocks, this.bounds[0], this.bounds[1], this.bounds[2], false, () => {
-			player.client.setClickDistance(10000)
-			player.emit("levelLoaded")
-		}, () => {
-			if (this.blockset) Level.sendBlockset(player.client, this.blockset)
-			if (this.environment) player.client.setEnvironmentProperties(this.environment)
-			if (this.texturePackUrl) player.client.texturePackUrl(this.texturePackUrl)
-			player.client.setBlockPermission(7, 1, 1)
-			player.client.setBlockPermission(8, 1, 1)
-			player.client.setBlockPermission(9, 1, 1)
-			player.client.setBlockPermission(10, 1, 1)
-			player.client.setBlockPermission(11, 1, 1)
-			player.client.configureSpawnExt(-1, player.authInfo.username, position[0], position[1], position[2], orientation[0], orientation[1], player.authInfo.username)
-		})
+		player.client.loadLevel(
+			this.blocks,
+			this.bounds[0],
+			this.bounds[1],
+			this.bounds[2],
+			false,
+			() => {
+				player.client.setClickDistance(10000)
+				player.emit("levelLoaded")
+			},
+			() => {
+				if (this.blockset) Level.sendBlockset(player.client, this.blockset)
+				if (this.environment) player.client.setEnvironmentProperties(this.environment)
+				if (this.texturePackUrl) player.client.texturePackUrl(this.texturePackUrl)
+				player.client.setBlockPermission(7, 1, 1)
+				player.client.setBlockPermission(8, 1, 1)
+				player.client.setBlockPermission(9, 1, 1)
+				player.client.setBlockPermission(10, 1, 1)
+				player.client.setBlockPermission(11, 1, 1)
+				player.client.configureSpawnExt(-1, player.authInfo.username, position[0], position[1], position[2], orientation[0], orientation[1], player.authInfo.username)
+			}
+		)
 	}
 
 	reload() {
-		this.players.forEach(player => {
+		this.players.forEach((player) => {
 			const reloadedPosition = Array.from(player.position)
 			const heightOffset = 22 / 32 // Player spawn height is different from reported height. Offset by # fixed-point units.
 			reloadedPosition[1] -= heightOffset
@@ -116,7 +124,7 @@ export class Level extends EventEmitter {
 	setBlock(position, block, excludePlayers = [], saveToRecord = true) {
 		this.blocks.writeUInt8(block, position[0] + this.bounds[0] * (position[2] + this.bounds[2] * position[1]))
 		// callback(block, position[0], position[1], position[2])
-		this.players.forEach(player => {
+		this.players.forEach((player) => {
 			if (!excludePlayers.includes(player)) player.client.setBlock(block, position[0], position[1], position[2])
 		})
 		if (saveToRecord) {
@@ -137,7 +145,8 @@ export class Level extends EventEmitter {
 		return this.blocks.readUInt8(position[0] + this.bounds[0] * (position[2] + this.bounds[2] * position[1]))
 	}
 
-	interpretCommand(command = "cuboid 1", player = null, actionBytes = []) { // i.e: cuboid 1
+	interpretCommand(command = "cuboid 1", player = null, actionBytes = []) {
+		// i.e: cuboid 1
 		// consider: if the block set has names, user could refer to blocks by name and not just id.
 		const commandClass = Level.getCommandClassFromName(command)
 		if (commandClass) {
@@ -199,8 +208,8 @@ export class Level extends EventEmitter {
 	static getCommandClassFromName(command) {
 		command = command.split(" ")
 		const commandName = command[0].toLowerCase()
-		let commandClass = Level.commands.find(otherCommand => otherCommand.name.toLowerCase() == commandName)
-		if (!commandClass) commandClass = Level.commands.find(otherCommand => otherCommand.aliases.includes(commandName))
+		let commandClass = Level.commands.find((otherCommand) => otherCommand.name.toLowerCase() == commandName)
+		if (!commandClass) commandClass = Level.commands.find((otherCommand) => otherCommand.aliases.includes(commandName))
 		return commandClass
 	}
 
@@ -244,8 +253,8 @@ export class Level extends EventEmitter {
 				incrementIndex()
 				continue
 			} else if (type == "position") {
-				let position = [0, 1, 2].map(index => parseInt(splitCommand[currentIndex + index]))
-				if (position.some(num => !validateByte(num))) {
+				let position = [0, 1, 2].map((index) => parseInt(splitCommand[currentIndex + index]))
+				if (position.some((num) => !validateByte(num))) {
 					player.message("Invalid position")
 					break
 				}
@@ -260,12 +269,14 @@ export class Level extends EventEmitter {
 				const enumName = layoutElement.split(":")[1]
 				const enumValue = splitCommand[currentIndex]
 				const attemptByte = parseInt(enumValue)
-				if (validateByte(attemptByte) && this.currentCommand.enums[enumName][attemptByte]) { // input is an index
+				if (validateByte(attemptByte) && this.currentCommand.enums[enumName][attemptByte]) {
+					// input is an index
 					this.currentCommandActionBytes.push(attemptByte)
 					incrementIndex()
 					continue
 				}
-				const index = this.currentCommand.enums[enumName].findIndex((value) => { // find index by enum name
+				const index = this.currentCommand.enums[enumName].findIndex((value) => {
+					// find index by enum name
 					return value == enumValue
 				})
 				if (index == -1) break
@@ -316,7 +327,7 @@ export class Level extends EventEmitter {
 	}
 
 	playSound(soundName) {
-		this.players.forEach(player => {
+		this.players.forEach((player) => {
 			player.emit("playSound", player.universe.sounds[soundName])
 		})
 	}
@@ -328,10 +339,10 @@ export class Level extends EventEmitter {
 	setBlinkText(blinkText = false, subliminalText) {
 		clearInterval(this.blinkInterval)
 		if (blinkText === false) {
-			this.players.forEach(player => {
+			this.players.forEach((player) => {
 				player.message(" ", 100)
 			})
-			return this.blinkText = null
+			return (this.blinkText = null)
 		}
 		let toggle = false
 		this.blinkText = subliminalText || blinkText
@@ -339,7 +350,7 @@ export class Level extends EventEmitter {
 			toggle = !toggle
 			let text = " "
 			if (toggle) text = this.blinkText
-			this.players.forEach(player => {
+			this.players.forEach((player) => {
 				player.message(text, 100)
 			})
 			this.blinkText = blinkText
@@ -367,7 +378,10 @@ export class Level extends EventEmitter {
 			}
 			const block = {
 				id: i + 1,
-				name: `${blockset[i].slice(0, 3).map(component => componentToHex(component)).join("")}#`,
+				name: `${blockset[i]
+					.slice(0, 3)
+					.map((component) => componentToHex(component))
+					.join("")}#`,
 				fogDensity: 127,
 				fogR: blockset[i][0],
 				fogG: blockset[i][1],
@@ -380,7 +394,7 @@ export class Level extends EventEmitter {
 				frontTexture: texture,
 				backTexture: texture,
 				bottomTexture: texture,
-				transmitLight: 1
+				transmitLight: 1,
 			}
 			client.defineBlock(block)
 			client.defineBlockExt(block)

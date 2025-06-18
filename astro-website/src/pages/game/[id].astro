@@ -1,51 +1,42 @@
 ---
-import ContentPage from "../../layouts/ContentPage.astro";
-import { database } from "../../shared/db.mjs";
-import Turn from "../../components/Turn.astro";
-import { ObjectId } from "mongojs";
-const gameId = Astro.params.id;
-let game = await database.getGame(new ObjectId(gameId));
-let title;
+import ContentPage from "../../layouts/ContentPage.astro"
+import { database } from "../../shared/db.mjs"
+import Turn from "../../components/Turn.astro"
+import { ObjectId } from "mongojs"
+const gameId = Astro.params.id
+let game = await database.getGame(new ObjectId(gameId))
+let title
 if (game && game.length !== 16) {
-	game = null;
+	game = null
 }
-let ogImage = null;
+let ogImage = null
 if (!game) {
-	Astro.response.status = 404;
-	game = null;
-	title = "Game not found";
+	Astro.response.status = 404
+	game = null
+	title = "Game not found"
 } else {
-	title = game[0].prompt;
+	title = game[0].prompt
 	ogImage = {
 		url: `/image/${game[1]._id}`,
 		alt: game[0].prompt,
-	};
+	}
 }
 ---
 
 {
 	game ? (
-		<ContentPage
-			title={title}
-			canon={`/game/${gameId}`}
-			description={`Game timeline of ${title}`}
-			ogImage={ogImage}
-		>
+		<ContentPage title={title} canon={`/game/${gameId}`} description={`Game timeline of ${title}`} ogImage={ogImage}>
 			<ol>
 				{game
 					.map((turn: any, index: number) => {
 						if (turn.promptType === "description") {
-							return null;
+							return null
 						} else {
 							return (
 								<li>
-									<Turn
-										description={game[index - 1]}
-										build={turn}
-										id={index}
-									/>
+									<Turn description={game[index - 1]} build={turn} id={index} />
 								</li>
-							);
+							)
 						}
 					})
 					.filter((element: any) => element != null)}

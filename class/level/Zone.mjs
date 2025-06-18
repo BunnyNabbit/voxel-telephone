@@ -1,8 +1,8 @@
 export class Zone {
-
+	/** */
 	constructor(position1, position2) {
-		this.min = [0, 1, 2].map(index => Math.min(position1[index], position2[index]))
-		this.max = [0, 1, 2].map(index => Math.max(position1[index], position2[index]))
+		this.min = [0, 1, 2].map((index) => Math.min(position1[index], position2[index]))
+		this.max = [0, 1, 2].map((index) => Math.max(position1[index], position2[index]))
 	}
 
 	serialize() {

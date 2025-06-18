@@ -15,7 +15,7 @@ export class DroneTransmitter extends EventEmitter {
 	}
 	/**Replicates a drone's position to zhe client.
 	 * @param {Drone} drone
-	*/
+	 */
 	updateDrone(drone) {
 		// TODO: Relative positions, but zhe packet isn't implemented in classicborne-protocol
 		const netId = this.netIds.get(drone)
@@ -34,7 +34,7 @@ export class DroneTransmitter extends EventEmitter {
 	}
 	/** Sends all drones as entities to the client. */
 	resendDrones() {
-		this.drones.forEach(drone => {
+		this.drones.forEach((drone) => {
 			this.configureDrone(drone)
 		})
 	}
@@ -44,7 +44,7 @@ export class DroneTransmitter extends EventEmitter {
 	 */
 	getDroneByNetId(netId) {
 		let resultDrone = null
-		this.drones.forEach(drone => {
+		this.drones.forEach((drone) => {
 			if (this.netIds.get(drone) == netId) resultDrone = drone
 		})
 		return resultDrone
@@ -88,7 +88,7 @@ export class DroneTransmitter extends EventEmitter {
 	}
 	/** Removes all drones. */
 	clearDrones() {
-		this.drones.forEach(drone => {
+		this.drones.forEach((drone) => {
 			this.removeDrone(drone)
 		})
 	}

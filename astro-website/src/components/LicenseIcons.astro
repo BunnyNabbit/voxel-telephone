@@ -1,28 +1,20 @@
 ---
-const licenses = Astro.props.licenses;
-import licenseData from "../../../creationLicenses.mjs";
-let Container = "div";
+import licenseData from "../../../creationLicenses.mjs"
+const licenses = Astro.props.licenses
+let Container = "div"
 let target = null
 let rel = null
 if (Astro.props.link) {
-	Container = "a";
-	target = "_blank";
-	rel = "license noopener";
+	Container = "a"
+	target = "_blank"
+	rel = "license noopener"
 }
 ---
 
 {
 	licenses.map((license) => (
 		<Container href={licenseData[license].licenseData.url} target={target} rel={rel}>
-			<img
-				src={`/license-icons/${licenseData[license].licenseData.icon}`}
-				alt={licenseData[license].name}
-				title={licenseData[license].name}
-				class={
-					licenseData[license].licenseData.iconClass ??
-					"license-icon-banner"
-				}
-			/>
+			<img src={`/license-icons/${licenseData[license].licenseData.icon}`} alt={licenseData[license].name} title={licenseData[license].name} class={licenseData[license].licenseData.iconClass ?? "license-icon-banner"} />
 		</Container>
 	))
 }

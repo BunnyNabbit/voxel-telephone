@@ -6,11 +6,12 @@ import { getAbsolutePath } from "esm-path"
 const __dirname = getAbsolutePath(import.meta.url)
 
 export class Category {
-
+	/** */
 	constructor(name) {
 		this.name = name
 		this.documents = []
 	}
+
 	displayHelpToPlayer(player) {
 		player.message(`&cCategory&f: ${this.name}`)
 		if (this.documents.length) player.message(`${this.documents.join(", ")}`)
@@ -18,7 +19,7 @@ export class Category {
 }
 
 export class TopicHelp {
-
+	/** */
 	constructor(name, title, help, category) {
 		this.type = "topic"
 		this.name = name
@@ -26,15 +27,16 @@ export class TopicHelp {
 		this.help = help
 		this.category = category
 	}
+
 	displayHelpToPlayer(player) {
-		this.help.forEach(message => {
+		this.help.forEach((message) => {
 			player.message(message)
 		})
 	}
 }
 
 export class CommandHelp extends TopicHelp {
-
+	/** */
 	constructor(name, title, help, category) {
 		super(name, title, help, category)
 		this.type = "command"
@@ -47,7 +49,7 @@ export class Help {
 	 */
 	constructor(universe) {
 		this.universe = universe
-		this.data = Help.loadHelpDocs(path.join(__dirname, "../astro-website/src/help"), path.join(__dirname, "../astro-website/dist/client/_astro"), universe.serverConfiguration.website.baseURL).then(data => {
+		this.data = Help.loadHelpDocs(path.join(__dirname, "../astro-website/src/help"), path.join(__dirname, "../astro-website/dist/client/_astro"), universe.serverConfiguration.website.baseURL).then((data) => {
 			this.data = data
 		})
 	}
@@ -60,7 +62,11 @@ export class Help {
 		const universe = this.universe
 		let displayLink = false
 		if (!argument) {
-			player.message(`&cCategories&f: ${Array.from(this.data.categories).map(([key]) => this.data.categories.get(key).name).join(", ")}`)
+			player.message(
+				`&cCategories&f: ${Array.from(this.data.categories)
+					.map(([key]) => this.data.categories.get(key).name)
+					.join(", ")}`
+			)
 			argument = "help"
 			displayLink = true
 		}
@@ -85,10 +91,10 @@ export class Help {
 	 */
 	static parseMarkdownToClassicText(markdown, config) {
 		const structure = DragonMark.parse(markdown)
-		const firstHeading = structure.find(element => element.type === "heading").content[0].content
+		const firstHeading = structure.find((element) => element.type === "heading").content[0].content
 		return {
 			text: Help.convertStructureToClassicText(structure, "&f", config),
-			heading: firstHeading
+			heading: firstHeading,
 		}
 	}
 	/**Loads the help documents from the specified directory.
@@ -100,25 +106,29 @@ export class Help {
 		const commands = new Map()
 		const categories = new Map()
 		const fullImageURLs = new Map()
-		await fs.promises.readdir(astroAssetCache).then(files => {
-			files.forEach(file => {
-				if (file.endsWith(".webp")) {
-					const [name, hash] = path.basename(file).split(".")
-					const key = `./${name}.webp`
-					const existing = fullImageURLs.get(fullImageURLs)
-					const fullURL = `${baseURL}_astro/${name}.${hash}.webp`
-					if (!existing) {
-						fullImageURLs.set(key, fullURL)
-					} else { // replace if shorter
-						if (existing.length > name.length) {
+		await fs.promises
+			.readdir(astroAssetCache)
+			.then((files) => {
+				files.forEach((file) => {
+					if (file.endsWith(".webp")) {
+						const [name, hash] = path.basename(file).split(".")
+						const key = `./${name}.webp`
+						const existing = fullImageURLs.get(fullImageURLs)
+						const fullURL = `${baseURL}_astro/${name}.${hash}.webp`
+						if (!existing) {
 							fullImageURLs.set(key, fullURL)
+						} else {
+							// replace if shorter
+							if (existing.length > name.length) {
+								fullImageURLs.set(key, fullURL)
+							}
 						}
 					}
-				}
+				})
 			})
-		}).catch(err => {
-			console.warn(`Unable to read astro asset cache: ${err}`)
-		})
+			.catch((err) => {
+				console.warn(`Unable to read astro asset cache: ${err}`)
+			})
 		const files = await Help.fileWalker(directory, 1)
 
 		for (const file of files) {
@@ -128,7 +138,7 @@ export class Help {
 				const content = await fs.promises.readFile(file, "utf-8")
 				const parsed = Help.parseMarkdownToClassicText(content, {
 					fullImageURLs,
-					baseURL
+					baseURL,
 				})
 				let category = path.basename(path.dirname(file))
 				if (category == "help") category = null
@@ -150,10 +160,10 @@ export class Help {
 		return { topics, commands, categories }
 	}
 	/**Converts the given parsed DragonMark structure to Minecraft classic text format.
-	* @param {Array} structure - The structure to convert.
-	* @param {string} defaultColorCode - The default color code to use.
-	* @returns {string} - The converted text.
-	*/
+	 * @param {Array} structure - The structure to convert.
+	 * @param {string} defaultColorCode - The default color code to use.
+	 * @returns {string} - The converted text.
+	 */
 	static convertStructureToClassicText(structure, defaultColorCode = "&f", imageConfig) {
 		let output = []
 		structure.forEach((element) => {

@@ -7,7 +7,7 @@ import { getAbsolutePath } from "esm-path"
 const __dirname = getAbsolutePath(import.meta.url)
 
 export class Heartbeat {
-
+	/** */
 	constructor(urlBase, universe) {
 		this.universe = universe
 		this.salt = crypto.randomBytes(192).toString("base64url")
@@ -36,20 +36,31 @@ export class Heartbeat {
 			web: "true",
 			salt: this.salt,
 		}
-		axios.post(pingURL, qs.stringify(form)).then((response) => {
-			if (this.pinged == false) console.log(response.data)
-			this.pinged = true
-		}).catch((err) => {
-			console.log(err)
-		})
+		axios
+			.post(pingURL, qs.stringify(form))
+			.then((response) => {
+				if (this.pinged == false) console.log(response.data)
+				this.pinged = true
+			})
+			.catch((err) => {
+				console.log(err)
+			})
 	}
 	/** @see https://stackoverflow.com/a/56975550 */
 	static getGitHash() {
-		const rev = fs.readFileSync(join(__dirname, "../../.git/HEAD")).toString().trim().split(/.*[: ]/).slice(-1)[0]
-		if (rev.indexOf('/') === -1) {
+		const rev = fs
+			.readFileSync(join(__dirname, "../../.git/HEAD"))
+			.toString()
+			.trim()
+			.split(/.*[: ]/)
+			.slice(-1)[0]
+		if (rev.indexOf("/") === -1) {
 			return rev
 		} else {
-			return fs.readFileSync('.git/' + rev).toString().trim()
+			return fs
+				.readFileSync(".git/" + rev)
+				.toString()
+				.trim()
 		}
 	}
 }

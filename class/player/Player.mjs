@@ -9,7 +9,7 @@ import { EventEmitter } from "events"
 import { randomIntFromInterval } from "../../utils.mjs"
 
 export class Player extends EventEmitter {
-
+	/** */
 	constructor(client, universe, authInfo) {
 		super()
 		this.client = client
@@ -22,10 +22,16 @@ export class Player extends EventEmitter {
 	}
 
 	async initialize(client, universe, authInfo) {
-		const verifyUsernames = (universe.serverConfiguration.verifyUsernames && universe.heartbeat)
-		if (universe.server.players.filter(otherClient => otherClient.address == client.address).length >= universe.serverConfiguration.maxIpConnections) return this.client.disconnect("Too many connections!")
-		if (universe.server.players.some(otherClient => otherClient.authInfo.username == authInfo.username)) return this.client.disconnect("Another client already has that name")
-		if (verifyUsernames && crypto.createHash("md5").update(universe.heartbeat.salt + authInfo.username).digest("hex") !== authInfo.key) {
+		const verifyUsernames = universe.serverConfiguration.verifyUsernames && universe.heartbeat
+		if (universe.server.players.filter((otherClient) => otherClient.address == client.address).length >= universe.serverConfiguration.maxIpConnections) return this.client.disconnect("Too many connections!")
+		if (universe.server.players.some((otherClient) => otherClient.authInfo.username == authInfo.username)) return this.client.disconnect("Another client already has that name")
+		if (
+			verifyUsernames &&
+			crypto
+				.createHash("md5")
+				.update(universe.heartbeat.salt + authInfo.username)
+				.digest("hex") !== authInfo.key
+		) {
 			console.log("Connection failed")
 			this.message("It appears that authorization failed. Are you connecting via the ClassiCube server list? Try refreshing it.")
 			this.message(`You will be disconnected in 10 seconds.`)
@@ -41,7 +47,7 @@ export class Player extends EventEmitter {
 			this.destroyed = true
 			if (this.space) this.space.removePlayer(this)
 			universe.pushMessage(`- ${this.authInfo.username} disconnected`, PushIntegration.interestType.playerConnection)
-			universe.server.players.forEach(otherClient => {
+			universe.server.players.forEach((otherClient) => {
 				otherClient.emit("playSound", universe.sounds.leave)
 			})
 			this.watchdog.destroy()
@@ -62,12 +68,12 @@ export class Player extends EventEmitter {
 		universe.addPlayer(this)
 		this.droneTransmitter = new DroneTransmitter(this.client)
 		universe.pushMessage(`+ ${this.username} connected`, PushIntegration.interestType.playerConnection)
-		universe.server.players.forEach(otherClient => {
+		universe.server.players.forEach((otherClient) => {
 			otherClient.emit("playSound", universe.sounds.join)
 		})
 		let tagline = "how do i get cowboy paint off a dog ."
 		if (universe.serverConfiguration.taglines) tagline = universe.serverConfiguration.taglines[randomIntFromInterval(0, universe.serverConfiguration.taglines.length - 1)]
-		this.client.serverIdentification("Voxel Telephone", tagline, 0x64)
+		this.client.serverIdentification("Voxel Telephone", tagline, 100)
 		this.watchdog = new Watchdog(this)
 		Player.sendHotbar(this)
 		if (this.usingCEF) {
@@ -78,7 +84,7 @@ export class Player extends EventEmitter {
 			const { processLevel } = await import("classicborne-server-protocol/utils.cjs")
 			const emptyLevelBuffer = await processLevel(templates.empty.generate([64, 64, 64]), 64, 64, 64)
 			this.client.loadLevel(await emptyLevelBuffer, 64, 64, 64, true)
-			const waitPromise = new Promise(resolve => setTimeout(resolve, 300))
+			const waitPromise = new Promise((resolve) => setTimeout(resolve, 300))
 			// allows zhe client to receive and load zhe dummy level. might be neater to wait for a position update, but not really possible here as zhe client hasn't received its own proper spawn position yet.
 			await waitPromise
 			this.emit("soundLoadHack")
@@ -88,7 +94,7 @@ export class Player extends EventEmitter {
 		this.lastClick = new Date()
 		this.lastClickPosition = [0, 0, 0]
 		const doubleClickTime = 500
-		this.client.on("setBlock", operation => {
+		this.client.on("setBlock", (operation) => {
 			if (this.watchdog.rateOperation()) return
 			if (!this.space) return
 			const operationPosition = [operation.x, operation.y, operation.z]
@@ -132,7 +138,7 @@ export class Player extends EventEmitter {
 			if (message == "/forcezero" && universe.serverConfiguration.listOperators.includes(this.authInfo.username) && universe.heartbeat) {
 				universe.heartbeat.forceZero = true
 				console.log(`! ${this.authInfo.username} forced heartbeat players to zero`)
-				universe.server.players.forEach(otherClient => otherClient.message(`! ${this.authInfo.username} forced heartbeat players to zero`))
+				universe.server.players.forEach((otherClient) => otherClient.message(`! ${this.authInfo.username} forced heartbeat players to zero`))
 				return
 			}
 			if (this.watchdog.rateOperation(20)) return
@@ -145,7 +151,7 @@ export class Player extends EventEmitter {
 			} else {
 				if (filter(message)) {
 					const filterMessages = universe.serverConfiguration.replacementMessages
-					universe.server.players.forEach(otherClient => otherClient.message(`&7${this.authInfo.username}: &f${filterMessages[randomIntFromInterval(0, filterMessages.length - 1)]}`))
+					universe.server.players.forEach((otherClient) => otherClient.message(`&7${this.authInfo.username}: &f${filterMessages[randomIntFromInterval(0, filterMessages.length - 1)]}`))
 					return
 				}
 				if (this.space?.game?.promptType == "build") {
@@ -169,7 +175,7 @@ export class Player extends EventEmitter {
 					const sound = universe.sounds[userRecord.chatSound] || universe.sounds.chat
 					message = message.replaceAll("%", "&")
 					universe.pushMessage(`&7${this.authInfo.username}: &f${message}`, PushIntegration.interestType.chatMessage)
-					universe.server.players.forEach(otherClient => {
+					universe.server.players.forEach((otherClient) => {
 						otherClient.emit("playSound", sound)
 					})
 				}
@@ -186,7 +192,7 @@ export class Player extends EventEmitter {
 				const controlledDrone = this.space.clientDrones.get(this.client)
 				if (controlledDrone) controlledDrone.setPosition(position, orientation)
 				// portal detection
-				this.space.portals.forEach(portal => {
+				this.space.portals.forEach((portal) => {
 					if (!portal.spawnZone && portal.intersects(this.position)) {
 						if (portal.globalCommand) this.universe.commandRegistry.attemptCall(this, portal.globalCommand)
 					}
@@ -203,7 +209,8 @@ export class Player extends EventEmitter {
 		const maxLength = 64 - continueAdornment.length
 		const messages = []
 		let currentColorCode = ""
-		if (message.length <= maxLength) {  // Handle short messages directly
+		if (message.length <= maxLength) {
+			// Handle short messages directly
 			messages.push(message)
 		} else {
 			while (message.length > 0) {
@@ -225,9 +232,9 @@ export class Player extends EventEmitter {
 			}
 		}
 
-		types.forEach(type => {
+		types.forEach((type) => {
 			if (type == 0) {
-				messages.forEach(message => {
+				messages.forEach((message) => {
 					this.client.message(message, type)
 				})
 			} else {

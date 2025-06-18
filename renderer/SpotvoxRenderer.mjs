@@ -25,7 +25,6 @@ const __dirname = getAbsolutePath(import.meta.url)
 
 /** Represents a MagicaVoxel .vox renderer using Spotvox. */
 export class SpotvoxRenderer {
-
 	constructor(serverConfiguration, db) {
 		this.serverConfiguration = serverConfiguration
 		this.db = db ?? new Database(serverConfiguration)
@@ -44,7 +43,7 @@ export class SpotvoxRenderer {
 					return reject(error)
 				}
 				const folderName = path.basename(file, path.extname(file))
-				const pngFileName = path.join(__dirname, folderName, 'size8blocky', `${folderName}_angle0.png`)
+				const pngFileName = path.join(__dirname, folderName, "size8blocky", `${folderName}_angle0.png`)
 				SpotvoxRenderer.readFile(pngFileName)
 					.then((pngData) => {
 						resolve({
@@ -70,7 +69,6 @@ export class SpotvoxRenderer {
 				})
 			})
 		})
-
 	}
 
 	async doJobs() {
@@ -170,12 +168,12 @@ export class SpotvoxRenderer {
 	}
 }
 
-import serverConfiguration from '../config.json' with { type: 'json' }
-const renderer = new SpotvoxRenderer(serverConfiguration);
-(async function main() {
+import serverConfiguration from "../config.json" with { type: "json" }
+const renderer = new SpotvoxRenderer(serverConfiguration)
+;(async function main() {
 	while (true) {
 		await renderer.doJobs()
-		await new Promise(resolve => setTimeout(resolve, 5000))
+		await new Promise((resolve) => setTimeout(resolve, 5000))
 	}
 })()
 
