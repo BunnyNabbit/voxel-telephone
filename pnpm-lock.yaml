@@ -64,8 +64,8 @@ importers:
         specifier: ^15.15.0
         version: 15.15.0
       prettier-plugin-drone-class:
-        specifier: ^0.0.1
-        version: 0.0.1
+        specifier: ^0.1.0
+        version: 0.1.0
 
 packages:
 
@@ -1780,8 +1780,8 @@ packages:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
 
-  prettier-plugin-drone-class@0.0.1:
-    resolution: {integrity: sha512-FwIN+AQUFJiX+wCxZqS0EhPuHDjEHGeiE12Jj90c38sipHza8x4qDEklhD3DrX4TpDD+X7sX8yw1mbVdyQ3THg==}
+  prettier-plugin-drone-class@0.1.0:
+    resolution: {integrity: sha512-T62HrHhZRN19726PJjulGP+RKqZM1ZbL91yzKMA4x6C1GHNEOyyqmn9HotnJwnnSz5KqsIjXE97vFXo/mhoqjA==}
 
   prettier@3.5.3:
     resolution: {integrity: sha512-QQtaxnoDJeAkDvDKWCLiwIXkTgRhwYDEQCghU9Z6q03iyek/rxRh/2lC3HB7P8sWT2xC/y5JDctPLBIGzHKbhw==}
@@ -4178,7 +4178,7 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier-plugin-drone-class@0.0.1:
+  prettier-plugin-drone-class@0.1.0:
     dependencies:
       '@babel/generator': 7.27.5
       '@babel/parser': 7.27.5
