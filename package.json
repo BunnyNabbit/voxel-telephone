@@ -32,6 +32,6 @@
     "esbuild": "0.25.5",
     "eslint": "^9.28.0",
     "globals": "^15.15.0",
-    "prettier-plugin-drone-class": "^0.0.1"
+    "prettier-plugin-drone-class": "^0.1.0"
   }
 }
