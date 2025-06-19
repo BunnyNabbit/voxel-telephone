@@ -13,7 +13,7 @@ import("../../creationLicenses.mjs").then(module => {
 })
 
 export class Commands {
-
+	/** */
 	static register(universe) {
 		universe.registerCommand(["/rules"], (player) => {
 			universe.commandRegistry.attemptCall(player, `/help rules`)

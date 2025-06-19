@@ -1,4 +1,5 @@
 class Command {
+	/** */
 	constructor(layout, level, enums = {}) {
 		this.level = level
 		this.layout = layout
@@ -61,7 +62,7 @@ class Cuboid extends Command {
 	name = "cuboid"
 	static help = ["Makes a cuboid on two positions.", "If no arguments are added, block is inferred from your current hand and the server will ask for the block positions interactively."]
 	static aliases = ["z"]
-
+	/** */
 	constructor(level) {
 		super(["block:block", "&enum:mode", "position:position1", "position:position2"], level, {
 			mode: ["solid", "hollow", "walls", "holes"],
@@ -102,7 +103,7 @@ class Line extends Command {
 	name = "Line"
 	static help = ["Makes a line between two points.", "If no arguments are added, block is inferred from your current hand and the server will ask for the block positions interactively."]
 	static aliases = ["l", "ln"]
-
+	/** */
 	constructor(level) {
 		super(["block:block", "position:start", "position:end"], level)
 	}
@@ -142,7 +143,7 @@ class AbnormalTriangle extends Command {
 	name = "AbnormalTriangle"
 	static help = ["Makes a triangle from three points. The resulting triangle may have holes", "If no arguments are added, block is inferred from your current hand and the server will ask for the block positions interactively."]
 	static aliases = ["triangle", "tri"]
-
+	/** */
 	constructor(level) {
 		super(["block:block", "position:position1", "position:position2", "position:position3"], level)
 	}
@@ -178,7 +179,7 @@ class SphereSlow extends Command {
 	name = "SphereSlow"
 	static help = ["Makes a sphere from a center point and a radius.", "If no arguments are added, block is inferred from your current hand and the server will ask for the block positions interactively."]
 	static aliases = ["sphere", "sp"]
-
+	/** */
 	constructor(level) {
 		super(["block:block", "&enum:mode", "position:center", "position:offset"], level, {
 			mode: ["solid"],
@@ -206,7 +207,7 @@ class SphereSlow extends Command {
 class Replace extends Command {
 	name = "Replace"
 	static aliases = ["r"]
-
+	/** */
 	constructor(level) {
 		super(["block:findBlock", "position:position1", "position:position2", "block:replacementBlock"], level)
 	}
