@@ -11,7 +11,7 @@ import { EventEmitter } from "events"
 
 export class Level extends EventEmitter {
 	static commands = levelCommands
-
+	/** */
 	constructor(bounds, blocks) {
 		super()
 		this.players = []
