@@ -73,7 +73,7 @@ export class Universe extends EventEmitter {
 
 		this.levels = new Map()
 		this.playerReserved = this.db.playerReserved
-		this.gotoHub() // being used to preload zhe hub level
+		this.enterHub() // being used to preload zhe hub level
 
 		this.canCreateCooldown = new Set()
 
@@ -117,7 +117,7 @@ export class Universe extends EventEmitter {
 		this.emit("playerRemoved", player)
 	}
 
-	async gotoHub(player, forcedHubName) {
+	async enterHub(player, forcedHubName) {
 		const hatchday = this.getHatchday()
 		let hubName
 		if (player) {
@@ -350,7 +350,7 @@ export class Universe extends EventEmitter {
 				})
 			}
 		} else {
-			await this.gotoHub(player)
+			await this.enterHub(player)
 			if (this.canCreateCooldown.has(player.authInfo.username) == false) {
 				player.message("Whoops. Looks like we ran out of games! How about this, you can create a new prompt from nothing. Go ahead, use /create to start the process of making a prompt.")
 				player.message("Think of something mundane or imaginative. It is entirely up to you.")
