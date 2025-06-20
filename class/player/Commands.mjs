@@ -67,7 +67,7 @@ export class Commands {
 				universe.db.addInteraction(player.authInfo.username, player.space.game.root, "complete")
 				player.space.doNotReserve = true
 				player.space.removePlayer(player)
-				await universe.gotoHub(player)
+				await universe.enterHub(player)
 			}
 		})
 		universe.registerCommand(["/report"], async (player, message) => {
@@ -82,7 +82,7 @@ export class Commands {
 				player.message(`Game reported with reason: "${reason}"`)
 				player.space.doNotReserve = true
 				player.space.removePlayer(player);
-				await universe.gotoHub(player)
+				await universe.enterHub(player)
 			}
 		})
 		universe.registerCommand(["/abort"], async (player) => {
@@ -135,7 +135,7 @@ export class Commands {
 				universe.db.addInteraction(player.authInfo.username, player.space.game._id, "skip")
 				player.space.doNotReserve = true
 				player.space.removePlayer(player)
-				await universe.gotoHub(player)
+				await universe.enterHub(player)
 			}
 		})
 		universe.registerCommand(["/place", "/pl"], async (player) => {
@@ -255,7 +255,7 @@ export class Commands {
 		universe.registerCommand(["/main", "/hub", "/spawn"], async (player) => {
 			if (player.space) {
 				player.space.removePlayer(player)
-				universe.gotoHub(player)
+				universe.enterHub(player)
 			}
 		})
 		universe.registerCommand(["/purge"], async (player, reason) => {

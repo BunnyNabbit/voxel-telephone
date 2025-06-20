@@ -90,7 +90,7 @@ export class Player extends EventEmitter {
 			this.emit("soundLoadHack")
 			if (this.destroyed) return
 		}
-		universe.gotoHub(this)
+		universe.enterHub(this)
 		this.lastClick = new Date()
 		this.lastClickPosition = [0, 0, 0]
 		const doubleClickTime = 500
