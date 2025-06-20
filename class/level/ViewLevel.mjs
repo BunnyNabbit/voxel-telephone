@@ -53,6 +53,10 @@ export class ViewLevel extends Level {
 			}
 			player.client.on("position", onPosition)
 			this.positionEventListeners.set(player, onPosition)
+			player.message("View", 1)
+			player.message("Go back to hub with /main", 2)
+			player.message("Noclip past level borders to view next page", 3)
+			player.emit("playSound", this.universe.sounds.viewTrack)
 		})
 		this.viewData = viewData
 	}

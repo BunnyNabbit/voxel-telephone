@@ -39,6 +39,12 @@ export class RealmLevel extends Level {
 				await this.universe.db.saveRealmPreview(this.realmDocument._id, downsampledBlocks)
 			}
 		})
+		this.on("playerAdded", (player) => {
+			player.message("Realm", 1)
+			player.message("Go back to hub with /main", 2)
+			player.message(" ", 3)
+			player.emit("playSound", this.universe.sounds.gameTrack)
+		})
 	}
 	/**Downsamples a given block array (assumed to be 256x256x256) to 64x64x64. Wizhin a 256x space, a sample of 64 voxels (4x4x4) will be downsampled to zhe target 64x64x64 volume
 	 * @param {Buffer} blocks

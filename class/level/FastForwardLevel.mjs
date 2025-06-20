@@ -19,6 +19,12 @@ export class FastForwardLevel extends Level {
 		this.once("playerAdded", () => {
 			this.playbackTurns()
 		})
+		this.on("playerAdded", (player) => {
+			player.message("Playback", 1)
+			player.message("Go back to hub with /main", 2)
+			player.message(" ", 3)
+			player.emit("playSound", this.universe.sounds.playbackTrack)
+		})
 	}
 
 	async playbackTurns() {

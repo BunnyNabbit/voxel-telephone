@@ -133,8 +133,6 @@ export class Universe extends EventEmitter {
 			arguments: [hubName, this.db],
 		})
 		if (player) {
-			player.message("Hub", 1)
-			player.message(" ", [2, 3])
 			promise.then((level) => {
 				const spawn = level.getSpawnPosition()
 				level.addPlayer(player, spawn[0], spawn[1])
@@ -205,14 +203,11 @@ export class Universe extends EventEmitter {
 			allowList: ["not a name"],
 			template: templates.empty,
 		})
-		player.message("View", 1)
-		player.message("Go back to hub with /main", 2)
-		player.message("Noclip past level borders to view next page", 3)
+
 		promise.then(async (level) => {
 			await level.reloadView(templates.empty)
 			level.addPlayer(player, [60, 8, 4], [162, 254])
 			player.teleporting = false
-			player.emit("playSound", this.sounds.viewTrack)
 		})
 	}
 
@@ -226,13 +221,10 @@ export class Universe extends EventEmitter {
 			allowList: ["not a name"],
 			arguments: [game],
 		})
-		player.message("Playback", 1)
-		player.message("Go back to hub with /main", 2)
-		player.message(" ", 3)
+
 		promise.then((level) => {
 			level.addPlayer(player, [40, 10, 60])
 			player.teleporting = false
-			player.emit("playSound", this.sounds.playbackTrack)
 		})
 	}
 
@@ -258,11 +250,7 @@ export class Universe extends EventEmitter {
 		promise.then((level) => {
 			level.addPlayer(player, [40, 10, 31])
 			player.teleporting = false
-			player.emit("playSound", this.sounds.gameTrack)
 		})
-		player.message("Realm", 1)
-		player.message("Go back to hub with /main", 2)
-		player.message(" ", 3)
 	}
 
 	async startGame(player) {
