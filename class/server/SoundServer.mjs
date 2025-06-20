@@ -67,11 +67,12 @@ class SoundTransmitter extends EventEmitter {
 			})
 		}
 		if (sound.loop && !sound.stop) {
+			sound.startTime = Date.now()
 			if (this.currentTrack) {
 				const deleteTrack = this.currentTrack
 				setTimeout(() => {
 					this.eventQueue.delete(deleteTrack)
-				}, 5000)
+				}, 3100)
 			}
 			this.currentTrack = event
 			this.eventQueue.add(event)
@@ -79,7 +80,7 @@ class SoundTransmitter extends EventEmitter {
 			this.eventQueue.add(event)
 			setTimeout(() => {
 				this.eventQueue.delete(event)
-			}, 5000)
+			}, 3100)
 		}
 	}
 
@@ -95,6 +96,9 @@ class SoundTransmitter extends EventEmitter {
 		this.eventQueue.forEach((event) => {
 			console.log(event.cursor, cursor, event.cursor > cursor)
 			if (this.canPlay(event.data) && (event.cursor > cursor || event.data.loop)) {
+				if (event.data.startTime) {
+					event.data.playTime = Date.now() - event.data.startTime
+				}
 				socket.emit("playSound", event)
 			}
 		})

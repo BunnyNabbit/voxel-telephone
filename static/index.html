@@ -65,9 +65,9 @@
 						if (loop) {
 							const destroyLoop = loop
 							try {
-								$buzz.fade(destroyLoop, 0, 3)
+								destroyLoop.fade(0, 3)
 								setTimeout(() => {
-									$buzz.destroy(destroyLoop)
+									destroyLoop.destroy()
 								}, 3100)
 							} catch (err) {
 								console.warn(err)
@@ -76,8 +76,19 @@
 						loopURL = data.url
 						data.stream = true
 						data.src = data.url
-						loop = $buzz.play(data)
-						$buzz.loop(loop, true)
+						loop = $buzz(data)
+						let playLoop = loop.play()
+						let scopeLoop = loop
+
+						if (data.playTime) {
+							let loadOffsetStart = Date.now()
+							scopeLoop.on("load", () => {
+								const loadOffset = Date.now() - loadOffsetStart
+								// scopeLoop.seek(playLoop, ((data.playTime + loadOffset) / 1000) % scopeLoop.duration())
+								scopeLoop.sound(playLoop)._audio.currentTime = ((data.playTime + loadOffset) / 1000) % scopeLoop.duration()
+								// i don't know why. but using sound.seek on a stream makes a different loop start point? looks like a bug. smells like one.
+							})
+						}
 					}
 				} else {
 					if (data.sfxr) {
