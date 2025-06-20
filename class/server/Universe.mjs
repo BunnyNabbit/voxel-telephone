@@ -20,14 +20,6 @@ import { EventEmitter } from "events"
 import { RealmLevel } from "../level/RealmLevel.mjs"
 import { invertPromptType, randomIntFromInterval } from "../../utils.mjs"
 
-const builderDefaults = {
-	template: templates.builder,
-}
-const describeDefaults = {
-	template: templates.empty,
-	allowList: ["not a name"],
-}
-
 export class Universe extends EventEmitter {
 	/** */
 	constructor(serverConfiguration) {
@@ -290,7 +282,7 @@ export class Universe extends EventEmitter {
 				player.message(`See building related commands by using /help`)
 				player.message(`Use /report if the prompt is inappropriate`)
 				player.message(`Once you are finished building, use /finish`, [0, 3])
-				this.loadLevel(`game-${game.next}`, builderDefaults).then((level) => {
+				this.loadLevel(`game-${game.next}`, Universe.builderDefaults).then((level) => {
 					if (!level.eventsAttached) {
 						level.eventsAttached = true
 						const floorDrone = new Drone(
@@ -345,7 +337,7 @@ export class Universe extends EventEmitter {
 				player.message("Enter your description in chat")
 				player.message(`To skip, use /skip`)
 				player.message("Use /report if the build is inappropriate")
-				this.loadLevel(`game-${game._id}`, describeDefaults).then((level) => {
+				this.loadLevel(`game-${game._id}`, Universe.describeDefaults).then((level) => {
 					// TODO: position
 					level.on("playerRemoved", async () => {
 						level.dispose()
@@ -384,5 +376,12 @@ export class Universe extends EventEmitter {
 					console.warn("Failed to post message", err)
 				})
 			})
+	}
+	static builderDefaults = {
+		template: templates.builder,
+	}
+	static describeDefaults = {
+		template: templates.empty,
+		allowList: ["not a name"],
 	}
 }
