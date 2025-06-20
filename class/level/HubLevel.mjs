@@ -7,6 +7,10 @@ export class HubLevel extends Level {
 		this.on("playerRemoved", async () => {
 			if (this.players.length == 0 && !this.changeRecord.draining && this.changeRecord.dirty) await this.changeRecord.flushChanges()
 		})
+		this.on("playerAdded", (player) => {
+			player.message("Hub", 1)
+			player.message(" ", [2, 3])
+		})
 		this.portals = []
 		db.getPortals(name).then((zones) => {
 			zones.forEach((zone) => {
