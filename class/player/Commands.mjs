@@ -252,7 +252,7 @@ export class Commands {
 				player.message("Unknown view argument. /help view")
 			}
 		})
-		universe.registerCommand(["/main", "/hub", "/spawn"], async (player) => {
+		universe.registerCommand(["/main", "/hub", "/spawn", "/h", "/wmain", "/worldmain"], async (player) => {
 			if (player.space) {
 				player.space.removePlayer(player)
 				universe.gotoHub(player)
