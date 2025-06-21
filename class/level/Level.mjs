@@ -1,13 +1,9 @@
-function componentToHex(component) {
-	const hex = component.toString(16).toUpperCase()
-	return hex.length == 1 ? "0" + hex : hex
-}
-
 import { levelCommands } from "./levelCommands.mjs"
 import { textSymbols } from "../../constants.mjs"
 import { Drone } from "./drone/Drone.mjs"
 import { Ego } from "./drone/Ego.mjs"
 import { EventEmitter } from "events"
+import { componentToHex } from "../../utils.mjs"
 
 export class Level extends EventEmitter {
 	static commands = levelCommands
