@@ -89,9 +89,7 @@ export class Level extends EventEmitter {
 	loadPlayer(player, position = [0, 0, 0], orientation = [0, 0]) {
 		player.client.loadLevel(
 			this.blocks,
-			this.bounds[0],
-			this.bounds[1],
-			this.bounds[2],
+			...this.bounds,
 			false,
 			() => {
 				player.client.setClickDistance(10000)
@@ -125,7 +123,7 @@ export class Level extends EventEmitter {
 		this.blocks.writeUInt8(block, position[0] + this.bounds[0] * (position[2] + this.bounds[2] * position[1]))
 		// callback(block, position[0], position[1], position[2])
 		this.players.forEach((player) => {
-			if (!excludePlayers.includes(player)) player.client.setBlock(block, position[0], position[1], position[2])
+			if (!excludePlayers.includes(player)) player.client.setBlock(block, ...position)
 		})
 		if (saveToRecord) {
 			this.changeRecord.addBlockChange(position, block)
@@ -331,7 +329,6 @@ export class Level extends EventEmitter {
 			player.emit("playSound", player.universe.sounds[soundName])
 		})
 	}
-
 	/**Sets the text that will blink in the level, or stops blinking if `blinkText` is false.
 	 * @param {string|boolean} blinkText - The text to blink, or `false` to stop blinking.
 	 * @param {string} [subliminalText] - Optional subliminal text to display when blinking.

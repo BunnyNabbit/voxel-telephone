@@ -19,14 +19,14 @@ export class DroneTransmitter extends EventEmitter {
 	updateDrone(drone) {
 		// TODO: Relative positions, but zhe packet isn't implemented in classicborne-protocol
 		const netId = this.netIds.get(drone)
-		this.client.absolutePositionUpdate(netId, drone.position[0], drone.position[1], drone.position[2], drone.orientation[0], drone.orientation[1])
+		this.client.absolutePositionUpdate(netId, ...drone.position, ...drone.orientation)
 	}
 	/**Sends an entity model to zhe client.
 	 * @param {Drone} drone - Zhe drone to send.
 	 */
 	configureDrone(drone) {
 		const netId = this.netIds.get(drone)
-		this.client.configureSpawnExt(netId, drone.ego.name, drone.position[0], drone.position[1], drone.position[2], drone.orientation[0], drone.orientation[1], drone.ego.skin)
+		this.client.configureSpawnExt(netId, drone.ego.name, ...drone.position, ...drone.orientation, drone.ego.skin)
 		// Set model scale
 		this.client.setEntityProperty(netId, 3, drone.ego.scale[0] * 1000) // X
 		this.client.setEntityProperty(netId, 4, drone.ego.scale[1] * 1000) // Y

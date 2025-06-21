@@ -101,7 +101,7 @@ export class Player extends EventEmitter {
 			if (operationPosition.some((value, index) => value > this.space.bounds[index] - 1)) return console.log(`Player ${this.authInfo.username} attempted to place a block outside of bounds: ${operationPosition}`)
 			let block = operation.type
 			if (!this.space.userHasPermission(this.authInfo.username)) {
-				this.client.setBlock(this.space.getBlock(operationPosition), operationPosition[0], operationPosition[1], operationPosition[2])
+				this.client.setBlock(this.space.getBlock(operationPosition), ...operationPosition)
 				if (new Date() - this.lastClick < doubleClickTime && this.lastClickPosition.every((value, index) => value === operationPosition[index])) {
 					this.space.emit("click", this, { position: operationPosition, holdingBlock: block, type: "double" })
 				} else {
@@ -113,12 +113,12 @@ export class Player extends EventEmitter {
 			}
 			if (operation.mode == 0) block = 0
 			if (this.space.inVcr) {
-				this.client.setBlock(this.space.getBlock(operationPosition), operationPosition[0], operationPosition[1], operationPosition[2])
+				this.client.setBlock(this.space.getBlock(operationPosition), ...operationPosition)
 				this.message("Unable to place block. Level is in VCR mode")
 				return
 			}
 			if (this.space.blocking) {
-				this.client.setBlock(this.space.getBlock(operationPosition), operationPosition[0], operationPosition[1], operationPosition[2])
+				this.client.setBlock(this.space.getBlock(operationPosition), ...operationPosition)
 				if (!this.space.inferCurrentCommand(this.getInferredData(operationPosition, block), this)) {
 					this.message("Unable to place block. Command in level is expecting additional arguments")
 				}
