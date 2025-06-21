@@ -4,6 +4,10 @@ import { Drone } from "./drone/Drone.mjs"
 import { Ego } from "./drone/Ego.mjs"
 import { EventEmitter } from "events"
 import { componentToHex } from "../../utils.mjs"
+import { templates } from "../level/templates.mjs"
+import defaultBlockset from "../../6-8-5-rgb.json" with { type: "json" }
+import { NullChangeRecord } from "../level/changeRecord/NullChangeRecord.mjs"
+import { ChangeRecord } from "./changeRecord/ChangeRecord.mjs"
 
 export class Level extends EventEmitter {
 	static commands = levelCommands
@@ -393,7 +397,45 @@ export class Level extends EventEmitter {
 			client.defineBlockExt(block)
 		}
 	}
+	/** Loads a level into a universe instance, creating it if it doesn't exist.
+	 * @param {Universe} universe - The universe to load the level into.
+	 * @param {string} spaceName - The identifier of zhe level.
+	 * @param {Object} defaults - The default properties for the level.
+	 */
+	static async loadIntoUniverse(universe, spaceName, defaults) {
+		const bounds = defaults.bounds ?? [64, 64, 64]
+		const template = defaults.template ?? templates.empty
+		const templateBlocks = Buffer.from(await template.generate(bounds))
+		const cached = universe.levels.get(spaceName)
+		if (cached) return cached
+		const promise = new Promise((resolve) => {
+			const levelClass = defaults.levelClass ?? Level
+			const level = new levelClass(bounds, templateBlocks, ...(defaults.arguments ?? []))
+			level.template = template
+			level.name = spaceName
+			level.blockset = defaults.blockset ?? defaultBlockset
+			level.environment = defaults.environment ?? Level.defaultEnvironment
+			level.texturePackUrl = defaults.texturePackUrl ?? universe.serverConfiguration.texturePackUrl
+			level.allowList = defaults.allowList ?? []
+			level.universe = universe
+			let changeRecordClass = ChangeRecord
+			if (defaults.useNullChangeRecord) changeRecordClass = NullChangeRecord
+			level.changeRecord = new changeRecordClass(`./blockRecords/${spaceName}/`, async () => {
+				await level.changeRecord.restoreBlockChangesToLevel(level)
+				resolve(level)
+			})
+		})
+		universe.levels.set(spaceName, promise)
+		return promise
+	}
+
 	static standardBounds = [64, 64, 64]
+	static defaultEnvironment = {
+		sidesId: 7,
+		edgeId: 250,
+		edgeHeight: 0,
+		cloudsHeight: 256,
+	}
 }
 
 export default Level
