@@ -4,9 +4,6 @@ import { ViewLevel } from "../level/ViewLevel.mjs"
 import { HubLevel } from "../level/HubLevel.mjs"
 import { FastForwardLevel } from "../level/FastForwardLevel.mjs"
 import { GlobalCommandRegistry } from "../GlobalCommandRegistry.mjs"
-import { ChangeRecord } from "../level/changeRecord/ChangeRecord.mjs"
-import { NullChangeRecord } from "../level/changeRecord/NullChangeRecord.mjs"
-import defaultBlockset from "../../6-8-5-rgb.json" with { type: "json" }
 import { Database } from "../Database.mjs"
 import { Heartbeat } from "./Heartbeat.mjs"
 import { templates } from "../level/templates.mjs"
@@ -126,7 +123,7 @@ export class Universe extends EventEmitter {
 			// being used as a preloader
 			hubName = forcedHubName || this.serverConfiguration.hubName
 		}
-		const promise = this.loadLevel(hubName, {
+		const promise = Level.loadIntoUniverse(this, hubName, {
 			template: templates.empty,
 			allowList: this.serverConfiguration.hubEditors,
 			levelClass: HubLevel,
@@ -152,38 +149,6 @@ export class Universe extends EventEmitter {
 		return false
 	}
 
-	async loadLevel(spaceName, defaults = {}) {
-		const bounds = defaults.bounds ?? [64, 64, 64]
-		const template = defaults.template ?? templates.empty
-		const templateBlocks = Buffer.from(await template.generate(bounds))
-		const cached = this.levels.get(spaceName)
-		if (cached) return cached
-		const promise = new Promise((resolve) => {
-			const levelClass = defaults.levelClass ?? Level
-			const level = new levelClass(bounds, templateBlocks, ...(defaults.arguments ?? []))
-			level.template = template
-			level.name = spaceName
-			level.blockset = defaults.blockset ?? defaultBlockset
-			level.environment = defaults.environment ?? {
-				sidesId: 7,
-				edgeId: 250,
-				edgeHeight: 0,
-				cloudsHeight: 256,
-			}
-			level.texturePackUrl = defaults.texturePackUrl ?? this.serverConfiguration.texturePackUrl
-			level.allowList = defaults.allowList ?? []
-			level.universe = this
-			let changeRecordClass = ChangeRecord
-			if (defaults.useNullChangeRecord) changeRecordClass = NullChangeRecord
-			level.changeRecord = new changeRecordClass(`./blockRecords/${spaceName}/`, async () => {
-				await level.changeRecord.restoreBlockChangesToLevel(level)
-				resolve(level)
-			})
-		})
-		this.levels.set(spaceName, promise)
-		return promise
-	}
-
 	async enterView(player, viewData = {}, cursor) {
 		if (player.teleporting == true) return
 		player.teleporting = true
@@ -195,7 +160,7 @@ export class Universe extends EventEmitter {
 		if (viewData.mode == "realm") spaceName += `-realms-${viewData.player}`
 		if (cursor) spaceName += cursor
 		let levelClass = viewData.levelClass ?? ViewLevel
-		const promise = this.loadLevel(spaceName, {
+		const promise = Level.loadIntoUniverse(this, spaceName, {
 			useNullChangeRecord: true,
 			levelClass: levelClass,
 			arguments: [viewData, cursor],
@@ -215,7 +180,7 @@ export class Universe extends EventEmitter {
 		if (player.teleporting == true) return
 		player.teleporting = true
 		player.space.removePlayer(player)
-		const promise = this.loadLevel(`game-${game._id}-${player.username}`, {
+		const promise = Level.loadIntoUniverse(this, `game-${game._id}-${player.username}`, {
 			useNullChangeRecord: true,
 			levelClass: FastForwardLevel,
 			allowList: ["not a name"],
@@ -239,7 +204,7 @@ export class Universe extends EventEmitter {
 			return
 		}
 		const levelName = `realm-${realmDocument._id}`
-		const promise = this.loadLevel(levelName, {
+		const promise = Level.loadIntoUniverse(this, levelName, {
 			useNullChangeRecord: false,
 			levelClass: RealmLevel,
 			arguments: [realmDocument],
@@ -270,7 +235,7 @@ export class Universe extends EventEmitter {
 				player.message(`See building related commands by using /help`)
 				player.message(`Use /report if the prompt is inappropriate`)
 				player.message(`Once you are finished building, use /finish`, [0, 3])
-				this.loadLevel(`game-${game.next}`, Universe.builderDefaults).then((level) => {
+				Level.loadIntoUniverse(this, `game-${game.next}`, Universe.builderDefaults).then((level) => {
 					if (!level.eventsAttached) {
 						level.eventsAttached = true
 						const floorDrone = new Drone(
@@ -325,7 +290,7 @@ export class Universe extends EventEmitter {
 				player.message("Enter your description in chat")
 				player.message(`To skip, use /skip`)
 				player.message("Use /report if the build is inappropriate")
-				this.loadLevel(`game-${game._id}`, Universe.describeDefaults).then((level) => {
+				Level.loadIntoUniverse(this, `game-${game._id}`, Universe.describeDefaults).then((level) => {
 					// TODO: position
 					level.on("playerRemoved", async () => {
 						level.dispose()
