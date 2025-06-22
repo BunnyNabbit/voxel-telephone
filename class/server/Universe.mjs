@@ -1,12 +1,7 @@
 import Server from "classicborne-server-protocol"
 import { Level } from "../level/Level.mjs"
-import { ViewLevel } from "../level/ViewLevel.mjs"
 import { HubLevel } from "../level/HubLevel.mjs"
-import { FastForwardLevel } from "../level/FastForwardLevel.mjs"
 import { GlobalCommandRegistry } from "../GlobalCommandRegistry.mjs"
-import { ChangeRecord } from "../level/changeRecord/ChangeRecord.mjs"
-import { NullChangeRecord } from "../level/changeRecord/NullChangeRecord.mjs"
-import defaultBlockset from "../../6-8-5-rgb.json" with { type: "json" }
 import { Database } from "../Database.mjs"
 import { Heartbeat } from "./Heartbeat.mjs"
 import { templates } from "../level/templates.mjs"
@@ -17,7 +12,6 @@ import { Drone } from "../level/drone/Drone.mjs"
 import { Ego } from "../level/drone/Ego.mjs"
 import { PushIntegration } from "../integrations/PushIntegration.mjs"
 import { EventEmitter } from "events"
-import { RealmLevel } from "../level/RealmLevel.mjs"
 import { invertPromptType, randomIntFromInterval } from "../../utils.mjs"
 
 export class Universe extends EventEmitter {
@@ -73,7 +67,7 @@ export class Universe extends EventEmitter {
 
 		this.levels = new Map()
 		this.playerReserved = this.db.playerReserved
-		this.gotoHub() // being used to preload zhe hub level
+		HubLevel.teleportPlayer(this) // being used to preload zhe hub level
 
 		this.canCreateCooldown = new Set()
 
@@ -117,33 +111,6 @@ export class Universe extends EventEmitter {
 		this.emit("playerRemoved", player)
 	}
 
-	async gotoHub(player, forcedHubName) {
-		const hatchday = this.getHatchday()
-		let hubName
-		if (player) {
-			hubName = forcedHubName || (await player.userRecord.get()).defaultHub || (hatchday && hatchday.hubName) || this.serverConfiguration.hubName
-		} else {
-			// being used as a preloader
-			hubName = forcedHubName || this.serverConfiguration.hubName
-		}
-		const promise = this.loadLevel(hubName, {
-			template: templates.empty,
-			allowList: this.serverConfiguration.hubEditors,
-			levelClass: HubLevel,
-			arguments: [hubName, this.db],
-		})
-		if (player) {
-			player.message("Hub", 1)
-			player.message(" ", [2, 3])
-			promise.then((level) => {
-				const spawn = level.getSpawnPosition()
-				level.addPlayer(player, spawn[0], spawn[1])
-				player.emit("playSound", (hatchday && this.sounds[hatchday.hubTrack]) || this.sounds.hubTrack)
-			})
-		}
-		return promise
-	}
-
 	getHatchday() {
 		const hatchdays = this.serverConfiguration.hatchday ?? []
 		for (let index = 0; index < hatchdays.length; index++) {
@@ -152,117 +119,6 @@ export class Universe extends EventEmitter {
 			if (month === new Date().getMonth() + 1 && day === new Date().getDate()) return hatchday
 		}
 		return false
-	}
-
-	async loadLevel(spaceName, defaults = {}) {
-		const bounds = defaults.bounds ?? [64, 64, 64]
-		const template = defaults.template ?? templates.empty
-		const templateBlocks = Buffer.from(await template.generate(bounds))
-		const cached = this.levels.get(spaceName)
-		if (cached) return cached
-		const promise = new Promise((resolve) => {
-			const levelClass = defaults.levelClass ?? Level
-			const level = new levelClass(bounds, templateBlocks, ...(defaults.arguments ?? []))
-			level.template = template
-			level.name = spaceName
-			level.blockset = defaults.blockset ?? defaultBlockset
-			level.environment = defaults.environment ?? {
-				sidesId: 7,
-				edgeId: 250,
-				edgeHeight: 0,
-				cloudsHeight: 256,
-			}
-			level.texturePackUrl = defaults.texturePackUrl ?? this.serverConfiguration.texturePackUrl
-			level.allowList = defaults.allowList ?? []
-			level.universe = this
-			let changeRecordClass = ChangeRecord
-			if (defaults.useNullChangeRecord) changeRecordClass = NullChangeRecord
-			level.changeRecord = new changeRecordClass(`./blockRecords/${spaceName}/`, async () => {
-				await level.changeRecord.restoreBlockChangesToLevel(level)
-				resolve(level)
-			})
-		})
-		this.levels.set(spaceName, promise)
-		return promise
-	}
-
-	async enterView(player, viewData = {}, cursor) {
-		if (player.teleporting == true) return
-		player.teleporting = true
-		player.space.removePlayer(player)
-		let spaceName = "game-view"
-		if (viewData.mode == "mod") spaceName += "-mod"
-		if (viewData.mode == "user") spaceName += `-user-${player.authInfo.username}`
-		if (viewData.mode == "purged") spaceName += `-purged`
-		if (viewData.mode == "realm") spaceName += `-realms-${viewData.player}`
-		if (cursor) spaceName += cursor
-		let levelClass = viewData.levelClass ?? ViewLevel
-		const promise = this.loadLevel(spaceName, {
-			useNullChangeRecord: true,
-			levelClass: levelClass,
-			arguments: [viewData, cursor],
-			bounds: [576, 64, 512],
-			allowList: ["not a name"],
-			template: templates.empty,
-		})
-		player.message("View", 1)
-		player.message("Go back to hub with /main", 2)
-		player.message("Noclip past level borders to view next page", 3)
-		promise.then(async (level) => {
-			await level.reloadView(templates.empty)
-			level.addPlayer(player, [60, 8, 4], [162, 254])
-			player.teleporting = false
-			player.emit("playSound", this.sounds.viewTrack)
-		})
-	}
-
-	async enterPlayback(player, game) {
-		if (player.teleporting == true) return
-		player.teleporting = true
-		player.space.removePlayer(player)
-		const promise = this.loadLevel(`game-${game._id}-${player.username}`, {
-			useNullChangeRecord: true,
-			levelClass: FastForwardLevel,
-			allowList: ["not a name"],
-			arguments: [game],
-		})
-		player.message("Playback", 1)
-		player.message("Go back to hub with /main", 2)
-		player.message(" ", 3)
-		promise.then((level) => {
-			level.addPlayer(player, [40, 10, 60])
-			player.teleporting = false
-			player.emit("playSound", this.sounds.playbackTrack)
-		})
-	}
-
-	async enterRealm(player, realmId) {
-		if (player.teleporting == true) return
-		player.teleporting = true
-		player.space.removePlayer(player)
-		const realmDocument = await this.db.getRealm(realmId)
-		if (!realmDocument) {
-			player.message("Realm not found", 1)
-			player.teleporting = false
-			return
-		}
-		const levelName = `realm-${realmDocument._id}`
-		const promise = this.loadLevel(levelName, {
-			useNullChangeRecord: false,
-			levelClass: RealmLevel,
-			arguments: [realmDocument],
-			bounds: [256, 256, 256],
-			template: templates.empty,
-			allowList: [realmDocument.ownedBy],
-		})
-		promise.then((level) => {
-			level.addPlayer(player, [40, 10, 31])
-			player.teleporting = false
-			player.emit("playSound", this.sounds.gameTrack)
-		})
-		player.message("Realm", 1)
-		player.message("Go back to hub with /main", 2)
-		player.message(" ", 3)
 	}
 
 	async startGame(player) {
@@ -282,7 +138,7 @@ export class Universe extends EventEmitter {
 				player.message(`See building related commands by using /help`)
 				player.message(`Use /report if the prompt is inappropriate`)
 				player.message(`Once you are finished building, use /finish`, [0, 3])
-				this.loadLevel(`game-${game.next}`, Universe.builderDefaults).then((level) => {
+				Level.loadIntoUniverse(this, `game-${game.next}`, Universe.builderDefaults).then((level) => {
 					if (!level.eventsAttached) {
 						level.eventsAttached = true
 						const floorDrone = new Drone(
@@ -324,7 +180,6 @@ export class Universe extends EventEmitter {
 					}
 					level.game = game
 					level.addPlayer(player, [40, 10, 31])
-					player.teleporting = false
 					player.emit("playSound", this.sounds.gameTrack)
 				})
 			} else {
@@ -337,7 +192,7 @@ export class Universe extends EventEmitter {
 				player.message("Enter your description in chat")
 				player.message(`To skip, use /skip`)
 				player.message("Use /report if the build is inappropriate")
-				this.loadLevel(`game-${game._id}`, Universe.describeDefaults).then((level) => {
+				Level.loadIntoUniverse(this, `game-${game._id}`, Universe.describeDefaults).then((level) => {
 					// TODO: position
 					level.on("playerRemoved", async () => {
 						level.dispose()
@@ -345,12 +200,11 @@ export class Universe extends EventEmitter {
 					})
 					level.game = game
 					level.addPlayer(player, [40, 65, 31])
-					player.teleporting = false
 					player.emit("playSound", this.sounds.gameTrack)
 				})
 			}
 		} else {
-			await this.gotoHub(player)
+			await HubLevel.teleportPlayer(player)
 			if (this.canCreateCooldown.has(player.authInfo.username) == false) {
 				player.message("Whoops. Looks like we ran out of games! How about this, you can create a new prompt from nothing. Go ahead, use /create to start the process of making a prompt.")
 				player.message("Think of something mundane or imaginative. It is entirely up to you.")

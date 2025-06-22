@@ -6,6 +6,9 @@ import { Help } from "../Help.mjs"
 import { RealmManagerLevel } from "../level/RealmManagerLevel.mjs"
 import { invertPromptType } from "../../utils.mjs"
 import { textSymbols } from "../../constants.mjs"
+import { ViewLevel } from "../level/ViewLevel.mjs"
+import { FastForwardLevel } from "../level/FastForwardLevel.mjs"
+import { HubLevel } from "../level/HubLevel.mjs"
 
 let creationLicenses = {}
 import("../../creationLicenses.mjs").then(module => {
@@ -67,7 +70,7 @@ export class Commands {
 				universe.db.addInteraction(player.authInfo.username, player.space.game.root, "complete")
 				player.space.doNotReserve = true
 				player.space.removePlayer(player)
-				await universe.gotoHub(player)
+				await HubLevel.teleportPlayer(player)
 			}
 		})
 		universe.registerCommand(["/report"], async (player, message) => {
@@ -82,7 +85,7 @@ export class Commands {
 				player.message(`Game reported with reason: "${reason}"`)
 				player.space.doNotReserve = true
 				player.space.removePlayer(player);
-				await universe.gotoHub(player)
+				await HubLevel.teleportPlayer(player)
 			}
 		})
 		universe.registerCommand(["/abort"], async (player) => {
@@ -135,7 +138,7 @@ export class Commands {
 				universe.db.addInteraction(player.authInfo.username, player.space.game._id, "skip")
 				player.space.doNotReserve = true
 				player.space.removePlayer(player)
-				await universe.gotoHub(player)
+				await HubLevel.teleportPlayer(player)
 			}
 		})
 		universe.registerCommand(["/place", "/pl"], async (player) => {
@@ -239,15 +242,15 @@ export class Commands {
 			if (message == "mod") {
 				const isModerator = await Commands.reasonHasUserPermission("moderator")(player)
 				if (!isModerator) return
-				universe.enterView(player, { viewAll: true, mode: "mod" })
+				ViewLevel.teleportPlayer(player, { viewAll: true, mode: "mod" })
 			} else if (message == "user") {
-				universe.enterView(player, { viewAll: true, mode: "user", username: player.authInfo.username })
+				ViewLevel.teleportPlayer(player, { viewAll: true, mode: "user", username: player.authInfo.username })
 			} else if (message == "purged") {
 				const isModerator = await Commands.reasonHasUserPermission("moderator")(player)
 				if (!isModerator) return
-				universe.enterView(player, { viewAll: true, mode: "purged", username: player.authInfo.username })
+				ViewLevel.teleportPlayer(player, { viewAll: true, mode: "purged", username: player.authInfo.username })
 			} else if (!message) {
-				universe.enterView(player)
+				ViewLevel.teleportPlayer(player)
 			} else {
 				player.message("Unknown view argument. /help view")
 			}
@@ -255,7 +258,7 @@ export class Commands {
 		universe.registerCommand(["/main", "/hub", "/spawn", "/h", "/wmain", "/worldmain"], async (player) => {
 			if (player.space) {
 				player.space.removePlayer(player)
-				universe.gotoHub(player)
+				HubLevel.teleportPlayer(player)
 			}
 		})
 		universe.registerCommand(["/purge"], async (player, reason) => {
@@ -278,7 +281,7 @@ export class Commands {
 			if (!selectedTurns?.description) return player.message("No game is selected.")
 			const game = await universe.db.getGame(selectedTurns.description.root)
 			if (game.length !== 16) return player.message("Game is not complete.")
-			universe.enterPlayback(player, game)
+			FastForwardLevel.teleportPlayer(player, game)
 		})
 
 		universe.registerCommand(["/setting"], async (player, message) => {
@@ -344,7 +347,7 @@ export class Commands {
 		})
 
 		universe.registerCommand(["/realm", "/os", "/myrealm"], async (player) => {
-			universe.enterView(player, { viewAll: true, mode: "realm", player: player.authInfo.username, levelClass: RealmManagerLevel })
+			ViewLevel.teleportPlayer(player, { viewAll: true, mode: "realm", player: player.authInfo.username, levelClass: RealmManagerLevel })
 			return
 		})
 
