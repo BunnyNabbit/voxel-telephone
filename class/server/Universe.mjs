@@ -1,8 +1,6 @@
 import Server from "classicborne-server-protocol"
 import { Level } from "../level/Level.mjs"
-import { ViewLevel } from "../level/ViewLevel.mjs"
 import { HubLevel } from "../level/HubLevel.mjs"
-import { FastForwardLevel } from "../level/FastForwardLevel.mjs"
 import { GlobalCommandRegistry } from "../GlobalCommandRegistry.mjs"
 import { Database } from "../Database.mjs"
 import { Heartbeat } from "./Heartbeat.mjs"
@@ -14,7 +12,6 @@ import { Drone } from "../level/drone/Drone.mjs"
 import { Ego } from "../level/drone/Ego.mjs"
 import { PushIntegration } from "../integrations/PushIntegration.mjs"
 import { EventEmitter } from "events"
-import { RealmLevel } from "../level/RealmLevel.mjs"
 import { invertPromptType, randomIntFromInterval } from "../../utils.mjs"
 
 export class Universe extends EventEmitter {
@@ -70,7 +67,7 @@ export class Universe extends EventEmitter {
 
 		this.levels = new Map()
 		this.playerReserved = this.db.playerReserved
-		this.enterHub() // being used to preload zhe hub level
+		HubLevel.teleportPlayer(this) // being used to preload zhe hub level
 
 		this.canCreateCooldown = new Set()
 
@@ -114,31 +111,6 @@ export class Universe extends EventEmitter {
 		this.emit("playerRemoved", player)
 	}
 
-	async enterHub(player, forcedHubName) {
-		const hatchday = this.getHatchday()
-		let hubName
-		if (player) {
-			hubName = forcedHubName || (await player.userRecord.get()).defaultHub || (hatchday && hatchday.hubName) || this.serverConfiguration.hubName
-		} else {
-			// being used as a preloader
-			hubName = forcedHubName || this.serverConfiguration.hubName
-		}
-		const promise = Level.loadIntoUniverse(this, hubName, {
-			template: templates.empty,
-			allowList: this.serverConfiguration.hubEditors,
-			levelClass: HubLevel,
-			arguments: [hubName, this.db],
-		})
-		if (player) {
-			promise.then((level) => {
-				const spawn = level.getSpawnPosition()
-				level.addPlayer(player, spawn[0], spawn[1])
-				player.emit("playSound", (hatchday && this.sounds[hatchday.hubTrack]) || this.sounds.hubTrack)
-			})
-		}
-		return promise
-	}
-
 	getHatchday() {
 		const hatchdays = this.serverConfiguration.hatchday ?? []
 		for (let index = 0; index < hatchdays.length; index++) {
@@ -147,75 +119,6 @@ export class Universe extends EventEmitter {
 			if (month === new Date().getMonth() + 1 && day === new Date().getDate()) return hatchday
 		}
 		return false
-	}
-
-	async enterView(player, viewData = {}, cursor) {
-		if (player.teleporting == true) return
-		player.teleporting = true
-		player.space.removePlayer(player)
-		let spaceName = "game-view"
-		if (viewData.mode == "mod") spaceName += "-mod"
-		if (viewData.mode == "user") spaceName += `-user-${player.authInfo.username}`
-		if (viewData.mode == "purged") spaceName += `-purged`
-		if (viewData.mode == "realm") spaceName += `-realms-${viewData.player}`
-		if (cursor) spaceName += cursor
-		let levelClass = viewData.levelClass ?? ViewLevel
-		const promise = Level.loadIntoUniverse(this, spaceName, {
-			useNullChangeRecord: true,
-			levelClass: levelClass,
-			arguments: [viewData, cursor],
-			bounds: [576, 64, 512],
-			allowList: ["not a name"],
-			template: templates.empty,
-		})
-
-		promise.then(async (level) => {
-			await level.reloadView(templates.empty)
-			level.addPlayer(player, [60, 8, 4], [162, 254])
-			player.teleporting = false
-		})
-	}
-
-	async enterPlayback(player, game) {
-		if (player.teleporting == true) return
-		player.teleporting = true
-		player.space.removePlayer(player)
-		const promise = Level.loadIntoUniverse(this, `game-${game._id}-${player.username}`, {
-			useNullChangeRecord: true,
-			levelClass: FastForwardLevel,
-			allowList: ["not a name"],
-			arguments: [game],
-		})
-
-		promise.then((level) => {
-			level.addPlayer(player, [40, 10, 60])
-			player.teleporting = false
-		})
-	}
-
-	async enterRealm(player, realmId) {
-		if (player.teleporting == true) return
-		player.teleporting = true
-		player.space.removePlayer(player)
-		const realmDocument = await this.db.getRealm(realmId)
-		if (!realmDocument) {
-			player.message("Realm not found", 1)
-			player.teleporting = false
-			return
-		}
-		const levelName = `realm-${realmDocument._id}`
-		const promise = Level.loadIntoUniverse(this, levelName, {
-			useNullChangeRecord: false,
-			levelClass: RealmLevel,
-			arguments: [realmDocument],
-			bounds: [256, 256, 256],
-			template: templates.empty,
-			allowList: [realmDocument.ownedBy],
-		})
-		promise.then((level) => {
-			level.addPlayer(player, [40, 10, 31])
-			player.teleporting = false
-		})
 	}
 
 	async startGame(player) {
@@ -277,7 +180,6 @@ export class Universe extends EventEmitter {
 					}
 					level.game = game
 					level.addPlayer(player, [40, 10, 31])
-					player.teleporting = false
 					player.emit("playSound", this.sounds.gameTrack)
 				})
 			} else {
@@ -298,12 +200,11 @@ export class Universe extends EventEmitter {
 					})
 					level.game = game
 					level.addPlayer(player, [40, 65, 31])
-					player.teleporting = false
 					player.emit("playSound", this.sounds.gameTrack)
 				})
 			}
 		} else {
-			await this.enterHub(player)
+			await HubLevel.teleportPlayer(player)
 			if (this.canCreateCooldown.has(player.authInfo.username) == false) {
 				player.message("Whoops. Looks like we ran out of games! How about this, you can create a new prompt from nothing. Go ahead, use /create to start the process of making a prompt.")
 				player.message("Think of something mundane or imaginative. It is entirely up to you.")

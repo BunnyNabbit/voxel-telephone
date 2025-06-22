@@ -1,4 +1,5 @@
 import { Level } from "./Level.mjs"
+import { templates } from "./templates.mjs"
 
 class Count {
 	/** */
@@ -82,6 +83,30 @@ export class RealmLevel extends Level {
 		}
 		console.timeEnd("downsample")
 		return downsampled
+	}
+
+	static async teleportPlayer(player, realmId) {
+		if (super.teleportPlayer(player) === false) return
+		const { universe } = player
+		const realmDocument = await universe.db.getRealm(realmId)
+		if (!realmDocument) {
+			player.message("Realm not found", 1)
+			player.teleporting = false
+			universe.commandRegistry.attemptCall(player, "/main")
+			return
+		}
+		const levelName = `realm-${realmDocument._id}`
+
+		Level.loadIntoUniverse(universe, levelName, {
+			useNullChangeRecord: false,
+			levelClass: RealmLevel,
+			arguments: [realmDocument],
+			bounds: [256, 256, 256],
+			template: templates.empty,
+			allowList: [realmDocument.ownedBy],
+		}).then((level) => {
+			level.addPlayer(player, [40, 10, 31])
+		})
 	}
 }
 

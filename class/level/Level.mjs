@@ -8,6 +8,7 @@ import { templates } from "../level/templates.mjs"
 import defaultBlockset from "../../6-8-5-rgb.json" with { type: "json" }
 import { NullChangeRecord } from "../level/changeRecord/NullChangeRecord.mjs"
 import { ChangeRecord } from "./changeRecord/ChangeRecord.mjs"
+/** @typedef {import("../player/Player.mjs").Player} Player */
 
 export class Level extends EventEmitter {
 	static commands = levelCommands
@@ -74,7 +75,9 @@ export class Level extends EventEmitter {
 		})
 		this.drones.add(drone)
 	}
-
+	/**Adds a player to the level.
+	 * @param {Player} player - The player to be added.
+	 */
 	addPlayer(player, position = [0, 0, 0], orientation = [0, 0]) {
 		this.emit("playerAdded", player)
 		player.space = this
@@ -84,6 +87,7 @@ export class Level extends EventEmitter {
 		this.clientDrones.set(player.client, drone)
 		this.addDrone(drone)
 		this.players.push(player)
+		player.teleporting = false
 	}
 
 	loadPlayer(player, position = [0, 0, 0], orientation = [0, 0]) {
@@ -397,17 +401,18 @@ export class Level extends EventEmitter {
 			client.defineBlockExt(block)
 		}
 	}
-	/** Loads a level into a universe instance, creating it if it doesn't exist.
+	/**Loads a level into a universe instance, creating it if it doesn't exist.
 	 * @param {Universe} universe - The universe to load the level into.
 	 * @param {string} spaceName - The identifier of zhe level.
 	 * @param {Object} defaults - The default properties for the level.
+	 * @returns {Promise<Level>} A promise that resolves to the loaded level.
 	 */
 	static async loadIntoUniverse(universe, spaceName, defaults) {
-		const bounds = defaults.bounds ?? [64, 64, 64]
-		const template = defaults.template ?? templates.empty
-		const templateBlocks = Buffer.from(await template.generate(bounds))
 		const cached = universe.levels.get(spaceName)
 		if (cached) return cached
+		const bounds = defaults.bounds ?? Level.standardBounds
+		const template = defaults.template ?? templates.empty
+		const templateBlocks = Buffer.from(await template.generate(bounds))
 		const promise = new Promise((resolve) => {
 			const levelClass = defaults.levelClass ?? Level
 			const level = new levelClass(bounds, templateBlocks, ...(defaults.arguments ?? []))
@@ -428,7 +433,20 @@ export class Level extends EventEmitter {
 		universe.levels.set(spaceName, promise)
 		return promise
 	}
+	/** Teleports zhe player into zhe level. If level currently doesn't exist in universe, it'll be created.*/
+	static async teleportPlayer(player, spaceName, defaults = {}) {
+		if (player) {
+			if (player.teleporting == true) return false
+			player.teleporting = true
+			if (player.space) player.space.removePlayer(player)
+		}
 
+		if (this === Level) {
+			Level.loadIntoUniverse(player.universe, spaceName, defaults).then(async (level) => {
+				level.addPlayer(player, [60, 8, 4], [162, 254])
+			})
+		}
+	}
 	static standardBounds = [64, 64, 64]
 	static defaultEnvironment = {
 		sidesId: 7,

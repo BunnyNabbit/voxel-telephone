@@ -89,6 +89,20 @@ export class FastForwardLevel extends Level {
 	static sleep(time) {
 		return new Promise((resolve) => setTimeout(resolve, time))
 	}
+
+	static async teleportPlayer(player, game) {
+		if (super.teleportPlayer(player) === false) return
+		const { universe } = player
+
+		Level.loadIntoUniverse(universe, `game-${game._id}-${player.username}`, {
+			useNullChangeRecord: true,
+			levelClass: FastForwardLevel,
+			allowList: ["not a name"],
+			arguments: [game],
+		}).then((level) => {
+			level.addPlayer(player, [40, 10, 60])
+		})
+	}
 }
 
 export default FastForwardLevel
