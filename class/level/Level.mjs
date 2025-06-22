@@ -1,13 +1,14 @@
-function componentToHex(component) {
-	const hex = component.toString(16).toUpperCase()
-	return hex.length == 1 ? "0" + hex : hex
-}
-
 import { levelCommands } from "./levelCommands.mjs"
 import { textSymbols } from "../../constants.mjs"
 import { Drone } from "./drone/Drone.mjs"
 import { Ego } from "./drone/Ego.mjs"
 import { EventEmitter } from "events"
+import { componentToHex } from "../../utils.mjs"
+import { templates } from "../level/templates.mjs"
+import defaultBlockset from "../../6-8-5-rgb.json" with { type: "json" }
+import { NullChangeRecord } from "../level/changeRecord/NullChangeRecord.mjs"
+import { ChangeRecord } from "./changeRecord/ChangeRecord.mjs"
+/** @typedef {import("../player/Player.mjs").Player} Player */
 
 export class Level extends EventEmitter {
 	static commands = levelCommands
@@ -74,7 +75,9 @@ export class Level extends EventEmitter {
 		})
 		this.drones.add(drone)
 	}
-
+	/**Adds a player to the level.
+	 * @param {Player} player - The player to be added.
+	 */
 	addPlayer(player, position = [0, 0, 0], orientation = [0, 0]) {
 		this.emit("playerAdded", player)
 		player.space = this
@@ -84,14 +87,13 @@ export class Level extends EventEmitter {
 		this.clientDrones.set(player.client, drone)
 		this.addDrone(drone)
 		this.players.push(player)
+		player.teleporting = false
 	}
 
 	loadPlayer(player, position = [0, 0, 0], orientation = [0, 0]) {
 		player.client.loadLevel(
 			this.blocks,
-			this.bounds[0],
-			this.bounds[1],
-			this.bounds[2],
+			...this.bounds,
 			false,
 			() => {
 				player.client.setClickDistance(10000)
@@ -125,7 +127,7 @@ export class Level extends EventEmitter {
 		this.blocks.writeUInt8(block, position[0] + this.bounds[0] * (position[2] + this.bounds[2] * position[1]))
 		// callback(block, position[0], position[1], position[2])
 		this.players.forEach((player) => {
-			if (!excludePlayers.includes(player)) player.client.setBlock(block, position[0], position[1], position[2])
+			if (!excludePlayers.includes(player)) player.client.setBlock(block, ...position)
 		})
 		if (saveToRecord) {
 			this.changeRecord.addBlockChange(position, block)
@@ -331,7 +333,6 @@ export class Level extends EventEmitter {
 			player.emit("playSound", player.universe.sounds[soundName])
 		})
 	}
-
 	/**Sets the text that will blink in the level, or stops blinking if `blinkText` is false.
 	 * @param {string|boolean} blinkText - The text to blink, or `false` to stop blinking.
 	 * @param {string} [subliminalText] - Optional subliminal text to display when blinking.
@@ -400,7 +401,59 @@ export class Level extends EventEmitter {
 			client.defineBlockExt(block)
 		}
 	}
+	/**Loads a level into a universe instance, creating it if it doesn't exist.
+	 * @param {Universe} universe - The universe to load the level into.
+	 * @param {string} spaceName - The identifier of zhe level.
+	 * @param {Object} defaults - The default properties for the level.
+	 * @returns {Promise<Level>} A promise that resolves to the loaded level.
+	 */
+	static async loadIntoUniverse(universe, spaceName, defaults) {
+		const cached = universe.levels.get(spaceName)
+		if (cached) return cached
+		const bounds = defaults.bounds ?? Level.standardBounds
+		const template = defaults.template ?? templates.empty
+		const templateBlocks = Buffer.from(await template.generate(bounds))
+		const promise = new Promise((resolve) => {
+			const levelClass = defaults.levelClass ?? Level
+			const level = new levelClass(bounds, templateBlocks, ...(defaults.arguments ?? []))
+			level.template = template
+			level.name = spaceName
+			level.blockset = defaults.blockset ?? defaultBlockset
+			level.environment = defaults.environment ?? Level.defaultEnvironment
+			level.texturePackUrl = defaults.texturePackUrl ?? universe.serverConfiguration.texturePackUrl
+			level.allowList = defaults.allowList ?? []
+			level.universe = universe
+			let changeRecordClass = ChangeRecord
+			if (defaults.useNullChangeRecord) changeRecordClass = NullChangeRecord
+			level.changeRecord = new changeRecordClass(`./blockRecords/${spaceName}/`, async () => {
+				await level.changeRecord.restoreBlockChangesToLevel(level)
+				resolve(level)
+			})
+		})
+		universe.levels.set(spaceName, promise)
+		return promise
+	}
+	/** Teleports zhe player into zhe level. If level currently doesn't exist in universe, it'll be created.*/
+	static async teleportPlayer(player, spaceName, defaults = {}) {
+		if (player) {
+			if (player.teleporting == true) return false
+			player.teleporting = true
+			if (player.space) player.space.removePlayer(player)
+		}
+
+		if (this === Level) {
+			Level.loadIntoUniverse(player.universe, spaceName, defaults).then(async (level) => {
+				level.addPlayer(player, [60, 8, 4], [162, 254])
+			})
+		}
+	}
 	static standardBounds = [64, 64, 64]
+	static defaultEnvironment = {
+		sidesId: 7,
+		edgeId: 250,
+		edgeHeight: 0,
+		cloudsHeight: 256,
+	}
 }
 
 export default Level

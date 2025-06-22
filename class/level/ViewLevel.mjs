@@ -48,11 +48,15 @@ export class ViewLevel extends Level {
 					setTimeout(() => {
 						player.viewDebounce = false
 					}, 1000)
-					this.universe.enterView(player, this.viewData, this.nextCursor)
+					ViewLevel.teleportPlayer(player, this.viewData, this.nextCursor)
 				}
 			}
 			player.client.on("position", onPosition)
 			this.positionEventListeners.set(player, onPosition)
+			player.message("View", 1)
+			player.message("Go back to hub with /main", 2)
+			player.message("Noclip past level borders to view next page", 3)
+			player.emit("playSound", this.universe.sounds.viewTrack)
 		})
 		this.viewData = viewData
 	}
@@ -209,5 +213,29 @@ export class ViewLevel extends Level {
 			}
 		}
 		xOffset++
+	}
+
+	static async teleportPlayer(player, viewData = {}, cursor) {
+		if (super.teleportPlayer(player) === false) return
+		const { universe } = player
+		let spaceName = "game-view"
+		if (viewData.mode == "mod") spaceName += "-mod"
+		if (viewData.mode == "user") spaceName += `-user-${player.authInfo.username}`
+		if (viewData.mode == "purged") spaceName += `-purged`
+		if (viewData.mode == "realm") spaceName += `-realms-${viewData.player}`
+		if (cursor) spaceName += cursor
+		let levelClass = viewData.levelClass ?? ViewLevel
+
+		Level.loadIntoUniverse(universe, spaceName, {
+			useNullChangeRecord: true,
+			levelClass: levelClass,
+			arguments: [viewData, cursor],
+			bounds: [576, 64, 512],
+			allowList: ["not a name"],
+			template: templates.empty,
+		}).then(async (level) => {
+			await level.reloadView(templates.empty)
+			level.addPlayer(player, [60, 8, 4], [162, 254])
+		})
 	}
 }

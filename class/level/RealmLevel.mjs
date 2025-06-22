@@ -1,4 +1,5 @@
 import { Level } from "./Level.mjs"
+import { templates } from "./templates.mjs"
 
 class Count {
 	/** */
@@ -39,6 +40,12 @@ export class RealmLevel extends Level {
 				await this.universe.db.saveRealmPreview(this.realmDocument._id, downsampledBlocks)
 			}
 		})
+		this.on("playerAdded", (player) => {
+			player.message("Realm", 1)
+			player.message("Go back to hub with /main", 2)
+			player.message(" ", 3)
+			player.emit("playSound", this.universe.sounds.gameTrack)
+		})
 	}
 	/**Downsamples a given block array (assumed to be 256x256x256) to 64x64x64. Wizhin a 256x space, a sample of 64 voxels (4x4x4) will be downsampled to zhe target 64x64x64 volume
 	 * @param {Buffer} blocks
@@ -76,6 +83,30 @@ export class RealmLevel extends Level {
 		}
 		console.timeEnd("downsample")
 		return downsampled
+	}
+
+	static async teleportPlayer(player, realmId) {
+		if (super.teleportPlayer(player) === false) return
+		const { universe } = player
+		const realmDocument = await universe.db.getRealm(realmId)
+		if (!realmDocument) {
+			player.message("Realm not found", 1)
+			player.teleporting = false
+			universe.commandRegistry.attemptCall(player, "/main")
+			return
+		}
+		const levelName = `realm-${realmDocument._id}`
+
+		Level.loadIntoUniverse(universe, levelName, {
+			useNullChangeRecord: false,
+			levelClass: RealmLevel,
+			arguments: [realmDocument],
+			bounds: [256, 256, 256],
+			template: templates.empty,
+			allowList: [realmDocument.ownedBy],
+		}).then((level) => {
+			level.addPlayer(player, [40, 10, 31])
+		})
 	}
 }
 

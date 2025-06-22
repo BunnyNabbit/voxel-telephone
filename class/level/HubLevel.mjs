@@ -1,4 +1,6 @@
+import { Player } from "../player/Player.mjs"
 import { Level } from "./Level.mjs"
+import { templates } from "./templates.mjs"
 
 export class HubLevel extends Level {
 	/** */
@@ -6,6 +8,10 @@ export class HubLevel extends Level {
 		super(bounds, blocks)
 		this.on("playerRemoved", async () => {
 			if (this.players.length == 0 && !this.changeRecord.draining && this.changeRecord.dirty) await this.changeRecord.flushChanges()
+		})
+		this.on("playerAdded", (player) => {
+			player.message("Hub", 1)
+			player.message(" ", [2, 3])
 		})
 		this.portals = []
 		db.getPortals(name).then((zones) => {
@@ -32,6 +38,39 @@ export class HubLevel extends Level {
 			.split(",")
 			.map((value) => parseInt(value))
 		return [zone.min.map((value, index) => value + Math.random() * (zone.max[index] - value)), orientation]
+	}
+
+	static async teleportPlayer(player, forcedHubName) {
+		if (super.teleportPlayer(player) === false) return
+		let universe = null
+		let hubName = null
+		if (!(player instanceof Player)) {
+			universe = player
+		}
+		let hatchday = null
+		if (player instanceof Player) {
+			universe = player.universe
+			hatchday = universe.getHatchday()
+			hubName = forcedHubName || (await player.userRecord.get()).defaultHub || (hatchday && hatchday.hubName) || universe.serverConfiguration.hubName
+		} else {
+			// being used as a preloader
+			hatchday = universe.getHatchday()
+			hubName = forcedHubName || universe.serverConfiguration.hubName
+		}
+		const promise = Level.loadIntoUniverse(universe, hubName, {
+			template: templates.empty,
+			allowList: universe.serverConfiguration.hubEditors,
+			levelClass: HubLevel,
+			arguments: [hubName, universe.db],
+		})
+		if (player instanceof Player) {
+			promise.then((level) => {
+				const spawn = level.getSpawnPosition()
+				level.addPlayer(player, spawn[0], spawn[1])
+				player.emit("playSound", (hatchday && universe.sounds[hatchday.hubTrack]) || universe.sounds.hubTrack)
+			})
+		}
+		return promise
 	}
 }
 
