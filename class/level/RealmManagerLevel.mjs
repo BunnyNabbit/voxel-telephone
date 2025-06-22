@@ -1,5 +1,6 @@
 import { ViewLevel } from "./ViewLevel.mjs"
 import { templates } from "./templates.mjs"
+import { RealmLevel } from "./RealmLevel.mjs"
 
 export class RealmManagerLevel extends ViewLevel {
 	/** */
@@ -18,14 +19,14 @@ export class RealmManagerLevel extends ViewLevel {
 				const realmDocument = await this.universe.db.createNewRealm(player.authInfo.username)
 				if (realmDocument) {
 					player.teleporting = false
-					this.universe.enterRealm(player, realmDocument._id)
+					RealmLevel.teleportPlayer(player, realmDocument._id)
 				} else {
 					// failed to create
 					player.message("Failed to create realm. Please try again later.", 1)
 					player.teleporting = false
 				}
 			} else if (turns.build) {
-				this.universe.enterRealm(player, turns.build._id)
+				RealmLevel.teleportPlayer(player, turns.build._id)
 			}
 		})
 	}

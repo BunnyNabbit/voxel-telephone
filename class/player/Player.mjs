@@ -7,6 +7,7 @@ import { templates } from "../level/templates.mjs"
 import { PushIntegration } from "../integrations/PushIntegration.mjs"
 import { EventEmitter } from "events"
 import { randomIntFromInterval } from "../../utils.mjs"
+import { HubLevel } from "../level/HubLevel.mjs"
 
 export class Player extends EventEmitter {
 	/** */
@@ -90,7 +91,7 @@ export class Player extends EventEmitter {
 			this.emit("soundLoadHack")
 			if (this.destroyed) return
 		}
-		universe.enterHub(this)
+		HubLevel.teleportPlayer(this)
 		this.lastClick = new Date()
 		this.lastClickPosition = [0, 0, 0]
 		const doubleClickTime = 500
