@@ -85,7 +85,7 @@ export class Player extends EventEmitter {
 			const { processLevel } = await import("classicborne-server-protocol/utils.cjs")
 			const emptyLevelBuffer = await processLevel(templates.empty.generate([64, 64, 64]), 64, 64, 64)
 			this.client.loadLevel(await emptyLevelBuffer, 64, 64, 64, true)
-			const waitPromise = new Promise((resolve) => setTimeout(resolve, 300))
+			const waitPromise = new Promise((resolve) => setTimeout(resolve, 1000))
 			// allows zhe client to receive and load zhe dummy level. might be neater to wait for a position update, but not really possible here as zhe client hasn't received its own proper spawn position yet.
 			await waitPromise
 			this.emit("soundLoadHack")
