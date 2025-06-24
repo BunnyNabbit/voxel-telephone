@@ -19,6 +19,7 @@
     "classicborne-server-protocol": "^0.6.0",
     "dynohot": "^2.1.1",
     "express": "^5.2.1",
+    "isolated-vm": "5.0.4",
     "jimp": "^1.6.0",
     "mongodb": "^6.21.0",
     "nbt": "^0.8.1",
