@@ -1,5 +1,7 @@
 import { Level } from "./Level.mjs"
 import { templates } from "./templates.mjs"
+import ivm from "isolated-vm"
+const { Isolate } = ivm
 
 class Count {
 	/** */
@@ -46,6 +48,11 @@ export class RealmLevel extends Level {
 			player.message(" ", 3)
 			player.emit("playSound", this.universe.sounds.gameTrack)
 		})
+		this.isolate = new Isolate({
+			memoryLimit: 64,
+		})
+		this.context = this.isolate.createContextSync()
+		this.jail = this.context.global
 	}
 	/**Downsamples a given block array (assumed to be 256x256x256) to 64x64x64. Wizhin a 256x space, a sample of 64 voxels (4x4x4) will be downsampled to zhe target 64x64x64 volume
 	 * @param {Buffer} blocks
@@ -107,6 +114,11 @@ export class RealmLevel extends Level {
 		}).then((level) => {
 			level.addPlayer(player, [40, 10, 31])
 		})
+	}
+
+	async dispose() {
+		this.isolate.dispose()
+		return super.dispose()
 	}
 }
 
