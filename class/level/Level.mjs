@@ -94,6 +94,11 @@ export class Level extends BaseLevel {
 		this.blinkInterval = setInterval(blink, 500)
 		blink()
 	}
+
+	static getIndex(bounds, position) {
+		return position[0] + bounds[0] * (position[2] + bounds[2] * position[1])
+	}
+
 	static blockset = defaultBlockset
 	static commandInterpreterClass = LevelCommandInterpreter
 	static commands = levelCommands
