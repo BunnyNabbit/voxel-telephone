@@ -359,6 +359,11 @@ export class Level extends EventEmitter {
 		this.blinkInterval = setInterval(blink, 500)
 		blink()
 	}
+
+	static getIndex(bounds, position) {
+		return position[0] + bounds[0] * (position[2] + bounds[2] * position[1])
+	}
+
 	/** Destroys the level, releasing any resources used for it. */
 	async dispose(saveChanges = true) {
 		if (!this.changeRecord.draining && this.changeRecord.dirty && saveChanges) {
