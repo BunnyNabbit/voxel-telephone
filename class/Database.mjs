@@ -150,7 +150,6 @@ export class Database {
 					}
 				})
 				if (currentColumn.length) grid.push(currentColumn)
-				console.log(grid)
 				resolve(grid)
 			})
 		})
