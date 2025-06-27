@@ -140,7 +140,6 @@ export class ViewLevel extends Level {
 						continue
 					}
 					if (isOnlyDescription) {
-						console.log(turn, turnIndex)
 						await this.addIcon(templates.view.description, iconPosition, gameIndex)
 						iconPosition++
 						continue
