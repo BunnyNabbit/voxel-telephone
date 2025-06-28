@@ -176,7 +176,7 @@ export class Database {
 		return this.portalCollection.replaceOne({ _id: level.name }, { _id: level.name, portals }, { upsert: true })
 	}
 
-	createNewGame(startingSentence, username) {
+	async createNewGame(startingSentence, username) {
 		const gameId = new ObjectId()
 		const gameNextId = new ObjectId()
 		const document = {
@@ -190,9 +190,8 @@ export class Database {
 			parent: "self",
 			depth: 0,
 		}
-		return this.gameCollection.insertOne(document).then(() => {
-			return document
-		})
+		await this.gameCollection.insertOne(document)
+		return document
 	}
 
 	async getInteraction(username, id, type) {
@@ -220,13 +219,9 @@ export class Database {
 		return this.reportCollection.updateMany({ _id: reportId }, { $set: { unresolved: status } })
 	}
 
-	getReports(gameIds) {
-		return this.reportCollection
-			.find({ _id: { $in: gameIds } })
-			.toArray()
-			.then((reports) => {
-				return reports
-			})
+	async getReports(gameIds) {
+		const reports = await this.reportCollection.find({ _id: { $in: gameIds } }).toArray()
+		return reports
 	}
 
 	addInteraction(username, id, type) {
@@ -407,17 +402,16 @@ export class Database {
 		this.draining = false
 	}
 
-	getSpotvoxRenderJobs() {
-		return this.gameCollection
-			.find({ promptType: "build", render: { $exists: false } })
-			.limit(32)
-			.toArray()
-			.then((docs) => {
-				return docs
-			})
-			.catch(() => {
-				return []
-			})
+	async getSpotvoxRenderJobs() {
+		try {
+			const docs = await this.gameCollection
+				.find({ promptType: "build", render: { $exists: false } })
+				.limit(32)
+				.toArray()
+			return docs
+		} catch {
+			return []
+		}
 	}
 
 	addSpotvoxRender(buildTurnId, data) {
@@ -509,47 +503,45 @@ export class Database {
 	 * @param {string} username - The username of the user.
 	 * @returns {Promise<Object>} - A promise that resolves to the created realm document or null if an error occurs.
 	 */
-	createNewRealm(username) {
+	async createNewRealm(username) {
 		const realmId = new ObjectId()
 		const document = {
 			_id: realmId,
 			ownedBy: username,
 			realmName: Database.generateName(),
 		}
-		return this.realmCollection
-			.insertOne(document)
-			.then(() => {
-				return document
-			})
-			.catch((err) => {
-				console.error("Error creating new realm:", err)
-				return null
-			})
+		try {
+			await this.realmCollection.insertOne(document)
+			return document
+		} catch (err) {
+			console.error("Error creating new realm:", err)
+			return null
+		}
 	}
 	/**Fetches a realm by its ID.
 	 * @param {ObjectId} realmId - The ID of the realm to fetch.
 	 * @returns {Promise<Object>} - A promise that resolves to the realm document or null if not found.
 	 */
-	getRealm(realmId) {
-		return this.realmCollection
-			.findOne({ _id: realmId })
-			.then((realm) => {
-				return realm
-			})
-			.catch((err) => {
-				console.error("Error fetching realm:", err)
-				return null
-			})
+	async getRealm(realmId) {
+		try {
+			const realm = await this.realmCollection.findOne({ _id: realmId })
+			return realm
+		} catch (err) {
+			console.error("Error fetching realm:", err)
+			return null
+		}
 	}
 	/**Saves a realm preview.
 	 * @param {ObjectId} realmId - The ID of the realm.
 	 * @param {Buffer} blocks - The blocks to save as a preview.
 	 * @returns {Promise<void>} - A promise that resolves when the operation is complete.
 	 */
-	saveRealmPreview(realmId, blocks) {
-		return this.realmCollection.updateMany({ _id: realmId }, { $set: { preview: blocks } }).catch((err) => {
+	async saveRealmPreview(realmId, blocks) {
+		try {
+			return await this.realmCollection.updateMany({ _id: realmId }, { $set: { preview: blocks } })
+		} catch (err) {
 			console.error("Error saving realm preview:", err)
-		})
+		}
 	}
 	/**Generates a random name consisting of three syllables.
 	 * @param {number} lengzh - The number of syllables to generate (default is 3).
@@ -567,17 +559,13 @@ export class Database {
 	/**Counts the number of ongoing games in the database.
 	 * @returns {Promise<number>} A promise that resolves to the count of ongoing games.
 	 */
-	getOngoingGameCount() {
-		return this.gameCollection
-			.countDocuments({ active: true })
-			.then((count) => {
-				return count
-			})
-			.catch((err) => {
-				if (err) {
-					console.error("Error counting ongoing games:", err)
-					return 0
-				}
-			})
+	async getOngoingGameCount() {
+		try {
+			const count = await this.gameCollection.countDocuments({ active: true })
+			return count
+		} catch (err) {
+			console.error("Error counting ongoing games:", err)
+			return 0
+		}
 	}
 }
