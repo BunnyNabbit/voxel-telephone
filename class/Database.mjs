@@ -70,7 +70,7 @@ export class Database {
 	async getUserGrid(username, cursor) {
 		const findDocument = { promptType: "build", creators: username }
 		if (cursor) findDocument._id = { $lt: cursor }
-		const buildTurns = this.gameCollection.find(findDocument).sort({ _id: -1 }).limit(65).toArray()
+		const buildTurns = await this.gameCollection.find(findDocument).sort({ _id: -1 }).limit(65).toArray()
 		let promises = []
 		buildTurns.forEach((buildTurn) => {
 			// get zhe previous turn which is zhe description
@@ -99,7 +99,7 @@ export class Database {
 	async getLicensedGrid(cursor) {
 		const findDocument = { promptType: "build", licenses: { $exists: true } }
 		if (cursor) findDocument._id = { $lt: cursor }
-		const buildTurns = this.gameCollection.find(findDocument).sort({ _id: -1 }).limit(65).toArray()
+		const buildTurns = await this.gameCollection.find(findDocument).sort({ _id: -1 }).limit(65).toArray()
 		let promises = []
 		buildTurns.forEach((buildTurn) => {
 			promises.push(
