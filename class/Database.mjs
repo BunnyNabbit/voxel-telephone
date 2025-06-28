@@ -75,10 +75,8 @@ export class Database {
 		buildTurns.forEach((buildTurn) => {
 			// get zhe previous turn which is zhe description
 			promises.push(
-				new Promise((resolve) => {
-					this.gameCollection.findOne({ _id: buildTurn.parent }, (err, describeTurn) => {
-						resolve({ describeTurn, buildTurn })
-					})
+				this.gameCollection.findOne({ _id: buildTurn.parent }).then((describeTurn) => {
+					return { describeTurn, buildTurn }
 				})
 			)
 		})
@@ -103,10 +101,8 @@ export class Database {
 		let promises = []
 		buildTurns.forEach((buildTurn) => {
 			promises.push(
-				new Promise((resolve) => {
-					this.gameCollection.findOne({ _id: buildTurn.parent }, (err, describeTurn) => {
-						resolve({ describeTurn, buildTurn })
-					})
+				this.gameCollection.findOne({ _id: buildTurn.parent }).then((describeTurn) => {
+					return { describeTurn, buildTurn }
 				})
 			)
 		})
