@@ -127,6 +127,7 @@ export class Database {
 			.find(findDocument)
 			.sort({ _id: -1 })
 			.limit(65)
+			.toArray()
 			.then(async (purgedTurns) => {
 				const grid = []
 				let currentColumn = []
@@ -320,7 +321,7 @@ export class Database {
 							turn.root = divergedRootId
 							turn.parent = "self"
 							turn.depth = newDepth
-							this.gameCollection.remove({ _id: oldId }).then(() => {
+							this.gameCollection.deleteOne({ _id: oldId }).then(() => {
 								this.gameCollection.insertOne(turn).then(() => {
 									resolve()
 								})
@@ -358,7 +359,7 @@ export class Database {
 		}
 		lastTurn.reason = reason
 		this.purgedCollection.insertOne(lastTurn)
-		await this.gameCollection.remove({ _id: lastTurn._id })
+		await this.gameCollection.deleteOne({ _id: lastTurn._id })
 		await this.setGameCompletion(gameRootId, false)
 	}
 
