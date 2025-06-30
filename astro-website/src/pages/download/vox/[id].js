@@ -1,6 +1,6 @@
 // @ts-ignore
 import { database } from "../../../shared/db.mjs"
-import { ObjectId } from "mongojs"
+import { ObjectId } from "mongodb"
 
 export async function GET({ params, request }) {
 	const render = await database.getTurnDownload(new ObjectId(params.id), "vox")

@@ -1,5 +1,5 @@
 import { database } from "../../shared/db.mjs"
-import { ObjectId } from "mongojs"
+import { ObjectId } from "mongodb"
 
 export async function GET({ params, request }) {
 	const render = await database.getTurnRender(new ObjectId(params.id))

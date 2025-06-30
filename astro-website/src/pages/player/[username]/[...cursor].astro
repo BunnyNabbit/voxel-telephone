@@ -4,7 +4,7 @@ import ContentPage from "../../../layouts/ContentPage.astro";
 import { Image } from "astro:assets";
 import Turn from "../../../components/Turn.astro";
 import Timestamp from "../../../components/Timestamp.astro";
-import { ObjectId } from "mongojs";
+import { ObjectId } from "mongodb";
 const username = Astro.params.username;
 let cursor, nextCursor
 if (Astro.params.cursor) {

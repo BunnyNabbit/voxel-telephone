@@ -2,7 +2,7 @@
 import ContentPage from "../../layouts/ContentPage.astro"
 import { database } from "../../shared/db.mjs"
 import Turn from "../../components/Turn.astro"
-import { ObjectId } from "mongojs"
+import { ObjectId } from "mongodb"
 const gameId = Astro.params.id
 let game = await database.getGame(new ObjectId(gameId))
 let title

@@ -1,7 +1,7 @@
 ---
 import { database } from "../shared/db.mjs"
 import GamePreview from "./GamePreview.astro"
-import { ObjectId } from "mongojs"
+import { ObjectId } from "mongodb"
 const cursor = Astro.props.cursor
 const doPagination = Astro.props.pagination ?? false
 const gamesPerPage = Astro.props.games ?? 5

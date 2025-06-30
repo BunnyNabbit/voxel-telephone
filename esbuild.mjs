@@ -18,7 +18,7 @@ await esbuild.build({
 		"smart-buffer",
 		"trash",
 		"sqlite3",
-		"mongojs",
+		"mongodb",
 		"chunked-vox", // i am a victim
 	],
 	treeShaking: true,

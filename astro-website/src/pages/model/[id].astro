@@ -4,7 +4,7 @@ import { database } from "../../shared/db.mjs"
 import LicenseIcons from "../../components/LicenseIcons.astro"
 import Timestamp from "../../components/Timestamp.astro"
 // @ts-ignore
-import { ObjectId } from "mongojs"
+import { ObjectId } from "mongodb"
 const id = new ObjectId(Astro.params.id)
 const buildTurn = await database.getTurn(id)
 if (
