@@ -14,8 +14,9 @@ export class ChangeRecord {
 	/**Creates a new ChangeRecord instance.
 	 * @param {string} path - The path to the change record file.
 	 * @param {function} loadedCallback - The callback function to call when file handles are opened.
+	 * @param {object} options - Options for the change record.
 	 */
-	constructor(path, loadedCallback = () => {}) {
+	constructor(path, loadedCallback = () => {}, { useKeyframeRecord = true } = {}) {
 		this.currentBuffer = new SmartBuffer()
 		this.path = path
 		this.draining = false
@@ -24,10 +25,13 @@ export class ChangeRecord {
 		this.bounds = [64, 64, 64]
 		this.actionCount = 0
 		this.currentActionCount = 0
-		// fs.mkd
 		if (!fs.existsSync(path)) fs.mkdirSync(path)
-		this.keyframeRecord = new KeyframeRecord(join(path, "/dvr.db"))
-		Promise.all([fs.promises.open(join(path + "/vhs.bin"), "a+")], this.keyframeRecord.ready).then((values) => {
+		const promises = [fs.promises.open(join(path + "/vhs.bin"), "a+")]
+		if (useKeyframeRecord) {
+			this.keyframeRecord = new KeyframeRecord(join(path, "/dvr.db"))
+			promises.push(this.keyframeRecord.ready)
+		}
+		Promise.all(promises).then((values) => {
 			this.vhsFh = values[0]
 			loadedCallback(this)
 		})
@@ -116,7 +120,7 @@ export class ChangeRecord {
 	 */
 	async restoreBlockChangesToLevel(level, maxActions, staller) {
 		level.loading = true
-		const latestKeyframe = await this.keyframeRecord.getLatestKeyframe(maxActions ?? Infinity, level?.template?.iconName ?? "empty", level.bounds)
+		const latestKeyframe = (this.keyframeRecord && (await this.keyframeRecord.getLatestKeyframe(maxActions ?? Infinity, level?.template?.iconName ?? "empty", level.bounds))) || null
 		const startingFileOffset = latestKeyframe?.offset ?? 0
 		const startingActionCount = latestKeyframe?.totalActionCount ?? 0
 		let keyframeBufferActionCount = latestKeyframe?.bufferActionCount
@@ -152,7 +156,7 @@ export class ChangeRecord {
 					}
 				}
 				// Create a keyframe if enough time has passed since the last one, and we're not stalling or seeking
-				if (!staller && !seeking && restoreWatch.elapsed > ChangeRecord.lagKeyframeTime) {
+				if (!staller && !seeking && restoreWatch.elapsed > ChangeRecord.lagKeyframeTime && this.keyframeRecord) {
 					restoreWatch.stop()
 					const keyframeId = await this.keyframeRecord.addKeyframe(currentFileReadOffset, this.actionCount, bufferActionCount, level?.template?.iconName ?? "empty", level.blocks, level.bounds)
 					console.log(`Created keyframe ${keyframeId} at offset ${currentFileReadOffset} for ${level.template.iconName} after ${restoreWatch.elapsed}ms`)
@@ -196,7 +200,7 @@ export class ChangeRecord {
 		const originalHandle = await fs.promises.open(originalPath, "r+")
 		const tempHandle = await fs.promises.open(join(this.path, "temp.vhs.bin"), "w+")
 		this.vhsFh = tempHandle // Use the temp file handle for writing
-		const latestKeyframe = await this.keyframeRecord.getLatestKeyframe(toActionCount, level.template.iconName, level.bounds)
+		const latestKeyframe = (this.keyframeRecord && (await this.keyframeRecord.getLatestKeyframe(toActionCount, level.template.iconName, level.bounds))) || null
 		// const startingActionCount = latestKeyframe?.totalActionCount ?? 0 // it's off by one. some where!
 		let startingActionCount = 0
 		let startingFileOffset = 0
@@ -239,7 +243,7 @@ export class ChangeRecord {
 		// delete temp file
 		await trash(join(this.path, "temp.vhs.bin"))
 		// purge keyframes after the action count
-		await this.keyframeRecord.purgeKeyframes(toActionCount)
+		if (this.keyframeRecord) await this.keyframeRecord.purgeKeyframes(toActionCount)
 		// vacuum database to optimize it
 		// await this.keyframeRecord.vacuum()
 		console.log("committed", count)
@@ -248,7 +252,7 @@ export class ChangeRecord {
 	/** Closes file handles of change record. Does not flush changes. */
 	async dispose() {
 		await this.vhsFh.close()
-		await this.keyframeRecord.close()
+		if (this.keyframeRecord) await this.keyframeRecord.close()
 	}
 }
 
