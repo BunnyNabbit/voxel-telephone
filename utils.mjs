@@ -1,4 +1,4 @@
-/**Inverts the prompt type from `description`to `build` and vice versa.
+/**Inverts the prompt type from `description` to `build` and vice versa.
  * @param {string} promptType - The current prompt type, either `description` or `build`.
  * @returns {string} The inverted prompt type.
  */
