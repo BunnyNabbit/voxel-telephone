@@ -28,10 +28,10 @@
     "trash": "^9.0.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.29.0",
-    "esbuild": "0.25.5",
-    "eslint": "^9.29.0",
-    "globals": "^16.2.0",
+    "@eslint/js": "^9.31.0",
+    "esbuild": "0.25.7",
+    "eslint": "^9.31.0",
+    "globals": "^16.3.0",
     "prettier-plugin-drone-class": "^0.1.0"
   }
 }
