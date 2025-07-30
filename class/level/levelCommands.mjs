@@ -229,6 +229,75 @@ class Replace extends Command {
 	}
 }
 
-export const levelCommands = [Cuboid, Line, AbnormalTriangle, SphereSlow, Replace]
+class PositionalTransform extends Command {
+	name = "PositionalTransform "
+	static aliases = ["move"]
+	/** */
+	constructor(level) {
+		super(["&enum:mode", "&enum:rotation", "&enum:flipAxis", "position:positionStart", "position:positionEnd", "position:offsetPosition", "position:pastePosition"], level, {
+			mode: ["move", "copy", "moveAir", "copyAir"],
+			rotation: ["none", "clockwise", "counterclockwise"],
+			flipAxis: ["none", "x", "y", "z"],
+		})
+	}
+
+	action(data) {
+		const { mode, rotation, flipAxis, positionStart, positionEnd, offsetPosition, pastePosition } = this.parseBytes(data)
+		const min = [0, 1, 2].map((index) => Math.min(positionStart[index], positionEnd[index]))
+		const max = [0, 1, 2].map((index) => Math.max(positionStart[index], positionEnd[index]))
+		const bounds = [max[0] - min[0] + 1, max[1] - min[1] + 1, max[2] - min[2] + 1]
+		const copyBuffer = Buffer.alloc(bounds[0] * bounds[1] * bounds[2])
+		for (let x = min[0]; x <= max[0]; x++) {
+			for (let y = min[1]; y <= max[1]; y++) {
+				for (let z = min[2]; z <= max[2]; z++) {
+					const block = this.level.getBlock([x, y, z])
+					copyBuffer.writeUint8(block, (x - min[0]) * bounds[1] * bounds[2] + (y - min[1]) * bounds[2] + (z - min[2]))
+					if (mode == "move") this.setBlock([x, y, z], 0) // Clear the block if moving
+				}
+			}
+		}
+		const placeAir = mode.endsWith("Air")
+		const pasteOffsetFromStart = [pastePosition[0] - positionStart[0], pastePosition[1] - positionStart[1], pastePosition[2] - positionStart[2]]
+		const offsetDifference = [positionStart[0] - offsetPosition[0], positionStart[1] - offsetPosition[1], positionStart[2] - offsetPosition[2]]
+
+		for (let x = 0; x < bounds[0]; x++) {
+			for (let y = 0; y < bounds[1]; y++) {
+				for (let z = 0; z < bounds[2]; z++) {
+					let newX = min[0] + x + pasteOffsetFromStart[0] + offsetDifference[0]
+					let newY = min[1] + y + pasteOffsetFromStart[1] + offsetDifference[1]
+					let newZ = min[2] + z + pasteOffsetFromStart[2] + offsetDifference[2]
+
+					if (rotation === "counterclockwise") {
+						const oldX = newX - pastePosition[0]
+						const oldZ = newZ - pastePosition[2]
+						newX = pastePosition[0] + oldZ
+						newZ = pastePosition[2] - oldX
+					} else if (rotation === "clockwise") {
+						const oldX = newX - pastePosition[0]
+						const oldZ = newZ - pastePosition[2]
+						newX = pastePosition[0] - oldZ
+						newZ = pastePosition[2] + oldX
+					}
+
+					if (flipAxis === "x") {
+						newX = pastePosition[0] - (newX - pastePosition[0])
+					} else if (flipAxis === "y") {
+						newY = pastePosition[1] - (newY - pastePosition[1])
+					} else if (flipAxis === "z") {
+						newZ = pastePosition[2] - (newZ - pastePosition[2])
+					}
+
+					const block = copyBuffer.readUint8(x * bounds[1] * bounds[2] + y * bounds[2] + z)
+					if (block === PositionalTransform.airBlockId && !placeAir) continue // Skip placing air blocks unless allowed
+					this.setBlock([newX, newY, newZ], block)
+				}
+			}
+		}
+		return super.action()
+	}
+	static airBlockId = 0
+}
+
+export const levelCommands = [Cuboid, Line, AbnormalTriangle, SphereSlow, Replace, PositionalTransform]
 
 export default levelCommands
