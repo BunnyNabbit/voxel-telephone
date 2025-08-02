@@ -8,6 +8,7 @@ import { PushIntegration } from "../integrations/PushIntegration.mjs"
 import { EventEmitter } from "events"
 import { randomIntFromInterval } from "../../utils.mjs"
 import { HubLevel } from "../level/HubLevel.mjs"
+import { FormattedString, defaultLanguage } from "../strings/FormattedString.mjs"
 
 export class Player extends EventEmitter {
 	/** */
@@ -205,6 +206,7 @@ export class Player extends EventEmitter {
 	}
 
 	message(message, types = [0], continueAdornment = "> ") {
+		if (message instanceof FormattedString) message = message.format(this.language ?? defaultLanguage)
 		const originalMessage = message
 		if (typeof types === "number") types = [types]
 		const maxLength = 64 - continueAdornment.length

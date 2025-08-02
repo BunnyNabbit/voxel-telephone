@@ -8,6 +8,7 @@ import { templates } from "../level/templates.mjs"
 import defaultBlockset from "../../6-8-5-rgb.json" with { type: "json" }
 import { NullChangeRecord } from "../level/changeRecord/NullChangeRecord.mjs"
 import { ChangeRecord } from "./changeRecord/ChangeRecord.mjs"
+import { FormattedString, stringSkeleton } from "../strings/FormattedString.mjs"
 /** @typedef {import("../player/Player.mjs").Player} Player */
 
 export class Level extends EventEmitter {
@@ -133,7 +134,7 @@ export class Level extends EventEmitter {
 			this.changeRecord.addBlockChange(position, block)
 			if (!this.changeRecord.draining && this.changeRecord.currentActionCount > 1024) {
 				this.changeRecord.flushChanges().then((bytes) => {
-					this.messageAll(`Changes drained. ${bytes} bytes saved to VHS record`)
+					this.messageAll(new FormattedString(stringSkeleton.level.status.drainedLevelActions, { bytes }))
 				})
 			}
 		}
@@ -165,7 +166,7 @@ export class Level extends EventEmitter {
 			}
 		} else if (command) {
 			const commandName = command.toLowerCase()
-			this.messageAll(`Unable to find command with name ${commandName} for level ${this.name}`)
+			this.messageAll(new FormattedString(stringSkeleton.level.status.drainedLevelActions, { commandName, levelName: this.name }))
 		}
 	}
 
@@ -187,7 +188,7 @@ export class Level extends EventEmitter {
 				this.inferCurrentCommand(null, player)
 				return true
 			} else {
-				if (!this.loading) this.messageAll(`Place a block to use for ${currentType}. Break for air.`)
+				if (!this.loading) this.messageAll(new FormattedString(stringSkeleton.level.commandQuestion.block, { currentType }))
 				return
 			}
 		}
@@ -200,7 +201,7 @@ export class Level extends EventEmitter {
 				this.inferCurrentCommand(null, player)
 				return true
 			} else {
-				if (!this.loading) this.messageAll(`Place or break a block to mark the position for ${currentType}`)
+				if (!this.loading) this.messageAll(new FormattedString(stringSkeleton.level.commandQuestion.position, { currentType }))
 				return
 			}
 		}
@@ -303,7 +304,7 @@ export class Level extends EventEmitter {
 		}
 		if (!this.changeRecord.draining && this.changeRecord.currentActionCount > 1024) {
 			this.changeRecord.flushChanges().then((bytes) => {
-				this.messageAll(`Changes drained. ${bytes} bytes saved to VHS record`)
+				this.messageAll(new FormattedString(stringSkeleton.level.status.drainedLevelActions, { bytes }))
 			})
 		}
 		if (player && player.repeatMode) {
