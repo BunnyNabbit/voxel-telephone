@@ -5,6 +5,29 @@
 		},
 		"commandQuestion": {
 			"position": "Place or break a block to mark zhe position for ${currentType}."
+		},
+		"topPrintInformation": {
+			"viewPagination": "Noclip past level borders to view zhe next page.",
+			"hubReminder": "Go back to hub wizh /main"
+		}
+	},
+	"command": {
+		"error": {
+			"uncaught": "&cAn error occured while running zhe command. ${err}",
+			"missingBuildPermission": "You don't have permission to build in zhis level.",
+			"missingPermission": "You don't have permission to use zhis command!"
+		},
+		"finish": {
+			"attemptFinishBuildEmpty": "Zhere is nozhing in zhe level. Build zhe prompt you are given!",
+			"attemptFinishDescriptionEmpty": "You currently have no description for zhis build. Write somezhing in chat first!"
+		}
+	},
+	"game": {
+		"welcome": "Welcome to Voxel Telephone. A multiplayer game where you build what you hear and describe what you see. Watch as creations transform zhrough collaborative misinterpretation!",
+		"question": {
+			"description": {
+				"confirmReminder": "Use /finish to confirm your description for zhis build."
+			}
 		}
 	}
 }

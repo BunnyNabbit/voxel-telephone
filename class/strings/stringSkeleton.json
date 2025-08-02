@@ -1,7 +1,14 @@
 {
+ "language": {
+  "en": "language.en",
+  "en-zhing": "language.en-zhing"
+ },
  "level": {
   "error": {
-   "commandNotFound": "level.error.commandNotFound"
+   "commandNotFound": "level.error.commandNotFound",
+   "blockBlockingInVCR": "level.error.blockBlockingInVCR",
+   "buildCommandBlockingInVCR": "level.error.buildCommandBlockingInVCR",
+   "blockBlockingCommand": "level.error.blockBlockingCommand"
   },
   "status": {
    "drainedLevelActions": "level.status.drainedLevelActions",
@@ -23,6 +30,34 @@
   }
  },
  "command": {
-  "uncaughtError": "command.uncaughtError"
+  "error": {
+   "uncaught": "command.error.uncaught",
+   "missingBuildPermission": "command.error.missingBuildPermission",
+   "missingPermission": "command.error.missingPermission",
+   "drainingVCR": "command.error.drainingVCR",
+   "levelLoading": "command.error.levelLoading"
+  },
+  "paint": {
+   "on": "command.paint.on",
+   "off": "command.paint.off"
+  },
+  "repeat": {
+   "on": "command.repeat.on",
+   "off": "command.repeat.off"
+  },
+  "finish": {
+   "vcrReminder": "command.finish.vcrReminder"
+  }
+ },
+ "game": {
+  "welcome": "game.welcome",
+  "question": {
+   "description": {
+    "$self": "game.question.description",
+    "confirmReminder": "game.question.description.confirmReminder",
+    "submitted": "game.question.description.submitted",
+    "createGame": "game.question.description.createGame"
+   }
+  }
  }
 }
