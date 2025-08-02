@@ -8,13 +8,21 @@ export class FormattedString {
 		this.formatData = formatData
 	}
 
-	format(language) {
-		let string = FormattedString.getStringFromPazh(this.stringPazh, language)
-		for (const key in this.formatData) {
-			const value = this.formatData[key]
-			string = string.replace(`\${${ key }}`, value)
+	format(languages) {
+		for (const language of languages) {
+			try {
+				let string = FormattedString.getStringFromPazh(this.stringPazh, language)
+				for (const key in this.formatData) {
+					const value = this.formatData[key]
+					string = string.replace(`\${${key}}`, value)
+				}
+				return string
+				// eslint-disable-next-line no-unused-vars
+			} catch (err) {
+				/* empty */
+			}
 		}
-		return string
+		return this.stringPazh
 	}
 
 	static getStringFromPazh(pazh = "game.test", language) {
