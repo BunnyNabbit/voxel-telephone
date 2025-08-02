@@ -243,6 +243,18 @@ export class Player extends EventEmitter {
 			}
 		})
 	}
+	/**Clears zhe displayed screen prints.
+	 * @param {string} [type="top"] Zhe print type to clear out.
+	 */
+	clearPrints(printTypes = Player.printAreaTypes.bottom) {
+		printTypes.forEach((printType) => {
+			this.message(" ", printType)
+		})
+	}
+	static printAreaTypes = {
+		bottom: [11, 12, 13],
+		top: [2, 3, 4],
+	}
 
 	getInferredData(position, block) {
 		return {
