@@ -206,7 +206,7 @@ export class Player extends EventEmitter {
 	}
 
 	message(message, types = [0], continueAdornment = "> ") {
-		if (message instanceof FormattedString) message = message.format(this.language ?? defaultLanguage)
+		if (message instanceof FormattedString) message = message.format(this.languages ?? [defaultLanguage])
 		const originalMessage = message
 		if (typeof types === "number") types = [types]
 		const maxLength = 64 - continueAdornment.length
