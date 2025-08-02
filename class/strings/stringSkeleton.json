@@ -1,0 +1,28 @@
+{
+ "level": {
+  "error": {
+   "commandNotFound": "level.error.commandNotFound"
+  },
+  "status": {
+   "drainedLevelActions": "level.status.drainedLevelActions",
+   "playbackFinished": "level.status.playbackFinished",
+   "playbackTurnInformation": "level.status.playbackTurnInformation"
+  },
+  "commandQuestion": {
+   "block": "level.commandQuestion.block",
+   "position": "level.commandQuestion.position"
+  },
+  "type": {
+   "realm": "level.type.realm",
+   "hub": "level.type.hub",
+   "view": "level.type.view"
+  },
+  "topPrintInformation": {
+   "viewPagination": "level.topPrintInformation.viewPagination",
+   "hubReminder": "level.topPrintInformation.hubReminder"
+  }
+ },
+ "command": {
+  "uncaughtError": "command.uncaughtError"
+ }
+}

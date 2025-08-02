@@ -1,5 +1,6 @@
 import { Level } from "./Level.mjs"
 import { templates } from "./templates.mjs"
+import { FormattedString, stringSkeleton } from "../strings/FormattedString.mjs"
 
 class Count {
 	/** */
@@ -41,8 +42,8 @@ export class RealmLevel extends Level {
 			}
 		})
 		this.on("playerAdded", (player) => {
-			player.message("Realm", 1)
-			player.message("Go back to hub with /main", 2)
+			player.message(new FormattedString(stringSkeleton.level.type.realm), 1)
+			player.message(new FormattedString(stringSkeleton.level.topPrintInformation.hubReminder), 2)
 			player.message(" ", 3)
 			player.emit("playSound", this.universe.sounds.gameTrack)
 		})

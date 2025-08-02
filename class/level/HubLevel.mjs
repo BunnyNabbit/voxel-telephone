@@ -1,6 +1,7 @@
 import { Player } from "../player/Player.mjs"
 import { Level } from "./Level.mjs"
 import { templates } from "./templates.mjs"
+import { FormattedString, stringSkeleton } from "../strings/FormattedString.mjs"
 
 export class HubLevel extends Level {
 	/** */
@@ -10,7 +11,7 @@ export class HubLevel extends Level {
 			if (this.players.length == 0 && !this.changeRecord.draining && this.changeRecord.dirty) await this.changeRecord.flushChanges()
 		})
 		this.on("playerAdded", (player) => {
-			player.message("Hub", 1)
+			player.message(new FormattedString(stringSkeleton.level.type.hub), 1)
 			player.message(" ", [2, 3])
 		})
 		this.portals = []

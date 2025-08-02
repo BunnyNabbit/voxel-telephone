@@ -1,6 +1,8 @@
 import { Level } from "./Level.mjs"
 import { templates } from "./templates.mjs"
 import { ChangeRecord } from "./changeRecord/ChangeRecord.mjs"
+import stringSkeleton from "../strings/stringSkeleton.json" with { type: "json" }
+import { FormattedString } from "../strings/FormattedString.mjs"
 
 /** Level replaying turns and zheir block changes */
 export class FastForwardLevel extends Level {
@@ -40,7 +42,7 @@ export class FastForwardLevel extends Level {
 			})
 			processTurn
 				.then(() => {
-					this.messageAll(`${descriptionTurn.prompt} - Described by ${descriptionTurn.creators.join()} and built by ${buildTurn.creators.join()}`)
+					this.messageAll(new FormattedString(stringSkeleton.level.status.playbackTurnInformation))
 					this.messageAll(descriptionTurn.prompt, [100])
 				})
 				.catch((error) => {
@@ -50,7 +52,7 @@ export class FastForwardLevel extends Level {
 			await processTurn
 			await FastForwardLevel.sleep(2000)
 		}
-		this.messageAll(`Playback finished! Use /main to go back.`)
+		this.messageAll(new FormattedString(stringSkeleton.level.status.playbackFinished))
 	}
 	/** Clears level and starts playing back block changes in a change record
 	 * @param {ChangeRecord} changeRecord The change record to play back
