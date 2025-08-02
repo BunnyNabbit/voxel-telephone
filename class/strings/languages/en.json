@@ -1,7 +1,14 @@
 {
+	"language": {
+		"en": "English",
+		"en-zhing": "Zhing-like English"
+	},
 	"level": {
 		"error": {
-			"commandNotFound": "Unable to find command with name ${commandName} for level ${levelName}."
+			"commandNotFound": "Unable to find command with name ${commandName} for level ${levelName}.",
+			"blockBlockingInVCR": "Unable to place block. Level is in VCR mode.",
+			"buildCommandBlockingInVCR": "Unable to use command. Level is in VCR mode.",
+			"blockBlockingCommand": "Unable to place block. Command in level is expecting additional arguments."
 		},
 		"status": {
 			"drainedLevelActions": "Changes drained. ${bytes} bytes saved to level's VHS record.",
@@ -23,6 +30,36 @@
 		}
 	},
 	"command": {
-		"uncaughtError": "&cAn error occured while running the command. ${err}"
+		"error": {
+			"uncaught": "&cAn error occured while running the command. ${err}",
+			"missingBuildPermission": "You don't have permission to build in this level.",
+			"missingPermission": "You don't have permission to use this command!",
+			"drainingVCR": "VCR is busy. Try again later?",
+			"levelLoading": "Level is busy seeking. Try again later?"
+		},
+		"paint": {
+			"on": "Paint mode on.",
+			"off": "Paint mode off."
+		},
+		"repeat": {
+			"on": "Repeat mode on.",
+			"off": "Repeat mode off."
+		},
+		"finish": {
+			"vcrReminder": "Hold up! Did you mean to use /abort instead? Exit out of VCR to if you intend to submit your game.",
+			"attemptFinishBuildEmpty": "There is nothing in the level. Build the prompt you are given!",
+			"attemptFinishDescriptionEmpty": "You currently have no description for this build. Write something in chat first!"
+		}
+	},
+	"game": {
+		"welcome": "Welcome to Voxel Telephone. A multiplayer game where you build what you hear and describe what you see. Watch as creations transform through collaborative misinterpretation!",
+		"question": {
+			"description": {
+				"$self": "Description:",
+				"confirmReminder": "Use /finish to confirm your description for this build.",
+				"submitted": "Your description has been submitted!",
+				"createGame": "Enter a description in chat. It can be mundane or imaginative."
+			}
+		}
 	}
 }

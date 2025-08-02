@@ -25,7 +25,7 @@ export class GlobalCommandRegistry {
 				await command.action(player, remainingString)
 			} catch (err) {
 				console.error("Failed to run command", str, err)
-				player.message(new FormattedString(stringSkeleton.command.uncaughtError), 0, ">&c")
+				player.message(new FormattedString(stringSkeleton.command.error.uncaught), 0, ">&c")
 				player.emit("playSound", player.universe.sounds.invalid)
 			}
 			return true

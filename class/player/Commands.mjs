@@ -9,6 +9,7 @@ import { textSymbols } from "../../constants.mjs"
 import { ViewLevel } from "../level/ViewLevel.mjs"
 import { FastForwardLevel } from "../level/FastForwardLevel.mjs"
 import { HubLevel } from "../level/HubLevel.mjs"
+import { FormattedString, stringSkeleton } from "../strings/FormattedString.mjs"
 
 let creationLicenses = {}
 import("../../creationLicenses.mjs").then((module) => {
@@ -40,11 +41,11 @@ export class Commands {
 		)
 		universe.registerCommand(["/finish"], async (player) => {
 			if (player.space && player.space.game && !player.space.changeRecord.draining) {
-				if (player.space.inVcr) return player.message("Hold up! Did you mean to use /abort instead? Exit out of VCR to if you intend to submit your game.")
+				if (player.space.inVcr) return player.message(new FormattedString(stringSkeleton.command.finish.vcrReminder))
 				const gameType = invertPromptType(player.space.game.promptType)
 				console.log(gameType)
 				if (gameType == "build") {
-					if (player.space.changeRecord.actionCount == 0) return player.message("There is nothing. Build the prompt you are given!")
+					if (player.space.changeRecord.actionCount == 0) return player.message(new FormattedString(stringSkeleton.command.finish.attemptFinishBuildEmpty))
 					universe.pushMessage(`${player.authInfo.username} finished a turn (Build)`, PushIntegration.interestType.gameProgression)
 					universe.server.players.forEach((otherPlayer) => {
 						otherPlayer.emit("playSound", player.universe.sounds.complete)
@@ -63,7 +64,7 @@ export class Commands {
 					exportLevelAsVox(player.space)
 				} else {
 					// describe
-					if (!player.currentDescription) return player.message("You currently have no description for this build. Write something in chat first!")
+					if (!player.currentDescription) return player.message(new FormattedString(stringSkeleton.command.finish.attemptFinishDescriptionEmpty))
 					universe.db.addInteraction(player.authInfo.username, player.space.game._id, "described")
 					universe.pushMessage(`${player.authInfo.username} finished a turn (Describe)`, PushIntegration.interestType.gameProgression)
 					universe.server.players.forEach((otherPlayer) => {
@@ -119,7 +120,7 @@ export class Commands {
 					}
 				}
 			},
-			Commands.reasonHasPermission(false, "You don't have permission to build in this level!")
+			Commands.reasonHasPermission(false, new FormattedString(stringSkeleton.error.missingBuildPermission))
 		)
 		universe.registerCommand(
 			["/mark"],
@@ -131,18 +132,18 @@ export class Commands {
 		universe.registerCommand(["/paint", "/p"], async (player) => {
 			player.paintMode = !player.paintMode
 			if (player.paintMode) {
-				player.message("Paint mode on")
+				player.message(new FormattedString(stringSkeleton.command.paint.on))
 			} else {
-				player.message("Paint mode off")
+				player.message(new FormattedString(stringSkeleton.command.paint.off))
 			}
 			player.emit("playSound", universe.sounds.toggle)
 		})
 		universe.registerCommand(["/repeat", "/static", "/t"], async (player) => {
 			player.repeatMode = !player.repeatMode
 			if (player.repeatMode) {
-				player.message("Repeat mode on")
+				player.message(new FormattedString(stringSkeleton.command.reoeat.on))
 			} else {
-				player.message("Repeat mode off")
+				player.message(new FormattedString(stringSkeleton.command.reoeat.off))
 			}
 			player.emit("playSound", universe.sounds.toggle)
 		})
@@ -162,7 +163,7 @@ export class Commands {
 				let block = player.heldBlock
 				player.space.setBlock(operationPosition, block)
 			},
-			Commands.makeMultiValidator([Commands.reasonHasPermission(false), Commands.reasonVcr(true, "Unable to place block. Level is in VCR mode"), Commands.reasonLevelBlocking(true, "Unable to place block. Command in level is expecting additional arguments")])
+			Commands.makeMultiValidator([Commands.reasonHasPermission(false), Commands.reasonVcr(true, new FormattedString(stringSkeleton.level.error.blockBlockingInVCR)), Commands.reasonLevelBlocking(true, new FormattedString(stringSkeleton.error.blockBlockingCommand))])
 		)
 		universe.registerCommand(["/clients"], async (player) => {
 			player.message("&ePlayers using:")
@@ -185,7 +186,7 @@ export class Commands {
 				player.space.reload()
 				player.emit("playSound", universe.sounds.activateVCR)
 			},
-			Commands.makeMultiValidator([Commands.reasonHasPermission(false, "You don't have permission to build in this level!"), Commands.reasonVcrDraining(true), Commands.reasonVcr(true, "The level is already in VCR mode")])
+			Commands.makeMultiValidator([Commands.reasonHasPermission(false), Commands.reasonVcrDraining(true), Commands.reasonVcr(true, "The level is already in VCR mode")])
 		)
 		universe.registerCommand(
 			["/template"],
@@ -201,7 +202,7 @@ export class Commands {
 					default:
 						return player.message("Invalid template name. Use /help templates for a list of templates")
 				}
-				if (player.space.loading) return player.message("Level is busy seeking. Try again later")
+				if (player.space.loading) return player.message(new FormattedString(stringSkeleton.command.error.levelLoading))
 				if (player.space.changeRecord.dirty) await player.space.changeRecord.flushChanges()
 				player.space.template = template
 				player.space.blocks = Buffer.from(await player.space.template.generate(player.space.bounds))
@@ -209,19 +210,19 @@ export class Commands {
 				player.space.reload()
 				player.emit("playSound", universe.sounds.deactivateVCR)
 			},
-			Commands.makeMultiValidator([Commands.reasonHasPermission(false, "You don't have permission to build in this level!"), Commands.reasonVcrDraining(true), Commands.reasonVcr(true, "The level is in VCR mode")])
+			Commands.makeMultiValidator([Commands.reasonHasPermission(false), Commands.reasonVcrDraining(true), Commands.reasonVcr(true, "The level is in VCR mode")])
 		)
 		universe.registerCommand(["/create"], async (player) => {
 			if (player.canCreate && player.space?.name == universe.serverConfiguration.hubName) {
 				player.creating = true
-				player.message("Enter a description in chat. It can be mundane or imaginative.")
+				player.message(new FormattedString(stringSkeleton.game.question.description.createGame))
 			}
 		})
 		universe.registerCommand(
 			["/rewind", "/rw", "/undo"],
 			async (player, message) => {
 				const count = Math.max(parseInt(message), 0) || 1
-				if (player.space.loading) return player.message("Level is busy seeking. Try again later")
+				if (player.space.loading) return player.message(new FormattedString(stringSkeleton.command.error.levelLoading))
 				player.space.blocks = Buffer.from(await player.space.template.generate(player.space.bounds))
 				await player.space.changeRecord.restoreBlockChangesToLevel(player.space, Math.max(player.space.changeRecord.actionCount - count, 1))
 				player.space.reload()
@@ -236,7 +237,7 @@ export class Commands {
 			["/fastforward", "/ff", "/redo"],
 			async (player, message) => {
 				const count = Math.max(parseInt(message), 0) || 1
-				if (player.space.loading) return player.message("Level is busy seeking. Try again later")
+				if (player.space.loading) return player.message(new FormattedString(stringSkeleton.command.error.levelLoading))
 				player.space.blocks = Buffer.from(await player.space.template.generate(player.space.bounds))
 				await player.space.changeRecord.restoreBlockChangesToLevel(player.space, Math.min(player.space.changeRecord.actionCount + count, player.space.changeRecord.maxActions))
 				player.space.reload()
@@ -429,7 +430,7 @@ export class Commands {
 		}
 	}
 
-	static reasonHasPermission(matchValue, message = "You don't have permission to build in this level!") {
+	static reasonHasPermission(matchValue, message = new FormattedString(stringSkeleton.command.error.missingBuildPermission)) {
 		return function (player) {
 			if (player.space.userHasPermission(player.username) == matchValue) {
 				if (message) player.message(message)
@@ -439,7 +440,7 @@ export class Commands {
 		}
 	}
 
-	static reasonHasUserPermission(matchValue, message = "You don't have permission to use this command!") {
+	static reasonHasUserPermission(matchValue, message = new FormattedString(stringSkeleton.command.error.missingPermission)) {
 		return async function (player) {
 			const userRecord = await player.userRecord.get()
 			if (userRecord.permissions[matchValue]) return true
@@ -458,7 +459,7 @@ export class Commands {
 		}
 	}
 
-	static reasonVcrDraining(matchValue, message = "VCR is busy. Try again later?") {
+	static reasonVcrDraining(matchValue, message = new FormattedString(stringSkeleton.command.error.drainingVCR)) {
 		return function (player) {
 			if (player.space.changeRecord.draining == matchValue) {
 				if (message) player.message(message)

@@ -8,7 +8,7 @@ import { PushIntegration } from "../integrations/PushIntegration.mjs"
 import { EventEmitter } from "events"
 import { randomIntFromInterval } from "../../utils.mjs"
 import { HubLevel } from "../level/HubLevel.mjs"
-import { FormattedString, defaultLanguage } from "../strings/FormattedString.mjs"
+import { FormattedString, defaultLanguage, stringSkeleton } from "../strings/FormattedString.mjs"
 
 export class Player extends EventEmitter {
 	/** */
@@ -60,7 +60,7 @@ export class Player extends EventEmitter {
 		this.usingCEF = universe.soundServer && this.client.appName.includes(" cef")
 		this.client.customBlockSupport(1)
 		this.authInfo = authInfo
-		this.message("Welcome to Voxel Telephone. A multiplayer game where you build what you hear and describe what you see. Watch as creations transform through collaborative misinterpretation!")
+		this.message(new FormattedString(stringSkeleton.game.welcome))
 		universe.commandRegistry.attemptCall(this, "/rules")
 		if (universe.serverConfiguration.listOperators.includes(authInfo.username)) {
 			this.message("* You are considered a list operator.")
@@ -116,13 +116,13 @@ export class Player extends EventEmitter {
 			if (operation.mode == 0) block = 0
 			if (this.space.inVcr) {
 				this.client.setBlock(this.space.getBlock(operationPosition), ...operationPosition)
-				this.message("Unable to place block. Level is in VCR mode")
+				this.message(new FormattedString(stringSkeleton.level.error.blockBlockingInVCR))
 				return
 			}
 			if (this.space.blocking) {
 				this.client.setBlock(this.space.getBlock(operationPosition), ...operationPosition)
 				if (!this.space.inferCurrentCommand(this.getInferredData(operationPosition, block), this)) {
-					this.message("Unable to place block. Command in level is expecting additional arguments")
+					this.message(new FormattedString.stringSkeleton.level.error.blockBlockingCommand())
 				}
 				return
 			}
@@ -147,8 +147,8 @@ export class Player extends EventEmitter {
 			// pass this to the level
 			if (message.startsWith("/")) {
 				if (!this.space) return
-				if (!this.space.userHasPermission(this.authInfo.username)) return this.message("You don't have permission to build in this level")
-				if (this.space.inVcr) return this.message("Unable to use commands. Level is in VCR mode")
+				if (!this.space.userHasPermission(this.authInfo.username)) return this.message(new FormattedString(stringSkeleton.command.error.missingBuildCommandPermission))
+				if (this.space.inVcr) return this.message(new FormattedString(stringSkeleton.level.error.buildCommandBlockingInVCR))
 				this.space.interpretCommand(message.replace("/", ""), this)
 			} else {
 				if (filter(message)) {
@@ -158,14 +158,14 @@ export class Player extends EventEmitter {
 				}
 				if (this.space?.game?.promptType == "build") {
 					this.currentDescription = message
-					this.message("Description:")
+					this.message(new FormattedString(stringSkeleton.game.question.description))
 					this.message(message, [0, 1])
-					this.message("Use /finish to confirm your description for this build", [0, 3])
+					this.message(new FormattedString(stringSkeleton.game.question.description.confirmReminder), [0, 3])
 				} else if (this.creating) {
 					this.creating = false
 					this.canCreate = false
 					universe.canCreateCooldown.add(this.authInfo.username)
-					this.message("Your description has been submitted!")
+					this.message(new FormattedString(stringSkeleton.game.question.description.submitted))
 					const game = await universe.db.createNewGame(message, this.authInfo.username)
 					// addInteraction(this.authInfo.username, game._id, "complete")
 					universe.db.addInteraction(this.authInfo.username, game._id, "skip")
