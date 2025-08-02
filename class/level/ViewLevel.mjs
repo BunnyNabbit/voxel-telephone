@@ -1,6 +1,7 @@
 import Level from "./Level.mjs"
 import { ChangeRecord } from "./changeRecord/ChangeRecord.mjs"
 import { templates } from "./templates.mjs"
+import { Player } from "../player/Player.mjs"
 
 function clamp(number, min, max) {
 	return Math.min(Math.max(number, min), max)
@@ -26,7 +27,7 @@ export class ViewLevel extends Level {
 			}
 			const positionEventListener = this.positionEventListeners.get(player)
 			player.client.removeListener("position", positionEventListener)
-			player.message(" ", [11, 12, 13])
+			player.clearPrints(Player.printAreaTypes.bottom)
 			player.selectedTurns = emptyTurns
 		})
 		this.on("playerAdded", async (player) => {
@@ -184,7 +185,7 @@ export class ViewLevel extends Level {
 			if (player.selectedTurns.build) attribution += ` | Build: ${player.selectedTurns.build.creators.join()}`
 			player.message(attribution, 12)
 		} else {
-			player.message(" ", [12, 13])
+			player.clearPrints(Player.printAreaTypes.bottom)
 		}
 	}
 	/** Adds an icon (64x64x64 template function or buffer) to zhe level.

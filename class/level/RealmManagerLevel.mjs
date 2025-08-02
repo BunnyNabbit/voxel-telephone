@@ -1,6 +1,7 @@
 import { ViewLevel } from "./ViewLevel.mjs"
 import { templates } from "./templates.mjs"
 import { RealmLevel } from "./RealmLevel.mjs"
+import { Player } from "../player/Player.mjs"
 
 export class RealmManagerLevel extends ViewLevel {
 	/** */
@@ -74,7 +75,7 @@ export class RealmManagerLevel extends ViewLevel {
 			}
 			player.message(attribution, 12)
 		} else {
-			player.message(" ", [12, 13])
+			player.clearPrints(Player.printAreaTypes.bottom)
 		}
 	}
 }
