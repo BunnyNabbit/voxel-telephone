@@ -168,7 +168,6 @@ export class ChangeRecord {
 			startingActionCount
 		)
 		level.loading = false
-		console.log("loaded", count)
 		return count
 	}
 	static lagKeyframeTime = 250 // milliseconds
