@@ -1,0 +1,28 @@
+{
+	"level": {
+		"error": {
+			"commandNotFound": "Unable to find command with name ${commandName} for level ${levelName}."
+		},
+		"status": {
+			"drainedLevelActions": "Changes drained. ${bytes} bytes saved to level's VHS record.",
+			"playbackFinished": "Playback finished! Use /main to go back.",
+			"playbackTurnInformation": "${prompt} - Described by ${descriptionCreators} and built by ${buildCreators}"
+		},
+		"commandQuestion": {
+			"block": "Place a block to use for ${currentType}. Break for air.",
+			"position": "Place or break a block to mark the position for ${currentType}."
+		},
+		"type": {
+			"realm": "Realm",
+			"hub": "Hub",
+			"view": "View Gallery"
+		},
+		"topPrintInformation": {
+			"viewPagination": "Noclip past level borders to view the next page.",
+			"hubReminder": "Go back to hub with /main"
+		}
+	},
+	"command": {
+		"uncaughtError": "&cAn error occured while running the command. ${err}"
+	}
+}

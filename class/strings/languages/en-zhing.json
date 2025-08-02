@@ -1,0 +1,10 @@
+{
+	"level": {
+		"error": {
+			"commandNotFound": "Unable to find command wizh name ${commandName} for level ${levelName}."
+		},
+		"commandQuestion": {
+			"position": "Place or break a block to mark zhe position for ${currentType}."
+		}
+	}
+}

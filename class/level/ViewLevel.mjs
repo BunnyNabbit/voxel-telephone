@@ -1,3 +1,4 @@
+import { FormattedString, stringSkeleton } from "../strings/FormattedString.mjs"
 import Level from "./Level.mjs"
 import { ChangeRecord } from "./changeRecord/ChangeRecord.mjs"
 import { templates } from "./templates.mjs"
@@ -54,9 +55,9 @@ export class ViewLevel extends Level {
 			}
 			player.client.on("position", onPosition)
 			this.positionEventListeners.set(player, onPosition)
-			player.message("View", 1)
-			player.message("Go back to hub with /main", 2)
-			player.message("Noclip past level borders to view next page", 3)
+			player.message(new FormattedString(stringSkeleton.level.type.view), 1)
+			player.message(new FormattedString(stringSkeleton.level.topPrintInformation.hubReminder), 2)
+			player.message(new FormattedString(stringSkeleton.level.topPrintInformation.viewPagination), 3)
 			player.emit("playSound", this.universe.sounds.viewTrack)
 		})
 		this.viewData = viewData
