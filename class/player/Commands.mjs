@@ -120,7 +120,7 @@ export class Commands {
 					}
 				}
 			},
-			Commands.reasonHasPermission(false, new FormattedString(stringSkeleton.error.missingBuildPermission))
+			Commands.reasonHasPermission(false, new FormattedString(stringSkeleton.command.error.missingBuildPermission))
 		)
 		universe.registerCommand(
 			["/mark"],
@@ -163,7 +163,7 @@ export class Commands {
 				let block = player.heldBlock
 				player.space.setBlock(operationPosition, block)
 			},
-			Commands.makeMultiValidator([Commands.reasonHasPermission(false), Commands.reasonVcr(true, new FormattedString(stringSkeleton.level.error.blockBlockingInVCR)), Commands.reasonLevelBlocking(true, new FormattedString(stringSkeleton.error.blockBlockingCommand))])
+			Commands.makeMultiValidator([Commands.reasonHasPermission(false), Commands.reasonVcr(true, new FormattedString(stringSkeleton.level.error.blockBlockingInVCR)), Commands.reasonLevelBlocking(true, new FormattedString(stringSkeleton.command.error.blockBlockingCommand))])
 		)
 		universe.registerCommand(["/clients"], async (player) => {
 			player.message("&ePlayers using:")

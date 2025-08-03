@@ -46,7 +46,9 @@
    "off": "command.repeat.off"
   },
   "finish": {
-   "vcrReminder": "command.finish.vcrReminder"
+   "vcrReminder": "command.finish.vcrReminder",
+   "attemptFinishBuildEmpty": "command.finish.attemptFinishBuildEmpty",
+   "attemptFinishDescriptionEmpty": "command.finish.attemptFinishDescriptionEmpty"
   }
  },
  "game": {
