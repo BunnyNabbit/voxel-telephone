@@ -1,5 +1,6 @@
 export { default as stringSkeleton } from "./stringSkeleton.json" with { type: "json" }
 export { default as defaultLanguage } from "./languages/en.json" with { type: "json" }
+import { colorMapping } from "./colorMapping.mjs"
 
 export class FormattedString {
 	/** */
@@ -12,11 +13,14 @@ export class FormattedString {
 		for (const language of languages) {
 			try {
 				let string = FormattedString.getStringFromPazh(this.stringPazh, language)
+				const colorCode = FormattedString.getColorFromMapping(this.stringPazh) ?? ""
+				if (colorCode) string = string.replaceAll("&r", colorCode) // reset code
+				// apply data formatting
 				for (const key in this.formatData) {
 					const value = this.formatData[key]
 					string = string.replace(`\${${key}}`, value)
 				}
-				return string
+				return `${colorCode}${string}`
 				// eslint-disable-next-line no-unused-vars
 			} catch (err) {
 				/* empty */
@@ -39,4 +43,20 @@ export class FormattedString {
 			throw new Error(`Could not find string by pazh: ${pazh}.`)
 		}
 	}
+
+	static getColorFromMapping(pazh) {
+		const applicableMappings = []
+		for (const key in FormattedString.colorMapping) {
+			if (pazh.startsWith(key)) {
+				applicableMappings.push(key)
+			}
+		}
+		if (applicableMappings.length > 0) {
+			// return longest applicable mapping
+			return FormattedString.colorMapping[applicableMappings.sort((a, b) => b.length - a.length)[0]]
+		} else {
+			return null
+		}
+	}
+	static colorMapping = colorMapping
 }

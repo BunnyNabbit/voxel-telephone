@@ -26,7 +26,7 @@
 		},
 		"topPrintInformation": {
 			"viewPagination": "Noclip past level borders to view the next page.",
-			"hubReminder": "Go back to hub with /main"
+			"hubReminder": "Go back to hub with &a/main&r."
 		}
 	},
 	"command": {
@@ -56,7 +56,7 @@
 		"question": {
 			"description": {
 				"$self": "Description:",
-				"confirmReminder": "Use /finish to confirm your description for this build.",
+				"confirmReminder": "Use &a/finish &rto confirm your description for this build.",
 				"submitted": "Your description has been submitted!",
 				"createGame": "Enter a description in chat. It can be mundane or imaginative."
 			}
