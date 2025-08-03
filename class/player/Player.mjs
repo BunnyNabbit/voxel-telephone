@@ -147,7 +147,7 @@ export class Player extends EventEmitter {
 			// pass this to the level
 			if (message.startsWith("/")) {
 				if (!this.space) return
-				if (!this.space.userHasPermission(this.authInfo.username)) return this.message(new FormattedString(stringSkeleton.command.error.missingBuildCommandPermission))
+				if (!this.space.userHasPermission(this.authInfo.username)) return this.message(new FormattedString(stringSkeleton.command.error.missingBuildPermission))
 				if (this.space.inVcr) return this.message(new FormattedString(stringSkeleton.level.error.buildCommandBlockingInVCR))
 				this.space.interpretCommand(message.replace("/", ""), this)
 			} else {
