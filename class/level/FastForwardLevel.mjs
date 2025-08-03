@@ -42,7 +42,12 @@ export class FastForwardLevel extends Level {
 			})
 			processTurn
 				.then(() => {
-					this.messageAll(new FormattedString(stringSkeleton.level.status.playbackTurnInformation))
+					this.messageAll(
+						new FormattedString(stringSkeleton.level.status.playbackTurnInformation, {
+							descriptionCreators: descriptionTurn.creators.join(),
+							buildCreators: buildTurn.creators.join(),
+						})
+					)
 					this.messageAll(descriptionTurn.prompt, [100])
 				})
 				.catch((error) => {
