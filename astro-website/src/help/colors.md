@@ -16,6 +16,6 @@ noIndex: true
 - a: &aLime
 - b: &bAqua
 - c: &cRed
-- d: &dPink
+- d: &dFuchsia
 - e: &eYellow
 - f: &fWhite
