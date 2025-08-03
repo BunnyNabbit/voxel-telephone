@@ -31,7 +31,7 @@
 	},
 	"command": {
 		"error": {
-			"uncaught": "&cAn error occured while running the command. ${err}",
+			"uncaught": "An error occured while running the command. ${err}",
 			"missingBuildPermission": "You don't have permission to build in this level.",
 			"missingPermission": "You don't have permission to use this command!",
 			"drainingVCR": "VCR is busy. Try again later?",
