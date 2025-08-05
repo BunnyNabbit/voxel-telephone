@@ -21,9 +21,10 @@ export const colors = {
 export const colorMapping = {
 	"level.error": colors.red,
 	"command.error": colors.red,
-	"game": colors.teal,
+	"game": colors.cyan,
 	"level.commandQuestion": colors.navy,
 	"level.topPrintInformation": colors.white,
+	"level.type": colors.cyan,
 	"game.welcome": colors.yellow
 }
 
