@@ -91,7 +91,7 @@ export class Help {
 	 */
 	static parseMarkdownToClassicText(markdown, config) {
 		const structure = DragonMark.parse(markdown)
-		const firstHeading = structure.find((element) => element.type === "heading").content[0].content
+		const firstHeading = structure.find((element) => element.type === "heading")?.content[0]?.content ?? "Untitled"
 		return {
 			text: Help.convertStructureToClassicText(structure, "&f", config),
 			heading: firstHeading,

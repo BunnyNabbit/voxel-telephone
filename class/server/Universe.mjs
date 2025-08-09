@@ -206,15 +206,13 @@ export class Universe extends EventEmitter {
 		} else {
 			await HubLevel.teleportPlayer(player)
 			if (this.canCreateCooldown.has(player.authInfo.username) == false) {
-				player.message("Whoops. Looks like we ran out of games! How about this, you can create a new prompt from nothing. Go ahead, use /create to start the process of making a prompt.")
-				player.message("Think of something mundane or imaginative. It is entirely up to you.")
+				player.canCreate = true
+				await this.commandRegistry.attemptCall(player, "/help out-of-games")
 				const inspirationFeeds = this.serverConfiguration.inspirationFeeds
 				const pickedFeed = inspirationFeeds[randomIntFromInterval(0, inspirationFeeds.length - 1)]
 				player.message(`Not inspired? ${pickedFeed}`)
-				player.canCreate = true
 			} else {
-				player.message("Voxel Telephone is out of games. Come back later!")
-				player.message("If we are still out of games, you can submit another description a hour later.")
+				this.commandRegistry.attemptCall(player, "/help still-out-of-games")
 			}
 			setTimeout(() => {
 				player.teleporting = false
