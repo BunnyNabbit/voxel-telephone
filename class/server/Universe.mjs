@@ -184,14 +184,9 @@ export class Universe extends EventEmitter {
 				})
 			} else {
 				player.currentDescription = null
-				player.message("==== Describe what this build is ====")
 				player.message("Describe the build - Enter your description in chat", 100)
 				player.message("Enter your description in chat", 1)
-				player.message('* Do not comment on the quality. i.e: "poorly built cat". Describe as you see it.')
-				player.message(`* Describe as you interpret the build. Do not intentionally derail games!`)
-				player.message("Enter your description in chat")
-				player.message(`To skip, use /skip`)
-				player.message("Use /report if the build is inappropriate")
+				this.commandRegistry.attemptCall(player, "/help game-describe")
 				Level.loadIntoUniverse(this, `game-${game._id}`, Universe.describeDefaults).then((level) => {
 					// TODO: position
 					level.on("playerRemoved", async () => {
