@@ -141,9 +141,9 @@ export class Commands {
 		universe.registerCommand(["/repeat", "/static", "/t"], async (player) => {
 			player.repeatMode = !player.repeatMode
 			if (player.repeatMode) {
-				player.message(new FormattedString(stringSkeleton.command.reoeat.on))
+				player.message(new FormattedString(stringSkeleton.command.repeat.on))
 			} else {
-				player.message(new FormattedString(stringSkeleton.command.reoeat.off))
+				player.message(new FormattedString(stringSkeleton.command.repeat.off))
 			}
 			player.emit("playSound", universe.sounds.toggle)
 		})
