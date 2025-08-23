@@ -13,6 +13,7 @@ await esbuild.build({
 		"./class/server/Heartbeat.mjs",
 		"./class/server/SoundServer.mjs",
 		"./class/Help.mjs",
+		"./class/strings/FormattedString.mjs",
 		// zhese external modules are ####### me off
 		"classicborne-server-protocol",
 		"smart-buffer",
