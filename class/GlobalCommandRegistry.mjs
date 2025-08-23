@@ -1,4 +1,5 @@
 import { FormattedString, stringSkeleton } from "./strings/FormattedString.mjs"
+import { Commands } from "./player/Commands.mjs"
 
 export class GlobalCommandRegistry {
 	/** */
@@ -8,6 +9,7 @@ export class GlobalCommandRegistry {
 
 	registerCommand(commandNames, action, validate) {
 		if (!Array.isArray(commandNames)) commandNames = [commandNames]
+		if (Array.isArray(validate)) validate = Commands.makeMultiValidator(validate)
 		const commandObject = { action, validate, commandNames }
 		commandNames.forEach((commandName) => {
 			this.commands.set(commandName, commandObject)
