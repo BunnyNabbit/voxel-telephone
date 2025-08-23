@@ -340,25 +340,13 @@ export class Commands {
 		})
 
 		universe.registerCommand(["/setting"], async (player, message) => {
-			const interpretBoolean = (str) => {
-				if (str == "true" || str == "on" || str == "1" || str == "yes") return true
-				if (str == "false" || str == "off" || str == "0" || str == "no") return false
-				return null
-			}
 			const setting = message.split(" ")[0]
-			const value = interpretBoolean(message.split(" ")[1])
 			const userRecord = await player.userRecord.get()
-			if (value == null) return player.message("Invalid value. Must be true or false.")
-			switch (setting) {
-				case "music":
-					userRecord.configuration.cefMusic = value
-					break
-				case "sounds":
-					userRecord.configuration.cefSounds = value
-					break
-				default:
-					return player.message("Unknown setting. /help setting")
-			}
+			const configuration = Commands.configurations[setting]
+			if (!configuration) return player.message("Unknown setting. /help setting") // TODO: use FormattedString
+			const value = configuration.interpret(message.split(" ")[1])
+			if (value == null) return player.message("Invalid value.") // TODO: use FormattedString
+			userRecord.configuration[configuration.slug] = value
 			player.message(`Setting ${setting} to ${value}`)
 			player.emit("configuration", userRecord.configuration)
 		})
@@ -419,6 +407,56 @@ export class Commands {
 
 		Help.register(universe)
 	}
+
+	static createConfigurations() {
+		class BaseConfiguration {
+			/** */
+			constructor(name, slug, options = {}) {
+				this.name = name
+				this.slug = slug
+				this.options = options
+			}
+			/** Interprets zhe given value as a string. Returns null if invalid datum was given. */
+			interpret() {
+				throw new Error("Not implemented.")
+			}
+		}
+		class BooleanConfiguration extends BaseConfiguration {
+			/** */
+			constructor(name, slug, options = {}) {
+				super(name, slug, options)
+			}
+
+			interpret(str) {
+				if (str == "true" || str == "on" || str == "1" || str == "yes") return true
+				if (str == "false" || str == "off" || str == "0" || str == "no") return false
+				return null
+			}
+		}
+		class StringConfiguration extends BaseConfiguration {
+			/** */
+			constructor(name, slug, options = {}) {
+				super(name, slug, options)
+			}
+
+			interpret(str) {
+				if (this.options.allowedValues) {
+					if (this.options.allowedValues.includes(str)) return str
+					return null
+				}
+				return str
+			}
+		}
+		/** @type {Record<string, BaseConfiguration>} */
+		const configurations = {
+			music: new BooleanConfiguration("music", "cefMusic"),
+			sounds: new BooleanConfiguration("sound", "cefSounds"),
+			language: new StringConfiguration("language", "language", { allowedValues: ["en", "en-zhing"] }),
+		}
+		return configurations
+	}
+
+	static configurations = Commands.createConfigurations()
 
 	static reasonVcr(matchValue, message) {
 		return function (player) {
