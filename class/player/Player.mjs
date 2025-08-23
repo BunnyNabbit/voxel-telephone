@@ -201,6 +201,12 @@ export class Player extends EventEmitter {
 				})
 			}
 		})
+		this.on("configuration", (configuration) => {
+			this.applyConfiguration(configuration)
+		})
+		this.userRecord.get().then((record) => {
+			this.emit("configuration", record.configuration)
+		})
 		const hatchday = universe.getHatchday()
 		if (hatchday) this.message(hatchday.joinMessage)
 	}
@@ -268,6 +274,14 @@ export class Player extends EventEmitter {
 
 	getBlockPosition() {
 		return [0, -1, 0].map((offset, index) => this.position[index] + offset).map((value, index) => Math.min(Math.max(Math.floor(value), 0), this.space.bounds[index] - 1))
+	}
+
+	applyConfiguration(configuration) {
+		if (configuration.language) {
+			FormattedString.getLanguage(configuration.language).then((language) => {
+				this.languages = [language, defaultLanguage]
+			})
+		}
 	}
 
 	static sendHotbar(player) {

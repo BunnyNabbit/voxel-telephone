@@ -1,6 +1,10 @@
 export { default as stringSkeleton } from "./stringSkeleton.json" with { type: "json" }
 export { default as defaultLanguage } from "./languages/en.json" with { type: "json" }
 import { colorMapping } from "./colorMapping.mjs"
+import { readFile } from "fs/promises"
+import path, { join } from "path"
+import { getAbsolutePath } from "esm-path"
+const __dirname = getAbsolutePath(import.meta.url)
 
 export class FormattedString {
 	/** */
@@ -59,4 +63,16 @@ export class FormattedString {
 		}
 	}
 	static colorMapping = colorMapping
+	
+	static async getLanguage(language) {
+		language = path.basename(language)
+		try {
+			const languagePath = join(__dirname, "languages", `${language}.json`)
+			const languageFile = await readFile(languagePath, "utf-8")
+			return JSON.parse(languageFile)
+			// eslint-disable-next-line no-unused-vars
+		} catch (err) {
+			throw new Error(`Could not load language file for language: ${language}.`)
+		}
+	}
 }
