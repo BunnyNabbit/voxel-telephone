@@ -120,14 +120,14 @@ export class Commands {
 					}
 				}
 			},
-			Commands.reasonHasPermission(false, new FormattedString(stringSkeleton.command.error.missingBuildPermission))
+			Commands.reasonHasLevelBuildPermission(false, new FormattedString(stringSkeleton.command.error.missingBuildPermission))
 		)
 		universe.registerCommand(
 			["/mark"],
 			async (player) => {
 				player.space.inferCurrentCommand(player.getInferredData(), player)
 			},
-			Commands.makeMultiValidator([Commands.reasonHasPermission(false), Commands.reasonLevelBlocking(false, "There are no current commands being run on the level")])
+			[Commands.reasonHasLevelBuildPermission(false), Commands.reasonLevelBlocking(false, "There are no current commands being run on the level")]
 		)
 		universe.registerCommand(["/paint", "/p"], async (player) => {
 			player.paintMode = !player.paintMode
@@ -163,7 +163,7 @@ export class Commands {
 				let block = player.heldBlock
 				player.space.setBlock(operationPosition, block)
 			},
-			Commands.makeMultiValidator([Commands.reasonHasPermission(false), Commands.reasonVcr(true, new FormattedString(stringSkeleton.level.error.blockBlockingInVCR)), Commands.reasonLevelBlocking(true, new FormattedString(stringSkeleton.command.error.blockBlockingCommand))])
+			[Commands.reasonHasLevelBuildPermission(false), Commands.reasonVcr(true, new FormattedString(stringSkeleton.level.error.blockBlockingInVCR)), Commands.reasonLevelBlocking(true, new FormattedString(stringSkeleton.command.error.blockBlockingCommand))]
 		)
 		universe.registerCommand(["/clients"], async (player) => {
 			player.message("&ePlayers using:")
@@ -186,7 +186,7 @@ export class Commands {
 				player.space.reload()
 				player.emit("playSound", universe.sounds.activateVCR)
 			},
-			Commands.makeMultiValidator([Commands.reasonHasPermission(false), Commands.reasonVcrDraining(true), Commands.reasonVcr(true, "The level is already in VCR mode")])
+			[Commands.reasonHasLevelBuildPermission(false), Commands.reasonVcrDraining(true), Commands.reasonVcr(true, "The level is already in VCR mode")]
 		)
 		universe.registerCommand(
 			["/template"],
@@ -210,7 +210,7 @@ export class Commands {
 				player.space.reload()
 				player.emit("playSound", universe.sounds.deactivateVCR)
 			},
-			Commands.makeMultiValidator([Commands.reasonHasPermission(false), Commands.reasonVcrDraining(true), Commands.reasonVcr(true, "The level is in VCR mode")])
+			[Commands.reasonHasLevelBuildPermission(false), Commands.reasonVcrDraining(true), Commands.reasonVcr(true, "The level is in VCR mode")]
 		)
 		universe.registerCommand(["/create"], async (player) => {
 			if (player.canCreate && player.space?.name == universe.serverConfiguration.hubName) {
@@ -468,7 +468,7 @@ export class Commands {
 		}
 	}
 
-	static reasonHasPermission(matchValue, message = new FormattedString(stringSkeleton.command.error.missingBuildPermission)) {
+	static reasonHasLevelBuildPermission(matchValue, message = new FormattedString(stringSkeleton.command.error.missingBuildPermission)) {
 		return function (player) {
 			if (player.space.userHasPermission(player.username) == matchValue) {
 				if (message) player.message(message)
