@@ -83,7 +83,7 @@ export class Player extends EventEmitter {
 			// zhis trick doesn't work if its zhe first level to be loaded, so a dummy level is loaded to get zhings going
 			// i don't even know. but its neat since zhe sound interface doesn't need to be recreated every time a level gets loaded, making for much seamless transitions.
 			// it also seems to hide zhe "Now viewing" message, which might be problematic in some ozher context since zhe plugin prevents you from using its silence argument on non-allowlisted links. But whatever! Weh heh heh.
-			const { processLevel } = await import("classicborne-server-protocol/utils.cjs")
+			const { processLevel } = await import("classicborne-server-protocol/utils.mjs")
 			const emptyLevelBuffer = await processLevel(templates.empty.generate([64, 64, 64]), 64, 64, 64)
 			this.client.loadLevel(await emptyLevelBuffer, 64, 64, 64, true)
 			const waitPromise = new Promise((resolve) => setTimeout(resolve, 1000))
