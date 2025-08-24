@@ -159,7 +159,7 @@ export class ChangeRecord {
 				if (!staller && !seeking && restoreWatch.elapsed > ChangeRecord.lagKeyframeTime && this.keyframeRecord) {
 					restoreWatch.stop()
 					const keyframeId = await this.keyframeRecord.addKeyframe(currentFileReadOffset, this.actionCount, bufferActionCount, level?.template?.iconName ?? "empty", level.blocks, level.bounds)
-					console.log(`Created keyframe ${keyframeId} at offset ${currentFileReadOffset} for ${level.template.iconName} after ${restoreWatch.elapsed}ms`)
+					console.log(`Created keyframe ${keyframeId} at offset ${currentFileReadOffset} for ${level?.template?.iconName ?? "empty"} after ${restoreWatch.elapsed}ms`)
 					restoreWatch.start()
 				}
 				return true // Continue processing
