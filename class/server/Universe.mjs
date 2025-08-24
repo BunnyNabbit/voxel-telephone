@@ -1,4 +1,4 @@
-import Server from "classicborne-server-protocol"
+import { Server } from "classicborne-server-protocol"
 import { Level } from "../level/Level.mjs"
 import { HubLevel } from "../level/HubLevel.mjs"
 import { GlobalCommandRegistry } from "../GlobalCommandRegistry.mjs"
