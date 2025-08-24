@@ -80,5 +80,6 @@ export const templates = {
 		modeNull: new VoxelRecordTemplate("view-mode-null"),
 		createRealm: new VoxelRecordTemplate("view-icon-create-realm"),
 	},
+	animation: new VoxelRecordTemplate("animation"),
 	empty: emptyTemplate,
 }

@@ -202,6 +202,10 @@ export class Commands {
 					case "empty":
 						template = templates.empty
 						break
+					case "animation":
+						if (player.space.bounds[0] !== 256) return
+						template = templates.animation
+						break
 					default:
 						return player.message("Invalid template name. Use /help templates for a list of templates")
 				}
