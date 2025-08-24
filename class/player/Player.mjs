@@ -9,6 +9,7 @@ import { EventEmitter } from "events"
 import { randomIntFromInterval } from "../../utils.mjs"
 import { HubLevel } from "../level/HubLevel.mjs"
 import { FormattedString, defaultLanguage, stringSkeleton } from "../strings/FormattedString.mjs"
+import { TeleportBehavior } from "classicborne-server-protocol/class/TeleportBehavior.mjs"
 
 export class Player extends EventEmitter {
 	/** */
@@ -283,6 +284,13 @@ export class Player extends EventEmitter {
 			})
 		}
 	}
+	/**Teleport player using a relative position.
+	 * @param {number[]} deltaPosition - Zhe relative position.
+	 */
+	relativeTeleport(deltaPosition) {
+		this.client.extendedPositionUpdate(-1, ...deltaPosition, 0, 0, Player.relativeTeleportBehavior)
+	}
+	static relativeTeleportBehavior = new TeleportBehavior().setMoveMode(TeleportBehavior.moveMode.relativeInstant).setAffectsPosition(true)
 
 	static sendHotbar(player) {
 		this.defaultHotbar.forEach((blockId, index) => {

@@ -10,6 +10,7 @@ import { ViewLevel } from "../level/ViewLevel.mjs"
 import { FastForwardLevel } from "../level/FastForwardLevel.mjs"
 import { HubLevel } from "../level/HubLevel.mjs"
 import { FormattedString, stringSkeleton } from "../strings/FormattedString.mjs"
+/** @typedef {import("../server/Universe.mjs").Universe Universe} */
 
 let creationLicenses = {}
 import("../../creationLicenses.mjs").then((module) => {
@@ -17,7 +18,9 @@ import("../../creationLicenses.mjs").then((module) => {
 })
 
 export class Commands {
-	/** */
+	/**Register global commands for universe,
+	 * @param {Universe} universe
+	 */
 	static register(universe) {
 		universe.registerCommand(["/rules"], (player) => {
 			universe.commandRegistry.attemptCall(player, `/help rules`)
@@ -392,6 +395,43 @@ export class Commands {
 		universe.registerCommand(["/realm", "/os", "/myrealm"], async (player) => {
 			ViewLevel.teleportPlayer(player, { viewAll: true, mode: "realm", player: player.authInfo.username, levelClass: RealmManagerLevel })
 			return
+		})
+
+		universe.registerCommand(["/animation"], async (player, message) => {
+			const blocksInFrame = 64
+			const componentFrames = 4
+			const animationFrameBounds = [componentFrames, componentFrames, componentFrames]
+			const maxFrames = componentFrames * componentFrames * componentFrames
+			const currentFrame = player.position.map((component) => {
+				return Math.floor(component / blocksInFrame)
+			})
+			let index = toIndex(currentFrame, animationFrameBounds)
+			if (message == "next") {
+				index += 1
+				if (index >= maxFrames) index = 0
+			} else if (message == "previous") {
+				index -= 1
+				if (index < 0) index = maxFrames - 1
+			}
+
+			function toIndex(position, bounds = [4, 4, 4]) {
+				return position[0] + bounds[0] * (position[2] + bounds[2] * position[1])
+			}
+			function toPosition(index, bounds = [4, 4, 4]) {
+				const y = Math.floor(index / (bounds[0] * bounds[2]))
+				const z = Math.floor((index - y * bounds[0] * bounds[2]) / bounds[0])
+				const x = index - y * bounds[0] * bounds[2] - z * bounds[0]
+				return [x, y, z]
+			}
+			function getPositionDelta(from, to) {
+				return to.map((component, index) => {
+					return component - from[index]
+				})
+			}
+			const nextFrame = toPosition(index, animationFrameBounds)
+			const frameDelta = getPositionDelta(currentFrame, nextFrame)
+			const positionDelta = frameDelta.map((component) => component * blocksInFrame)
+			player.relativeTeleport(positionDelta)
 		})
 
 		function unimplementedCommandHelper(commands, helpTopic) {
