@@ -166,7 +166,7 @@ export class Level extends EventEmitter {
 			}
 		} else if (command) {
 			const commandName = command.toLowerCase()
-			this.messageAll(new FormattedString(stringSkeleton.level.status.drainedLevelActions, { commandName, levelName: this.name }))
+			this.messageAll(new FormattedString(stringSkeleton.level.error.commandNotFound, { commandName, levelName: this.name }))
 		}
 	}
 
