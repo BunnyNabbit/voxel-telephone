@@ -22,17 +22,24 @@ export class GlobalCommandRegistry {
 		segments.shift()
 		const remainingString = segments.join(" ")
 		const command = this.commands.get(commandName)
-		if (command && (!command.validate || (await command.validate(player, remainingString)))) {
-			try {
-				await command.action(player, remainingString)
-			} catch (err) {
-				console.error("Failed to run command", str, err)
-				player.message(new FormattedString(stringSkeleton.command.error.uncaught, { err }), 0, ">&c")
+		try {
+			if (command && (!command.validate || (await command.validate(player, remainingString)))) {
+				try {
+					await command.action(player, remainingString)
+				} catch (err) {
+					console.error("Failed to run command", str, err)
+					player.message(new FormattedString(stringSkeleton.command.error.uncaught, { err }), 0, ">&c")
+					player.emit("playSound", player.universe.sounds.invalid)
+				}
+				return true
+			} else if (command) {
+				// didn't pass validation, but a command was found.
 				player.emit("playSound", player.universe.sounds.invalid)
+				return true
 			}
-			return true
-		} else if (command) {
-			// didn't pass validation, but a command was found.
+		} catch (error) {
+			console.error("Failed to validate command", str, error)
+			player.message(new FormattedString(stringSkeleton.command.error.uncaught, { err: error.message }), 0, ">&c")
 			player.emit("playSound", player.universe.sounds.invalid)
 			return true
 		}

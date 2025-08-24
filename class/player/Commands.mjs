@@ -163,7 +163,7 @@ export class Commands {
 				let block = player.heldBlock
 				player.space.setBlock(operationPosition, block)
 			},
-			[Commands.reasonHasLevelBuildPermission(false), Commands.reasonVcr(true, new FormattedString(stringSkeleton.level.error.blockBlockingInVCR)), Commands.reasonLevelBlocking(true, new FormattedString(stringSkeleton.command.error.blockBlockingCommand))]
+			[Commands.reasonHasLevelBuildPermission(false), Commands.reasonVcr(true, new FormattedString(stringSkeleton.level.error.blockBlockingInVCR)), Commands.reasonLevelBlocking(true, new FormattedString(stringSkeleton.level.error.blockBlockingCommand))]
 		)
 		universe.registerCommand(["/clients"], async (player) => {
 			player.message("&ePlayers using:")
