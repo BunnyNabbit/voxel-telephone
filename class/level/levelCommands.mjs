@@ -1,4 +1,4 @@
-class Command {
+class LevelCommand {
 	/** */
 	constructor(layout, level, enums = {}) {
 		this.level = level
@@ -15,7 +15,7 @@ class Command {
 			} else {
 				this.level.setBlock(position, block, [], false)
 				this.blocksChanged++
-				if (this.blocksChanged > Command.networkedBlockChanges) this.rawSet = true
+				if (this.blocksChanged > LevelCommand.networkedBlockChanges) this.rawSet = true
 			}
 		} catch (err) {
 			if (this.level.logErrors) console.error(`Error setting block at ${position}:`, err)
@@ -58,7 +58,7 @@ class Command {
 	static networkedBlockChanges = 4096
 }
 
-class Cuboid extends Command {
+class Cuboid extends LevelCommand {
 	name = "cuboid"
 	static help = ["Makes a cuboid on two positions.", "If no arguments are added, block is inferred from your current hand and the server will ask for the block positions interactively."]
 	static aliases = ["z"]
@@ -99,7 +99,7 @@ class Cuboid extends Command {
 	}
 }
 
-class Line extends Command {
+class Line extends LevelCommand {
 	name = "Line"
 	static help = ["Makes a line between two points.", "If no arguments are added, block is inferred from your current hand and the server will ask for the block positions interactively."]
 	static aliases = ["l", "ln"]
@@ -139,7 +139,7 @@ class Line extends Command {
 	}
 }
 
-class AbnormalTriangle extends Command {
+class AbnormalTriangle extends LevelCommand {
 	name = "AbnormalTriangle"
 	static help = ["Makes a triangle from three points. The resulting triangle may have holes", "If no arguments are added, block is inferred from your current hand and the server will ask for the block positions interactively."]
 	static aliases = ["triangle", "tri"]
@@ -175,7 +175,7 @@ class AbnormalTriangle extends Command {
 	}
 }
 
-class SphereSlow extends Command {
+class SphereSlow extends LevelCommand {
 	name = "SphereSlow"
 	static help = ["Makes a sphere from a center point and a radius.", "If no arguments are added, block is inferred from your current hand and the server will ask for the block positions interactively."]
 	static aliases = ["sphere", "sp"]
@@ -204,7 +204,7 @@ class SphereSlow extends Command {
 	}
 }
 
-class Replace extends Command {
+class Replace extends LevelCommand {
 	name = "Replace"
 	static aliases = ["r"]
 	/** */
@@ -229,7 +229,7 @@ class Replace extends Command {
 	}
 }
 
-class PositionalTransform extends Command {
+class PositionalTransform extends LevelCommand {
 	name = "PositionalTransform "
 	static aliases = ["move"]
 	/** */
