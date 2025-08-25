@@ -70,7 +70,7 @@ export class DragonMark {
 		text = DragonMark.normalizeLineEndings(text)
 		const structure = []
 		const sections = text.split("---")
-		if (sections.length < 3) throw new Error("Input text does not contain the expected structure with '---'")
+		if (sections.length < 3) throw new Error("Input text does not contain the expected structure with '---'.")
 		const lines = sections[2].split("\n")
 		lines.forEach((line) => {
 			line = line.trim()
