@@ -413,9 +413,11 @@ export class Commands {
 			if (message == "next") {
 				index += 1
 				if (index >= maxFrames) index = 0
+				player.emit("playSound", universe.sounds.rewind)
 			} else if (message == "previous") {
 				index -= 1
 				if (index < 0) index = maxFrames - 1
+				player.emit("playSound", universe.sounds.fastForward)
 			}
 
 			function toIndex(position, bounds = [4, 4, 4]) {
