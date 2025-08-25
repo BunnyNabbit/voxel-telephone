@@ -5,7 +5,9 @@ summary: "The `/Line` command creates a line between two points."
 image: "./line-output.webp"
 imageAlt: "Red line"
 ---
+
 # /Line
+
 Makes a line between two points.
 
 ![Red line](./line-output.webp)

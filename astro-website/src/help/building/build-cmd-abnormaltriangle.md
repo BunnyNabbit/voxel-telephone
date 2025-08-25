@@ -5,7 +5,9 @@ summary: "The `/AbnormalTriangle` command creates a triangle from three points."
 image: "./triangle-output.webp"
 imageAlt: "Red triangle"
 ---
+
 # /AbnormalTriangle
+
 Makes a triangle from three points. The resulting triangle may have holes.
 
 ![Red triangle](./triangle-output.webp)

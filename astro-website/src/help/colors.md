@@ -2,7 +2,9 @@
 title: "Colors"
 noIndex: true
 ---
+
 # Colors
+
 - 0: &0Black
 - 1: &1Navy
 - 2: &2Green
