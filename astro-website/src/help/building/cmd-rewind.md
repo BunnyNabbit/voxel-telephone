@@ -3,7 +3,9 @@ title: "/rewind"
 contributors: ["BunnyNabbit \"Aon\""]
 summary: "The `/rewind` command reverts a number of actions done to a level."
 ---
+
 # /rewind
+
 Usage: `/rewind <actions>`
 
 Usable if VCR is currently enabled with `/vcr`.
