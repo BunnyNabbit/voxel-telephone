@@ -217,6 +217,7 @@ export class Level extends EventEmitter {
 	}
 
 	withinLevelBounds(position) {
+		if (position.some((num) => isNaN(num))) return false
 		if (position[0] < 0 || position[1] < 0 || position[2] < 0) return false
 		if (position[0] >= this.bounds[0] || position[1] >= this.bounds[1] || position[2] >= this.bounds[2]) return false
 		return true

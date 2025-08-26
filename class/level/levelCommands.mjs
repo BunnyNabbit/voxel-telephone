@@ -298,6 +298,120 @@ class PositionalTransform extends LevelCommand {
 	static airBlockId = 0
 }
 
-export const levelCommands = [Cuboid, Line, AbnormalTriangle, SphereSlow, Replace, PositionalTransform]
+class CourierTransform extends LevelCommand {
+	name = "CourierTransform"
+	static aliases = ["courier"]
+	/** */
+	constructor(level) {
+		super(["block:setBlock", "position:position1", "position:position2"], level)
+	}
+
+	action(data) {
+		const { position1, position2, setBlock } = this.parseBytes(data)
+		const min = [0, 1, 2].map((index) => Math.min(position1[index], position2[index]))
+		const max = [0, 1, 2].map((index) => Math.max(position1[index], position2[index]))
+		// Damage all blocks in area
+		for (let x = min[0]; x <= max[0]; x++) {
+			for (let y = min[1]; y <= max[1]; y++) {
+				for (let z = min[2]; z <= max[2]; z++) {
+					const currentBlock = this.level.getBlock([x, y, z])
+					if (currentBlock === 0) continue
+					const randomValue = (CourierTransform.hashPosition([x, y, z]) % 100) / 100
+					if (randomValue < 0.3) this.damageBlock([x, y, z], currentBlock, setBlock)
+				}
+			}
+		}
+
+		const selectionCorners = [
+			[min[0], min[1], min[2]],
+			[min[0], min[1], max[2]],
+			[min[0], max[1], min[2]],
+			[min[0], max[1], max[2]],
+			[max[0], min[1], min[2]],
+			[max[0], min[1], max[2]],
+			[max[0], max[1], min[2]],
+			[max[0], max[1], max[2]],
+		]
+
+		// Push blocks inward around corners
+		const center = [(min[0] + max[0]) / 2, (min[1] + max[1]) / 2, (min[2] + max[2]) / 2]
+		selectionCorners.forEach((corner) => {
+			const lines = []
+			for (let x = corner[0] - CourierTransform.cornerDamageRadius; x <= corner[0] + CourierTransform.cornerDamageRadius; x++) {
+				for (let y = corner[1] - CourierTransform.cornerDamageRadius; y <= corner[1] + CourierTransform.cornerDamageRadius; y++) {
+					for (let z = corner[2] - CourierTransform.cornerDamageRadius; z <= corner[2] + CourierTransform.cornerDamageRadius; z++) {
+						if (!this.level.withinLevelBounds([x, y, z])) continue
+						const distanceToCorner = Math.sqrt((x - corner[0]) ** 2 + (y - corner[1]) ** 2 + (z - corner[2]) ** 2)
+						if (distanceToCorner > CourierTransform.cornerDamageRadius) continue
+						const randomValue = (CourierTransform.hashPosition([x, y, z]) % 300) / 300 - 0.1
+						const damageChance = (CourierTransform.cornerDamageRadius - distanceToCorner) / CourierTransform.cornerDamageRadius
+						if (randomValue < damageChance) lines.push(Line.process([x, y, z], center))
+					}
+				}
+			}
+			lines.forEach((line) => {
+				for (let step = 0; step < CourierTransform.cornerRayLength; step++) {
+					const position = line[step]
+					if (!position) break
+					if (!this.level.withinLevelBounds(position)) break
+					const currentBlock = this.level.getBlock(position)
+					if (currentBlock === 0) continue
+					const randomValue = (CourierTransform.hashPosition(position) % 100) / 100
+					const pushChance = (CourierTransform.cornerRayLength - step) / CourierTransform.cornerRayLength
+					if (randomValue < pushChance) {
+						const nextPosition = line[Math.min(step + 1, CourierTransform.cornerRayLength - 1)]
+						if (!nextPosition) break
+						if (!this.level.withinLevelBounds(nextPosition)) break
+						this.setBlock(position, 0)
+						this.setBlock(nextPosition, currentBlock)
+					}
+				}
+			})
+		})
+
+		return super.action()
+	}
+
+	damageBlock(position, blockType, setBlock) {
+		let damageType = "destroy"
+		const randomValue = (CourierTransform.hashPosition(position) % 200) / 200
+		if (randomValue < 0.35) {
+			damageType = "relocate"
+		}
+
+		let newPosition
+		switch (damageType) {
+			case "destroy":
+				this.setBlock(position, setBlock)
+				break
+			case "relocate":
+				newPosition = position.slice()
+				for (let step = 0; step < CourierTransform.maxRelocateSteps; step++) {
+					newPosition[0] += CourierTransform.relocateGravity[0]
+					newPosition[1] += CourierTransform.relocateGravity[1]
+					newPosition[2] += CourierTransform.relocateGravity[2]
+					if (!this.level.withinLevelBounds(newPosition)) break
+					const blockAtNewPosition = this.level.getBlock(newPosition)
+					if (blockAtNewPosition === 0) {
+						this.setBlock(position, 0)
+						this.setBlock(newPosition, blockType)
+						position = newPosition.slice()
+					}
+				}
+				break
+		}
+	}
+
+	static maxRelocateSteps = 32
+	static relocateGravity = [0, -1, 0]
+	static cornerDamageRadius = 5
+	static cornerRayLength = 8
+
+	static hashPosition(position) {
+		return Math.abs((position[0] * 73856093) ^ (position[1] * 19349663) ^ (position[2] * 83492791))
+	}
+}
+
+export const levelCommands = [Cuboid, Line, AbnormalTriangle, SphereSlow, Replace, PositionalTransform, CourierTransform]
 
 export default levelCommands
