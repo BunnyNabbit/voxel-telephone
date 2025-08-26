@@ -412,6 +412,63 @@ class CourierTransform extends LevelCommand {
 	}
 }
 
-export const levelCommands = [Cuboid, Line, AbnormalTriangle, SphereSlow, Replace, PositionalTransform, CourierTransform]
+class FurrierTransform extends LevelCommand {
+	name = "FurrierTransform"
+	static aliases = ["furrier", "fur"]
+	/** */
+	constructor(level) {
+		super(["block:setBlock", "position:position1", "position:position2"], level)
+	}
+	action(data) {
+		const { position1, position2, setBlock } = this.parseBytes(data)
+		const min = [0, 1, 2].map((index) => Math.min(position1[index], position2[index]))
+		const max = [0, 1, 2].map((index) => Math.max(position1[index], position2[index]))
+		const setBlocks = []
+
+		for (let x = min[0]; x <= max[0]; x++) {
+			for (let y = min[1]; y <= max[1]; y++) {
+				for (let z = min[2]; z <= max[2]; z++) {
+					const currentBlock = this.level.getBlock([x, y, z])
+					if (currentBlock === 0) continue
+					const randomValue = (CourierTransform.hashPosition([x, y, z]) % 100) / 100
+					if (randomValue < 0.75) {
+						FurrierTransform.directions.forEach((direction) => {
+							const position = [x, y, z]
+							const adjacentPosition = [position[0] + direction[0], position[1] + direction[1], position[2] + direction[2]]
+							if (!this.level.withinLevelBounds(adjacentPosition)) return
+							const adjacentBlock = this.level.getBlock(adjacentPosition)
+							if (adjacentBlock !== 0) return // Only add fur into air blocks
+							const randomValue = (CourierTransform.hashPosition(adjacentPosition) % 200) / 200
+							if (randomValue < 0.5) {
+								if (setBlock == 0) {
+									setBlocks.push({ position: adjacentPosition, block: currentBlock })
+								} else {
+									setBlocks.push({ position: adjacentPosition, block: setBlock })
+								}
+							}
+						})
+					}
+				}
+			}
+		}
+
+		setBlocks.forEach(({ position, block }) => {
+			this.setBlock(position, block)
+		})
+
+		return super.action()
+	}
+
+	static directions = [
+		[1, 0, 0],
+		[-1, 0, 0],
+		[0, 1, 0],
+		[0, -1, 0],
+		[0, 0, 1],
+		[0, 0, -1],
+	]
+}
+
+export const levelCommands = [Cuboid, Line, AbnormalTriangle, SphereSlow, Replace, PositionalTransform, CourierTransform, FurrierTransform]
 
 export default levelCommands
