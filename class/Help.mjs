@@ -3,6 +3,7 @@ import path from "path"
 import { DragonMark, Heading, Paragraph, Text, InlineCode, Image } from "./DragonMark.mjs"
 import { Level } from "./level/Level.mjs"
 import { getAbsolutePath } from "esm-path"
+import { FormattedString, defaultLanguage, stringSkeleton } from "./strings/FormattedString.mjs"
 const __dirname = getAbsolutePath(import.meta.url)
 
 export class Category {
@@ -56,34 +57,54 @@ export class Help {
 	/**Displays help information to the player based on the provided argument.
 	 * @param {Player} player - The player to display help information to.
 	 * @param {String} argument - The argument provided by the player.
+	 * @param {String?} [languageOverride] - Optional language override.
 	 */
-	async callPlayer(player, argument) {
+	async callPlayer(player, argument, languageOverride) {
 		await this.data
 		const universe = this.universe
 		let displayLink = false
+		const playerLanguage = languageOverride ?? (player.languages ?? [defaultLanguage])[0].locale
+		let originalArgument = argument
 		if (!argument) {
 			player.message(
 				`&cCategories&f: ${Array.from(this.data.categories)
+					.filter(([key]) => key.endsWith(`:${playerLanguage}`))
 					.map(([key]) => this.data.categories.get(key).name)
 					.join(", ")}`
 			)
-			argument = "help"
+			argument = `help:${playerLanguage}`
+			originalArgument = "help"
 			displayLink = true
+		} else {
+			argument = argument.toLowerCase().split(" ")[0]
+			argument = `${argument}:${playerLanguage}`
 		}
-		argument = argument.toLowerCase().split(" ")[0]
 		const topic = this.data.topics.get(argument)
 		if (topic) return topic.displayHelpToPlayer(player)
-		const command = universe.commandRegistry.commands.get("/" + argument) || universe.commandRegistry.commands.get(argument) || Level.getCommandClassFromName(argument.replace("/", ""))
+		// Find command/
+		const command = universe.commandRegistry.commands.get("/" + originalArgument) || universe.commandRegistry.commands.get(originalArgument) || Level.getCommandClassFromName(originalArgument.replace("/", ""))
 		if (command) {
-			const commandHelp = this.data.commands.get((command.name && "/" + command.name.toLowerCase()) || command.commandNames[0])
-			if (!commandHelp) return player.message(`Command exists but unable to find help document for it.`)
-			commandHelp.displayHelpToPlayer(player)
-			if (displayLink) player.message(`&eHelp documentation is available on the web. ${universe.serverConfiguration.website.baseURL}help`)
-			return
+			// Commands may not always be documented.
+			let commandHelpKey
+			if (command.name) {
+				commandHelpKey = `/${command.name.toLowerCase()}:${playerLanguage}`
+			} else {
+				commandHelpKey = `${command.commandNames[0].toLowerCase()}:${playerLanguage}`
+			}
+			const commandHelp = this.data.commands.get(commandHelpKey)
+
+			if (commandHelp) {
+				commandHelp.displayHelpToPlayer(player)
+				if (displayLink) player.message(`&eHelp documentation is available on the web. ${universe.serverConfiguration.website.baseURL}help/${playerLanguage}`)
+				return
+			} else if (!commandHelp && languageOverride) {
+				player.message(`Command exists but unable to find help document for it.`)
+			}
 		}
 		const category = this.data.categories.get(argument)
 		if (category) return category.displayHelpToPlayer(player)
-		player.message(`Unable to find help document for ${argument}.`)
+		if (playerLanguage !== defaultLanguage.locale) return this.callPlayer(player, originalArgument, defaultLanguage.locale)
+		player.message(`Unable to find help document for ${originalArgument}.`)
 	}
 	/**Parses the markdown content into Minecraft classic text format.
 	 * @param {String} markdown - The markdown content to parse.
@@ -129,19 +150,25 @@ export class Help {
 			.catch((err) => {
 				console.warn(`Unable to read astro asset cache: ${err}`)
 			})
-		const files = await Help.fileWalker(directory, 1)
+		const files = await Help.fileWalker(directory, 2)
 
 		for (const file of files) {
 			if (path.extname(file) === ".md") {
-				const name = path.basename(file, ".md")
+				let name = path.basename(file, ".md")
 				if (name == "index") continue // category
+				const language = file.split("astro-website\\src\\help\\")[1].split("\\")[0]
+				name = `${name}:${language}`
 				const content = await fs.promises.readFile(file, "utf-8")
 				const parsed = Help.parseMarkdownToClassicText(content, {
 					fullImageURLs,
 					baseURL,
 				})
 				let category = path.basename(path.dirname(file))
-				if (category == "help") category = null
+				if (category == language) {
+					category = null
+				} else {
+					category = `${category}:${language}`
+				}
 
 				if (name.startsWith("cmd-") || name.startsWith("build-cmd-")) {
 					const commandName = "/" + name.replace("cmd-", "").replace("build-", "")
@@ -151,7 +178,7 @@ export class Help {
 				}
 
 				if (category) {
-					if (!categories.has(category)) categories.set(category, new Category(category[0].toUpperCase() + category.slice(1)))
+					if (!categories.has(category)) categories.set(category, new Category((category[0].toUpperCase() + category.slice(1)).split(":")[0]))
 					categories.get(category).documents.push(parsed.heading)
 				}
 			}
