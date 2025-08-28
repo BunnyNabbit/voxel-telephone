@@ -497,7 +497,7 @@ export class Commands {
 		const configurations = {
 			music: new BooleanConfiguration("music", "cefMusic"),
 			sounds: new BooleanConfiguration("sound", "cefSounds"),
-			language: new StringConfiguration("language", "language", { allowedValues: ["en", "en-zhing"] }),
+			language: new StringConfiguration("language", "language", { allowedValues: ["en", "en-zhing", "es"] }),
 		}
 		return configurations
 	}

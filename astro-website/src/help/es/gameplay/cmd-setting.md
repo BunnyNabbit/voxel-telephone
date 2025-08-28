@@ -15,3 +15,4 @@ Allows for setting preferences.
 - `language` `[language code]`: What language is used by system messages?
   - `en`: English
   - `en-zhing`: Zhing-like English
+  - `es`: Spanish
