@@ -9,7 +9,8 @@
 			"commandNotFound": "Unable to find command with name ${commandName} for level ${levelName}.",
 			"blockBlockingInVCR": "Unable to place block. Level is in VCR mode.",
 			"buildCommandBlockingInVCR": "Unable to use command. Level is in VCR mode.",
-			"blockBlockingCommand": "Unable to place block. Command in level is expecting additional arguments."
+			"blockBlockingCommand": "Unable to place block. Command in level is expecting additional arguments.",
+			"noInteractiveCommands": "There are no current commands being run on the level"
 		},
 		"status": {
 			"drainedLevelActions": "Changes drained. ${bytes} bytes saved to level's VHS record.",
@@ -36,7 +37,36 @@
 			"missingBuildPermission": "You don't have permission to build in this level.",
 			"missingPermission": "You don't have permission to use this command!",
 			"drainingVCR": "VCR is busy. Try again later?",
-			"levelLoading": "Level is busy seeking. Try again later?"
+			"levelLoading": "Level is busy seeking. Try again later?",
+			"controlRequiresVcr": "Level isn't in VCR mode. /vcr",
+			"unimplementedCommand": {
+				"unavailable": "This command is unavailable:",
+				"helpHint": "For help on existing commands and topics, use &a/help&r."
+			},
+			"noGameSelected": "No game is selected.",
+			"incompleteGame": "Game is not complete.",
+			"license": {
+				"alreadyAdded": "License already exists.",
+				"noBuildSelected": "No build exists on selected game.",
+				"notOwner": "You are not the owner of this build.",
+				"unknownLicense": "Unknown license."
+			},
+			"setting": {
+				"unknownSetting": "Unknown setting.",
+				"invalidValue": "Invalid setting value."
+			},
+			"diverge": {
+				"cannotDivergeRoot": "Cannot diverge game at root."
+			},
+			"view": {
+				"unknownArgument": "Unknown view argument."
+			},
+			"template": {
+				"unknownTemplate": "Unknown template name."
+			},
+			"vcr": {
+				"alreadyVcr": "The level is already in VCR mode"
+			}
 		},
 		"paint": {
 			"on": "Paint mode on.",
@@ -50,6 +80,37 @@
 			"vcrReminder": "Hold up! Did you mean to use /abort instead? Exit out of VCR to if you intend to submit your game.",
 			"attemptFinishBuildEmpty": "There is nothing in the level. Build the prompt you are given!",
 			"attemptFinishDescriptionEmpty": "You currently have no description for this build. Write something in chat first!"
+		},
+		"license": {
+			"added": "Added license ${licenseName} to ${prompt}.",
+			"noLicenses": "No licenses found.",
+			"listingCurrentLicenses": "Current licenses:"
+		},
+		"setting": {
+			"updated": "Updated setting ${setting} to ${value}."
+		},
+		"diverge": {
+			"success": "Game diverged."
+		},
+		"purge": {
+			"success": "Turn purged."
+		},
+		"removeallzones": {
+			"success": "All zones removed."
+		},
+		"vcrControls": {
+			"rewinded": "Fast-forwarded. Current actions: ${actionCount}.",
+			"fastforwarded": "Fast-forwarded. Current actions: ${currentAction}/${maxActions}.",
+			"commitReminder": "To commit this state use &a/commit&r. Use &a/abort&r to exit VCR"
+		},
+		"vcr": {
+			"listActionCount": "VCR has recorded ${actionCount} actions."
+		},
+		"abort": {
+			"success": "Command aborted."
+		},
+		"report": {
+			"gameReported": "Game reported with reason: \"${reason}\"."
 		}
 	},
 	"game": {
