@@ -156,7 +156,8 @@ export class Help {
 			if (path.extname(file) === ".md") {
 				let name = path.basename(file, ".md")
 				if (name == "index") continue // category
-				const language = file.split("astro-website\\src\\help\\")[1].split("\\")[0]
+				const relativePath = path.relative(directory, file)
+				const language = relativePath.split(path.sep)[0]
 				name = `${name}:${language}`
 				const content = await fs.promises.readFile(file, "utf-8")
 				const parsed = Help.parseMarkdownToClassicText(content, {
