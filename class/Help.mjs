@@ -95,7 +95,7 @@ export class Help {
 
 			if (commandHelp) {
 				commandHelp.displayHelpToPlayer(player)
-				if (displayLink) player.message(`&eHelp documentation is available on the web. ${universe.serverConfiguration.website.baseURL}help/${playerLanguage}`)
+				if (displayLink) player.message(`&eHelp documentation is available on the web. ${universe.serverConfiguration.website.baseURL}help`)
 				return
 			} else if (!commandHelp && languageOverride) {
 				player.message(`Command exists but unable to find help document for it.`)
