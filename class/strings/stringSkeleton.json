@@ -1,14 +1,16 @@
 {
  "language": {
   "en": "language.en",
-  "en-zhing": "language.en-zhing"
+  "en-zhing": "language.en-zhing",
+  "es": "language.es"
  },
  "level": {
   "error": {
    "commandNotFound": "level.error.commandNotFound",
    "blockBlockingInVCR": "level.error.blockBlockingInVCR",
    "buildCommandBlockingInVCR": "level.error.buildCommandBlockingInVCR",
-   "blockBlockingCommand": "level.error.blockBlockingCommand"
+   "blockBlockingCommand": "level.error.blockBlockingCommand",
+   "noInteractiveCommands": "level.error.noInteractiveCommands"
   },
   "status": {
    "drainedLevelActions": "level.status.drainedLevelActions",
@@ -35,7 +37,36 @@
    "missingBuildPermission": "command.error.missingBuildPermission",
    "missingPermission": "command.error.missingPermission",
    "drainingVCR": "command.error.drainingVCR",
-   "levelLoading": "command.error.levelLoading"
+   "levelLoading": "command.error.levelLoading",
+   "controlRequiresVcr": "command.error.controlRequiresVcr",
+   "unimplementedCommand": {
+    "unavailable": "command.error.unimplementedCommand.unavailable",
+    "helpHint": "command.error.unimplementedCommand.helpHint"
+   },
+   "noGameSelected": "command.error.noGameSelected",
+   "incompleteGame": "command.error.incompleteGame",
+   "license": {
+    "alreadyAdded": "command.error.license.alreadyAdded",
+    "noBuildSelected": "command.error.license.noBuildSelected",
+    "notOwner": "command.error.license.notOwner",
+    "unknownLicense": "command.error.license.unknownLicense"
+   },
+   "setting": {
+    "unknownSetting": "command.error.setting.unknownSetting",
+    "invalidValue": "command.error.setting.invalidValue"
+   },
+   "diverge": {
+    "cannotDivergeRoot": "command.error.diverge.cannotDivergeRoot"
+   },
+   "view": {
+    "unknownArgument": "command.error.view.unknownArgument"
+   },
+   "template": {
+    "unknownTemplate": "command.error.template.unknownTemplate"
+   },
+   "vcr": {
+    "alreadyVcr": "command.error.vcr.alreadyVcr"
+   }
   },
   "paint": {
    "on": "command.paint.on",
@@ -49,6 +80,37 @@
    "vcrReminder": "command.finish.vcrReminder",
    "attemptFinishBuildEmpty": "command.finish.attemptFinishBuildEmpty",
    "attemptFinishDescriptionEmpty": "command.finish.attemptFinishDescriptionEmpty"
+  },
+  "license": {
+   "added": "command.license.added",
+   "noLicenses": "command.license.noLicenses",
+   "listingCurrentLicenses": "command.license.listingCurrentLicenses"
+  },
+  "setting": {
+   "updated": "command.setting.updated"
+  },
+  "diverge": {
+   "success": "command.diverge.success"
+  },
+  "purge": {
+   "success": "command.purge.success"
+  },
+  "removeallzones": {
+   "success": "command.removeallzones.success"
+  },
+  "vcrControls": {
+   "rewinded": "command.vcrControls.rewinded",
+   "fastforwarded": "command.vcrControls.fastforwarded",
+   "commitReminder": "command.vcrControls.commitReminder"
+  },
+  "vcr": {
+   "listActionCount": "command.vcr.listActionCount"
+  },
+  "abort": {
+   "success": "command.abort.success"
+  },
+  "report": {
+   "gameReported": "command.report.gameReported"
   }
  },
  "game": {

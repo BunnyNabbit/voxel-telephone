@@ -91,7 +91,7 @@ export class Commands {
 				await universe.db.deactivateGame(player.space.game._id)
 				await universe.db.addReport(player.authInfo.username, player.space.game._id, reason)
 				console.log(`Game reported with reason: "${reason}"`)
-				player.message(`Game reported with reason: "${reason}"`)
+				player.message(new FormattedString(stringSkeleton.command.report.gameReported, { reason }))
 				player.space.doNotReserve = true
 				player.space.removePlayer(player)
 				await HubLevel.teleportPlayer(player)
@@ -116,7 +116,7 @@ export class Commands {
 					if (player.space.currentCommand) {
 						player.space.blocking = false
 						player.space.currentCommand = null
-						player.message("Command aborted")
+						player.message(new FormattedString(stringSkeleton.command.abort.success))
 						player.emit("playSound", universe.sounds.abort)
 					} else {
 						player.message("Nothing happened")
@@ -130,7 +130,7 @@ export class Commands {
 			async (player) => {
 				player.space.inferCurrentCommand(player.getInferredData(), player)
 			},
-			[Commands.reasonHasLevelBuildPermission(false), Commands.reasonLevelBlocking(false, "There are no current commands being run on the level")]
+			[Commands.reasonHasLevelBuildPermission(false), Commands.reasonLevelBlocking(false, new FormattedString(stringSkeleton.level.error.noInteractiveCommands))]
 		)
 		universe.registerCommand(["/paint", "/p"], async (player) => {
 			player.paintMode = !player.paintMode
@@ -169,6 +169,7 @@ export class Commands {
 			[Commands.reasonHasLevelBuildPermission(false), Commands.reasonVcr(true, new FormattedString(stringSkeleton.level.error.blockBlockingInVCR)), Commands.reasonLevelBlocking(true, new FormattedString(stringSkeleton.level.error.blockBlockingCommand))]
 		)
 		universe.registerCommand(["/clients"], async (player) => {
+			// strings are expected to be untranslated because of CEF.
 			player.message("&ePlayers using:")
 			universe.server.players.forEach((otherPlayer) => {
 				player.message(`&e  ${otherPlayer.client.appName}: &f${otherPlayer.authInfo.username}`, 0, "> ")
@@ -180,16 +181,12 @@ export class Commands {
 				if (player.space.changeRecord.dirty) await player.space.changeRecord.flushChanges()
 				player.space.changeRecord.maxActions = player.space.changeRecord.actionCount
 				player.space.toggleVcr()
-				player.message(`VCR has ${player.space.changeRecord.actionCount} actions. VCR Controls`)
-				player.message(`/rewind (actions) - undos actions`)
-				// client.message(`/keyframe (keyframe number) - VCR brings to keyframe`)
-				player.message(`/fastforward (actions) - redos rewinded actions`)
-				player.message(`/commit - loads current state seen in the VCR preview. will override change record.`)
-				player.message(`/abort - aborts VCR preview, loading state as it was before enabling VCR.`)
+				player.message(new FormattedString(stringSkeleton.command.vcr.listActionCount, { actionCount: player.space.changeRecord.actionCount }))
+				universe.commandRegistry.attemptCall(player, `/help vcr`)
 				player.space.reload()
 				player.emit("playSound", universe.sounds.activateVCR)
 			},
-			[Commands.reasonHasLevelBuildPermission(false), Commands.reasonVcrDraining(true), Commands.reasonVcr(true, "The level is already in VCR mode")]
+			[Commands.reasonHasLevelBuildPermission(false), Commands.reasonVcrDraining(true), Commands.reasonVcr(true, new FormattedString(stringSkeleton.command.error.vcr.alreadyVcr))]
 		)
 		universe.registerCommand(
 			["/template"],
@@ -207,7 +204,9 @@ export class Commands {
 						template = templates.animation
 						break
 					default:
-						return player.message("Invalid template name. Use /help templates for a list of templates")
+						player.message(new FormattedString(stringSkeleton.command.error.template.unknownTemplate))
+						universe.commandRegistry.attemptCall(player, `/help templates`)
+						return
 				}
 				if (player.space.loading) return player.message(new FormattedString(stringSkeleton.command.error.levelLoading))
 				if (player.space.changeRecord.dirty) await player.space.changeRecord.flushChanges()
@@ -217,7 +216,7 @@ export class Commands {
 				player.space.reload()
 				player.emit("playSound", universe.sounds.deactivateVCR)
 			},
-			[Commands.reasonHasLevelBuildPermission(false), Commands.reasonVcrDraining(true), Commands.reasonVcr(true, "The level is in VCR mode")]
+			[Commands.reasonHasLevelBuildPermission(false), Commands.reasonVcrDraining(true), Commands.reasonVcr(true, new FormattedString(stringSkeleton.level.error.blockBlockingCommand))]
 		)
 		universe.registerCommand(["/create"], async (player) => {
 			if (player.canCreate && player.space?.name == universe.serverConfiguration.hubName) {
@@ -233,8 +232,8 @@ export class Commands {
 				player.space.blocks = Buffer.from(await player.space.template.generate(player.space.bounds))
 				await player.space.changeRecord.restoreBlockChangesToLevel(player.space, Math.max(player.space.changeRecord.actionCount - count, 1))
 				player.space.reload()
-				player.message(`Rewinded. Current actions: ${player.space.changeRecord.actionCount}/${player.space.changeRecord.maxActions}`)
-				player.message(`To commit this state use /commit. use /abort to exit VCR`)
+				player.message(new FormattedString(stringSkeleton.command.vcrControls.rewinded, { actionCount: player.space.changeRecord.actionCount }))
+				player.message(new FormattedString(stringSkeleton.command.vcrControls.commitReminder))
 				player.emit("playSound", universe.sounds.rewind)
 				player.space.setBlinkText(textSymbols.pause, textSymbols.rewind)
 			},
@@ -248,12 +247,12 @@ export class Commands {
 				player.space.blocks = Buffer.from(await player.space.template.generate(player.space.bounds))
 				await player.space.changeRecord.restoreBlockChangesToLevel(player.space, Math.min(player.space.changeRecord.actionCount + count, player.space.changeRecord.maxActions))
 				player.space.reload()
-				player.message(`Fast-forwarded. Current actions: ${player.space.changeRecord.actionCount}/${player.space.changeRecord.maxActions}`)
-				player.message(`To commit this state use /commit. Use /abort to exit VCR`)
+				player.message(new FormattedString(stringSkeleton.command.vcrControls.fastforwarded, { currentAction: player.space.changeRecord.actionCount, maxActions: player.space.changeRecord.maxActions }))
+				player.message(new FormattedString(stringSkeleton.command.vcrControls.commitReminder))
 				player.emit("playSound", universe.sounds.fastForward)
 				player.space.setBlinkText(textSymbols.pause, textSymbols.fastForward)
 			},
-			Commands.reasonVcr(false, "Level isn't in VCR mode. /vcr")
+			Commands.reasonVcr(false, new FormattedString(stringSkeleton.command.error.controlRequiresVcr))
 		)
 		universe.registerCommand(
 			["/addzone"],
@@ -285,7 +284,7 @@ export class Commands {
 				if (player.space.name.startsWith("game-")) return
 				player.space.portals = []
 				await universe.db.saveLevelPortals(player.space)
-				player.message("Zones removed")
+				player.message(new FormattedString(stringSkeleton.command.removeallzones.success))
 			},
 			Commands.reasonHasUserPermission("hubBuilder")
 		)
@@ -306,7 +305,8 @@ export class Commands {
 			} else if (!message) {
 				ViewLevel.teleportPlayer(player)
 			} else {
-				player.message("Unknown view argument. /help view")
+				player.message(new FormattedString(stringSkeleton.command.error.view.unknownArgument))
+				universe.commandRegistry.attemptCall(player, `/help view`)
 			}
 		})
 		universe.registerCommand(["/main", "/hub", "/spawn", "/h", "/wmain", "/worldmain"], async (player) => {
@@ -322,7 +322,7 @@ export class Commands {
 				if (!selectedTurns.description) return
 				await universe.db.purgeLastTurn(selectedTurns.description.root, reason)
 				await player.space.reloadView(templates.empty)
-				player.message("Turn purged!")
+				player.message(new FormattedString(stringSkeleton.command.purge.success))
 			},
 			Commands.reasonHasUserPermission("moderator")
 		)
@@ -331,18 +331,18 @@ export class Commands {
 			async (player, reason) => {
 				const selectedTurns = player.selectedTurns
 				if (!selectedTurns.description) return
-				if (selectedTurns.description.depth == 0) return player.message("Unable to diverge game.")
+				if (selectedTurns.description.depth == 0) return player.message(new FormattedString(stringSkeleton.command.error.diverge.cannotDivergeRoot))
 				await universe.db.divergeGame(selectedTurns.description, reason)
 				await player.space.reloadView(templates.empty)
-				player.message("Game diverged!")
+				player.message(new FormattedString(stringSkeleton.command.diverge.success))
 			},
 			Commands.reasonHasUserPermission("moderator")
 		)
 		universe.registerCommand(["/playback"], async (player) => {
 			const selectedTurns = player.selectedTurns
-			if (!selectedTurns?.description) return player.message("No game is selected.")
+			if (!selectedTurns?.description) return player.message(new FormattedString(stringSkeleton.command.error.noGameSelected))
 			const game = await universe.db.getGame(selectedTurns.description.root)
-			if (game.length !== 16) return player.message("Game is not complete.")
+			if (game.length !== 16) return player.message(new FormattedString(stringSkeleton.command.error.incompleteGame))
 			FastForwardLevel.teleportPlayer(player, game)
 		})
 
@@ -350,11 +350,15 @@ export class Commands {
 			const setting = message.split(" ")[0]
 			const userRecord = await player.userRecord.get()
 			const configuration = Commands.configurations[setting]
-			if (!configuration) return player.message("Unknown setting. /help setting") // TODO: use FormattedString
+			if (!configuration) {
+				player.message(new FormattedString(stringSkeleton.command.error.setting.unknownSetting))
+				universe.commandRegistry.attemptCall(player, `/help setting`)
+				return
+			}
 			const value = configuration.interpret(message.split(" ")[1])
-			if (value == null) return player.message("Invalid value.") // TODO: use FormattedString
+			if (value == null) return player.message(new FormattedString(stringSkeleton.command.error.setting.invalidValue))
 			userRecord.configuration[configuration.slug] = value
-			player.message(`Setting ${setting} to ${value}`)
+			player.message(new FormattedString(stringSkeleton.command.setting.updated, { setting: configuration.name, value }))
 			player.emit("configuration", userRecord.configuration)
 		})
 
@@ -365,9 +369,9 @@ export class Commands {
 				const buildTurn = selectedTurns.build
 				const licenses = buildTurn.licenses ?? []
 				if (licenses.length == 0) {
-					player.message("No licenses found.")
+					player.message(new FormattedString(stringSkeleton.command.license.noLicenses))
 				} else {
-					player.message("Current licenses:")
+					player.message(new FormattedString(stringSkeleton.command.license.listingCurrentLicenses))
 					licenses.forEach((license) => {
 						const licenseData = creationLicenses[license]
 						if (licenseData) player.message(`- ${licenseData.name} (${license})`)
@@ -377,21 +381,21 @@ export class Commands {
 			}
 			licenseName = licenseName.toUpperCase()
 			if (!creationLicenses[licenseName]) {
-				if (licenseName.length) player.message("Unknown license.")
+				if (licenseName.length) player.message(new FormattedString(stringSkeleton.command.error.license.unknownLicense))
 				universe.commandRegistry.attemptCall(player, `/help license`)
 				return
 			}
-			if (!selectedTurns || !selectedTurns.description) return player.message("No game is selected.")
+			if (!selectedTurns || !selectedTurns.description) return player.message(new FormattedString(stringSkeleton.command.error.noGameSelected))
 			// check ownership
 			const buildTurn = selectedTurns.build
-			if (!buildTurn) return player.message("No build selected.")
-			if (!buildTurn.creators.includes(player.authInfo.username)) return player.message("You are not the owner of this build.")
+			if (!buildTurn) return player.message(new FormattedString(stringSkeleton.command.error.license.noBuildSelected))
+			if (!buildTurn.creators.includes(player.authInfo.username)) return player.message(new FormattedString(stringSkeleton.command.error.license.notOwner))
 			const license = creationLicenses[licenseName]
 			// check if license already exists
 			const exists = (buildTurn.licenses ?? []).includes(licenseName)
-			if (exists) return player.message("License already exists.")
+			if (exists) return player.message(new FormattedString(stringSkeleton.command.error.license.alreadyAdded))
 			universe.db.addTurnLicense(buildTurn._id, licenseName, license.licenseData).then(() => {
-				player.message(`Added license ${license.name} to ${selectedTurns.description.prompt}.`)
+				player.message(new FormattedString(stringSkeleton.command.license.added, { licenseName: license.name, prompt: selectedTurns.description.prompt }))
 				player.space.reloadView(templates.empty)
 			})
 		})
@@ -442,9 +446,9 @@ export class Commands {
 
 		function unimplementedCommandHelper(commands, helpTopic) {
 			universe.registerCommand(commands, (player) => {
-				player.message("&cThis command is unavailable:")
+				player.message(new FormattedString(stringSkeleton.command.error.unimplementedCommand.unavailable))
 				universe.commandRegistry.attemptCall(player, `/help ${helpTopic}`)
-				player.message("&cFor help on existing commands and topics, use /help")
+				player.message(new FormattedString(stringSkeleton.command.error.unimplementedCommand.helpHint))
 			})
 		}
 
