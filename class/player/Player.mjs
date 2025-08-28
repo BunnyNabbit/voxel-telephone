@@ -281,6 +281,8 @@ export class Player extends EventEmitter {
 		if (configuration.language) {
 			FormattedString.getLanguage(configuration.language).then((language) => {
 				this.languages = [language, defaultLanguage]
+			}).catch((err) => {
+				console.error(err)
 			})
 		}
 	}
