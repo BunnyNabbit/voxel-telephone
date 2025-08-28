@@ -1,7 +1,7 @@
 ---
 import { getCollection, render, getEntry } from "astro:content"
-import ContentPage from "../../../layouts/ContentPage.astro"
-import WikiLinks from "../../../components/WikiLinks.astro"
+import ContentPage from "../../../../layouts/ContentPage.astro"
+import WikiLinks from "../../../../components/WikiLinks.astro"
 export const prerender = true
 export async function getStaticPaths() {
 	const posts = await getCollection("help")
@@ -9,8 +9,9 @@ export async function getStaticPaths() {
 		return {
 			params: {
 				// i am very trying to avoid metadata in md files by using directory structure instead
-				id: post.id.split("/")[1] || post.id.split("/")[0] || "/",
-				category: post.id.split("/")[0] || "none",
+				id: post.id.split("/")[2] || post.id.split("/")[1] || "/",
+				category: post.id.split("/")[1] || "none",
+				language: post.id.split("/")[0] || "en",
 			},
 			props: { post },
 		}
@@ -18,11 +19,14 @@ export async function getStaticPaths() {
 }
 const { category } = Astro.params
 const { id } = Astro.params
+const { language } = Astro.params
 
-let slug = `${category}/${id}`
+let slug = `${language}/${category}/${id ?? ""}`
+
+console.log("slug", slug)
 
 const post = await getEntry("help", slug)
-const categoryPost = await getEntry("help", category)
+const categoryPost = await getEntry("help", `${language}/${category}`)
 if (!post || !categoryPost) {
 	return new Response(null, {
 		status: 404,

@@ -1,28 +1,27 @@
 ---
 import { getCollection, render } from "astro:content"
-import ContentPage from "../../../layouts/ContentPage.astro"
+import ContentPage from "../../../../layouts/ContentPage.astro"
 export const prerender = true
 export async function getStaticPaths() {
 	const posts = await getCollection("help")
 	const processed = posts
 		.filter((post) => {
-			return !post.id.includes("/")
+			return post.id.split("/").length == 2
 		})
 		.map((post) => {
-			console.log(post.rendered?.metadata)
 			return {
 				params: {
-					id: post.id,
-					category: post.id,
+					id: post.id.split("/")[2],
+					category: post.id.split("/")[1],
+					language: post.id.split("/")[0],
 				},
 				props: { post },
 			}
 		})
-	// console.log(posts)
 	return processed
 }
 const { post } = Astro.props
-const { category } = Astro.params
+const { category, language } = Astro.params
 const { Content } = await render(post)
 ---
 
@@ -32,10 +31,10 @@ const { Content } = await render(post)
 		{
 			await getCollection("help").then((posts) => {
 				return posts.map((post) => {
-					if (post.id.includes(category + "/")) {
+					if (post.id.includes(`${language}/${category}/`)) {
 						return (
 							<li>
-								<a href={`./${category}/${post.id.split("/")[1]}`} class="text-blue-500 hover:underline">
+								<a href={`./${category}/${post.id.split("/")[2]}`} class="text-blue-500 hover:underline">
 									{post.data.title}
 								</a>
 							</li>
