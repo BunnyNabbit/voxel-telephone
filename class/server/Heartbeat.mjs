@@ -15,7 +15,7 @@ export class Heartbeat {
 		this.pinged = false
 		setInterval(() => {
 			this.postHeartbeat()
-		}, 60000)
+		}, 45000)
 		this.softwareName = `&9Voxel &3Telephone &7@ ${Heartbeat.getGitHash()}`.substring(0, 63)
 		this.postHeartbeat()
 		console.log(this.softwareName)
