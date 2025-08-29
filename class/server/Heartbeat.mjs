@@ -4,10 +4,14 @@ import crypto from "crypto"
 import fs from "fs"
 import { join } from "path"
 import { getAbsolutePath } from "esm-path"
+/** @typedef {import("./Universe.mjs").default} Universe */
 const __dirname = getAbsolutePath(import.meta.url)
 
 export class Heartbeat {
-	/** */
+	/**Creates a Heartbeat instance. Will send heartbeats to ClassiCube's server list shortly after initialization.
+	 * @param {string} urlBase
+	 * @param {Universe} universe 
+	 */
 	constructor(urlBase, universe) {
 		this.universe = universe
 		this.salt = crypto.randomBytes(192).toString("base64url")
