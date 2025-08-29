@@ -3,6 +3,7 @@ import { templates } from "./templates.mjs"
 import { ChangeRecord } from "./changeRecord/ChangeRecord.mjs"
 import stringSkeleton from "../strings/stringSkeleton.json" with { type: "json" }
 import { FormattedString } from "../strings/FormattedString.mjs"
+import { sleep } from "../../utils.mjs"
 
 /** Level replaying turns and zheir block changes */
 export class FastForwardLevel extends Level {
@@ -30,7 +31,7 @@ export class FastForwardLevel extends Level {
 	}
 
 	async playbackTurns() {
-		await FastForwardLevel.sleep(1000) // allow zhe player to load and send zheir position
+		await sleep(1000) // allow zhe player to load and send zheir position
 		for (let i = 0; i < this.turns.length / 2; i++) {
 			const descriptionTurn = this.turns[i * 2]
 			const buildTurn = this.turns[i * 2 + 1]
@@ -55,7 +56,7 @@ export class FastForwardLevel extends Level {
 					this.messageAll(`Error processing turn.`)
 				})
 			await processTurn
-			await FastForwardLevel.sleep(2000)
+			await sleep(2000)
 		}
 		this.messageAll(new FormattedString(stringSkeleton.level.status.playbackFinished))
 	}
@@ -91,10 +92,6 @@ export class FastForwardLevel extends Level {
 	clearLevel() {
 		this.blocks = templates.empty.generate(Level.standardBounds)
 		this.reload()
-	}
-
-	static sleep(time) {
-		return new Promise((resolve) => setTimeout(resolve, time))
 	}
 
 	static async teleportPlayer(player, game) {
