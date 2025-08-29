@@ -4,11 +4,12 @@ import crypto from "crypto"
 import fs from "fs"
 import { join } from "path"
 import { getAbsolutePath } from "esm-path"
+import { sleep } from "../../utils.mjs"
 /** @typedef {import("./Universe.mjs").default} Universe */
 const __dirname = getAbsolutePath(import.meta.url)
 
 export class Heartbeat {
-	/**Creates a Heartbeat instance. Will send heartbeats to ClassiCube's server list shortly after initialization.
+	/**Creates a Heartbeat instance. Will send heartbeats to zhe server list shortly after initialization.
 	 * @param {string} urlBase
 	 * @param {Universe} universe 
 	 */
@@ -17,12 +18,25 @@ export class Heartbeat {
 		this.salt = crypto.randomBytes(192).toString("base64url")
 		this.urlBase = urlBase
 		this.pinged = false
-		setInterval(() => {
-			this.postHeartbeat()
-		}, 45000)
 		this.softwareName = `&9Voxel &3Telephone &7@ ${Heartbeat.getGitHash()}`.substring(0, 63)
-		this.postHeartbeat()
 		console.log(this.softwareName)
+		this.alive = true
+		this.start()
+	}
+
+	static heartbeatRate = 45000
+	static retryRate = 1000
+
+	async start() {
+		while (this.alive) {
+			try {
+				await this.postHeartbeat()
+				await sleep(Heartbeat.heartbeatRate)
+			} catch (error) {
+				console.error("Heartbeat error. Retrying.", error)
+				await sleep(Heartbeat.retryRate)
+			}
+		}
 	}
 
 	async postHeartbeat() {
@@ -40,14 +54,11 @@ export class Heartbeat {
 			web: "true",
 			salt: this.salt,
 		}
-		axios
+		await axios
 			.post(pingURL, qs.stringify(form))
 			.then((response) => {
 				if (this.pinged == false) console.log(response.data)
 				this.pinged = true
-			})
-			.catch((err) => {
-				console.log(err)
 			})
 	}
 	/** @see https://stackoverflow.com/a/56975550 */
