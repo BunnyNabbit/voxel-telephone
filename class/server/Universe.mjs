@@ -232,3 +232,5 @@ export class Universe extends EventEmitter {
 		allowList: ["not a name"],
 	}
 }
+
+export default Universe
