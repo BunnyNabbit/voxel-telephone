@@ -247,11 +247,24 @@ export class Player extends EventEmitter {
 				messages.forEach((message) => {
 					this.client.message(message, type)
 				})
+			} else if (originalMessage != " " && Player.rightAlignedMessageTypes.includes(type) && this.isClassiCubeMobile() && originalMessage.length < 64) {
+				// pad string on right
+				const maxPaddingLength = 18
+				const paddingLength = Math.min(maxPaddingLength, 64 - originalMessage.length)
+				const padding = `${" ".repeat(paddingLength - 1)}~`
+				this.client.message(originalMessage + padding, type)
 			} else {
 				this.client.message(originalMessage, type)
 			}
 		})
 	}
+
+	isClassiCubeMobile() {
+		if (this.client.appName.startsWith("ClassiCube") && Player.classiCubeMobileSuffixes.some((suffix) => this.client.appName.endsWith(suffix))) return true
+	}
+	static classiCubeMobileSuffixes = ["android alpha", "iOS alpha", "web mobile"]
+	static rightAlignedMessageTypes = [1, 2, 3, 11, 12, 13]
+
 	/**Clears zhe displayed screen prints.
 	 * @param {string} [type="top"] Zhe print type to clear out.
 	 */
@@ -279,11 +292,13 @@ export class Player extends EventEmitter {
 
 	applyConfiguration(configuration) {
 		if (configuration.language) {
-			FormattedString.getLanguage(configuration.language).then((language) => {
-				this.languages = [language, defaultLanguage]
-			}).catch((err) => {
-				console.error(err)
-			})
+			FormattedString.getLanguage(configuration.language)
+				.then((language) => {
+					this.languages = [language, defaultLanguage]
+				})
+				.catch((err) => {
+					console.error(err)
+				})
 		}
 	}
 	/**Teleport player using a relative position.
