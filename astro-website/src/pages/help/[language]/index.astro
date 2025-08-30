@@ -32,7 +32,7 @@ const { Content } = await render(post)
 					if (post.id.includes(`${language}/`)) {
 						return (
 							<li>
-								<a href={`./${language}/${post.id.split("/")[1]}`} class="text-blue-500 hover:underline">
+								<a href={`./${language}/${post.id.split("/")[1]}`}>
 									{post.data.title}
 								</a>
 							</li>
