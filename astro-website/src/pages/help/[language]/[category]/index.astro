@@ -34,9 +34,7 @@ const { Content } = await render(post)
 					if (post.id.includes(`${language}/${category}/`)) {
 						return (
 							<li>
-								<a href={`./${category}/${post.id.split("/")[2]}`}>
-									{post.data.title}
-								</a>
+									<a href={`./${category}/${post.id.split("/")[2]}`}>{post.data.title}</a> {post.data.summary}
 							</li>
 						)
 					}
