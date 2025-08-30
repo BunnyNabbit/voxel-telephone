@@ -1,19 +1,17 @@
 ---
 import { getCollection, render } from "astro:content"
-import ContentPage from "../../../../layouts/ContentPage.astro"
+import ContentPage from "../../../layouts/ContentPage.astro"
 export const prerender = true
 export async function getStaticPaths() {
 	const posts = await getCollection("help")
 	const processed = posts
 		.filter((post) => {
-			return post.id.split("/").length == 2
+			return post.id.split("/").length == 1
 		})
 		.map((post) => {
 			return {
 				params: {
-					id: post.id.split("/")[2],
-					category: post.id.split("/")[1],
-					language: post.id.split("/")[0],
+					language: post.id,
 				},
 				props: { post },
 			}
@@ -21,7 +19,7 @@ export async function getStaticPaths() {
 	return processed
 }
 const { post } = Astro.props
-const { category, language } = Astro.params
+const { language } = Astro.params
 const { Content } = await render(post)
 ---
 
@@ -30,11 +28,11 @@ const { Content } = await render(post)
 	<ul>
 		{
 			await getCollection("help").then((posts) => {
-				return posts.map((post) => {
-					if (post.id.includes(`${language}/${category}/`)) {
+				return posts.filter(post => post.id.split("/").length == 2 && !post.data.noIndex).map((post) => {
+					if (post.id.includes(`${language}/`)) {
 						return (
 							<li>
-								<a href={`./${category}/${post.id.split("/")[2]}`} class="text-blue-500 hover:underline">
+								<a href={`./${language}/${post.id.split("/")[1]}`} class="text-blue-500 hover:underline">
 									{post.data.title}
 								</a>
 							</li>
@@ -44,5 +42,5 @@ const { Content } = await render(post)
 			})
 		}
 	</ul>
-	<p><a href=`../${language}`>Help index</a></p>
+	<p><a href="/help">Select a language</a></p>
 </ContentPage>
