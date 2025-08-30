@@ -1,7 +1,7 @@
 ---
 title: "/Replace"
 contributors: ["BunnyNabbit \"Aon\""]
-summary: "The `/Replace` command replaces blocks in a cuboid with another block type."
+summary: "Replaces blocks in a cuboid with another block type."
 ---
 
 # /Replace

@@ -1,7 +1,7 @@
 ---
 title: "/paint"
 contributors: ["BunnyNabbit \"Aon\""]
-summary: "The `/paint` command toggles paint mode."
+summary: "Toggles paint mode."
 ---
 
 # /paint

@@ -1,7 +1,7 @@
 ---
 title: "/fastforward"
 contributors: ["BunnyNabbit \"Aon\""]
-summary: "The `/fastforward` command restores actions reverted by `/rewind`."
+summary: "Restores actions reverted by /rewind."
 ---
 
 # /fastforward

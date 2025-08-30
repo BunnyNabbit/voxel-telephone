@@ -1,7 +1,7 @@
 ---
 title: "/repeat"
 contributors: ["BunnyNabbit \"Aon\""]
-summary: "The `/repeat` command toggles repeat mode. The last build command will be interactively repeated."
+summary: "Toggles repeat mode. The last build command will be interactively repeated."
 ---
 
 # /rewind

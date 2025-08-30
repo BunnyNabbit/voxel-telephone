@@ -1,14 +1,14 @@
 ---
 title: "/view"
 contributors: ["BunnyNabbit \"Aon\""]
-summary: "The `/view` command enters the view level where you can see finished and ongoing games."
+summary: "Enters the view gallery of finished and ongoing games."
 ---
 
 # /view
 
 Usage: `/view <mode>`
 
-Enters the view level where you can see finished and ongoing games.
+Enters the view gallery of finished and ongoing games.
 
 When issued without a mode (`/view`), each game will be represented by a column with pairs of turns in each grid. If a game has not been finished, only icons representing the state of a turn will be visualized. If a game has been finished then the entire game sequence with builds and descriptions are visible.
 

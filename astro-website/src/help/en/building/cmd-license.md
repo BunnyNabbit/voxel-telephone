@@ -1,7 +1,7 @@
 ---
 title: "/license"
 contributors: ["BunnyNabbit \"Aon\""]
-summary: "The `/license` command adds a license to a build."
+summary: "Adds a license to a build and publishes it as a model."
 ---
 
 # /license

@@ -1,7 +1,7 @@
 ---
 title: "/abort"
 contributors: ["BunnyNabbit \"Aon\""]
-summary: "The `/abort` command cancels interactive operations."
+summary: "Cancels interactive operations."
 ---
 
 # /abort

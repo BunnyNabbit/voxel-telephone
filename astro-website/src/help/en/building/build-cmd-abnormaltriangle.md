@@ -1,7 +1,7 @@
 ---
 title: "/AbnormalTriangle"
 contributors: ["BunnyNabbit \"Aon\""]
-summary: "The `/AbnormalTriangle` command creates a triangle from three points."
+summary: "Creates a triangle from three points."
 image: "./triangle-output.webp"
 imageAlt: "Red triangle"
 ---
