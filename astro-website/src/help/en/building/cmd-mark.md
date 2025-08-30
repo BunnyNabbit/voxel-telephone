@@ -1,7 +1,7 @@
 ---
 title: "/mark"
 contributors: ["BunnyNabbit \"Aon\""]
-summary: "The `/mark` command marks your player position for interactive commands."
+summary: "Marks your player position for interactive commands."
 ---
 
 # /mark

@@ -1,7 +1,7 @@
 ---
 title: "/report"
 contributors: ["BunnyNabbit \"Aon\""]
-summary: "The `/report` command reports the current turn for moderation review."
+summary: "Reports the current turn for moderation review."
 ---
 
 # /report

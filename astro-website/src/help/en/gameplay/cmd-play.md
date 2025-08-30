@@ -1,7 +1,7 @@
 ---
 title: "/play"
 contributors: ["BunnyNabbit \"Aon\""]
-summary: "The `/play` command enters a new game."
+summary: "Enters a new game."
 ---
 
 # /play

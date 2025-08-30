@@ -1,7 +1,7 @@
 ---
 title: "/FurrierTransform"
 contributors: ["BunnyNabbit \"Aon\""]
-summary: "The /FurrierTransform command adds extra blocks within a selection to make it look fluffier."
+summary: "Adds extra blocks within a selection to make it look fluffier."
 image: "./furriertransform-sheep.webp"
 imageAlt: "A fluffy sheep."
 ---

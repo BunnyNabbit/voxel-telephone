@@ -1,7 +1,7 @@
 ---
 title: "/PositionalTransform"
 contributors: ["BunnyNabbit \"Aon\""]
-summary: "The /PositionalTransform command transforms a selection. It can be used for moving, copying, flipping or spinning a selection of blocks."
+summary: "Transforms a selection. It can be used for moving, copying, flipping or spinning a selection of blocks."
 image: "./positionaltransform-mirrored-dragons.webp"
 imageAlt: "A black dragon with cyan eyes and white underbelly is being mirrored horizontally by his hand. The dragon is in a bipedal form and has one hand lifted closer to the center than the other."
 ---

@@ -1,7 +1,7 @@
 ---
 title: "/skip"
 contributors: ["BunnyNabbit \"Aon\""]
-summary: "The `/skip` command skips the current turn."
+summary: "Skips the current turn."
 ---
 
 # /skip

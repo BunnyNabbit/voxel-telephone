@@ -1,7 +1,7 @@
 ---
 title: "/commit"
 contributors: ["BunnyNabbit \"Aon\""]
-summary: "The `/commit` command saves the current VCR state as the level state."
+summary: "Saves the current VCR state as the level state."
 ---
 
 # /commit

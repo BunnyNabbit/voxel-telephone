@@ -1,7 +1,7 @@
 ---
 title: "/place"
 contributors: ["BunnyNabbit \"Aon\""]
-summary: "The `/place` command places a block at your player position."
+summary: "Places a block at your player position."
 ---
 
 # /place

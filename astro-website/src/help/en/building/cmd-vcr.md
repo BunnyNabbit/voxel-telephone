@@ -1,7 +1,7 @@
 ---
 title: "/vcr"
 contributors: ["BunnyNabbit \"Aon\""]
-summary: "The `/vcr` command enables VCR mode in a level."
+summary: "Enables VCR mode in a level."
 ---
 
 # /vcr

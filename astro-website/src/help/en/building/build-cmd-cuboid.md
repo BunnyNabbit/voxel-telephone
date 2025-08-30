@@ -1,7 +1,7 @@
 ---
 title: "/Cuboid"
 contributors: ["BunnyNabbit \"Aon\""]
-summary: "The `/Cuboid` command creates a cuboid from two points."
+summary: "Creates a cuboid from two points."
 image: "./cuboid-output.webp"
 imageAlt: "Red solid cuboid"
 ---

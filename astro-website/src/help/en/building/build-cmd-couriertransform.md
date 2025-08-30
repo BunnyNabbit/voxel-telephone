@@ -1,7 +1,7 @@
 ---
 title: "/CourierTransform"
 contributors: ["BunnyNabbit \"Aon\""]
-summary: "The /CourierTransform command simulates the result of rough handling during transit."
+summary: "Simulates the result of rough handling during transit."
 image: "./couriertransform-result.webp"
 imageAlt: "A damaged cardboard box."
 ---

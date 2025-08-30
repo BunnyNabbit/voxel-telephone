@@ -1,7 +1,7 @@
 ---
 title: "/setting"
 contributors: ["BunnyNabbit \"Aon\""]
-summary: "The `/setting` command allows for setting preferences."
+summary: "Allows for setting preferences."
 ---
 
 # /setting
