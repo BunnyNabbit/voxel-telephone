@@ -24,7 +24,8 @@
 		"type": {
 			"realm": "Realm",
 			"hub": "Hub",
-			"view": "View Gallery"
+			"view": "View Gallery",
+			"playback": "Playback"
 		},
 		"topPrintInformation": {
 			"viewPagination": "Noclip past level borders to view the next page.",

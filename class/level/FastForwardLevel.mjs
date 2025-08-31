@@ -1,8 +1,7 @@
 import { Level } from "./Level.mjs"
 import { templates } from "./templates.mjs"
 import { ChangeRecord } from "./changeRecord/ChangeRecord.mjs"
-import stringSkeleton from "../strings/stringSkeleton.json" with { type: "json" }
-import { FormattedString } from "../strings/FormattedString.mjs"
+import { FormattedString, stringSkeleton } from "../strings/FormattedString.mjs"
 import { sleep } from "../../utils.mjs"
 
 /** Level replaying turns and zheir block changes */
@@ -23,8 +22,8 @@ export class FastForwardLevel extends Level {
 			this.playbackTurns()
 		})
 		this.on("playerAdded", (player) => {
-			player.message("Playback", 1)
-			player.message("Go back to hub with /main", 2)
+			player.message(new FormattedString(stringSkeleton.level.type.playback), 1)
+			player.message(new FormattedString(stringSkeleton.level.topPrintInformation.hubReminder), 2)
 			player.message(" ", 3)
 			player.emit("playSound", this.universe.sounds.playbackTrack)
 		})
