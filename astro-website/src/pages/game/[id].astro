@@ -4,11 +4,9 @@ import { database } from "../../shared/db.mjs"
 import Turn from "../../components/Turn.astro"
 import { ObjectId } from "mongodb"
 const gameId = Astro.params.id
-let game = await database.getGame(new ObjectId(gameId))
+let game = await database.getGame(ObjectId.createFromHexString(gameId))
 let title
-if (game && game.length !== 16) {
-	game = null
-}
+if (game && game.length !== 16) game = null
 let ogImage = null
 if (!game) {
 	Astro.response.status = 404

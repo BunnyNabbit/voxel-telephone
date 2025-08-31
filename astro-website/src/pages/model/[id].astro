@@ -5,7 +5,7 @@ import LicenseIcons from "../../components/LicenseIcons.astro"
 import Timestamp from "../../components/Timestamp.astro"
 // @ts-ignore
 import { ObjectId } from "mongodb"
-const id = new ObjectId(Astro.params.id)
+const id = ObjectId.createFromHexString(Astro.params.id)
 const buildTurn = await database.getTurn(id)
 if (
 	// make sure the turn is a build turn and is licensed
