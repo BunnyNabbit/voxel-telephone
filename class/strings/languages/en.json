@@ -85,6 +85,9 @@
 			"help": {
 				"foundCommandDocumentationMissing": "Command exists but unable to find help document for it.",
 				"documentationMissing": "Unable to find help document for ${originalArgument}."
+			},
+			"abort": {
+				"nothingToAbort": "There is nothing to abort."
 			}
 		},
 		"paint": {
