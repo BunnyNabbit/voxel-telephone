@@ -5,9 +5,7 @@ import { database } from "../../shared/db.mjs"
 // @ts-ignore
 import { ObjectId } from "mongodb"
 let cursor, nextCursor
-if (Astro.params.cursor) {
-	cursor = new ObjectId(Astro.params.cursor)
-}
+if (Astro.params.cursor) cursor = ObjectId.createFromHexString(Astro.params.cursor)
 let licensedGrid = []
 licensedGrid = await database.getLicensedGrid(cursor)
 licensedGrid = licensedGrid.flat(1)

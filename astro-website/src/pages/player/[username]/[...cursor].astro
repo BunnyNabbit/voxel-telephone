@@ -7,9 +7,7 @@ import Timestamp from "../../../components/Timestamp.astro";
 import { ObjectId } from "mongodb";
 const username = Astro.params.username;
 let cursor, nextCursor
-if (Astro.params.cursor) {
-	cursor = new ObjectId(Astro.params.cursor);
-}
+if (Astro.params.cursor) cursor = ObjectId.createFromHexString(Astro.params.cursor);
 const userRecord = await database.getUserRecordDocument(username, true);
 let title = username;
 let userGrid = [];
