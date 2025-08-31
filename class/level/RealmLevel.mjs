@@ -91,7 +91,7 @@ export class RealmLevel extends Level {
 		const { universe } = player
 		const realmDocument = await universe.db.getRealm(realmId)
 		if (!realmDocument) {
-			player.message("Realm not found", 1)
+			player.message(new FormattedString(stringSkeleton.level.error.realm.notFound), 1)
 			player.teleporting = false
 			universe.commandRegistry.attemptCall(player, "/main")
 			return

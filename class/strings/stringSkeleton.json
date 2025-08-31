@@ -18,7 +18,8 @@
     "layoutInvalidArgument": "level.error.parsing.layoutInvalidArgument"
    },
    "realm": {
-    "failedCreate": "level.error.realm.failedCreate"
+    "failedCreate": "level.error.realm.failedCreate",
+    "notFound": "level.error.realm.notFound"
    }
   },
   "status": {

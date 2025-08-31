@@ -18,7 +18,8 @@
 				"layoutInvalidArgument": "${splitCommand} is not a valid argument for ${layoutElement}. Entering interactive mode."
 			},
 			"realm": {
-				"failedCreate": "Failed to create realm. Please try again later."
+				"failedCreate": "Failed to create realm. Please try again later.",
+				"notFound": "Realm not found."
 			}
 		},
 		"status": {
