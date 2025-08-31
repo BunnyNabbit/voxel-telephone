@@ -123,5 +123,40 @@
 				"createGame": "Enter a description in chat. It can be mundane or imaginative."
 			}
 		}
+	},
+	"announcements": {
+		"donation": {
+			"0": "Support the server and its development https://ko-fi.com/bunnynabbit",
+			"1": "If you like Voxel Telephone, give us a star! https://github.com/BunnyNabbit/voxel-telephone"
+		},
+		"openSource": {
+			"0": "Voxel Telephone is open source software https://github.com/BunnyNabbit/voxel-telephone",
+			"1": "Found an issue? Report it! https://github.com/BunnyNabbit/voxel-telephone/issues"
+		},
+		"buildingCommands": {
+			"0": "Toggle paint mode by using the /paint command",
+			"1": "Place down a block at your position with the /place command",
+			"2": "Made a mistake? Enter the VCR with /vcr",
+			"3": "Triangles are my favorite shape. /triangle",
+			"4": "Need something round? Use the /sphere command!",
+			"5": "Is the palette getting in the way? Use \"/template empty\" to clear it! Or use \"/template builder\" to bring it back."
+		},
+		"gameTips": {
+			"0": "An entire game consists of 16 turns. When a game is completed, you can see all of its turns in the view mode.",
+			"1": "Want to practice building? Try building in a /realm level.",
+			"2": "Voxel Telephone has a bunch of commands. Use /help or view the help documentation on the web. https://voxel-telephone.bunnynabbit.com/help"
+		},
+		"safety": {
+			"0": "See an inappropriate prompt or build? Use /report"
+		}
+	},
+	"taglines": {
+		"0": "Where words become worlds, and back again.",
+		"1": "Build it, describe it, watch it evolve.",
+		"2": "Get creative, get building, get talking.",
+		"3": "From pixels to prose, and back again.",
+		"4": "Lost in translation, found in creation.",
+		"5": "Whispers of blocks, echoes of imagination.",
+		"6": "The classic game of telephone, now with 100% more blocks!"
 	}
 }
