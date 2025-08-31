@@ -125,8 +125,12 @@
 		"vcr": {
 			"listActionCount": "VCR has recorded ${actionCount} actions."
 		},
+		"commit": {
+			"success": "Changes commited. VCR mode off."
+		},
 		"abort": {
-			"success": "Command aborted."
+			"success": "Command aborted.",
+			"successVcr": "Aborted. VCR mode off."
 		},
 		"report": {
 			"gameReported": "Game reported with reason: \"${reason}\"."

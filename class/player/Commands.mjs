@@ -32,7 +32,7 @@ export class Commands {
 				await player.space.changeRecord.commit(player.space.changeRecord.actionCount, player.space)
 				player.space.loading = false
 				player.space.inVcr = false
-				player.message("Changes committed. VCR mode off")
+				player.message(new FormattedString(stringSkeleton.command.commit.success))
 				player.space.setBlinkText(false)
 				player.space.players.forEach((player) => {
 					player.emit("playSound", universe.sounds.deactivateVCR)
@@ -40,7 +40,7 @@ export class Commands {
 				})
 				player.space.setBlinkText(false)
 			},
-			Commands.reasonVcr(false, "Level isn't in VCR mode. /vcr")
+			Commands.reasonVcr(false, new FormattedString(stringSkeleton.command.error.controlRequiresVcr))
 		)
 		universe.registerCommand(["/finish"], async (player) => {
 			if (player.space && player.space.game && !player.space.changeRecord.draining) {
@@ -100,13 +100,13 @@ export class Commands {
 		universe.registerCommand(
 			["/abort"],
 			async (player) => {
-				if (player.space.loading) return player.message("Please wait")
+				if (player.space.loading) return player.message(new FormattedString(stringSkeleton.command.error.levelLoading))
 				if (player.space.inVcr) {
 					player.space.blocks = Buffer.from(await player.space.template.generate(player.space.bounds))
 					await player.space.changeRecord.restoreBlockChangesToLevel(player.space)
 					player.space.reload()
 					player.space.inVcr = false
-					player.message("Aborted. VCR mode off")
+					player.message(new FormattedString(stringSkeleton.command.abort.successVcr))
 					player.space.setBlinkText(false)
 					player.space.players.forEach((player) => {
 						player.emit("playSound", universe.sounds.deactivateVCR)
@@ -119,7 +119,7 @@ export class Commands {
 						player.message(new FormattedString(stringSkeleton.command.abort.success))
 						player.emit("playSound", universe.sounds.abort)
 					} else {
-						player.message("Nothing happened")
+						player.message(new FormattedString(stringSkeleton.command.error.abort.nothingToAbort))
 					}
 				}
 			},
