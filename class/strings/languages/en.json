@@ -16,6 +16,9 @@
 				"invalidPosition": "invalidPosition",
 				"positionOutBounds": "Position out of bounds",
 				"layoutInvalidArgument": "${splitCommand} is not a valid argument for ${layoutElement}. Entering interactive mode."
+			},
+			"realm": {
+				"failedCreate": "Failed to create realm. Please try again later."
 			}
 		},
 		"status": {
@@ -36,6 +39,10 @@
 		"topPrintInformation": {
 			"viewPagination": "Noclip past level borders to view the next page.",
 			"hubReminder": "Go back to hub with &a/main&r."
+		},
+		"realm": {
+			"attribution": "By: ${ownedBy}",
+			"realmCreateButton": "Double click icon to begin."
 		}
 	},
 	"command": {

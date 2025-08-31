@@ -16,6 +16,9 @@
     "invalidPosition": "level.error.parsing.invalidPosition",
     "positionOutBounds": "level.error.parsing.positionOutBounds",
     "layoutInvalidArgument": "level.error.parsing.layoutInvalidArgument"
+   },
+   "realm": {
+    "failedCreate": "level.error.realm.failedCreate"
    }
   },
   "status": {
@@ -36,6 +39,10 @@
   "topPrintInformation": {
    "viewPagination": "level.topPrintInformation.viewPagination",
    "hubReminder": "level.topPrintInformation.hubReminder"
+  },
+  "realm": {
+   "attribution": "level.realm.attribution",
+   "realmCreateButton": "level.realm.realmCreateButton"
   }
  },
  "command": {
