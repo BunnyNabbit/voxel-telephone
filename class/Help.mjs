@@ -68,7 +68,7 @@ export class Help {
 		const universe = this.universe
 		let displayLink = false
 		const playerLanguage = languageOverride ?? (player.languages ?? [defaultLanguage])[0].locale
-		let originalArgument = argument
+		let originalArgument = argument.toLowerCase()
 		if (!argument) {
 			player.message(
 				new FormattedString(stringSkeleton.command.help.listing.categories, {

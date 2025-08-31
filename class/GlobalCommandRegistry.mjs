@@ -12,13 +12,13 @@ export class GlobalCommandRegistry {
 		if (Array.isArray(validate)) validate = Commands.makeMultiValidator(validate)
 		const commandObject = { action, validate, commandNames }
 		commandNames.forEach((commandName) => {
-			this.commands.set(commandName, commandObject)
+			this.commands.set(commandName.toLowerCase(), commandObject)
 		})
 	}
 
 	async attemptCall(player, str) {
 		const segments = str.split(" ")
-		const commandName = segments[0]
+		const commandName = segments[0].toLowerCase()
 		segments.shift()
 		const remainingString = segments.join(" ")
 		const command = this.commands.get(commandName)
