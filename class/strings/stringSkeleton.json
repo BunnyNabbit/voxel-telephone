@@ -125,8 +125,12 @@
   "vcr": {
    "listActionCount": "command.vcr.listActionCount"
   },
+  "commit": {
+   "success": "command.commit.success"
+  },
   "abort": {
-   "success": "command.abort.success"
+   "success": "command.abort.success",
+   "successVcr": "command.abort.successVcr"
   },
   "report": {
    "gameReported": "command.report.gameReported"
