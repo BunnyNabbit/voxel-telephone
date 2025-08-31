@@ -119,9 +119,23 @@
 			"description": {
 				"$self": "Description:",
 				"confirmReminder": "Use &a/finish &rto confirm your description for this build.",
+				"centerText": "Describe the build. Enter your description in chat.",
+				"reminder": "Enter your description in chat.",
 				"submitted": "Your description has been submitted!",
 				"createGame": "Enter a description in chat. It can be mundane or imaginative."
+			},
+			"build": {
+				"buildTheFollowing": "Build the following: &a${prompt}",
+				"finishReminder": "Once you are finished building, use &a/finish&r.",
+				"machineTranslationUrl": "This prompt may be written in a different language. Translate it by visiting this URL: ${url}"
+			},
+			"gameModes": {
+				"casual": "Mode: Casual"
 			}
-		}
+		},
+		"outOfGames": {
+			"inspirationFeedUrl": "Not inspired? ${pickedFeed}"
+		},
+		"returnedReservedGame": "Returned to this game because it was reserved for you. Games will only be reserved for two hours."
 	}
 }

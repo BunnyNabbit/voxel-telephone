@@ -13,6 +13,7 @@ import { Ego } from "../level/drone/Ego.mjs"
 import { PushIntegration } from "../integrations/PushIntegration.mjs"
 import { EventEmitter } from "events"
 import { invertPromptType, randomIntFromInterval } from "../../utils.mjs"
+import { FormattedString, stringSkeleton } from "../strings/FormattedString.mjs"
 
 export class Universe extends EventEmitter {
 	/** */
@@ -129,15 +130,12 @@ export class Universe extends EventEmitter {
 		if (games.length) {
 			const game = games[randomIntFromInterval(0, games.length - 1)]
 			const gameType = invertPromptType(game.promptType)
-			player.message("Mode: Casual", 2)
+			player.message(new FormattedString(stringSkeleton.game.gameModes.casual), 2)
 			if (gameType == "build") {
-				player.message(`==== Build the following ====`)
-				player.message(game.prompt, [0, 1, 100])
-				player.message(`* Build as you interpret the prompt. Do not intentionally derail games!`)
-				player.message(`To skip, use /skip`)
-				player.message(`See building related commands by using /help`)
-				player.message(`Use /report if the prompt is inappropriate`)
-				player.message(`Once you are finished building, use /finish`, [0, 3])
+				this.commandRegistry.attemptCall(player, "/help game-build")
+				player.message(new FormattedString(stringSkeleton.game.question.build.finishReminder), [0, 3])
+				player.message(new FormattedString(stringSkeleton.game.question.build.buildTheFollowing, { prompt: game.prompt }))
+				player.message(game.prompt, [1, 100])
 				Level.loadIntoUniverse(this, `game-${game.next}`, Universe.builderDefaults).then((level) => {
 					if (!level.eventsAttached) {
 						level.eventsAttached = true
@@ -150,16 +148,16 @@ export class Universe extends EventEmitter {
 						)
 						level.addDrone(floorDrone)
 						floorDrone.setPosition({ x: 32, y: 0, z: 32 }, { yaw: 0, pitch: 0 })
-						level.on("playerRemoved", async (client) => {
+						level.on("playerRemoved", async (player) => {
 							if (!level.changeRecord.dirty) {
 								await level.dispose()
 								this.levels.delete(level.name)
 								return
 							}
-							this.db.addInteraction(client.authInfo.username, game.next, "built")
+							this.db.addInteraction(player.authInfo.username, game.next, "built")
 							if (level.doNotReserve) return
 							// reserve game for player
-							this.playerReserved.set(client.authInfo.username, level.game)
+							this.playerReserved.set(player.authInfo.username, level.game)
 							console.log("reserved game")
 							if (!level.changeRecord.draining) {
 								level.changeRecord.flushChanges()
@@ -167,13 +165,12 @@ export class Universe extends EventEmitter {
 							const timeout = setTimeout(async () => {
 								await level.dispose()
 								this.levels.delete(level.name)
-								this.playerReserved.delete(client.authInfo.username)
+								this.playerReserved.delete(player.authInfo.username)
 								console.log("removed reserved game")
 							}, 7200000) // two hours
 							level.once("playerAdded", () => {
-								client.message(">> Returned to this game because it was reserved for you.")
-								client.message(">> Games will only be reserved for two hours.")
-								this.playerReserved.delete(client.authInfo.username)
+								player.message(new FormattedString(stringSkeleton.game.returnedReservedGame))
+								this.playerReserved.delete(player.authInfo.username)
 								clearTimeout(timeout)
 							})
 						})
@@ -184,8 +181,8 @@ export class Universe extends EventEmitter {
 				})
 			} else {
 				player.currentDescription = null
-				player.message("Describe the build - Enter your description in chat", 100)
-				player.message("Enter your description in chat", 1)
+				player.message(new FormattedString(stringSkeleton.game.question.description.centerText), 100)
+				player.message(new FormattedString(stringSkeleton.game.question.description.reminder), 1)
 				this.commandRegistry.attemptCall(player, "/help game-describe")
 				Level.loadIntoUniverse(this, `game-${game._id}`, Universe.describeDefaults).then((level) => {
 					// TODO: position
@@ -205,7 +202,7 @@ export class Universe extends EventEmitter {
 				await this.commandRegistry.attemptCall(player, "/help out-of-games")
 				const inspirationFeeds = this.serverConfiguration.inspirationFeeds
 				const pickedFeed = inspirationFeeds[randomIntFromInterval(0, inspirationFeeds.length - 1)]
-				player.message(`Not inspired? ${pickedFeed}`)
+				player.message(new FormattedString(stringSkeleton.game.outOfGames.inspirationFeedUrl, { pickedFeed }))
 			} else {
 				this.commandRegistry.attemptCall(player, "/help still-out-of-games")
 			}

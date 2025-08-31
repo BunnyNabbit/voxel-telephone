@@ -119,9 +119,23 @@
    "description": {
     "$self": "game.question.description",
     "confirmReminder": "game.question.description.confirmReminder",
+    "centerText": "game.question.description.centerText",
+    "reminder": "game.question.description.reminder",
     "submitted": "game.question.description.submitted",
     "createGame": "game.question.description.createGame"
+   },
+   "build": {
+    "buildTheFollowing": "game.question.build.buildTheFollowing",
+    "finishReminder": "game.question.build.finishReminder",
+    "machineTranslationUrl": "game.question.build.machineTranslationUrl"
+   },
+   "gameModes": {
+    "casual": "game.question.gameModes.casual"
    }
-  }
+  },
+  "outOfGames": {
+   "inspirationFeedUrl": "game.outOfGames.inspirationFeedUrl"
+  },
+  "returnedReservedGame": "game.returnedReservedGame"
  }
 }
