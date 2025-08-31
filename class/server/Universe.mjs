@@ -45,7 +45,7 @@ export class Universe extends EventEmitter {
 				try {
 					const integrationClass = (await import(`../integrations/${integrationData.class}.mjs`)).default
 					const interests = integrationData.interests.map((interest) => PushIntegration.interestType[interest])
-					const integration = new integrationClass(interests, integrationData.authData, this)
+					const integration = new integrationClass(interests, integrationData.authData, this, integrationData.language)
 					this.integrations.push(integration)
 				} catch (error) {
 					console.error(error)
@@ -61,9 +61,7 @@ export class Universe extends EventEmitter {
 			}
 			const category = this.serverConfiguration.announcements.messages[weightedIndex[randomIntFromInterval(0, weightedIndex.length - 1)]]
 			const message = category[randomIntFromInterval(0, category.length - 1)]
-			this.server.players.forEach((player) => {
-				player.message(message, 0, "> ")
-			})
+			this.pushMessage(new FormattedString(message), PushIntegration.interestType.announcement)
 		}, this.serverConfiguration.announcements.interval)
 
 		this.levels = new Map()

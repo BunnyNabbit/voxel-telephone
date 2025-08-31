@@ -136,6 +136,11 @@
   "outOfGames": {
    "inspirationFeedUrl": "game.outOfGames.inspirationFeedUrl"
   },
+  "finish": {
+   "describe": "game.finish.describe",
+   "build": "game.finish.build",
+   "game": "game.finish.game"
+  },
   "returnedReservedGame": "game.returnedReservedGame"
  }
 }

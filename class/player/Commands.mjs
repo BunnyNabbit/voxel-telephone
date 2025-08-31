@@ -49,7 +49,7 @@ export class Commands {
 				console.log(gameType)
 				if (gameType == "build") {
 					if (player.space.changeRecord.actionCount == 0) return player.message(new FormattedString(stringSkeleton.command.finish.attemptFinishBuildEmpty))
-					universe.pushMessage(`${player.authInfo.username} finished a turn (Build)`, PushIntegration.interestType.gameProgression)
+					universe.pushMessage(new FormattedString(stringSkeleton.game.finish.build, { username: player.authInfo.username }), PushIntegration.interestType.gameProgression)
 					universe.server.players.forEach((otherPlayer) => {
 						otherPlayer.emit("playSound", player.universe.sounds.complete)
 					})
@@ -58,7 +58,7 @@ export class Commands {
 							const game = await universe.db.getGame(status.document.root)
 							const firstDescription = game[0].prompt
 							const lastDescription = game[game.length - 2].prompt
-							universe.pushMessage(`${player.authInfo.username} finished a game! Check out the game that started as &a"${firstDescription}" &fand ended with &a"${lastDescription}" &fIn the view gallery.`, PushIntegration.interestType.gameProgression)
+							universe.pushMessage(new FormattedString(stringSkeleton.game.finish.game, { username: player.authInfo.username, firstDescription, lastDescription }), PushIntegration.interestType.gameProgression)
 							universe.db.setGameCompletion(status.document.root, true)
 						}
 					})
@@ -69,7 +69,7 @@ export class Commands {
 					// describe
 					if (!player.currentDescription) return player.message(new FormattedString(stringSkeleton.command.finish.attemptFinishDescriptionEmpty))
 					universe.db.addInteraction(player.authInfo.username, player.space.game._id, "described")
-					universe.pushMessage(`${player.authInfo.username} finished a turn (Describe)`, PushIntegration.interestType.gameProgression)
+					universe.pushMessage(new FormattedString(stringSkeleton.game.finish.describe, { username: player.authInfo.username }), PushIntegration.interestType.gameProgression)
 					universe.server.players.forEach((otherPlayer) => {
 						otherPlayer.emit("playSound", player.universe.sounds.complete)
 					})
