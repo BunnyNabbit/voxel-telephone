@@ -66,6 +66,10 @@
    },
    "vcr": {
     "alreadyVcr": "command.error.vcr.alreadyVcr"
+   },
+   "help": {
+    "foundCommandDocumentationMissing": "command.error.help.foundCommandDocumentationMissing",
+    "documentationMissing": "command.error.help.documentationMissing"
    }
   },
   "paint": {
@@ -111,6 +115,13 @@
   },
   "report": {
    "gameReported": "command.report.gameReported"
+  },
+  "help": {
+   "listing": {
+    "categories": "command.help.listing.categories",
+    "category": "command.help.listing.category"
+   },
+   "webReminder": "command.help.webReminder"
   }
  },
  "game": {
@@ -123,24 +134,42 @@
     "reminder": "game.question.description.reminder",
     "submitted": "game.question.description.submitted",
     "createGame": "game.question.description.createGame"
-   },
-   "build": {
-    "buildTheFollowing": "game.question.build.buildTheFollowing",
-    "finishReminder": "game.question.build.finishReminder",
-    "machineTranslationUrl": "game.question.build.machineTranslationUrl"
-   },
-   "gameModes": {
-    "casual": "game.question.gameModes.casual"
    }
+  }
+ },
+ "announcements": {
+  "donation": {
+   "0": "announcements.donation.0",
+   "1": "announcements.donation.1"
   },
-  "outOfGames": {
-   "inspirationFeedUrl": "game.outOfGames.inspirationFeedUrl"
+  "openSource": {
+   "0": "announcements.openSource.0",
+   "1": "announcements.openSource.1"
   },
-  "finish": {
-   "describe": "game.finish.describe",
-   "build": "game.finish.build",
-   "game": "game.finish.game"
+  "buildingCommands": {
+   "0": "announcements.buildingCommands.0",
+   "1": "announcements.buildingCommands.1",
+   "2": "announcements.buildingCommands.2",
+   "3": "announcements.buildingCommands.3",
+   "4": "announcements.buildingCommands.4",
+   "5": "announcements.buildingCommands.5"
   },
-  "returnedReservedGame": "game.returnedReservedGame"
+  "gameTips": {
+   "0": "announcements.gameTips.0",
+   "1": "announcements.gameTips.1",
+   "2": "announcements.gameTips.2"
+  },
+  "safety": {
+   "0": "announcements.safety.0"
+  }
+ },
+ "taglines": {
+  "0": "taglines.0",
+  "1": "taglines.1",
+  "2": "taglines.2",
+  "3": "taglines.3",
+  "4": "taglines.4",
+  "5": "taglines.5",
+  "6": "taglines.6"
  }
 }
