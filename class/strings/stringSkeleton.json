@@ -10,7 +10,13 @@
    "blockBlockingInVCR": "level.error.blockBlockingInVCR",
    "buildCommandBlockingInVCR": "level.error.buildCommandBlockingInVCR",
    "blockBlockingCommand": "level.error.blockBlockingCommand",
-   "noInteractiveCommands": "level.error.noInteractiveCommands"
+   "noInteractiveCommands": "level.error.noInteractiveCommands",
+   "parsing": {
+    "invalidBlockId": "level.error.parsing.invalidBlockId",
+    "invalidPosition": "level.error.parsing.invalidPosition",
+    "positionOutBounds": "level.error.parsing.positionOutBounds",
+    "layoutInvalidArgument": "level.error.parsing.layoutInvalidArgument"
+   }
   },
   "status": {
    "drainedLevelActions": "level.status.drainedLevelActions",
