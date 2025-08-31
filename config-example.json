@@ -23,7 +23,11 @@
    "integrations": [
       {
          "class": "ServerAnnouncement",
-         "interests": ["gameProgression", "chatMessage", "playerConnection"]
+         "interests": [
+            "gameProgression",
+            "chatMessage",
+            "playerConnection"
+         ]
       }
    ],
    "port": 25565,
@@ -32,7 +36,10 @@
    "postToMainServer": false,
    "verifyUsernames": true,
    "maxIpConnections": 3,
-   "inspirationFeeds": ["https://www.bing.com/images/feed", "https://mix.com/topic/for-you"],
+   "inspirationFeeds": [
+      "https://www.bing.com/images/feed",
+      "https://mix.com/topic/for-you"
+   ],
    "sounds": {
       "enabled": false,
       "interfacePort": 1333,
@@ -52,38 +59,38 @@
       },
       "messages": {
          "donation": [
-            "Support the server and its development https://ko-fi.com/bunnynabbit",
-            "If you like Voxel Telephone, give us a star! https://github.com/BunnyNabbit/voxel-telephone"
+            "announcements.donation.0",
+            "announcements.donation.1"
          ],
          "openSource": [
-            "Voxel Telephone is open source software https://github.com/BunnyNabbit/voxel-telephone",
-            "Found an issue? Report it! https://github.com/BunnyNabbit/voxel-telephone/issues"
+            "announcements.openSource.0",
+            "announcements.openSource.1"
          ],
          "buildingCommands": [
-            "Toggle paint mode by using the /paint command",
-            "Place down a block at your position with the /place command",
-            "Made a mistake? Enter the VCR with /vcr",
-            "Triangles are my favorite shape. /triangle",
-            "Need something round? Use the /sphere command!",
-            "Is the palette getting in the way? Use \"/template empty\" to clear it! Or use \"/template builder\" to bring it back."
+            "announcements.buildingCommands.0",
+            "announcements.buildingCommands.1",
+            "announcements.buildingCommands.2",
+            "announcements.buildingCommands.3",
+            "announcements.buildingCommands.4",
+            "announcements.buildingCommands.5"
          ],
          "gameTips": [
-            "An entire game consists of 16 turns. When a game is completed, you can see all of its turns in the view mode.",
-            "Want to practice building? Try building in a /realm level.",
-            "Voxel Telephone has a bunch of commands. Use /help or view the help documentation on the web. https://voxel-telephone.bunnynabbit.com/help"
+            "announcements.gameTips.0",
+            "announcements.gameTips.1",
+            "announcements.gameTips.2"
          ],
          "safety": [
-            "See an inappropriate prompt or build? Use /report"
+            "announcements.safety.0"
          ]
       }
    },
    "taglines": [
-      "Where words become worlds, and back again.",
-      "Build it, describe it, watch it evolve.",
-      "Get creative, get building, get talking.",
-      "From pixels to prose, and back again.",
-      "Lost in translation, found in creation.",
-      "Whispers of blocks, echoes of imagination.",
-      "The classic game of telephone, now with 100% more blocks!"
+      "announcements.taglines.0",
+      "announcements.taglines.1",
+      "announcements.taglines.2",
+      "announcements.taglines.3",
+      "announcements.taglines.4",
+      "announcements.taglines.5",
+      "announcements.taglines.6"
    ]
 }
