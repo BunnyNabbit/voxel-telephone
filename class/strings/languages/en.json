@@ -119,6 +119,8 @@
 			"description": {
 				"$self": "Description:",
 				"confirmReminder": "Use &a/finish &rto confirm your description for this build.",
+				"centerText": "Describe the build. Enter your description in chat.",
+				"reminder": "Enter your description in chat.",
 				"submitted": "Your description has been submitted!",
 				"createGame": "Enter a description in chat. It can be mundane or imaginative."
 			}
