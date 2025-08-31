@@ -1,9 +1,10 @@
 import { VoxelModelWriter } from "chunked-vox"
 import fs from "fs"
+/** @typedef {import("fs").PathLike} PathLike */
 
 /**Export a level as a .vox file.
  * @param {Level} level - The level to export.
- * @param {string} [writePath] - The path to write the .vox file to.
+ * @param {PathLike} [writePath] - The path to write the .vox file to.
  * @return {Promise<void>} - A promise that resolves when the file is written.
  */
 export async function exportLevelAsVox(level, writePath) {
