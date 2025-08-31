@@ -5,6 +5,7 @@ import { join } from "node:path"
 import { createServer } from "node:http"
 import { Server } from "socket.io"
 import { getAbsolutePath } from "esm-path"
+import { FormattedString, stringSkeleton } from "../strings/FormattedString.mjs"
 const __dirname = getAbsolutePath(import.meta.url)
 
 class SoundEvent {
@@ -122,8 +123,7 @@ export class SoundServer extends EventEmitter {
 				player.once("close", () => {
 					this.keySoundTransmitters.delete(key)
 				})
-				player.message("CEF sounds are enabled.")
-				player.message("Use &a/setting music off &fto disable music")
+				player.message(new FormattedString(stringSkeleton.game.cefReminder))
 			}
 		})
 

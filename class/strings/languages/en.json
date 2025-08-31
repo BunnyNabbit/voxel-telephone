@@ -148,6 +148,7 @@
 	},
 	"game": {
 		"welcome": "Welcome to Voxel Telephone. A multiplayer game where you build what you hear and describe what you see. Watch as creations transform through collaborative misinterpretation!",
+		"cefReminder": "Sounds and music via CEF is active. Use &a/setting music off&r to disable music.",
 		"question": {
 			"description": {
 				"$self": "Description:",
