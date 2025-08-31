@@ -2,6 +2,7 @@ import { ViewLevel } from "./ViewLevel.mjs"
 import { templates } from "./templates.mjs"
 import { RealmLevel } from "./RealmLevel.mjs"
 import { Player } from "../player/Player.mjs"
+import { FormattedString, stringSkeleton } from "../strings/FormattedString.mjs"
 
 export class RealmManagerLevel extends ViewLevel {
 	/** */
@@ -23,7 +24,7 @@ export class RealmManagerLevel extends ViewLevel {
 					RealmLevel.teleportPlayer(player, realmDocument._id)
 				} else {
 					// failed to create
-					player.message("Failed to create realm. Please try again later.", 1)
+					player.message(new FormattedString(stringSkeleton.level.error.realm.failedCreate), 1)
 					player.teleporting = false
 				}
 			} else if (turns.build) {
@@ -65,15 +66,17 @@ export class RealmManagerLevel extends ViewLevel {
 
 	displaySelectedTurns(player) {
 		if (player.selectedTurns.description) {
-			let attribution = ""
+			let displayedMessage
 			player.message(player.selectedTurns.description.prompt, 13)
 			if (player.selectedTurns.build) {
-				attribution += `By: ${player.selectedTurns.build.ownedBy}`
+				displayedMessage = new FormattedString(stringSkeleton.level.realm.attribution, {
+					ownedBy: player.selectedTurns.build.ownedBy,
+				})
 			} else {
 				// it's a realm create button.
-				attribution += "Double click icon to begin."
+				displayedMessage = new FormattedString(stringSkeleton.level.realm.realmCreateButton)
 			}
-			player.message(attribution, 12)
+			player.message(displayedMessage, 12)
 		} else {
 			player.clearPrints(Player.printAreaTypes.bottom)
 		}
