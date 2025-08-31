@@ -2,7 +2,7 @@ export { default as stringSkeleton } from "./stringSkeleton.json" with { type: "
 export { default as defaultLanguage } from "./languages/en.json" with { type: "json" }
 import defaultLanguage from "./languages/en.json" with { type: "json" }
 defaultLanguage.locale = "en"
-import { colorMapping } from "./colorMapping.mjs"
+import { colorMapping, colors } from "./colorMapping.mjs"
 import { readFile } from "fs/promises"
 import path, { join } from "path"
 import { getAbsolutePath } from "esm-path"
@@ -19,7 +19,7 @@ export class FormattedString {
 		for (const language of languages) {
 			try {
 				let string = FormattedString.getStringFromPazh(this.stringPazh, language)
-				const colorCode = FormattedString.getColorFromMapping(this.stringPazh) ?? ""
+				const colorCode = FormattedString.getColorFromMapping(this.stringPazh) ?? colors.white	
 				if (colorCode) string = string.replaceAll("&r", colorCode) // reset code
 				// apply data formatting
 				for (const key in this.formatData) {
