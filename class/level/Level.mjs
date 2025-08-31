@@ -250,7 +250,7 @@ export class Level extends EventEmitter {
 				}
 				block = parseInt(splitCommand[currentIndex])
 				if (!validateByte(block)) {
-					player.message("Invalid block id")
+					player.message(new FormattedString(stringSkeleton.level.error.parsing.invalidBlockId))
 					break
 				}
 				this.currentCommandActionBytes.push(block)
@@ -259,11 +259,11 @@ export class Level extends EventEmitter {
 			} else if (type == "position") {
 				let position = [0, 1, 2].map((index) => parseInt(splitCommand[currentIndex + index]))
 				if (position.some((num) => !validateByte(num))) {
-					player.message("Invalid position")
+					player.message(new FormattedString(stringSkeleton.level.error.parsing.invalidPosition))
 					break
 				}
 				if (!this.withinLevelBounds(position)) {
-					player.message("Position out of bounds")
+					player.message(new FormattedString(stringSkeleton.level.error.parsing.positionOutBounds))
 					break
 				}
 				this.currentCommandActionBytes.push(...position)
@@ -288,8 +288,7 @@ export class Level extends EventEmitter {
 				incrementIndex()
 				continue
 			}
-			player.message("" + splitCommand[currentIndex] + " is not a valid argument for " + layoutElement)
-			player.message("Entering interactive mode")
+			player.message(new FormattedString(stringSkeleton.level.error.parsing.layoutInvalidArgument, { splitCommand: splitCommand[currentIndex], layoutElement }))
 			break
 		}
 		this.inferCurrentCommand(null, player)

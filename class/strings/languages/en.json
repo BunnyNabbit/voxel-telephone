@@ -10,7 +10,13 @@
 			"blockBlockingInVCR": "Unable to place block. Level is in VCR mode.",
 			"buildCommandBlockingInVCR": "Unable to use command. Level is in VCR mode.",
 			"blockBlockingCommand": "Unable to place block. Command in level is expecting additional arguments.",
-			"noInteractiveCommands": "There are no current commands being run on the level"
+			"noInteractiveCommands": "There are no current commands being run on the level",
+			"parsing": {
+				"invalidBlockId": "Invalid block ID.",
+				"invalidPosition": "invalidPosition",
+				"positionOutBounds": "Position out of bounds",
+				"layoutInvalidArgument": "${splitCommand} is not a valid argument for ${layoutElement}. Entering interactive mode."
+			}
 		},
 		"status": {
 			"drainedLevelActions": "Changes drained. ${bytes} bytes saved to level's VHS record.",
