@@ -24,7 +24,8 @@
   "type": {
    "realm": "level.type.realm",
    "hub": "level.type.hub",
-   "view": "level.type.view"
+   "view": "level.type.view",
+   "playback": "level.type.playback"
   },
   "topPrintInformation": {
    "viewPagination": "level.topPrintInformation.viewPagination",
