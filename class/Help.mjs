@@ -14,7 +14,11 @@ export class Category {
 	}
 
 	displayHelpToPlayer(player) {
-		player.message(`&cCategory&f: ${this.name}`)
+		player.message(
+			new FormattedString(stringSkeleton.command.help.listing.category, {
+				name: this.name,
+			})
+		)
 		if (this.documents.length) player.message(`${this.documents.join(", ")}`)
 	}
 }
@@ -67,10 +71,12 @@ export class Help {
 		let originalArgument = argument
 		if (!argument) {
 			player.message(
-				`&cCategories&f: ${Array.from(this.data.categories)
-					.filter(([key]) => key.endsWith(`:${playerLanguage}`))
-					.map(([key]) => this.data.categories.get(key).name)
-					.join(", ")}`
+				new FormattedString(stringSkeleton.command.help.listing.categories, {
+					categories: Array.from(this.data.categories)
+						.filter(([key]) => key.endsWith(`:${playerLanguage}`))
+						.map(([key]) => this.data.categories.get(key).name)
+						.join(", "),
+				})
 			)
 			argument = `help:${playerLanguage}`
 			originalArgument = "help"
@@ -95,16 +101,21 @@ export class Help {
 
 			if (commandHelp) {
 				commandHelp.displayHelpToPlayer(player)
-				if (displayLink) player.message(`&eHelp documentation is available on the web. ${universe.serverConfiguration.website.baseURL}help`)
+				if (displayLink)
+					player.message(
+						new FormattedString(stringSkeleton.command.help.webReminder, {
+							baseURL: universe.serverConfiguration.website.baseURL,
+						})
+					)
 				return
 			} else if (!commandHelp && languageOverride) {
-				player.message(`Command exists but unable to find help document for it.`)
+				player.message(new FormattedString(stringSkeleton.command.error.help.foundCommandDocumentationMissing))
 			}
 		}
 		const category = this.data.categories.get(argument)
 		if (category) return category.displayHelpToPlayer(player)
 		if (playerLanguage !== defaultLanguage.locale) return this.callPlayer(player, originalArgument, defaultLanguage.locale)
-		player.message(`Unable to find help document for ${originalArgument}.`)
+		player.message(new FormattedString(stringSkeleton.command.error.help.documentationMissing, { originalArgument }))
 	}
 	/**Parses the markdown content into Minecraft classic text format.
 	 * @param {String} markdown - The markdown content to parse.

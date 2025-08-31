@@ -25,7 +25,9 @@ export const colorMapping = {
 	"level.commandQuestion": colors.navy,
 	"level.topPrintInformation": colors.white,
 	"level.type": colors.cyan,
-	"game.welcome": colors.yellow
+	"game.welcome": colors.yellow,
+	"command.help.listing": colors.red,
+	"command.help.webReminder": colors.yellow,
 }
 
 export default colorMapping

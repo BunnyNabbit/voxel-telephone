@@ -66,6 +66,10 @@
 			},
 			"vcr": {
 				"alreadyVcr": "The level is already in VCR mode"
+			},
+			"help": {
+				"foundCommandDocumentationMissing": "Command exists but unable to find help document for it.",
+				"documentationMissing": "Unable to find help document for ${originalArgument}."
 			}
 		},
 		"paint": {
@@ -111,6 +115,13 @@
 		},
 		"report": {
 			"gameReported": "Game reported with reason: \"${reason}\"."
+		},
+		"help": {
+			"listing": {
+				"categories": "Categories&f: ${categories}",
+				"category": "Category&f: ${name}"
+			},
+			"webReminder": "Help documentation is available on the web. ${baseURL}help"
 		}
 	},
 	"game": {
