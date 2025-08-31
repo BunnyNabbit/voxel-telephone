@@ -136,6 +136,11 @@
 		"outOfGames": {
 			"inspirationFeedUrl": "Not inspired? ${pickedFeed}"
 		},
+		"finish": {
+			"describe": "${username} finished a describe turn.",
+			"build": "${username} finished a build turn.",
+			"game": "${username} finished a game! Check out the game that started as &a\"${firstDescription}\"&r and ended with &a\"${lastDescription}\"&r fIn the view gallery."
+		},
 		"returnedReservedGame": "Returned to this game because it was reserved for you. Games will only be reserved for two hours."
 	}
 }
