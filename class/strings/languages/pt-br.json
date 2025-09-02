@@ -5,7 +5,6 @@
 		"es": "Español",
 		"pt-br": "Português Brasileiro"
 	},
-	
 	"level": {
 		"error": {
 			"commandNotFound": "Comando de nome ${commandName} para o nível ${levelName} não encontrado.",
@@ -22,12 +21,12 @@
 			"realm": {
 				"failedCreate": "Falha ao criar Realm. tente novamente mais tarde.",
 				"notFound": "Realm não encontrado."
-			} 
+			}
 		},
 		"status": {
 			"drainedLevelActions": "Alterações descartadas. ${bytes} bytes salvos no registro VHS do nível.",
-			"playbackFinished": "Reprodução finalizada! Use /main para voltar.", 
-			"playbackTurnInformation": "${prompt} - Descrito por ${descriptionCreators} e construído por ${buildCreators}" 
+			"playbackFinished": "Reprodução finalizada! Use /main para voltar.",
+			"playbackTurnInformation": "${prompt} - Descrito por ${descriptionCreators} e construído por ${buildCreators}"
 		},
 		"commandQuestion": {
 			"block": "Coloque um bloco para usar em ${currentType}. Quebre para ar.",
@@ -114,7 +113,7 @@
 			"updated": "Configuração ${setting} atualizada para ${value}."
 		},
 		"diverge": {
-			"success": "Jogo divergido." 
+			"success": "Jogo divergido."
 		},
 		"purge": {
 			"success": "Turno limpo."
@@ -159,7 +158,17 @@
 				"reminder": "Digite sua descrição no chat.",
 				"submitted": "Sua descrição foi enviada!",
 				"createGame": "Digite uma descrição no chat. Pode ser mundana ou imaginativa."
+			},
+			"build": {
+				"finishReminder": "Once you are finished building, use &a/finish&r.",
+				"buildTheFollowing": "Build the following: ${prompt}"
 			}
+		},
+		"outOfGames": {
+			"inspirationFeedUrl": "Not inspired? ${pickedFeed}"
+		},
+		"gameModes": {
+			"casual": "Mode: Casual"
 		}
 	},
 	"announcements": {
