@@ -1,7 +1,7 @@
 ---
 title: "/Line"
 contributors: ["BunnyNabbit \"Aon\""]
-summary: "The `/Line` command creates a line between two points."
+summary: "Creates a line between two points."
 image: "./line-output.webp"
 imageAlt: "Red line"
 ---

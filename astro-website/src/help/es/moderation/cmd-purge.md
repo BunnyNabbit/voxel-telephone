@@ -1,7 +1,7 @@
 ---
 title: "/purge"
 contributors: ["BunnyNabbit \"Aon\""]
-summary: "The `/purge` command purges the latest turn of a highlighted game in the view gallery."
+summary: "Purges the latest turn of a highlighted game in the view gallery."
 ---
 
 # /purge
