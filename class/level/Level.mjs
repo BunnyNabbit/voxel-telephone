@@ -428,6 +428,7 @@ export class Level extends EventEmitter {
 			if (defaults.useNullChangeRecord) changeRecordClass = NullChangeRecord
 			level.changeRecord = new changeRecordClass(`./blockRecords/${spaceName}/`, async () => {
 				await level.changeRecord.restoreBlockChangesToLevel(level)
+				level.emit("loaded")
 				resolve(level)
 			})
 		})
