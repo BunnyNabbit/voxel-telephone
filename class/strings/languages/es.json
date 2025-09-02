@@ -158,10 +158,17 @@
 				"reminder": "Enter your description in chat.",
 				"submitted": "Your description has been submitted!",
 				"createGame": "Enter a description in chat. It can be mundane or imaginative."
+			},
+			"build": {
+				"finishReminder": "Once you are finished building, use &a/finish&r.",
+				"buildTheFollowing": "Build the following: ${prompt}"
 			}
 		},
 		"outOfGames": {
 			"inspirationFeedUrl": "Not inspired? ${pickedFeed}"
+		},
+		"gameModes": {
+			"casual": "Mode: Casual"
 		}
 	},
 	"announcements": {

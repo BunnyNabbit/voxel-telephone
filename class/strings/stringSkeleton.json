@@ -158,10 +158,17 @@
     "reminder": "game.question.description.reminder",
     "submitted": "game.question.description.submitted",
     "createGame": "game.question.description.createGame"
+   },
+   "build": {
+    "finishReminder": "game.question.build.finishReminder",
+    "buildTheFollowing": "game.question.build.buildTheFollowing"
    }
   },
   "outOfGames": {
    "inspirationFeedUrl": "game.outOfGames.inspirationFeedUrl"
+  },
+  "gameModes": {
+   "casual": "game.gameModes.casual"
   }
  },
  "announcements": {
