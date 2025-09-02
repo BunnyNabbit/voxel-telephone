@@ -1,7 +1,7 @@
 ---
 title: "/template"
 contributors: ["BunnyNabbit \"Aon\""]
-summary: "The `/template` command switches the level's template."
+summary: "Switches the level's template."
 image: "./template-builder.webp"
 imageAlt: "A space with a color palette arranged in a cube and axis lines pointing out from a corner."
 ---

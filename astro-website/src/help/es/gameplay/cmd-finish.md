@@ -1,7 +1,7 @@
 ---
 title: "/finish"
 contributors: ["BunnyNabbit \"Aon\""]
-summary: "The `/finish` command marks a turn as finished and exits back to hub."
+summary: "Marks a turn as finished and exits back to hub."
 ---
 
 # /finish

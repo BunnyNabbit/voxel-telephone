@@ -1,7 +1,7 @@
 ---
 title: "/realm"
 contributors: ["BunnyNabbit \"Aon\""]
-summary: "The realm command is a gateway to user created realms."
+summary: "Enters the personal realm view."
 ---
 
 # /realm

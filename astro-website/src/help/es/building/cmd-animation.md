@@ -1,7 +1,7 @@
 ---
 title: "/animation"
 contributors: ["BunnyNabbit \"Aon\""]
-summary: "The /animation command provides a basic tool for exploiting a visual illusion of motion."
+summary: "Provides a basic tool for exploiting a visual illusion of motion."
 ---
 
 # /animation
