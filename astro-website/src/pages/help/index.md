@@ -5,5 +5,5 @@ title: "Select a language"
 
 - [English](/help/en)
 - [Español](/help/es)  
-- [Português Brasileiro](/help/pt-br)  
 Needs translation. [You can help](https://github.com/BunnyNabbit/voxel-telephone/tree/main/astro-website/src/help/es).
+- [Português Brasileiro](/help/pt-br)  
