@@ -159,6 +159,9 @@
 				"submitted": "Your description has been submitted!",
 				"createGame": "Enter a description in chat. It can be mundane or imaginative."
 			}
+		},
+		"outOfGames": {
+			"inspirationFeedUrl": "Not inspired? ${pickedFeed}"
 		}
 	},
 	"announcements": {
