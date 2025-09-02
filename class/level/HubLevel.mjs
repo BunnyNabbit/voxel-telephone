@@ -58,10 +58,9 @@ export class HubLevel extends Level {
 			hatchday = universe.getHatchday()
 			hubName = forcedHubName || universe.serverConfiguration.hubName
 		}
-		const promise = Level.loadIntoUniverse(universe, hubName, {
+		const promise = this.loadIntoUniverse(universe, hubName, {
 			template: templates.empty,
 			allowList: universe.serverConfiguration.hubEditors,
-			levelClass: HubLevel,
 			arguments: [hubName, universe.db],
 		})
 		if (player instanceof Player) {

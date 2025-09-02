@@ -50,7 +50,7 @@ export class ViewLevel extends Level {
 					setTimeout(() => {
 						player.viewDebounce = false
 					}, 1000)
-					ViewLevel.teleportPlayer(player, this.viewData, this.nextCursor)
+					this.constructor.teleportPlayer(player, this.viewData, this.nextCursor)
 				}
 			}
 			player.client.on("position", onPosition)
@@ -225,18 +225,16 @@ export class ViewLevel extends Level {
 		if (viewData.mode == "purged") spaceName += `-purged`
 		if (viewData.mode == "realm") spaceName += `-realms-${viewData.player}`
 		if (cursor) spaceName += cursor
-		let levelClass = viewData.levelClass ?? ViewLevel
 
-		Level.loadIntoUniverse(universe, spaceName, {
+		this.loadIntoUniverse(universe, spaceName, {
 			useNullChangeRecord: true,
-			levelClass: levelClass,
 			arguments: [viewData, cursor],
-			bounds: [576, 64, 512],
 			allowList: ["not a name"],
-			template: templates.empty,
 		}).then(async (level) => {
-			await level.reloadView(templates.empty)
+			await level.reloadView(this.template)
 			level.addPlayer(player, [60, 8, 4], [162, 254])
 		})
 	}
+
+	static bounds = [576, 64, 512]
 }

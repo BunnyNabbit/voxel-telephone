@@ -401,7 +401,7 @@ export class Commands {
 		})
 
 		universe.registerCommand(["/realm", "/os", "/myrealm"], async (player) => {
-			ViewLevel.teleportPlayer(player, { viewAll: true, mode: "realm", player: player.authInfo.username, levelClass: RealmManagerLevel })
+			RealmManagerLevel.teleportPlayer(player, { viewAll: true, mode: "realm", player: player.authInfo.username })
 			return
 		})
 
