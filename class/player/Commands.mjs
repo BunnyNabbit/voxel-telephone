@@ -10,6 +10,7 @@ import { ViewLevel } from "../level/ViewLevel.mjs"
 import { FastForwardLevel } from "../level/FastForwardLevel.mjs"
 import { HubLevel } from "../level/HubLevel.mjs"
 import { FormattedString, stringSkeleton } from "../strings/FormattedString.mjs"
+import TutorialLevel from "../level/TutorialLevel.mjs"
 /** @typedef {import("../server/Universe.mjs").Universe Universe} */
 
 let creationLicenses = {}
@@ -151,11 +152,15 @@ export class Commands {
 			player.emit("playSound", universe.sounds.toggle)
 		})
 		universe.registerCommand(["/skip"], async (player) => {
-			if (player.space && player.space.game) {
-				universe.db.addInteraction(player.authInfo.username, player.space.game._id, "skip")
-				player.space.doNotReserve = true
-				player.space.removePlayer(player)
-				await HubLevel.teleportPlayer(player)
+			if (player.space) {
+				if (player.space.game) {
+					universe.db.addInteraction(player.authInfo.username, player.space.game._id, "skip")
+					player.space.doNotReserve = true
+					player.space.removePlayer(player)
+					await HubLevel.teleportPlayer(player)
+				} else if (player.space.game instanceof TutorialLevel) {
+					player.space.game.next(player, TutorialLevel.progressionReasons.skipped)
+				}
 			}
 		})
 		universe.registerCommand(

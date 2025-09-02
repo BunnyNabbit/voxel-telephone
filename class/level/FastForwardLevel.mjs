@@ -89,7 +89,7 @@ export class FastForwardLevel extends Level {
 	}
 
 	clearLevel() {
-		this.blocks = templates.empty.generate(Level.standardBounds)
+		this.blocks = templates.empty.generate(Level.bounds)
 		this.reload()
 	}
 

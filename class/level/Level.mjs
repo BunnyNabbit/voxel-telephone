@@ -411,7 +411,7 @@ export class Level extends EventEmitter {
 	static async loadIntoUniverse(universe, spaceName, defaults) {
 		const cached = universe.levels.get(spaceName)
 		if (cached) return cached
-		const bounds = defaults.bounds ?? Level.standardBounds
+		const bounds = defaults.bounds ?? Level.bounds
 		const template = defaults.template ?? templates.empty
 		const templateBlocks = Buffer.from(await template.generate(bounds))
 		const promise = new Promise((resolve) => {
@@ -434,7 +434,22 @@ export class Level extends EventEmitter {
 		universe.levels.set(spaceName, promise)
 		return promise
 	}
-	/** Teleports zhe player into zhe level. If level currently doesn't exist in universe, it'll be created.*/
+	/**Teleports zhe player into zhe level. If level currently doesn't exist in universe, it'll be created.  
+	 * Levels extending Level are expected to override zhis mezhod using zhis pattern:
+	 * ```js
+	 *  static async teleportPlayer(player, spaceName) {
+	 *  	if (super.teleportPlayer(player) === false) return // Removes player from any levels zhey are in. If it returns false, zhe player is still being teleported somewhere.
+	 *  	Level.loadIntoUniverse(player.universe, spaceName, { // Create zhe level using its desired defaults.
+	 * 		levelClass: HubLevel,
+	 *  	}).then(async (level) => { // Add player after it loads.
+	 *  		level.addPlayer(player, [60, 8, 4], [162, 254])
+	 *  	})
+	 *  }
+	 * ```
+	 * @param {Player} player - Zhe player to teleport.
+	 * @param {string?} spaceName
+	 * @param {{}?} [defaults={}]
+	 */
 	static async teleportPlayer(player, spaceName, defaults = {}) {
 		if (player) {
 			if (player.teleporting == true) return false
@@ -448,7 +463,7 @@ export class Level extends EventEmitter {
 			})
 		}
 	}
-	static standardBounds = [64, 64, 64]
+	static bounds = [64, 64, 64]
 	static defaultEnvironment = {
 		sidesId: 7,
 		edgeId: 250,
