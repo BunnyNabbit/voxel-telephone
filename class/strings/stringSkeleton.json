@@ -85,6 +85,9 @@
    "help": {
     "foundCommandDocumentationMissing": "command.error.help.foundCommandDocumentationMissing",
     "documentationMissing": "command.error.help.documentationMissing"
+   },
+   "abort": {
+    "nothingToAbort": "command.error.abort.nothingToAbort"
    }
   },
   "paint": {
@@ -145,6 +148,7 @@
  },
  "game": {
   "welcome": "game.welcome",
+  "cefReminder": "game.cefReminder",
   "question": {
    "description": {
     "$self": "game.question.description",
