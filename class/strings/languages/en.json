@@ -2,7 +2,8 @@
 	"language": {
 		"en": "English",
 		"en-zhing": "Zhing-like English",
-		"es": "Spanish"
+		"es": "Spanish",
+		"pt-br": "Brazilian Portuguese"
 	},
 	"level": {
 		"error": {
