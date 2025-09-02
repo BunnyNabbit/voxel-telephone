@@ -2,7 +2,8 @@
  "language": {
   "en": "language.en",
   "en-zhing": "language.en-zhing",
-  "es": "language.es"
+  "es": "language.es",
+  "pt-br": "language.pt-br"
  },
  "level": {
   "error": {
