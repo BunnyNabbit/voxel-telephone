@@ -53,6 +53,18 @@ class SpanishDrone extends BaseLanguageDrone {
 	}
 }
 
+class PortuguêsBrasileiroDrone extends BaseLanguageDrone {
+	constructor(languageDroneBaseUrl) {
+		super(
+			{
+				locale: "pt-br",
+				name: "Português Brasileiro",
+			},
+			languageDroneBaseUrl
+		)
+	}
+}
+
 export class LanguageSelectionLevel extends TutorialLevel {
 	/** */
 	constructor(bounds, blocks) {
@@ -121,7 +133,7 @@ export class LanguageSelectionLevel extends TutorialLevel {
 		]
 	}
 
-	static droneClasses = [EnglishDrone, SpanishDrone]
+	static droneClasses = [EnglishDrone, SpanishDrone, PortuguêsBrasileiroDrone]
 	static template = templates.tutorial.languageSelection
 }
 

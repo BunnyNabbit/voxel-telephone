@@ -214,6 +214,7 @@ export class Player extends EventEmitter {
 
 	message(message, types = [0], continueAdornment = "> ") {
 		if (message instanceof FormattedString) message = message.format(this.languages ?? [defaultLanguage])
+		if (this.languages) message = FormattedString.replaceUnsupportedCharacters(message, this.languages[0].locale)
 		const originalMessage = message
 		if (typeof types === "number") types = [types]
 		const maxLength = 64 - continueAdornment.length
