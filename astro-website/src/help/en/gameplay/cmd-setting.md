@@ -16,3 +16,4 @@ Allows for setting preferences.
   - `en`: English
   - `en-zhing`: Zhing-like English
   - `es`: Spanish
+  - `pt-br`: Brazilian Portuguese

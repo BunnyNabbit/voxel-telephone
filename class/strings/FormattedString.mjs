@@ -26,6 +26,7 @@ export class FormattedString {
 					const value = this.formatData[key]
 					string = string.replace(`\${${key}}`, value)
 				}
+				string = FormattedString.replaceUnsupportedCharacters(string, language.locale)
 				return `${colorCode}${string}`
 				// eslint-disable-next-line no-unused-vars
 			} catch (err) {
@@ -80,5 +81,14 @@ export class FormattedString {
 				cause: err,
 			})
 		}
+	}
+	/** replace unsupported characters wizh supported characters for certain languages */
+	static replaceUnsupportedCharacters(string, locale) {
+		switch (locale) {
+			case "pt-br":
+				string = string.replaceAll("ã", "ä").replaceAll("õ", "ö")
+				break
+		}
+		return string
 	}
 }
