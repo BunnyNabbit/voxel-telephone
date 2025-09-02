@@ -411,16 +411,16 @@ export class Level extends EventEmitter {
 	static async loadIntoUniverse(universe, spaceName, defaults) {
 		const cached = universe.levels.get(spaceName)
 		if (cached) return cached
-		const bounds = defaults.bounds ?? Level.bounds
-		const template = defaults.template ?? templates.empty
+		const bounds = defaults.bounds ?? this.bounds
+		const template = defaults.template ?? this.template
 		const templateBlocks = Buffer.from(await template.generate(bounds))
 		const promise = new Promise((resolve) => {
-			const levelClass = defaults.levelClass ?? Level
+			const levelClass = defaults.levelClass ?? this
 			const level = new levelClass(bounds, templateBlocks, ...(defaults.arguments ?? []))
 			level.template = template
 			level.name = spaceName
-			level.blockset = defaults.blockset ?? defaultBlockset
-			level.environment = defaults.environment ?? Level.defaultEnvironment
+			level.blockset = defaults.blockset ?? this.blockset
+			level.environment = defaults.environment ?? this.environment
 			level.texturePackUrl = defaults.texturePackUrl ?? universe.serverConfiguration.texturePackUrl
 			level.allowList = defaults.allowList ?? []
 			level.universe = universe
@@ -464,12 +464,19 @@ export class Level extends EventEmitter {
 		}
 	}
 	static bounds = [64, 64, 64]
-	static defaultEnvironment = {
+	static environment = {
 		sidesId: 7,
 		edgeId: 250,
 		edgeHeight: 0,
 		cloudsHeight: 256,
 	}
+	static blockset = defaultBlockset
+	static template = templates.empty
+	/**
+	 * @see `Level.bounds`
+	 * @deprecated
+	 */
+	static standardBounds = this.bounds
 }
 
 export default Level
