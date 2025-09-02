@@ -159,6 +159,9 @@
     "submitted": "game.question.description.submitted",
     "createGame": "game.question.description.createGame"
    }
+  },
+  "outOfGames": {
+   "inspirationFeedUrl": "game.outOfGames.inspirationFeedUrl"
   }
  },
  "announcements": {
