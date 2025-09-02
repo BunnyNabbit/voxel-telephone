@@ -45,6 +45,7 @@ export class FastForwardLevel extends Level {
 						new FormattedString(stringSkeleton.level.status.playbackTurnInformation, {
 							descriptionCreators: descriptionTurn.creators.join(),
 							buildCreators: buildTurn.creators.join(),
+							prompt: descriptionTurn.prompt,
 						})
 					)
 					this.messageAll(descriptionTurn.prompt, [100])
