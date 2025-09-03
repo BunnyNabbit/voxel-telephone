@@ -7,7 +7,9 @@ const doPagination = Astro.props.pagination ?? false
 const gamesPerPage = Astro.props.games ?? 5
 const onlyCompleted = Astro.props.onlyCompleted ?? false
 let nextCursor = null
-const games = await database.getGames(ObjectId.createFromTime(cursor), gamesPerPage, onlyCompleted)
+let cursorObjectId = null
+if (cursor) cursorObjectId = ObjectId.createFromHexString(cursor)
+const games = await database.getGames(cursorObjectId, gamesPerPage, onlyCompleted)
 if (doPagination && games.length == gamesPerPage) {
 	nextCursor = games[games.length - 2][0]._id
 	games.pop()
