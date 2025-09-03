@@ -1,33 +1,82 @@
 {
 	"level": {
 		"error": {
-			"commandNotFound": "Unable to find command wizh name ${commandName} for level ${levelName}."
+			"commandNotFound": "Unable to find command wizh name ${commandName} for level ${levelName}.",
+			"noInteractiveCommands": "Zhere are no current commands being run on zhe level"
 		},
 		"commandQuestion": {
 			"position": "Place or break a block to mark zhe position for ${currentType}."
 		},
 		"topPrintInformation": {
 			"viewPagination": "Noclip past level borders to view zhe next page.",
-			"hubReminder": "Go back to hub wizh /main"
+			"hubReminder": "Go back to hub wizh &a/main&r."
+		},
+		"realm": {
+			"attribution": "By: ${ownedBy}",
+			"realmCreateButton": "Double click zhing to begin."
 		}
 	},
 	"command": {
 		"error": {
-			"uncaught": "&cAn error occured while running zhe command. ${err}",
+			"uncaught": "An error occured while running zhe command. ${err}",
 			"missingBuildPermission": "You don't have permission to build in zhis level.",
-			"missingPermission": "You don't have permission to use zhis command!"
+			"missingPermission": "You don't have permission to use zhis command!",
+			"unimplementedCommand": {
+				"unavailable": "Zhis command is unavailable:"
+			},
+			"license": {
+				"notOwner": "You are not zhe owner of zhis build."
+			},
+			"vcr": {
+				"alreadyVcr": "Zhe level is already in VCR mode"
+			},
+			"abort": {
+				"nothingToAbort": "Zhere is nozhing to abort."
+			}
 		},
 		"finish": {
 			"attemptFinishBuildEmpty": "Zhere is nozhing in zhe level. Build zhe prompt you are given!",
 			"attemptFinishDescriptionEmpty": "You currently have no description for zhis build. Write somezhing in chat first!"
+		},
+		"vcrControls": {
+			"commitReminder": "To commit zhis state use &a/commit&r. Use &a/abort&r to exit VCR"
+		},
+		"report": {
+			"gameReported": "Game reported wizh reason: \"${reason}\"."
+		},
+		"help": {
+			"webReminder": "Help documentation is available on zhe web. ${baseURL}help"
 		}
 	},
 	"game": {
 		"welcome": "Welcome to Voxel Telephone. A multiplayer game where you build what you hear and describe what you see. Watch as creations transform zhrough collaborative misinterpretation!",
 		"question": {
 			"description": {
-				"confirmReminder": "Use /finish to confirm your description for zhis build."
+				"confirmReminder": "Use &a/finish &rto confirm your description for zhis build.",
+				"centerText": "Describe zhe build. Enter your description in chat."
+			},
+			"build": {
+				"buildTheFollowing": "Build zhe following: ${prompt}"
 			}
 		}
+	},
+	"announcements": {
+		"donation": {
+			"0": "Support zhe server and its development https://ko-fi.com/bunnynabbit"
+		},
+		"buildingCommands": {
+			"0": "Toggle paint mode by using zhe /paint command",
+			"1": "Place down a block at your position wizh zhe /place command",
+			"2": "Made a mistake? Enter zhe VCR wizh /vcr",
+			"4": "Need somezhing round? Use zhe /sphere command!",
+			"5": "Is zhe palette getting in zhe way? Use \"/template empty\" to clear it! Or use \"/template builder\" to bring it back."
+		},
+		"gameTips": {
+			"0": "An entire game consists of 16 turns. When a game is completed, you can see all of its turns in zhe view mode.",
+			"2": "Voxel Telephone has a bunch of commands. Use /help or view zhe help documentation on zhe web. https://voxel-telephone.bunnynabbit.com/help"
+		}
+	},
+	"taglines": {
+		"6": "Zhe classic game of telephone, now wizh 100% more blocks!"
 	}
 }
