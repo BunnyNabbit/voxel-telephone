@@ -43,7 +43,7 @@ if (post.data.image) {
 }
 ---
 
-<ContentPage title={post.data.title} includeH1={false} description={post.data.summary} ogImage={image} noIndex={post.data.noIndex}>
+<ContentPage title={post.data.title} includeH1={false} description={post.data.summary} ogImage={image} noIndex={post.data.noIndex} language={language}>
 	<WikiLinks category={categoryPost} {post} />
 	<Content />
 </ContentPage>

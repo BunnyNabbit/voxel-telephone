@@ -23,7 +23,7 @@ const { language } = Astro.params
 const { Content } = await render(post)
 ---
 
-<ContentPage title={post.data.title} includeH1={false} description={post.data.summary} noIndex={post.data.noIndex}>
+<ContentPage title={post.data.title} includeH1={false} description={post.data.summary} noIndex={post.data.noIndex} language={language}>
 	<Content />
 	<ul>
 		{

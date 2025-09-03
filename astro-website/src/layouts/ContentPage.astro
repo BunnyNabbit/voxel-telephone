@@ -28,9 +28,10 @@ const description = Astro.props.description
 const ogImage = Astro.props.ogImage
 const includeH1 = Astro.props.includeH1 ?? true
 const noIndex = Astro.props.noIndex ?? false
+const language = Astro.props.language ?? "en"
 ---
 
-<html lang="en">
+<html lang={language}>
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
