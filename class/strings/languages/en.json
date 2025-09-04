@@ -122,7 +122,7 @@
 			"success": "All zones removed."
 		},
 		"vcrControls": {
-			"rewinded": "Fast-forwarded. Current actions: ${actionCount}.",
+			"rewinded": "Rewinded. Current actions: ${actionCount}.",
 			"fastforwarded": "Fast-forwarded. Current actions: ${currentAction}/${maxActions}.",
 			"commitReminder": "To commit this state use &a/commit&r. Use &a/abort&r to exit VCR"
 		},
