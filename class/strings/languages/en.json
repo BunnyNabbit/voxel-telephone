@@ -100,7 +100,7 @@
 			"off": "Repeat mode off."
 		},
 		"finish": {
-			"vcrReminder": "Hold up! Did you mean to use /abort instead? Exit out of VCR to if you intend to submit your game.",
+			"vcrReminder": "Hold up! Did you mean to use /abort instead? Exit out of VCR if you intend to submit your game.",
 			"attemptFinishBuildEmpty": "There is nothing in the level. Build the prompt you are given!",
 			"attemptFinishDescriptionEmpty": "You currently have no description for this build. Write something in chat first!"
 		},
