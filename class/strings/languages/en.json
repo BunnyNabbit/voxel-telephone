@@ -25,7 +25,7 @@
 		},
 		"status": {
 			"drainedLevelActions": "Changes drained. ${bytes} bytes saved to level's VHS record.",
-			"playbackFinished": "Playback finished! Use /main to go back.",
+			"playbackFinished": "Playback finished! Use &a/main&r to go back.",
 			"playbackTurnInformation": "${prompt} - Described by ${descriptionCreators} and built by ${buildCreators}"
 		},
 		"commandQuestion": {
@@ -54,7 +54,7 @@
 			"missingPermission": "You don't have permission to use this command!",
 			"drainingVCR": "VCR is busy. Try again later?",
 			"levelLoading": "Level is busy seeking. Try again later?",
-			"controlRequiresVcr": "Level isn't in VCR mode. /vcr",
+			"controlRequiresVcr": "Level isn't in VCR mode. &a/vcr&r.",
 			"unimplementedCommand": {
 				"unavailable": "This command is unavailable:",
 				"helpHint": "For help on existing commands and topics, use &a/help&r."
@@ -81,7 +81,7 @@
 				"unknownTemplate": "Unknown template name."
 			},
 			"vcr": {
-				"alreadyVcr": "The level is already in VCR mode"
+				"alreadyVcr": "The level is already in VCR mode."
 			},
 			"help": {
 				"foundCommandDocumentationMissing": "Command exists but unable to find help document for it.",
@@ -100,7 +100,7 @@
 			"off": "Repeat mode off."
 		},
 		"finish": {
-			"vcrReminder": "Hold up! Did you mean to use /abort instead? Exit out of VCR if you intend to submit your game.",
+			"vcrReminder": "Hold up! Did you mean to use &a/abort&r instead? Exit out of VCR if you intend to submit your game.",
 			"attemptFinishBuildEmpty": "There is nothing in the level. Build the prompt you are given!",
 			"attemptFinishDescriptionEmpty": "You currently have no description for this build. Write something in chat first!"
 		},
@@ -124,7 +124,7 @@
 		"vcrControls": {
 			"rewinded": "Rewinded. Current actions: ${actionCount}.",
 			"fastforwarded": "Fast-forwarded. Current actions: ${currentAction}/${maxActions}.",
-			"commitReminder": "To commit this state use &a/commit&r. Use &a/abort&r to exit VCR"
+			"commitReminder": "To commit this state use &a/commit&r. Use &a/abort&r to exit VCR."
 		},
 		"vcr": {
 			"listActionCount": "VCR has recorded ${actionCount} actions."
@@ -153,7 +153,7 @@
 		"question": {
 			"description": {
 				"$self": "Description:",
-				"confirmReminder": "Use &a/finish &rto confirm your description for this build.",
+				"confirmReminder": "Use &a/finish&r to confirm your description for this build.",
 				"centerText": "Describe the build. Enter your description in chat.",
 				"reminder": "Enter your description in chat.",
 				"submitted": "Your description has been submitted!",
@@ -186,20 +186,20 @@
 			"1": "Found an issue? Report it! https://github.com/BunnyNabbit/voxel-telephone/issues"
 		},
 		"buildingCommands": {
-			"0": "Toggle paint mode by using the /paint command",
-			"1": "Place down a block at your position with the /place command",
-			"2": "Made a mistake? Enter the VCR with /vcr",
-			"3": "Triangles are my favorite shape. /triangle",
-			"4": "Need something round? Use the /sphere command!",
-			"5": "Is the palette getting in the way? Use \"/template empty\" to clear it! Or use \"/template builder\" to bring it back."
+			"0": "Toggle paint mode by using the &a/paint&r command",
+			"1": "Place down a block at your position with the &a/place&r command",
+			"2": "Made a mistake? Enter the VCR with &a/vcr&r.",
+			"3": "Triangles are my favorite shape. &a/triangle&r.",
+			"4": "Need something round? Use the &a/sphere&r command!",
+			"5": "Is the palette getting in the way? Use &a/template empty&r to clear it! Or use &a/template builder&r to bring it back."
 		},
 		"gameTips": {
 			"0": "An entire game consists of 16 turns. When a game is completed, you can see all of its turns in the view mode.",
-			"1": "Want to practice building? Try building in a /realm level.",
-			"2": "Voxel Telephone has a bunch of commands. Use /help or view the help documentation on the web. https://voxel-telephone.bunnynabbit.com/help"
+			"1": "Want to practice building? Try building in a &a/realm&r level.",
+			"2": "Voxel Telephone has a bunch of commands. Use &a/help&r or view the help documentation on the web. https://voxel-telephone.bunnynabbit.com/help"
 		},
 		"safety": {
-			"0": "See an inappropriate prompt or build? Use /report"
+			"0": "See an inappropriate prompt or build? Use &a/report&r."
 		}
 	},
 	"taglines": {
