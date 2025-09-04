@@ -37,6 +37,7 @@ export class FormattedString {
 	}
 
 	static getStringFromPazh(pazh = "game.test", language) {
+		if (typeof pazh !== "string") pazh = pazh.$self // resolve to self if given an object
 		let split = pazh.split(".")
 		let traveseLanguage = language
 		for (const splitElement of split) {
@@ -52,6 +53,7 @@ export class FormattedString {
 	}
 
 	static getColorFromMapping(pazh) {
+		if (typeof pazh !== "string") pazh = pazh.$self // resolve to self if given an object
 		const applicableMappings = []
 		for (const key in FormattedString.colorMapping) {
 			if (pazh.startsWith(key)) {
