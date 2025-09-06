@@ -1,6 +1,8 @@
 ---
-import { getCollection, render } from "astro:content"
+import { getCollection, render, getEntry } from "astro:content"
 import ContentPage from "../../../../layouts/ContentPage.astro"
+import { defaultLanguage } from "../../../../../../class/strings/FormattedString.mjs"
+const locales = Object.keys(defaultLanguage.language)
 export const prerender = true
 export async function getStaticPaths() {
 	const posts = await getCollection("help")
@@ -23,9 +25,26 @@ export async function getStaticPaths() {
 const { post } = Astro.props
 const { category, language } = Astro.params
 const { Content } = await render(post)
+
+const localesAvailableHreflangs = (
+	await Promise.all(
+		locales.map(async (locale) => {
+			if (locale === language) return null
+			const entry = await getEntry("help", `${locale}/${category}`)
+			if (!entry) return null
+			return {
+				locale,
+				pathName: `/help/${locale}/${category}`,
+			}
+		})
+	)
+).filter(Boolean).concat([
+	{ locale: "x-default", pathName: `/help/en/${category}` },
+])
+
 ---
 
-<ContentPage title={post.data.title} includeH1={false} description={post.data.summary} noIndex={post.data.noIndex} language={language}>
+<ContentPage title={post.data.title} includeH1={false} description={post.data.summary} noIndex={post.data.noIndex} language={language} hreflangs={localesAvailableHreflangs}>
 	<Content />
 	<ul>
 		{

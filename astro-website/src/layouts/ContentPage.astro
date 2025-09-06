@@ -2,6 +2,7 @@
 import Header from "../components/Header.astro"
 import Footer from "../components/Footer.astro"
 import getCanonicalURL from "../shared/getCanonicalURL.mjs"
+import Hreflangs from "../components/Hreflangs.astro"
 import { ClientRouter } from "astro:transitions"
 const { frontmatter } = Astro.props
 let { title } = Astro.props
@@ -29,6 +30,7 @@ const ogImage = Astro.props.ogImage
 const includeH1 = Astro.props.includeH1 ?? true
 const noIndex = Astro.props.noIndex ?? false
 const language = Astro.props.language ?? "en"
+const hreflangs = Astro.props.hreflangs
 ---
 
 <html lang={language}>
@@ -62,6 +64,9 @@ const language = Astro.props.language ?? "en"
 			)
 		}
 		{noIndex && <meta name="robots" content="noindex" />}
+		{
+			hreflangs && <Hreflangs hreflangs={hreflangs} />
+		}
 		<ClientRouter />
 	</head>
 	<body>
