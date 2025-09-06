@@ -1,0 +1,10 @@
+---
+import getCanonicalURL from "../shared/getCanonicalURL.mjs";
+const hreflangs = Astro.props.hreflangs ?? []
+---
+
+{
+	hreflangs.map((hreflang: { pathName: string; locale: string }) => {
+		return <link rel="alternate" href={getCanonicalURL(hreflang.pathName)} hreflang={hreflang.locale} />
+	})
+}
