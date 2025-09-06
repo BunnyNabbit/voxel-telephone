@@ -29,7 +29,6 @@ const { Content } = await render(post)
 const localesAvailableHreflangs = (
 	await Promise.all(
 		locales.map(async (locale) => {
-			if (locale === language) return null
 			const entry = await getEntry("help", `${locale}/${category}`)
 			if (!entry) return null
 			return {
