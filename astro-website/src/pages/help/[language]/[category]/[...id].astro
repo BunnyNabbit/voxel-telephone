@@ -47,7 +47,6 @@ if (post.data.image) {
 const localesAvailableHreflangs = (
 	await Promise.all(
 		locales.map(async (locale) => {
-			if (locale === language) return null
 			const entry = await getEntry("help", `${locale}/${category}/${id ?? ""}`)
 			if (!entry) return null
 			return {
