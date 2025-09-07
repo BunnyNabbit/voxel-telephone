@@ -1,10 +1,15 @@
 ---
 import ContentPage from "../layouts/ContentPage.astro"
 import Games from "../components/Games.astro"
+import Picture from "astro/components/Picture.astro"
+import diagramImage from '../assets/diagram.webp'
 ---
 
 <ContentPage title="Voxel Telephone" description="A multiplayer game where you build what you hear and describe what you see.">
 	<p>From pixels to prose, and back again. Voxel Telephone is a unique multiplayer experience where you build what you hear and describe what you see. Watch as creations transform through collaborative misinterpretation! Join us on <a href="https://www.classicube.net/server/play/1209f0e99914671f9cffc14d23f543c4/?canProxy=true">ClassiCube</a> to play!</p>
+	<h2>Simple yet fascinating</h2>
+	<p>The rules are based on the <a href="https://en.wikipedia.org/wiki/Telephone_game#Game">Telephone game</a>. Each game begins with a prompt which players repeatedly build and describe until the 16th turn.</p>
+	<Picture src={diagramImage} formats={['avif', 'webp']} alt="A diagram of a Voxel Telephone game. It starts off with a deer and ends with a smiley face." />
 	<h2>Recent games</h2>
 	<p>Check out the latest games completed on Voxel Telephone.</p>
 	<Games pagination={false} games={5} onlyCompleted={true} />
