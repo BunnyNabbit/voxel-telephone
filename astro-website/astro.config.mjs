@@ -17,4 +17,8 @@ export default defineConfig({
 		defaultStrategy: "hover",
 	},
 	trailingSlash: "never",
+	image: {
+		responsiveStyles: true,
+		layout: "constrained"
+	},
 })
