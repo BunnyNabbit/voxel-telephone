@@ -1,19 +1,19 @@
 ---
 title: "/setting"
-contributors: ["BunnyNabbit \"Aon\""]
-summary: "Permite configurar preferências."
+contributors: [ "BunnyNabbit \"Aon\"" ]
+summary: "Allows for setting preferences."
 ---
 
 # /setting
 
-Uso: `/setting [nome da configuração] [valor]`
+Usage: `/setting [setting name] [value]`
 
-Permite configurar preferências.
+Allows for setting preferences.
 
-- `music` `[on/off]`: A música deve tocar?
-- `sounds` `[on/off]`: Os sons devem tocar?
-- `language` `[código do idioma]`: Qual idioma será usado nas mensagens do sistema?
+- `music` `[on/off]`: Should music play?
+- `sounds` `[on/off]`: Should sounds play?
+- `language` `[language code]`: What language is used by system messages?
   - `en`: English
   - `en-zhing`: Zhing-like English
-  - `es`: Español
-  - `pt-br`: Português Brasileiro
+  - `es`: Spanish
+  - `pt-br`: Brazilian Portuguese
