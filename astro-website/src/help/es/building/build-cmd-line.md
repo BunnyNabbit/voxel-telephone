@@ -1,6 +1,6 @@
 ---
 title: "/Line"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Creates a line between two points."
 image: "./line-output.webp"
 imageAlt: "Red line"
