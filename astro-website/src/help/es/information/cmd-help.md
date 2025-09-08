@@ -1,6 +1,6 @@
 ---
 title: "/help"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Lists help documentation and aliases (shortcuts) for a command, topic or category."
 ---
 
