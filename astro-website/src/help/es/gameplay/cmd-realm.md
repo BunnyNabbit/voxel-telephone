@@ -1,6 +1,6 @@
 ---
 title: "/realm"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Enters the personal realm view."
 ---
 
