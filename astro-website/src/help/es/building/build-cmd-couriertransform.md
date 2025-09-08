@@ -1,6 +1,6 @@
 ---
 title: "/CourierTransform"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Simulates the result of rough handling during transit."
 image: "./couriertransform-result.webp"
 imageAlt: "A damaged cardboard box."
