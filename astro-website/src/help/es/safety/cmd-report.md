@@ -1,6 +1,6 @@
 ---
 title: "/report"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Reports the current turn for moderation review."
 ---
 
