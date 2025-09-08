@@ -1,11 +1,11 @@
 ---
 title: "/place"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Coloca um bloco na posição do jogador."
 ---
 
 # /place
 
-Coloca um bloco na posição do jogador. O bloco que você está segurando será colocado.
+Coloca um bloco na posição do jogador. Coloca um bloco na posição do jogador.
 
 Aliases: `/pl`
