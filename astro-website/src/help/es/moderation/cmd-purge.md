@@ -1,6 +1,6 @@
 ---
 title: "/purge"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Purges the latest turn of a highlighted game in the view gallery."
 ---
 
