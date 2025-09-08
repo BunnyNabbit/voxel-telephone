@@ -1,6 +1,6 @@
 ---
 title: "/SphereSlow"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Creates a sphere from a center point and a radius."
 image: "./sphereslow-output.webp"
 imageAlt: "Red sphere"
