@@ -1,6 +1,6 @@
 ---
 title: "/PositionalTransform"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Transforma uma seleção. Pode ser usado para mover, copiar, espelhar ou girar uma seleção de blocos."
 image: "./positionaltransform-mirrored-dragons.webp"
 imageAlt: "Um dragão preto com olhos cianos e barriga branca sendo espelhado horizontalmente pela mão. O dragão está em forma bípede e uma mão está mais próxima do centro que a outra."
@@ -8,7 +8,7 @@ imageAlt: "Um dragão preto com olhos cianos e barriga branca sendo espelhado ho
 
 # /PositionalTransform
 
-Transforma uma seleção de blocos. Pode ser usado para mover, copiar, espelhar ou girar uma seleção de blocos. Com os parâmetros padrão, ele moverá uma seleção de blocos sem aplicar transformações adicionais.
+Transforma uma seleção de blocos. Pode ser usado para mover, copiar, espelhar ou girar uma seleção de blocos. Pode ser usado para mover, copiar, espelhar ou girar uma seleção de blocos.
 
 Formato do comando: `/positionaltransform &enum:mode &enum:rotation &enum:flipAxis position:positionStart position:positionEnd position:offsetPosition position:pastePosition`
 
@@ -23,7 +23,7 @@ O parâmetro `&enum:mode` é usado como modo base. Por padrão, é `move`:
 - `moveAir` Igual ao `move`, mas cola blocos de ar na área de destino.
 - `copyAir` Igual ao `copy`, mas cola blocos de ar na área de destino.
 
-## Giro
+## Spinning
 
 Uma seleção pode ser girada no sentido horário ou anti-horário usando o parâmetro `&enum:rotation`.
 
@@ -35,7 +35,7 @@ Exemplo: `/positionaltransform move clockwise`. Gira a seleção no sentido hor�
 
 ![Dois relógios lado a lado. O relógio da esquerda tem o ponteiro vermelho apontando para a direita e o da direita apontando para baixo.](./positionaltransform-clocks.webp)
 
-## Espelhamento
+## Flipping
 
 Exemplo: `/positionaltransform copy none x`. Copia e espelha uma seleção pelo eixo X.
 

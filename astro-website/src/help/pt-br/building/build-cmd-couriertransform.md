@@ -1,6 +1,6 @@
 ---
 title: "/CourierTransform"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Simula o resultado de um manuseio brusco durante o transporte."
 image: "./couriertransform-result.webp"
 imageAlt: "Uma caixa de papelão danificada."

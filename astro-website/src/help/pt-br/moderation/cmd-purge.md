@@ -1,6 +1,6 @@
 ---
 title: "/purge"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Remove o último turno de um jogo destacado na galeria."
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: "/main"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Teleporta o jogador para o hub ou sua base principal."
 ---
 

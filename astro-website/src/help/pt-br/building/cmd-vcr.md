@@ -1,6 +1,6 @@
 ---
 title: "/vcr"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Ativa o modo VCR em um nível."
 ---
 

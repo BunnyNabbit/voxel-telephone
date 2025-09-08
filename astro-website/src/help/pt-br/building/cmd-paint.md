@@ -1,6 +1,6 @@
 ---
 title: "/paint"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Ativa ou desativa o modo pintura."
 ---
 

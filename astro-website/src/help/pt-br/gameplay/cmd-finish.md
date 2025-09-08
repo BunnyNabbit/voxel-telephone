@@ -1,6 +1,6 @@
 ---
 title: "/finish"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Marca um turno como concluído e retorna ao hub."
 ---
 

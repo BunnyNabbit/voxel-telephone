@@ -5,4 +5,4 @@ noIndex: true
 
 # Louco
 
-Louco? Eu já fui louco uma vez. Me trancaram num quarto. Um quarto acolchoado. Um quarto acolchoado cheio de baratas. Um quarto acolchoado cheio de baratas de verdade. E baratas… me deixam louco.
+Louco? Eu já fui louco uma vez. Me trancaram num quarto. Um quarto acolchoado. A rubber room with rats. A rubber room with rubber rats. And rubber rats make me crazy

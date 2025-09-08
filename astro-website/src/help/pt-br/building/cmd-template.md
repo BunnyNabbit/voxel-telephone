@@ -1,6 +1,6 @@
 ---
 title: "/template"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Altera o template do nível."
 image: "./template-builder.webp"
 imageAlt: "Uma área com uma paleta de cores organizada em um cubo e linhas de eixo saindo de um canto."

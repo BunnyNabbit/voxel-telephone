@@ -1,6 +1,6 @@
 ---
 title: "/help"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Lista a documentação de ajuda e aliases (atalhos) para um comando, tópico ou categoria."
 ---
 
@@ -8,7 +8,7 @@ summary: "Lista a documentação de ajuda e aliases (atalhos) para um comando, t
 
 Uso: `/help <um comando, tópico ou categoria>`
 
-Lista a documentação de ajuda e aliases (atalhos) para um comando, tópico ou categoria. Se usado sem fornecer um argumento, será exibida uma lista de categorias e tópicos de comandos, junto com alguns comandos em destaque.
+Lista a documentação de ajuda e aliases (atalhos) para um comando, tópico ou categoria. Lista a documentação de ajuda e aliases (atalhos) para um comando, tópico ou categoria.
 
 Por exemplo, `/help vcr` exibirá a documentação de ajuda para o comando `/vcr`.
 

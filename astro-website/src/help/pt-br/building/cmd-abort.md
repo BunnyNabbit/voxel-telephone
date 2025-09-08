@@ -1,6 +1,6 @@
 ---
 title: "/abort"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Cancela operações interativas."
 ---
 
@@ -8,4 +8,4 @@ summary: "Cancela operações interativas."
 
 Usado para cancelar operações interativas, como comandos de construção ou desativação do modo VCR.
 
-Quando usado para cancelar o VCR, o nível retornará ao estado anterior à ativação do VCR. Nenhum estado será salvo neste caso, podendo ser usado para verificar com segurança o estado anterior de um nível.
+When used to cancel VCR. Quando usado para cancelar o VCR, o nível retornará ao estado anterior à ativação do VCR. Nenhum estado será salvo neste caso, podendo ser usado para verificar com segurança o estado anterior de um nível.

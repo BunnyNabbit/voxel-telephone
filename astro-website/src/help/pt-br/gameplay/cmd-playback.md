@@ -1,6 +1,6 @@
 ---
 title: "/playback"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Reproduz um conjunto de turnos na galeria."
 ---
 
