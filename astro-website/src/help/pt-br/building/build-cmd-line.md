@@ -1,6 +1,6 @@
 ---
 title: "/Line"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Cria uma linha entre dois pontos."
 image: "./line-output.webp"
 imageAlt: "Linha vermelha"
@@ -12,6 +12,6 @@ Cria uma linha entre dois pontos.
 
 ![Linha vermelha](./line-output.webp)
 
-Se nenhum argumento for fornecido, o bloco será inferido da sua mão atual e o servidor pedirá interativamente as posições dos blocos.
+Se nenhum argumento for fornecido, o bloco será inferido a partir do que você está segurando, e o servidor solicitará interativamente as posições dos blocos.
 
 Aliases: `l`, `/ln`
