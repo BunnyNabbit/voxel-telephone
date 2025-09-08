@@ -1,13 +1,13 @@
 ---
 title: "/diverge"
-contributors: ["BunnyNabbit \"Aon\""]
-summary: "Cria uma nova linha do tempo do jogo a partir do turno destacado em /view."
+contributors: [ "BunnyNabbit \"Aon\"" ]
+summary: "Creates a new game timeline branching off from the highlighted turn in /view."
 ---
 
 # /diverge
 
-Cria uma nova linha do tempo do jogo a partir do turno destacado em `/view`.
+Creates a new game timeline branching off from the highlighted turn in `/view`.
 
-Este comando está disponível apenas para moderadores.
+This command is only available for moderators.
 
 Aliases: `/fork`
