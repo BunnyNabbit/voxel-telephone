@@ -1,11 +1,11 @@
 ---
 title: "/repeat"
-contributors: ["BunnyNabbit \"Aon\""]
-summary: "Ativa ou desativa o modo repetição. O último comando de construção será repetido interativamente."
+contributors: [ "BunnyNabbit \"Aon\"" ]
+summary: "Toggles repeat mode. The last build command will be interactively repeated."
 ---
 
-# /repeat
+# /rewind
 
-Ativa ou desativa o modo repetição. Quando o modo repetição está ativado, o último comando de construção será repetido interativamente.
+Toggles repeat mode. When repeat mode is on, the last build command will be interactively repeated.
 
 Aliases: `/static`, `/toggle`, `/t`
