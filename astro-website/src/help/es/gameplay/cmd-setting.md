@@ -1,6 +1,6 @@
 ---
 title: "/setting"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Allows for setting preferences."
 ---
 
