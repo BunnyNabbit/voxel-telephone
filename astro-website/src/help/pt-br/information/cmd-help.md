@@ -1,15 +1,15 @@
 ---
 title: "/help"
-contributors: ["BunnyNabbit \"Aon\""]
-summary: "Lista a documentação de ajuda e aliases (atalhos) para um comando, tópico ou categoria."
+contributors: [ "BunnyNabbit \"Aon\"" ]
+summary: "Lists help documentation and aliases (shortcuts) for a command, topic or category."
 ---
 
 # /help
 
-Uso: `/help <um comando, tópico ou categoria>`
+Usage: `/help <a command, topic or category>`
 
-Lista a documentação de ajuda e aliases (atalhos) para um comando, tópico ou categoria. Se usado sem fornecer um argumento, será exibida uma lista de categorias e tópicos de comandos, junto com alguns comandos em destaque.
+Lists help documentation and aliases (shortcuts) for a command, topic or category. If used without an argument provided, a list of command categories and topics is listed along with a few featured commands.
 
-Por exemplo, `/help vcr` exibirá a documentação de ajuda para o comando `/vcr`.
+For example, `/help vcr` will bring up the help documentation for the `/vcr` command.
 
-Na documentação de ajuda, você pode notar `<colchetes angulares>` e `[colchetes retos]`. Essa notação ajuda a descrever os argumentos de um comando e se esses argumentos são opcionais ou obrigatórios. `<colchetes angulares>` indicam argumento opcional, enquanto `[colchetes retos]` indicam argumentos obrigatórios.
+Throughout help documentation, you may notice `<angled brackets>` and `[square brackets]`. This annotation helps describe a command's argument and if that argument is optional or not. `<angled brackets>` describe an optional argument, while `[square brackets]` are required arguments.
