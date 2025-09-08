@@ -1,6 +1,6 @@
 ---
 title: "/Cuboid"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Creates a cuboid from two points."
 image: "./cuboid-output.webp"
 imageAlt: "Red solid cuboid"
