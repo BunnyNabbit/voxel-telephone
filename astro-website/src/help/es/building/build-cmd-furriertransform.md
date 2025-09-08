@@ -1,6 +1,6 @@
 ---
 title: "/FurrierTransform"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Adds extra blocks within a selection to make it look fluffier."
 image: "./furriertransform-sheep.webp"
 imageAlt: "A fluffy sheep."
