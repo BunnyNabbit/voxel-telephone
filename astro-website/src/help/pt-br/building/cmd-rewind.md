@@ -1,15 +1,15 @@
 ---
 title: "/rewind"
-contributors: ["BunnyNabbit \"Aon\""]
-summary: "Reverte um número de ações realizadas em um nível."
+contributors: [ "BunnyNabbit \"Aon\"" ]
+summary: "Reverts a number of actions done to a level."
 ---
 
 # /rewind
 
-Uso: `/rewind <ações>`
+Usage: `/rewind <actions>`
 
-Pode ser usado se o VCR estiver ativado com `/vcr`.
+Usable if VCR is currently enabled with `/vcr`.
 
-Reverte um número de ações realizadas em um nível. Se nenhum argumento for fornecido, apenas uma ação será revertida.
+Reverts a number of actions done to a level. If no argument is given, only one action will be reverted
 
 Aliases: `/rw` `/undo`
