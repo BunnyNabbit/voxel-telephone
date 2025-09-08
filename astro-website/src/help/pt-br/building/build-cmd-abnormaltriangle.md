@@ -1,17 +1,17 @@
 ---
 title: "/AbnormalTriangle"
-contributors: ["BunnyNabbit \"Aon\""]
-summary: "Cria um triângulo a partir de três pontos."
+contributors: [ "BunnyNabbit \"Aon\"" ]
+summary: "Creates a triangle from three points."
 image: "./triangle-output.webp"
-imageAlt: "Triângulo vermelho."
+imageAlt: "Red triangle"
 ---
 
 # /AbnormalTriangle
 
-Cria um triângulo a partir de três pontos. O triângulo resultante pode ter buracos.
+Makes a triangle from three points. The resulting triangle may have holes.
 
-![Triângulo vermelho.](./triangle-output.webp)
+![Red triangle](./triangle-output.webp)
 
-Se nenhum argumento for fornecido, o bloco será inferido a partir do que você está segurando, e o servidor solicitará interativamente as posições dos blocos.
+If no arguments are added, block is inferred from your current hand and the server will ask for the block positions interactively.
 
 Aliases: `/triangle`, `/tri`
