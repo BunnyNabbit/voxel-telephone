@@ -1,17 +1,17 @@
 ---
-title: "Onde estão os níveis?"
-contributors: ["BunnyNabbit \"Aon\""]
+title: "Where are levels?"
+contributors: [ "BunnyNabbit \"Aon\"" ]
 noIndex: true
 ---
 
-# Onde estão os níveis?
+# Where are levels?
 
-Voxel Telephone não tem uma lista de níveis, invez disso, todos os modos de jogo estão no Nível hub `/main` como portais.
+Voxel Telephone does not have a list of levels. Instead, all game modes are in the `/main` level hub as portals.
 
-Entre nos portais localizados no hub para entrar em seu modo de jogo.
+Walk into the portals located in the hub to enter its game mode.
 
-Alternativamente, use os comandos a seguir para entrar em um modo de jogo.
+Alternatively, use the following commands to enter a game mode.
 
-- `/play`: Entrar em um jogo aleatorio.
-- `/view`: Entrar na galeria.
-- `/main`: Entrar no hub.
+- `/play`: Enter a random game.
+- `/view`: Enter the view gallery.
+- `/main`: Enter the hub.
