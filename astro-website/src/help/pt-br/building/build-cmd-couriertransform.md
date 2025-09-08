@@ -1,29 +1,29 @@
 ---
 title: "/CourierTransform"
-contributors: ["BunnyNabbit \"Aon\""]
-summary: "Simula o resultado de um manuseio brusco durante o transporte."
+contributors: [ "BunnyNabbit \"Aon\"" ]
+summary: "Simulates the result of rough handling during transit."
 image: "./couriertransform-result.webp"
-imageAlt: "Uma caixa de papelão danificada."
+imageAlt: "A damaged cardboard box."
 ---
 
 # /CourierTransform
 
-Transforma uma seleção de blocos de maneira que pareça ter sido danificada durante o transporte.
+Transforms a selection of blocks in a way which looks like it was damaged during transit.
 
-![Uma caixa de papelão danificada.](./couriertransform-result.webp)
+![A damaged cardboard box.](./couriertransform-result.webp)
 
 Aliases: `/courier`
 
-## Comportamento
+## Behavior
 
-Vários passos são realizados para simular o resultado de manuseio bruto de um objeto durante o transporte.
+Several steps are taken to simulate the result of roughly handling an object during transit.
 
-### Destruição e gravidade
+### Destroying and gravity
 
-Este passo é realizado primeiro. Blocos dentro da seleção têm chance de serem danificados. Quando um bloco é danificado, ele cai para o voxel mais baixo disponível ou é substituído pelo bloco que você está segurando.
+This step is first taken. Blocks within the selection have a chance to be damaged. When a block is damaged, it either falls to the lowest voxel available or get replaced by the held block.
 
-Um bloco é afetado pela gravidade apenas por 32 blocos. Se um bloco em queda não encontrar um bloco adequado para aterrissar, ele pode flutuar.
+A block is only affected by gravity for 32 blocks. If a falling block cannot find a suitable block to land on, it may float.
 
-### Implosão
+### Imploding
 
-Este passo é realizado por último. De cada um dos 8 cantos, os blocos têm chance de serem trazidos mais próximos do centro da seleção.
+This step is taken last. From each of the 8 corners, blocks have a chance to be brought closer to the selection's center.
