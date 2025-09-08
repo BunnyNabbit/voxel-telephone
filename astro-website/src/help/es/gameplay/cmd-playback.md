@@ -1,6 +1,6 @@
 ---
 title: "/playback"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Replays a set of turns in the view gallery."
 ---
 
