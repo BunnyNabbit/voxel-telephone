@@ -8,7 +8,7 @@ imageAlt: "A black dragon with cyan eyes and white underbelly is being mirrored 
 
 # /PositionalTransform
 
-Transforms a selection of blocks. It can be used for moving, copying, flipping or spinning a selection of blocks. It can be used for moving, copying, flipping or spinning a selection of blocks.
+Transforms a selection of blocks. It can be used for moving, copying, flipping or spinning a selection of blocks. With default parameters, it will move a selection of blocks with no additional transformations applied.
 
 Command layout: `/positionaltransform &enum:mode &enum:rotation &enum:flipAxis position:positionStart position:positionEnd position:offsetPosition position:pastePosition`
 
