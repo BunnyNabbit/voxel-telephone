@@ -1,0 +1,20 @@
+---
+title: "/vcr"
+contributors: [ "BunnyNabbit \"Aon\"" ]
+summary: "Enables VCR mode in a level."
+---
+
+# /vcr
+
+Enables VCR mode in a level, allowing for previous level states to be viewed and switched to.
+
+Block changes and commands are always saved and may be reverted if needed.
+
+If VCR is enabled, the commands for rewinding (`/rewind <actions>`) and fast-forwarding (`/fastforward <actions>`) become usable. Rewinding and fast-forwarding only affects the preview and does not affect the level state until it has been committed with the `/commit` command.
+
+## Related commands
+
+- `/rewind <actions>` - undos actions.
+- `/fastforward <actions>` - redos rewinded actions.
+- `/commit` - loads current state seen in the VCR preview. will override change record.
+- `/abort` - aborts VCR preview, loading state as it was before enabling VCR.
