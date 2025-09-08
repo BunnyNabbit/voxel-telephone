@@ -1,6 +1,6 @@
 ---
 title: "/commit"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Salva o estado atual do VCR como estado do nível."
 ---
 

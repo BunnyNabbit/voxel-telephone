@@ -1,6 +1,6 @@
 ---
 title: "/repeat"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Ativa ou desativa o modo repetição. O último comando de construção será repetido interativamente."
 ---
 

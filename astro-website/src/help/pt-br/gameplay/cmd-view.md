@@ -1,6 +1,6 @@
 ---
 title: "/view"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Entra na galeria de jogos finalizados e em andamento."
 ---
 

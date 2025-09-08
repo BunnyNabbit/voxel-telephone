@@ -1,6 +1,6 @@
 ---
 title: "Onde estão os ranks?"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 noIndex: true
 ---
 

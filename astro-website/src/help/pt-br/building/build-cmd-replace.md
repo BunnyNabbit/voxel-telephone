@@ -1,6 +1,6 @@
 ---
 title: "/Replace"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Substitui blocos em um cuboide por outro tipo de bloco."
 ---
 
