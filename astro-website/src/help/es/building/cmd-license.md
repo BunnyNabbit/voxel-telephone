@@ -1,6 +1,6 @@
 ---
 title: "/license"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Adds a license to a build and publishes it as a model."
 ---
 
