@@ -1,47 +1,47 @@
 ---
 title: "/PositionalTransform"
-contributors: ["BunnyNabbit \"Aon\""]
-summary: "Transforma uma seleção. Pode ser usado para mover, copiar, espelhar ou girar uma seleção de blocos."
+contributors: [ "BunnyNabbit \"Aon\"" ]
+summary: "Transforms a selection. It can be used for moving, copying, flipping or spinning a selection of blocks."
 image: "./positionaltransform-mirrored-dragons.webp"
-imageAlt: "Um dragão preto com olhos cianos e barriga branca sendo espelhado horizontalmente pela mão. O dragão está em forma bípede e uma mão está mais próxima do centro que a outra."
+imageAlt: "A black dragon with cyan eyes and white underbelly is being mirrored horizontally by his hand. The dragon is in a bipedal form and has one hand lifted closer to the center than the other."
 ---
 
 # /PositionalTransform
 
-Transforma uma seleção de blocos. Pode ser usado para mover, copiar, espelhar ou girar uma seleção de blocos. Com os parâmetros padrão, ele moverá uma seleção de blocos sem aplicar transformações adicionais.
+Transforms a selection of blocks. It can be used for moving, copying, flipping or spinning a selection of blocks. With default parameters, it will move a selection of blocks with no additional transformations applied.
 
-Formato do comando: `/positionaltransform &enum:mode &enum:rotation &enum:flipAxis position:positionStart position:positionEnd position:offsetPosition position:pastePosition`
+Command layout: `/positionaltransform &enum:mode &enum:rotation &enum:flipAxis position:positionStart position:positionEnd position:offsetPosition position:pastePosition`
 
 Aliases: `/move`
 
-## Modos
+## Modes
 
-O parâmetro `&enum:mode` é usado como modo base. Por padrão, é `move`:
+The `&enum:mode` parameter is used as the base mode. It is `move` by default,
 
-- `move` Move a seleção limpando a área com ar.
-- `copy` Preserva a seleção original.
-- `moveAir` Igual ao `move`, mas cola blocos de ar na área de destino.
-- `copyAir` Igual ao `copy`, mas cola blocos de ar na área de destino.
+- `move` Moves the selection by clearing the selection with air.
+- `copy` Preserves the original selection.
+- `moveAir` Same as `move` but pastes air blocks over pasting area.
+- `copyAir` Same as `copy` but pastes air blocks over pasting area.
 
-## Giro
+## Spinning
 
-Uma seleção pode ser girada no sentido horário ou anti-horário usando o parâmetro `&enum:rotation`.
+A selection can be spun clockwise or counterclockwise using the `&enum:rotation` parameter.
 
-- `none` Nenhuma rotação aplicada.
-- `clockwise` Sentido horário.
-- `counterclockwise` Sentido anti-horário.
+- `none` No rotation transformation applied.
+- `clockwise`
+- `counterclockwise`
 
-Exemplo: `/positionaltransform move clockwise`. Gira a seleção no sentido horário.
+Example: `/positionaltransform move clockwise`. Spins the selection clockwise.
 
-![Dois relógios lado a lado. O relógio da esquerda tem o ponteiro vermelho apontando para a direita e o da direita apontando para baixo.](./positionaltransform-clocks.webp)
+![Two clocks are arranged side-by-side. The clock on the left has its red hand pointing to the right and the clock on the right is pointing down.](./positionaltransform-clocks.webp)
 
-## Espelhamento
+## Flipping
 
-Exemplo: `/positionaltransform copy none x`. Copia e espelha uma seleção pelo eixo X.
+Example: `/positionaltransform copy none x`. Copies and flips a selection by its X axis.
 
-![Um dragão preto com olhos cianos e barriga branca sendo espelhado horizontalmente pela mão. O dragão está em forma bípede e uma mão está mais próxima do centro que a outra.](./positionaltransform-mirrored-dragons.webp)
+![A black dragon with cyan eyes and white underbelly is being mirrored horizontally by his hand. The dragon is in a bipedal form and has one hand lifted closer to the center than the other.](./positionaltransform-mirrored-dragons.webp)
 
-- `none` Nenhum espelhamento aplicado.
-- `x` Espelhar pelo eixo X.
-- `y` Espelhar pelo eixo Y.
-- `z` Espelhar pelo eixo Z.
+- `none` No flip transformation applied.
+- `x` Flip by x axis.
+- `y` Flip by y axis.
+- `z` Flip by z axis.
