@@ -1,12 +1,11 @@
 ---
 title: "/report"
-contributors: ["BunnyNabbit \"Aon\""]
-summary: "Reporta o turno atual para revisão da moderação."
+contributors: [ "BunnyNabbit \"Aon\"" ]
+summary: "Reports the current turn for moderation review."
 ---
 
 # /report
 
-Reporta o turno atual para revisão da moderação. Além disso, o jogo associado deixará de ser jogado até que o reporte seja analisado.
+Reports the current turn for moderation review. Additionally, the associated game will stop being played until the report has been acknowledged.
 
-O uso indevido deste comando pode resultar em punição pela moderação. Revise `/rules` para ver quais conteúdos não são permitidos.
- 
+Abuse of this command may result in moderation punishment. Please review `/rules` to see which content isn't allowed.
