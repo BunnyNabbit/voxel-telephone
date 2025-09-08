@@ -1,6 +1,6 @@
 ---
 title: "/place"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Places a block at your player position."
 ---
 
