@@ -1,6 +1,6 @@
 ---
 title: "/Cuboid"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Cria um cuboide a partir de dois pontos."
 image: "./cuboid-output.webp"
 imageAlt: "Cuboide sólido vermelho"
@@ -12,7 +12,7 @@ Cria um cuboide a partir de duas posições.
 
 ![Cuboide sólido vermelho](./cuboid-output.webp)
 
-Se nenhum argumento for fornecido, o bloco será inferido da sua mão atual e o servidor pedirá interativamente as posições dos blocos.
+Se nenhum argumento for fornecido, o bloco será inferido a partir do que você está segurando, e o servidor solicitará interativamente as posições dos blocos.
 
 Aliases: `/z`
 
@@ -20,7 +20,7 @@ Aliases: `/z`
 
 Cuboides podem ser criados com modificadores. Estes afetam a aparência do cuboide resultante. `Sólido` é o modo padrão.
 
-Para usar um modo, o comando deve ser emitido com um ID de bloco e o nome do modo, por exemplo: `/cuboid 9 hollow` para criar um cuboide vermelho oco. Se `hand` for fornecido como ID do bloco, será usado o bloco que você está segurando.
+Para usar um modo, o comando deve ser emitido com um ID de bloco e o nome do modo, por exemplo: `/cuboid 9 hollow` para criar um cuboide vermelho oco. i.e.: `/cuboid 9 hollow` to make a red hollow cuboid. Se `hand` for fornecido como ID do bloco, será usado o bloco que você está segurando.
 
 ### Hollow (Oco)
 
