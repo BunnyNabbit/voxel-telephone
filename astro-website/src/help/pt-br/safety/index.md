@@ -1,5 +1,5 @@
 ---
-title: "Segurança"
+title: "Safety"
 ---
 
-# Segurança
+# Safety
