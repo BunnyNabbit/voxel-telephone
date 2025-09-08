@@ -1,6 +1,6 @@
 ---
 title: "/license"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Adiciona uma licença a uma construção e publica como modelo."
 ---
 
