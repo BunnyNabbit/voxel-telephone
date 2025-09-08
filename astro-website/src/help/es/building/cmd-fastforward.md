@@ -1,6 +1,6 @@
 ---
 title: "/fastforward"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Restores actions reverted by /rewind."
 ---
 
