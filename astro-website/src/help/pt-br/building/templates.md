@@ -1,27 +1,27 @@
 ---
 title: "Templates"
-contributors: ["BunnyNabbit \"Aon\""]
-summary: "Uma lista de vários templates que podem ser usados durante a construção."
+contributors: [ "BunnyNabbit \"Aon\"" ]
+summary: "A list of various templates that can be used while building."
 image: "./template-builder.webp"
-imageAlt: "Uma área com uma paleta de cores organizada em um cubo e linhas de eixo saindo de um canto."
+imageAlt: "A space with a color palette arranged in a cube and axis lines pointing out from a corner."
 ---
 
 # Templates
 
-## builder (construtor)
+## builder
 
-![Uma área com uma paleta de cores organizada em um cubo e linhas de eixo saindo de um canto.](./template-builder.webp)
+![A space with a color palette arranged in a cube and axis lines pointing out from a corner.](./template-builder.webp)
 
-Usado como template padrão para construção, incluindo paleta de cores e linhas de eixo.
+Used as the default template for building which includes a palette and axis lines.
 
-## empty (vazio)
+## empty
 
-![Uma área vazia que apresenta apenas o chão.](./template-empty.webp)
+![An empty space which only features a floor.](./template-empty.webp)
 
-Um template vazio. Usado em turnos de descrição e no nível hub. 
+An empty template. Used by describe turns and the hub level.
 
-## animation (animação)
-   
-![Uma área com salas transparentes organizadas e empilhadas em forma de cubo.](./template-animation.webp)
+## animation
 
-Um template usado para criar animações. Veja `/help animation`. 
+![A space with transparent rooms arranged and stacked as a cube.](./template-animation.webp)
+
+A template used for creating animations. See `/help animation`.
