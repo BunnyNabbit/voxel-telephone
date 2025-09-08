@@ -10,7 +10,7 @@ imageAlt: "Triângulo vermelho."
 
 Cria um triângulo a partir de três pontos. O triângulo resultante pode ter buracos.
 
-![Triângulo vermelho.](./triangle-output.webp)
+![Red triangle.](./triangle-output.webp)
 
 Se nenhum argumento for fornecido, o bloco será inferido a partir do que você está segurando, e o servidor solicitará interativamente as posições dos blocos.
 
