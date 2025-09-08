@@ -1,8 +1,8 @@
 ---
-title: "Sem jogos"
+title: "Out of games"
 noIndex: true
 ---
 
-Ooops. Parece que ficamos sem jogos! Que tal isso: você pode criar um novo prompt do zero. Vá em frente, use `/create` para iniciar o processo de criação de um prompt.
+Whoops. Looks like we ran out of games! How about this, you can create a new prompt from nothing. Go ahead, use `/create` to start the process of making a prompt.
 
-Pense em algo mundano ou imaginativo. A escolha é totalmente sua.
+Think of something mundane or imaginative. It is entirely up to you.
