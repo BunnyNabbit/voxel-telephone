@@ -1,5 +1,5 @@
 ---
-title: "Moderação"
+title: "Moderation"
 ---
 
-# Moderação
+# Moderation
