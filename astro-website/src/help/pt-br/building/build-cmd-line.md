@@ -1,17 +1,17 @@
 ---
 title: "/Line"
-contributors: ["BunnyNabbit \"Aon\""]
-summary: "Cria uma linha entre dois pontos."
+contributors: [ "BunnyNabbit \"Aon\"" ]
+summary: "Creates a line between two points."
 image: "./line-output.webp"
-imageAlt: "Linha vermelha"
+imageAlt: "Red line"
 ---
 
 # /Line
 
-Cria uma linha entre dois pontos.
+Makes a line between two points.
 
-![Linha vermelha](./line-output.webp)
+![Red line](./line-output.webp)
 
-Se nenhum argumento for fornecido, o bloco será inferido da sua mão atual e o servidor pedirá interativamente as posições dos blocos.
+If no arguments are added, block is inferred from your current hand and the server will ask for the block positions interactively.
 
 Aliases: `l`, `/ln`
