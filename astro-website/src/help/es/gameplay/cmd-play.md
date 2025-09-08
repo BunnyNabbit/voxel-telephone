@@ -1,6 +1,6 @@
 ---
 title: "/play"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Enters a new game."
 ---
 
