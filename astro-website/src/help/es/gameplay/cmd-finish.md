@@ -1,6 +1,6 @@
 ---
 title: "/finish"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Marks a turn as finished and exits back to hub."
 ---
 
