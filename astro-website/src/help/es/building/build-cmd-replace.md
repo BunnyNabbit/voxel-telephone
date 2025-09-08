@@ -1,6 +1,6 @@
 ---
 title: "/Replace"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Replaces blocks in a cuboid with another block type."
 ---
 
