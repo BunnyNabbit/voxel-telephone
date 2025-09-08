@@ -1,8 +1,8 @@
 ---
-title: Louco
+title: Crazy
 noIndex: true
 ---
 
-# Louco
+# Crazy
 
-Louco? Eu já fui louco uma vez. Me trancaram num quarto. Um quarto acolchoado. Um quarto acolchoado cheio de baratas. Um quarto acolchoado cheio de baratas de verdade. E baratas… me deixam louco.
+Crazy? I was crazy once. They locked me in a room. A rubber room. A rubber room with rats. A rubber room with rubber rats. And rubber rats make me crazy
