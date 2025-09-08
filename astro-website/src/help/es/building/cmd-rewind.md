@@ -1,6 +1,6 @@
 ---
 title: "/rewind"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Reverts a number of actions done to a level."
 ---
 
