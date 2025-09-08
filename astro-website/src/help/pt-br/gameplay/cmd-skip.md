@@ -1,6 +1,6 @@
 ---
 title: "/skip"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Pula o turno ou tutorial atual."
 ---
 
