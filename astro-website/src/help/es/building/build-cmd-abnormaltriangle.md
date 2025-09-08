@@ -1,6 +1,6 @@
 ---
 title: "/AbnormalTriangle"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Creates a triangle from three points."
 image: "./triangle-output.webp"
 imageAlt: "Red triangle"
