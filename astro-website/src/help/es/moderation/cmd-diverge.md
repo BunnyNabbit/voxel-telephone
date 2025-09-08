@@ -1,6 +1,6 @@
 ---
 title: "/diverge"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Creates a new game timeline branching off from the highlighted turn in /view."
 ---
 
