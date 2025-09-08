@@ -1,6 +1,6 @@
 ---
 title: "Game"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Voxel Telephone is a game based on the \"telephone game\" which players build a given prompt and describe builds."
 ---
 
