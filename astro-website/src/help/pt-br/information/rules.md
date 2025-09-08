@@ -1,6 +1,6 @@
 ---
 title: "Regras"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "As regras de Voxel Telephone"
 ---
 
