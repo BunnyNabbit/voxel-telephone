@@ -1,11 +1,11 @@
 ---
 title: "/finish"
-contributors: ["BunnyNabbit \"Aon\""]
-summary: "Marca um turno como concluído e retorna ao hub."
+contributors: [ "BunnyNabbit \"Aon\"" ]
+summary: "Marks a turn as finished and exits back to hub."
 ---
 
 # /finish
 
-Marca um turno como concluído e retorna ao hub. O sistema também evitará atribuir turnos do jogo associado a você.
+Marks a turn as finished and exits back to hub. Turn assignment will also avoid from giving turns to you from its associated game.
 
-Para não submeter seu trabalho como final, use `/skip` para pular o turno.
+To avoid submitting your work as final, use `/skip` to pass your turn.
