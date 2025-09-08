@@ -1,6 +1,6 @@
 ---
 title: "/PositionalTransform"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Transforms a selection. It can be used for moving, copying, flipping or spinning a selection of blocks."
 image: "./positionaltransform-mirrored-dragons.webp"
 imageAlt: "A black dragon with cyan eyes and white underbelly is being mirrored horizontally by his hand. The dragon is in a bipedal form and has one hand lifted closer to the center than the other."
@@ -8,7 +8,7 @@ imageAlt: "A black dragon with cyan eyes and white underbelly is being mirrored 
 
 # /PositionalTransform
 
-Transforms a selection of blocks. It can be used for moving, copying, flipping or spinning a selection of blocks. With default parameters, it will move a selection of blocks with no additional transformations applied.
+Transforms a selection of blocks. It can be used for moving, copying, flipping or spinning a selection of blocks. It can be used for moving, copying, flipping or spinning a selection of blocks.
 
 Command layout: `/positionaltransform &enum:mode &enum:rotation &enum:flipAxis position:positionStart position:positionEnd position:offsetPosition position:pastePosition`
 
