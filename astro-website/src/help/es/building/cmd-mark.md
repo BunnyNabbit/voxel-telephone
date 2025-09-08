@@ -1,6 +1,6 @@
 ---
 title: "/mark"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Marks your player position for interactive commands."
 ---
 
