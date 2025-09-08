@@ -1,23 +1,23 @@
 ---
 title: "/FurrierTransform"
-contributors: ["BunnyNabbit \"Aon\""]
-summary: "Adiciona blocos extras dentro de uma seleção para deixá-la mais fofinha."
+contributors: [ "BunnyNabbit \"Aon\"" ]
+summary: "Adds extra blocks within a selection to make it look fluffier."
 image: "./furriertransform-sheep.webp"
-imageAlt: "Uma ovelha fofinha."
+imageAlt: "A fluffy sheep."
 ---
 
 # /FurrierTransform
 
-Adiciona blocos extras dentro de uma seleção para deixá-la mais fofinha.
+Adds extra blocks within a selection to make it look fluffier.
 
-![Uma ovelha fofinha.](./furriertransform-sheep.webp)
+![A fluffy sheep.](./furriertransform-sheep.webp)
 
-Formato do comando: `/furriertransform &block:block position:position1 position:position2`
+Command layout: `/furriertransform &block:block position:position1 position:position2`
 
 Aliases: `/furrier`, `/fur`
 
-## Parâmetros
+## Parameters
 
 ### &block:block
 
-O parâmetro `&block:block` define o tipo de bloco criado quando o "pelo" cresce. Se for ar, o bloco será derivado do bloco sobre o qual o pelo está sendo adicionado.
+The `&block:block` parameter is the block type created when fur grows. If it's air then the block will be derived from the block used to grow fur on.
