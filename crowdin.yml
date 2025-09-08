@@ -1,0 +1,5 @@
+files:
+  - source: /astro-website/src/help/en/**/*.md
+    translation: /astro-website/src/help/%locale%/**/%original_file_name%
+  - source: /class/strings/languages/en.json
+    translation: /class/strings/languages/%locale%.json
