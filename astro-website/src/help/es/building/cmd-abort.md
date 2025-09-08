@@ -1,6 +1,6 @@
 ---
 title: "/abort"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Cancels interactive operations."
 ---
 
