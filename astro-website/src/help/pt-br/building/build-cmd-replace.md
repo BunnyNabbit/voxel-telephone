@@ -1,19 +1,19 @@
 ---
 title: "/Replace"
-contributors: ["BunnyNabbit \"Aon\""]
-summary: "Substitui blocos em um cuboide por outro tipo de bloco."
+contributors: [ "BunnyNabbit \"Aon\"" ]
+summary: "Replaces blocks in a cuboid with another block type."
 ---
 
 # /Replace
 
-Substitui blocos em um cuboide por outro tipo de bloco.
+Replaces blocks in a cuboid with another block type.
 
-Se nenhum argumento for fornecido, o bloco a ser substituído será inferido da sua mão atual. As posições serão solicitadas primeiro e o bloco de substituição será solicitado por último.
+If no arguments are added, the block to replace is inferred from your current hand. Positions will be asked first and the replacement block is asked last.
 
-Formato: `block:findBlock position:position1 position:position2 block:replacementBlock`
+Layout: `block:findBlock position:position1 position:position2 block:replacementBlock`
 
 Aliases: `/r`
 
-## Exemplos
+## Examples
 
-- `/replace 0` para substituir blocos de ar.
+- `/replace 0` to replace air blocks.
