@@ -1,6 +1,6 @@
 ---
 title: "/view"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Enters the view gallery of finished and ongoing games."
 ---
 
