@@ -1,11 +1,11 @@
 ---
 title: "/paint"
-contributors: ["BunnyNabbit \"Aon\""]
-summary: "Ativa ou desativa o modo pintura."
+contributors: [ "BunnyNabbit \"Aon\"" ]
+summary: "Toggles paint mode."
 ---
 
 # /paint
 
-Ativa ou desativa o modo pintura. Ao tentar destruir blocos, o bloco será substituído pelo que você está segurando.
+Toggles paint mode. Attempting to destroy blocks will instead replace that block with the block on hand
 
 Aliases: `/p`
