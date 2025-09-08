@@ -1,19 +1,19 @@
 ---
 title: "/animation"
-contributors: ["BunnyNabbit \"Aon\""]
-summary: "Fornece uma ferramenta básica para explorar a ilusão visual de movimento."
+contributors: [ "BunnyNabbit \"Aon\"" ]
+summary: "Provides a basic tool for exploiting a visual illusion of motion."
 ---
 
 # /animation
 
-Uso: `/animation [direção da travessia]`
+Usage: `/animation [traversal direction]`
 
-Quando invocado com as direções `next` ou `previous`, o jogador é teleportado de sua posição para uma área diferente chamada "quadro".
+When invoked with the directions `next` or `previous`, the player is teleported away from their position to a different area called a "frame".
 
-Este comando só pode ser usado em um realm.
+This command can only be called in a realm.
 
-## Quadros
+## Frames
 
-Cada quadro é um volume de 64x64x64 e são organizados e empilhados de forma a criar 64 quadros em um volume de 256x256x256 do realm. Isso é melhor visualizado com o comando `/template animation`, que é um template de salas ocas otimizadas para este comando.
+Each frame is a 64x64x64 volume and are arranged and stacked in a way which creates 64 frames in a 256x256x256 realm volume. This is better visualized with the `/template animation` command which is a template of hollow rooms optimized for this command.
 
-Os quadros para os quais o jogador é teleportado são ordenados por XZY. Se não houver mais quadros acessíveis, o último quadro no extremo oposto da travessia será usado.
+The frames which the player teleport to are ordered by XZY. If no more frames can be accessed, the last frame on the opposite traversal end will be used.
