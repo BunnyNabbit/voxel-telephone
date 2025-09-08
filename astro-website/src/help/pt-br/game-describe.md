@@ -1,15 +1,15 @@
 ---
-title: "Descreva o que é esta construção"
+title: "Describe what this build is"
 noIndex: true
 ---
 
-# Descreva o que é esta construção
+# Describe what this build is
 
-- Não comente sobre a qualidade. Ex.: "gato mal construído". Descreva como você vê.
-- Descreva como você interpreta a construção. Não desvie dos jogos de propósito!
+- Do not comment on the quality. i.e: "poorly built cat". Describe as you see it.'
+- Describe as you interpret the build. Do not intentionally derail games!\`
 
-Digite sua descrição no chat.
+Enter your description in chat.
 
-Para pular, use `/skip`.
+To skip, use `/skip`.
 
-Use `/report` se a construção for inapropriada.
+Use `/report` if the build is inappropriate.
