@@ -1,11 +1,11 @@
 ---
 title: "/main"
-contributors: ["BunnyNabbit \"Aon\""]
-summary: "Teleporta o jogador para o hub ou sua base principal."
+contributors: [ "BunnyNabbit \"Aon\"" ]
+summary: "Teleports the player to the hub level or their homebase."
 ---
 
 # /main
 
-Teleporta o jogador para o hub ou sua base principal.
+Teleports the player to the hub level or their homebase.
 
 Aliases: `/hub`, `/spawn`, `/h`, `/wmain`, `/worldmain`
