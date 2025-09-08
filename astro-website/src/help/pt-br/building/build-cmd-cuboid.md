@@ -1,41 +1,41 @@
 ---
 title: "/Cuboid"
-contributors: ["BunnyNabbit \"Aon\""]
-summary: "Cria um cuboide a partir de dois pontos."
+contributors: [ "BunnyNabbit \"Aon\"" ]
+summary: "Creates a cuboid from two points."
 image: "./cuboid-output.webp"
-imageAlt: "Cuboide sólido vermelho"
+imageAlt: "Red solid cuboid"
 ---
 
 # /Cuboid
 
-Cria um cuboide a partir de duas posições.
+Makes a cuboid on two positions.
 
-![Cuboide sólido vermelho](./cuboid-output.webp)
+![Red solid cuboid](./cuboid-output.webp)
 
-Se nenhum argumento for fornecido, o bloco será inferido da sua mão atual e o servidor pedirá interativamente as posições dos blocos.
+If no arguments are added, block is inferred from your current hand and the server will ask for the block positions interactively.
 
 Aliases: `/z`
 
-## Modos
+## Modes
 
-Cuboides podem ser criados com modificadores. Estes afetam a aparência do cuboide resultante. `Sólido` é o modo padrão.
+Cuboids can created with modifiers. These affect how the resulting cuboid looks. `Solid` is the default mode.
 
-Para usar um modo, o comando deve ser emitido com um ID de bloco e o nome do modo, por exemplo: `/cuboid 9 hollow` para criar um cuboide vermelho oco. Se `hand` for fornecido como ID do bloco, será usado o bloco que você está segurando.
+To use a mode, the command must be issued with a block ID and the mode's name. i.e.: `/cuboid 9 hollow` to make a red hollow cuboid. If `hand` is given for the block ID, the block on hand will be used instead.
 
-### Hollow (Oco)
+### Hollow
 
-Cria um cuboide oco. O interior do cuboide ficará vazio.
+Creates a hollow cuboid. The inside of the cuboid will be empty.
 
-![Cuboide oco vermelho](./cuboid-hollow.webp)
+![Red hollow cuboid](./cuboid-hollow.webp)
 
-### Walls (Paredes)
+### Walls
 
-Cria um cuboide oco sem piso ou teto.
+Creates a hollow cuboid without a floor or roof.
 
-![Paredes vermelhas](./cuboid-walls.webp)
+![Red walls](./cuboid-walls.webp)
 
-### Holes (Buracos)
+### Holes
 
-Cria um cuboide com padrão de tabuleiro de xadrez.
+Creates a cuboid with a checkerboard pattern.
 
-![Cuboide vermelho com buracos em padrão de tabuleiro de xadrez](./cuboid-holes.webp)
+![Red cuboid with holes resembling a checkerboard](./cuboid-holes.webp)
