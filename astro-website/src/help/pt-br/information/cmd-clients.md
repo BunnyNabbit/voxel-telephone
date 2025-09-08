@@ -1,9 +1,9 @@
 ---
 title: "/clients"
-contributors: ["BunnyNabbit \"Aon\""]
-summary: "Lista os jogadores ativos e os clientes que estão usando."
+contributors: [ "BunnyNabbit \"Aon\"" ]
+summary: "Lists active players and the clients they are using."
 ---
 
 # /clients
 
-Lista os jogadores ativos e os clientes que estão usando.
+Lists active players and the clients they are using.
