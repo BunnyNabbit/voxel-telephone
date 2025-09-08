@@ -1,11 +1,11 @@
 ---
 title: "/mark"
-contributors: ["BunnyNabbit \"Aon\""]
-summary: "Marca a posição do jogador para comandos interativos."
+contributors: [ "BunnyNabbit \"Aon\"" ]
+summary: "Marks your player position for interactive commands."
 ---
 
 # /mark
 
-Marca a posição do jogador para comandos interativos.
+Marks your player position for interactive commands.
 
-Por exemplo, `/cuboid` pedirá duas posições. Você pode usar `/mark` para definir uma delas.
+For example, `/cuboid` will ask for two positions. You can use `/mark` to set one of them
