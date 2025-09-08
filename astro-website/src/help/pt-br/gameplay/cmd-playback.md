@@ -1,9 +1,9 @@
 ---
 title: "/playback"
-contributors: ["BunnyNabbit \"Aon\""]
-summary: "Reproduz um conjunto de turnos na galeria."
+contributors: [ "BunnyNabbit \"Aon\"" ]
+summary: "Replays a set of turns in the view gallery."
 ---
 
 # /playback
 
-Reproduz um conjunto de turnos em `/view`.
+Replay a set of turns in `/view`.
