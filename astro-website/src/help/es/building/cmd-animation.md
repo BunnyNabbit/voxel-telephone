@@ -1,6 +1,6 @@
 ---
 title: "/animation"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Provides a basic tool for exploiting a visual illusion of motion."
 ---
 
