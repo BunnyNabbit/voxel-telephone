@@ -1,12 +1,12 @@
 ---
-title: "Construa a descrição que você recebeu"
+title: "Build your given description"
 noIndex: true
 ---
 
-# Construa o prompt que você recebeu
+# Build your given prompt
 
-Construa como você interpreta o prompt. Não desvie dos jogos de propósito!
+Build as you interpret the prompt. Do not intentionally derail games!
 
-- Para pular, use `/skip`.
-- Veja comandos relacionados à construção usando `/help`.
-- Use `/report` se o prompt for inapropriado.
+- To skip, use `/skip`.
+- See building related commands by using `/help`.
+- Use `/report` if the prompt is inappropriate.
