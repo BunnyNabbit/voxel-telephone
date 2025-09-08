@@ -1,13 +1,13 @@
 ---
 title: "/purge"
-contributors: ["BunnyNabbit \"Aon\""]
-summary: "Remove o último turno de um jogo destacado na galeria."
+contributors: [ "BunnyNabbit \"Aon\"" ]
+summary: "Purges the latest turn of a highlighted game in the view gallery."
 ---
 
 # /purge
 
-Uso: `/purge <motivo>`
+Usage: `/purge <reason>`
 
-Remove o último turno de um jogo destacado em `/view`. `<motivo>` é opcional para explicar a remoção.
+Purges the latest turn of a highlighted game in `/view`. `<reason>` is an optional reason for purging.
 
-Este comando está disponível apenas para moderadores.
+This command is only available for moderators.
