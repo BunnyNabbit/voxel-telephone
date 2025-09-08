@@ -1,15 +1,15 @@
 ---
 title: "/realm"
-contributors: ["BunnyNabbit \"Aon\""]
-summary: "Entra na visualização do seu Realm pessoal."
+contributors: [ "BunnyNabbit \"Aon\"" ]
+summary: "Enters the personal realm view."
 ---
 
 # /realm
 
-Entra na visualização do seu Realm pessoal. Todos os Realms criados pelo usuário serão exibidos.
+Enters the personal realm view. All created realms by the user will be displayed.
 
-Esta visualização começa inicialmente com um ícone "Criar um Realm". Clicar duas vezes neste ícone, quebrando/colocando um bloco duas vezes, criará um novo Realm. 
+This view initially starts off with a "Create a realm" icon. Double clicking this icon by breaking/placing a block twice will create a new realm.
 
-Cada Realm possui um volume de 256x256x256. Comandos de construção padrão e modos `/vcr` são suportados. Realms existentes podem ser acessados clicando duas vezes.
+Each realm is a 256x256x256 volume. Standard building commands and `/vcr` modes are supported. Existing realms can be joined by double clicking.
 
 Aliases: `/os`, `/myrealm`
