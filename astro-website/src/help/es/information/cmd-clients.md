@@ -1,6 +1,6 @@
 ---
 title: "/clients"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Lists active players and the clients they are using."
 ---
 
