@@ -1,6 +1,6 @@
 ---
 title: "/FurrierTransform"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Adiciona blocos extras dentro de uma seleção para deixá-la mais fofinha."
 image: "./furriertransform-sheep.webp"
 imageAlt: "Uma ovelha fofinha."
@@ -16,7 +16,7 @@ Formato do comando: `/furriertransform &block:block position:position1 position:
 
 Aliases: `/furrier`, `/fur`
 
-## Parâmetros
+## Parameters
 
 ### &block:block
 
