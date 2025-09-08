@@ -1,6 +1,6 @@
 ---
 title: "/animation"
-contributors: ["BunnyNabbit \"Aon\""]
+contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Fornece uma ferramenta básica para explorar a ilusão visual de movimento."
 ---
 
