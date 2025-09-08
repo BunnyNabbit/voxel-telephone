@@ -1,11 +1,42 @@
 {
+	"language": {
+		"en": "English",
+		"en-zhing": "Zhing-like English",
+		"es": "Spanish",
+		"pt-br": "Brazilian Portuguese"
+	},
 	"level": {
 		"error": {
 			"commandNotFound": "Unable to find command wizh name ${commandName} for level ${levelName}.",
-			"noInteractiveCommands": "Zhere are no current commands being run on zhe level"
+			"blockBlockingInVCR": "Unable to place block. Level is in VCR mode.",
+			"buildCommandBlockingInVCR": "Unable to use command. Level is in VCR mode.",
+			"blockBlockingCommand": "Unable to place block. Command in level is expecting additional arguments.",
+			"noInteractiveCommands": "Zhere are no current commands being run on zhe level",
+			"parsing": {
+				"invalidBlockId": "Invalid block ID.",
+				"invalidPosition": "invalidPosition",
+				"positionOutBounds": "Position out of bounds",
+				"layoutInvalidArgument": "${splitCommand} is not a valid argument for ${layoutElement}. Entering interactive mode."
+			},
+			"realm": {
+				"failedCreate": "Failed to create realm. Please try again later.",
+				"notFound": "Realm not found."
+			}
+		},
+		"status": {
+			"drainedLevelActions": "Changes drained. ${bytes} bytes saved to level's VHS record.",
+			"playbackFinished": "Playback finished! Use &a/main&r to go back.",
+			"playbackTurnInformation": "${prompt} - Described by ${descriptionCreators} and built by ${buildCreators}"
 		},
 		"commandQuestion": {
+			"block": "Place a block to use for ${currentType}. Break for air.",
 			"position": "Place or break a block to mark zhe position for ${currentType}."
+		},
+		"type": {
+			"realm": "Realm",
+			"hub": "Hub",
+			"view": "View Gallery",
+			"playback": "Playback"
 		},
 		"topPrintInformation": {
 			"viewPagination": "Noclip past level borders to view zhe next page.",
@@ -21,62 +52,163 @@
 			"uncaught": "An error occured while running zhe command. ${err}",
 			"missingBuildPermission": "You don't have permission to build in zhis level.",
 			"missingPermission": "You don't have permission to use zhis command!",
+			"drainingVCR": "VCR is busy. Try again later?",
+			"levelLoading": "Level is busy seeking. Try again later?",
+			"controlRequiresVcr": "Level isn't in VCR mode. &a/vcr&r.",
 			"unimplementedCommand": {
-				"unavailable": "Zhis command is unavailable:"
+				"unavailable": "Zhis command is unavailable:",
+				"helpHint": "For help on existing commands and topics, use &a/help&r."
 			},
+			"noGameSelected": "No game is selected.",
+			"incompleteGame": "Game is not complete.",
 			"license": {
-				"notOwner": "You are not zhe owner of zhis build."
+				"alreadyAdded": "License already exists.",
+				"noBuildSelected": "No build exists on selected game.",
+				"notOwner": "You are not zhe owner of zhis build.",
+				"unknownLicense": "Unknown license."
+			},
+			"setting": {
+				"unknownSetting": "Unknown setting.",
+				"invalidValue": "Invalid setting value."
+			},
+			"diverge": {
+				"cannotDivergeRoot": "Cannot diverge game at root."
+			},
+			"view": {
+				"unknownArgument": "Unknown view argument."
+			},
+			"template": {
+				"unknownTemplate": "Unknown template name."
 			},
 			"vcr": {
 				"alreadyVcr": "Zhe level is already in VCR mode"
+			},
+			"help": {
+				"foundCommandDocumentationMissing": "Command exists but unable to find help document for it.",
+				"documentationMissing": "Unable to find help document for ${originalArgument}."
 			},
 			"abort": {
 				"nothingToAbort": "Zhere is nozhing to abort."
 			}
 		},
+		"paint": {
+			"on": "Paint mode on.",
+			"off": "Paint mode off."
+		},
+		"repeat": {
+			"on": "Repeat mode on.",
+			"off": "Repeat mode off."
+		},
 		"finish": {
+			"vcrReminder": "Hold up! Did you mean to use &a/abort&r instead? Exit out of VCR if you intend to submit your game.",
 			"attemptFinishBuildEmpty": "Zhere is nozhing in zhe level. Build zhe prompt you are given!",
 			"attemptFinishDescriptionEmpty": "You currently have no description for zhis build. Write somezhing in chat first!"
 		},
+		"license": {
+			"added": "Added license ${licenseName} to ${prompt}.",
+			"noLicenses": "No licenses found.",
+			"listingCurrentLicenses": "Current licenses:"
+		},
+		"setting": {
+			"updated": "Updated setting ${setting} to ${value}."
+		},
+		"diverge": {
+			"success": "Game diverged."
+		},
+		"purge": {
+			"success": "Turn purged."
+		},
+		"removeallzones": {
+			"success": "All zones removed."
+		},
 		"vcrControls": {
+			"rewinded": "Rewinded. Current actions: ${actionCount}.",
+			"fastforwarded": "Fast-forwarded. Current actions: ${currentAction}/${maxActions}.",
 			"commitReminder": "To commit zhis state use &a/commit&r. Use &a/abort&r to exit VCR"
+		},
+		"vcr": {
+			"listActionCount": "VCR has recorded ${actionCount} actions."
+		},
+		"commit": {
+			"success": "Changes commited. VCR mode off."
+		},
+		"abort": {
+			"success": "Command aborted.",
+			"successVcr": "Aborted. VCR mode off."
 		},
 		"report": {
 			"gameReported": "Game reported wizh reason: \"${reason}\"."
 		},
 		"help": {
+			"listing": {
+				"categories": "Categories&f: ${categories}",
+				"category": "Category&f: ${name}"
+			},
 			"webReminder": "Help documentation is available on zhe web. ${baseURL}help"
 		}
 	},
 	"game": {
 		"welcome": "Welcome to Voxel Telephone. A multiplayer game where you build what you hear and describe what you see. Watch as creations transform zhrough collaborative misinterpretation!",
+		"cefReminder": "Sounds and music via CEF is active. Use &a/setting music off&r to disable music.",
 		"question": {
 			"description": {
+				"$self": "Description:",
 				"confirmReminder": "Use &a/finish &rto confirm your description for zhis build.",
-				"centerText": "Describe zhe build. Enter your description in chat."
+				"centerText": "Describe zhe build. Enter your description in chat.",
+				"reminder": "Enter your description in chat.",
+				"submitted": "Your description has been submitted!",
+				"createGame": "Enter a description in chat. It can be mundane or imaginative."
 			},
 			"build": {
+				"finishReminder": "Once you are finished building, use &a/finish&r.",
 				"buildTheFollowing": "Build zhe following: ${prompt}"
 			}
+		},
+		"outOfGames": {
+			"inspirationFeedUrl": "Not inspired? ${pickedFeed}"
+		},
+		"gameModes": {
+			"casual": "Mode: Casual"
+		},
+		"finish": {
+			"game": "${username} finished a game! Check out the game that started as &a\"${firstDescription}\"&r and ended with &a\"${lastDescription}\"&r In the view gallery.",
+			"build": "${username} finished a build turn.",
+			"describe": "${username} finished a describe turn."
 		}
 	},
 	"announcements": {
 		"donation": {
-			"0": "Support zhe server and its development https://ko-fi.com/bunnynabbit"
+			"0": "Support zhe server and its development https://ko-fi.com/bunnynabbit",
+			"1": "If you like Voxel Telephone, give us a star! https://github.com/BunnyNabbit/voxel-telephone"
+		},
+		"openSource": {
+			"0": "Voxel Telephone is open source software https://github.com/BunnyNabbit/voxel-telephone",
+			"1": "Found an issue? Report it! https://github.com/BunnyNabbit/voxel-telephone/issues"
 		},
 		"buildingCommands": {
 			"0": "Toggle paint mode by using zhe /paint command",
 			"1": "Place down a block at your position wizh zhe /place command",
 			"2": "Made a mistake? Enter zhe VCR wizh /vcr",
+			"3": "Triangles are my favorite shape. &a/triangle&r.",
 			"4": "Need somezhing round? Use zhe /sphere command!",
 			"5": "Is zhe palette getting in zhe way? Use \"/template empty\" to clear it! Or use \"/template builder\" to bring it back."
 		},
 		"gameTips": {
 			"0": "An entire game consists of 16 turns. When a game is completed, you can see all of its turns in zhe view mode.",
+			"1": "Want to practice building? Try building in a &a/realm&r level.",
 			"2": "Voxel Telephone has a bunch of commands. Use /help or view zhe help documentation on zhe web. https://voxel-telephone.bunnynabbit.com/help"
+		},
+		"safety": {
+			"0": "See an inappropriate prompt or build? Use &a/report&r."
 		}
 	},
 	"taglines": {
+		"0": "Where words become worlds, and back again.",
+		"1": "Build it, describe it, watch it evolve.",
+		"2": "Get creative, get building, get talking.",
+		"3": "From pixels to prose, and back again.",
+		"4": "Lost in translation, found in creation.",
+		"5": "Whispers of blocks, echoes of imagination.",
 		"6": "Zhe classic game of telephone, now wizh 100% more blocks!"
 	}
 }
