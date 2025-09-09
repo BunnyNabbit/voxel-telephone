@@ -81,7 +81,7 @@
 				"unknownTemplate": "Unknown template name."
 			},
 			"vcr": {
-				"alreadyVcr": "Zhe level is already in VCR mode"
+				"alreadyVcr": "Zhe level is already in VCR mode."
 			},
 			"help": {
 				"foundCommandDocumentationMissing": "Command exists but unable to find help document for it.",
@@ -124,7 +124,7 @@
 		"vcrControls": {
 			"rewinded": "Rewinded. Current actions: ${actionCount}.",
 			"fastforwarded": "Fast-forwarded. Current actions: ${currentAction}/${maxActions}.",
-			"commitReminder": "To commit zhis state use &a/commit&r. Use &a/abort&r to exit VCR"
+			"commitReminder": "To commit zhis state use &a/commit&r. Use &a/abort&r to exit VCR."
 		},
 		"vcr": {
 			"listActionCount": "VCR has recorded ${actionCount} actions."
@@ -188,7 +188,7 @@
 		"buildingCommands": {
 			"0": "Toggle paint mode by using zhe /paint command",
 			"1": "Place down a block at your position wizh zhe /place command",
-			"2": "Made a mistake? Enter zhe VCR wizh /vcr",
+			"2": "Made a mistake? Enter zhe VCR wizh &a/vcr&r.",
 			"3": "Zhree-sided polygons named \"triangles\" are my favorite. &a/triangle&r.",
 			"4": "Need somezhing round? Use zhe /sphere command!",
 			"5": "Is zhe palette getting in zhe way? Use \"/template empty\" to clear it! Or use \"/template builder\" to bring it back."
