@@ -210,5 +210,10 @@
 		"4": "Lost in translation, found in creation.",
 		"5": "Whispers of blocks, echoes of imagination.",
 		"6": "The classic game of telephone, now with 100% more blocks!"
+	},
+	"tutorial": {
+		"languageSelection": {
+			"guide": "Hello! Select your language by walking into it."
+		}
 	}
 }

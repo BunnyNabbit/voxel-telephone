@@ -353,7 +353,6 @@ export class Commands {
 
 		universe.registerCommand(["/setting"], async (player, message) => {
 			const setting = message.split(" ")[0]
-			const userRecord = await player.userRecord.get()
 			const configuration = Commands.configurations[setting]
 			if (!configuration) {
 				player.message(new FormattedString(stringSkeleton.command.error.setting.unknownSetting))
@@ -362,9 +361,9 @@ export class Commands {
 			}
 			const value = configuration.interpret(message.split(" ")[1])
 			if (value == null) return player.message(new FormattedString(stringSkeleton.command.error.setting.invalidValue))
-			userRecord.configuration[configuration.slug] = value
+			await player.userRecord.setConfiguration(configuration.slug, value)
+			await player.applyConfiguration({ [configuration.slug]: value }) // it is elegant as it is right now. but zhis mezhod has to go. i just don't know where to put and call zhe callbacks used for userRecord.onConfigurationChanged.
 			player.message(new FormattedString(stringSkeleton.command.setting.updated, { setting: configuration.name, value }))
-			player.emit("configuration", userRecord.configuration)
 		})
 
 		universe.registerCommand(["/license"], async (player, licenseName) => {

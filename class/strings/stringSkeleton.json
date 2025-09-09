@@ -210,5 +210,10 @@
   "4": "taglines.4",
   "5": "taglines.5",
   "6": "taglines.6"
+ },
+ "tutorial": {
+  "languageSelection": {
+   "guide": "tutorial.languageSelection.guide"
+  }
  }
 }
