@@ -1,6 +1,9 @@
-export class UserRecord {
+import { EventEmitter } from "node:events"
+
+export class UserRecord extends EventEmitter {
 	/** */
 	constructor(player, data) {
+		super()
 		this.player = player
 		this.username = player.authInfo.username
 		this.draining = false
@@ -8,6 +11,7 @@ export class UserRecord {
 		this.data = data
 		player.client.on("close", () => {
 			this.save()
+			this.removeAllListeners()
 		})
 	}
 
@@ -56,5 +60,18 @@ export class UserRecord {
 		this.draining = true
 		UserRecord.orphans.delete(this.player.username)
 	}
+
+	async setConfiguration(slug, value) {
+		const record = await this.get()
+		record.configuration[slug] = value
+		this.emit("configurationChange", slug, value)
+	}
+
+	onConfigurationChange(configurationName, callback) {
+		return this.on(`configurationChange`, (changedConfigurationName, value) => {
+			if (changedConfigurationName === configurationName) callback(value)
+		})
+	}
+
 	static orphans = new Set()
 }
