@@ -149,7 +149,7 @@
 	},
 	"game": {
 		"welcome": "Bienvenido a Voxel Teléfono. Un juego multijugador en el que construyes lo que escuchas y describes lo que ves. ¡Observa cómo las creaciones se transforman a través de malas interpretaciones colaborativas!",
-		"cefReminder": "Los sonidos y música a través de CEF están activos. Usa &a/configurando música off&r para desactivar la música.",
+		"cefReminder": "Los sonidos y música a través de CEF están activos. Usa &a/setting music off&r para desactivar la música.",
 		"question": {
 			"description": {
 				"$self": "Descripción:",
@@ -160,7 +160,7 @@
 				"createGame": "Introduzca una descripción en el chat. Puede ser mundano o imaginativo."
 			},
 			"build": {
-				"finishReminder": "Una vez que hayas terminado de construir, usa &a/terminar&r.",
+				"finishReminder": "Una vez que hayas terminado de construir, usa &a/finish&r.",
 				"buildTheFollowing": "Construye lo siguiente: ${prompt}"
 			}
 		},
@@ -189,9 +189,9 @@
 			"0": "Cambiar el modo de pintura usando el comando &a/paint&r",
 			"1": "Coloca un bloque en tu posición con el comando &a/place&r",
 			"2": "¿Ha cometido un error? Introduzca el VCR con &a/vcr&r.",
-			"3": "Los triángulos son mi forma favorita. &a/triángulo&r.",
+			"3": "Los triángulos son mi forma favorita. &a/triangle&r.",
 			"4": "¿Necesitas algo redondo? ¡Usa el comando &a/sphere&r!",
-			"5": "¿La paleta se está poniendo en camino? ¡Usa &a/plantilla vacía&r para limpiarla! O usa &a/template builder&r para traerla."
+			"5": "¿La paleta se está poniendo en camino? ¡Usa &a/template empty&r para limpiarla! O usa &a/template builder&r para traerla."
 		},
 		"gameTips": {
 			"0": "Un juego completo consiste en 16 turnos. Cuando un juego se completa, puedes ver todos sus turnos en el modo de vista.",
