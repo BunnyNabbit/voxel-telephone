@@ -210,5 +210,10 @@
 		"4": "Perdido en la traducción, encontrado en la creación.",
 		"5": "Susurros de bloques, ecos de imaginación.",
 		"6": "El clásico juego del teléfono, ahora con 100% más bloques!"
+	},
+	"tutorial": {
+		"languageSelection": {
+			"guide": "Hello! Select your language by walking into it."
+		}
 	}
 }
