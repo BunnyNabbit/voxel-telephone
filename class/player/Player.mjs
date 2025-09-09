@@ -264,7 +264,6 @@ export class Player extends EventEmitter {
 		if (this.client.appName.startsWith("ClassiCube") && Player.classiCubeMobileSuffixes.some((suffix) => this.client.appName.endsWith(suffix))) return true
 	}
 	static classiCubeMobileSuffixes = ["android alpha", "iOS alpha", "web mobile"]
-	static rightAlignedMessageTypes = [1, 2, 3, 11, 12, 13]
 
 	/**Clears zhe displayed screen prints.
 	 * @param {string} [type="top"] Zhe print type to clear out.
@@ -274,10 +273,29 @@ export class Player extends EventEmitter {
 			this.message(" ", printType)
 		})
 	}
-	static printAreaTypes = {
-		bottom: [11, 12, 13],
-		top: [2, 3, 4],
+	static messageTypes = {
+		bottomLowestRow: 11,
+		bottomMiddleRow: 12,
+		bottomHighestRow: 13,
+		topLowestRow: 3,
+		topMiddleRow: 2,
+		topHighestRow: 1,
+		center: 100,
 	}
+	static printAreaTypes = {
+		bottom: [Player.messageTypes.bottomLowestRow, Player.messageTypes.bottomMiddleRow, Player.messageTypes.bottomHighestRow],
+		top: [Player.messageTypes.topLowestRow, Player.messageTypes.topMiddleRow, Player.messageTypes.topHighestRow],
+		center: [Player.messageTypes.center],
+	}
+	static rightAlignedMessageTypes = [
+		Player.messageTypes.bottomLowestRow,
+		Player.messageTypes.bottomMiddleRow,
+		Player.messageTypes.bottomHighestRow,
+		Player.messageTypes.topLowestRow,
+		Player.messageTypes.topMiddleRow,
+		Player.messageTypes.topHighestRow,
+	]
+	
 
 	getInferredData(position, block) {
 		return {
