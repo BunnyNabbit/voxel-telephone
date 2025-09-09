@@ -1,6 +1,7 @@
 # Voxel Telephone
 [![Open GitHub issues badge](https://img.shields.io/github/issues/bunnynabbit/voxel-telephone)](https://github.com/BunnyNabbit/voxel-telephone/issues)
 [![GitHub Repo stars badge](https://img.shields.io/github/stars/bunnynabbit/voxel-telephone)](https://github.com/BunnyNabbit/voxel-telephone/stargazers)
+[![Crowdin progress badge](https://badges.crowdin.net/voxel-telephone/localized.svg)](https://crowdin.com/project/voxel-telephone)
 
 A telephone game about repeatedly describing and building. How can misinterpretations form throughout a game? Designed for the ClassiCube client.
 
