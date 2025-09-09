@@ -210,5 +210,10 @@
 		"4": "Perdido na tradução, encontrado na criação.",
 		"5": "Sussurros de blocos, ecos de imaginação.",
 		"6": "O clássico telefone sem fio, agora com 100% mais blocos!"
+	},
+	"tutorial": {
+		"languageSelection": {
+			"guide": "Olá! Selecione o seu idioma entrando nele."
+		}
 	}
 }
