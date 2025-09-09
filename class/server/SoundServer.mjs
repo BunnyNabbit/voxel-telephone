@@ -40,17 +40,26 @@ class SoundTransmitter extends EventEmitter {
 			cefMusic: false,
 			cefSounds: false,
 		}
-		player.on("configuration", (configuration) => {
-			this.configuration = configuration
-			if (!configuration.cefMusic) {
-				this.enqueueEvent({
-					loop: true,
-					stop: true,
-				})
-			} else {
-				// resend current track
-				if (this.currentTrack) this.enqueueEvent(this.currentTrack.data)
-			}
+		player.userRecord.get().then((record) => {
+			this.configuration.cefMusic = record.configuration.cefMusic
+			this.configuration.cefSounds = record.configuration.cefSounds
+			player.userRecord.onConfigurationChange("cefMusic", (cefMusicEnabled) => {
+				if (this.configuration.cefMusic !== cefMusicEnabled) {
+					this.configuration.cefMusic = cefMusicEnabled
+					if (!cefMusicEnabled) {
+						this.enqueueEvent({
+							loop: true,
+							stop: true,
+						})
+					} else {
+						// resend current track
+						if (this.currentTrack) this.enqueueEvent(this.currentTrack.data)
+					}
+				}
+			})
+			player.userRecord.onConfigurationChange("cefSounds", (cefSoundsEnabled) => {
+				this.configuration.cefSounds = cefSoundsEnabled
+			})
 		})
 	}
 

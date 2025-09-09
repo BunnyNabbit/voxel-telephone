@@ -2,18 +2,19 @@ import { Drone } from "./drone/Drone.mjs"
 import { Ego } from "./drone/Ego.mjs"
 import { TutorialLevel } from "./TutorialLevel.mjs"
 import { templates } from "./templates.mjs"
+import { FormattedString, stringSkeleton, defaultLanguage } from "../strings/FormattedString.mjs"
+import { Player } from "../player/Player.mjs"
 
 class BaseLanguageDrone extends Drone {
 	/** */
-	constructor(data, languageDroneBaseUrl) {
-		super(
-			new Ego({
-				skin: `${languageDroneBaseUrl}/drone-${data.locale}.png`,
-				name: data.name,
-			})
-		)
-		this.locale = data.locale
-		this.name = data.name
+	constructor(languageDroneBaseUrl) {
+		const ego = new Ego()
+		super(ego)
+		if (this.constructor === BaseLanguageDrone) throw new Error("BaseLanguageDrone is abstract and cannot be instantiated directly.")
+		ego.setSkin(`${languageDroneBaseUrl}drone-${this.constructor.locale}.png`)
+		ego.setName(this.constructor.displayName)
+		this.locale = this.constructor.locale
+		this.name = this.constructor.displayName
 		this.radius = 2
 	}
 	/**Checks if a given position is within interaction range of the drone.
@@ -30,39 +31,18 @@ class BaseLanguageDrone extends Drone {
 }
 
 class EnglishDrone extends BaseLanguageDrone {
-	constructor(languageDroneBaseUrl) {
-		super(
-			{
-				locale: "en",
-				name: "English",
-			},
-			languageDroneBaseUrl
-		)
-	}
+	static locale = "en"
+	static displayName = "English"
 }
 
 class SpanishDrone extends BaseLanguageDrone {
-	constructor(languageDroneBaseUrl) {
-		super(
-			{
-				locale: "es",
-				name: "Español",
-			},
-			languageDroneBaseUrl
-		)
-	}
+	static locale = "es"
+	static displayName = "Español"
 }
 
 class PortuguêsBrasileiroDrone extends BaseLanguageDrone {
-	constructor(languageDroneBaseUrl) {
-		super(
-			{
-				locale: "pt-br",
-				name: "Português Brasileiro",
-			},
-			languageDroneBaseUrl
-		)
-	}
+	static locale = "pt-br"
+	static displayName = "Português Brasileiro"
 }
 
 export class LanguageSelectionLevel extends TutorialLevel {
@@ -89,6 +69,10 @@ export class LanguageSelectionLevel extends TutorialLevel {
 			this.positionEventListeners.set(player, onPosition)
 			player.emit("playSound", this.universe.sounds.playbackTrack)
 		})
+		this.languageIndex = 0
+		this.interval = setInterval(() => {
+			this.rotateSelection()
+		}, 1500)
 	}
 	/** Creates an arrangement of drones in a circle, each representing a language option. When a player interacts with a drone, they are set to that language and progressed to the next tutorial step. */
 	createDroneArrangement() {
@@ -104,11 +88,13 @@ export class LanguageSelectionLevel extends TutorialLevel {
 			const drone = new droneClass(`${this.universe.serverConfiguration.sounds.audioPlayerBaseURL}game/`)
 			this.addDrone(drone)
 			drone.setPosition({ x, y, z }, { yaw: 0, pitch: 0 })
-			drone.on("interact", (player) => {
+			drone.on("interact", async (player) => {
 				if (drone.spinning) return
+				clearInterval(this.interval)
+				player.message(" ", [Player.messageTypes.center]) // clear center
 				drone.spinning = true
-				player.universe.commandRegistry.attemptCall(player, `/setting language ${drone.locale}`)
-				if (this.complete(player, `Language set to ${drone.name}.`)) {
+				await player.universe.commandRegistry.attemptCall(player, `/setting language ${drone.locale}`)
+				if (this.complete(player, null)) {
 					for (let animationStep = 0; animationStep < 60; animationStep++) {
 						setTimeout(() => {
 							drone.setPosition(
@@ -126,11 +112,34 @@ export class LanguageSelectionLevel extends TutorialLevel {
 		})
 	}
 
+	next(player, ...args) {
+		super.next(player, ...args)
+		player.message(new FormattedString(stringSkeleton.game.welcome))
+		player.universe.commandRegistry.attemptCall(player, "/rules")
+	}
+
 	async getSpawnPosition() {
 		return [
 			[32, 8, 32], // centered
 			[0, 0], // facing norzh, level. should be facing English.
 		]
+	}
+	/** rotates different languages To Communicate In Clear */
+	rotateSelection() {
+		this.players.forEach(async (player) => {
+			const locales = LanguageSelectionLevel.droneClasses.map((DroneClass) => {
+				return DroneClass.locale
+			})
+			const pickedLocale = locales[this.languageIndex % locales.length]
+			this.languageIndex++
+			const language = await FormattedString.getLanguage(pickedLocale)
+			player.message(new FormattedString(stringSkeleton.tutorial.languageSelection.guide), [Player.messageTypes.center], "", { languageOverrides: [language, defaultLanguage] })
+		})
+	}
+
+	async dispose() {
+		super.dispose()
+		clearInterval(this.interval)
 	}
 
 	static droneClasses = [EnglishDrone, SpanishDrone, PortuguêsBrasileiroDrone]

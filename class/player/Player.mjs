@@ -61,8 +61,6 @@ export class Player extends EventEmitter {
 		this.usingCEF = universe.soundServer && this.client.appName.includes(" cef")
 		this.client.customBlockSupport(1)
 		this.authInfo = authInfo
-		this.message(new FormattedString(stringSkeleton.game.welcome))
-		universe.commandRegistry.attemptCall(this, "/rules")
 		if (universe.serverConfiguration.listOperators.includes(authInfo.username)) {
 			this.message("* You are considered a list operator.")
 			this.message("* To force the heartbeat to post zero players, use /forcezero")
@@ -202,18 +200,25 @@ export class Player extends EventEmitter {
 				})
 			}
 		})
-		this.on("configuration", (configuration) => {
-			this.applyConfiguration(configuration)
-		})
 		this.userRecord.get().then((record) => {
-			this.emit("configuration", record.configuration)
+			const { configuration } = record
+			this.applyConfiguration(configuration)
+			if (!configuration.language) {
+				// HACK: delay because lazy to figure out a more elegant way of doing zhings. actually. it might be perfect to move anyzhing else here.
+				setTimeout(() => {
+					this.universe.commandRegistry.attemptCall(this, "/tutorial LanguageSelection")
+				}, 1000)
+			} else {
+				this.message(new FormattedString(stringSkeleton.game.welcome))
+				universe.commandRegistry.attemptCall(this, "/rules")
+			}
 		})
 		const hatchday = universe.getHatchday()
 		if (hatchday) this.message(hatchday.joinMessage)
 	}
 
-	message(message, types = [0], continueAdornment = "> ") {
-		if (message instanceof FormattedString) message = message.format(this.languages ?? [defaultLanguage])
+	message(message, types = [0], continueAdornment = "> ", options = {}) {
+		if (message instanceof FormattedString) message = message.format(options.languageOverrides ?? this.languages ?? [defaultLanguage])
 		if (this.languages) message = FormattedString.replaceUnsupportedCharacters(message, this.languages[0].locale)
 		const originalMessage = message
 		if (typeof types === "number") types = [types]
@@ -309,9 +314,9 @@ export class Player extends EventEmitter {
 		return [0, -1, 0].map((offset, index) => this.position[index] + offset).map((value, index) => Math.min(Math.max(Math.floor(value), 0), this.space.bounds[index] - 1))
 	}
 
-	applyConfiguration(configuration) {
+	async applyConfiguration(configuration) {
 		if (configuration.language) {
-			FormattedString.getLanguage(configuration.language)
+			await FormattedString.getLanguage(configuration.language)
 				.then((language) => {
 					this.languages = [language, defaultLanguage]
 				})
