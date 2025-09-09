@@ -1,214 +1,214 @@
 {
 	"language": {
-		"en": "English",
-		"en-zhing": "Zhing-like English",
-		"es": "Spanish",
-		"pt-br": "Brazilian Portuguese"
+		"en": "Inglés",
+		"en-zhing": "Inglés como Zhing",
+		"es": "Español",
+		"pt-br": "Portugués Brasileño"
 	},
 	"level": {
 		"error": {
-			"commandNotFound": "Unable to find command with name ${commandName} for level ${levelName}.",
-			"blockBlockingInVCR": "Unable to place block. Level is in VCR mode.",
-			"buildCommandBlockingInVCR": "Unable to use command. Level is in VCR mode.",
-			"blockBlockingCommand": "Unable to place block. Command in level is expecting additional arguments.",
-			"noInteractiveCommands": "There are no current commands being run on the level",
+			"commandNotFound": "No se ha podido encontrar el comando con el nombre ${commandName} para el nivel ${levelName}.",
+			"blockBlockingInVCR": "No se puede colocar el bloque. El nivel está en modo VCR.",
+			"buildCommandBlockingInVCR": "No se puede usar el comando. El nivel está en modo VCR.",
+			"blockBlockingCommand": "No se puede colocar el bloque. El comando en el nivel está esperando argumentos adicionales.",
+			"noInteractiveCommands": "No hay comandos actuales ejecutándose en el nivel",
 			"parsing": {
-				"invalidBlockId": "Invalid block ID.",
-				"invalidPosition": "invalidPosition",
-				"positionOutBounds": "Position out of bounds",
-				"layoutInvalidArgument": "${splitCommand} is not a valid argument for ${layoutElement}. Entering interactive mode."
+				"invalidBlockId": "ID de bloque inválido.",
+				"invalidPosition": "posición no válida",
+				"positionOutBounds": "Posición fuera de los límites",
+				"layoutInvalidArgument": "${splitCommand} no es un argumento válido para ${layoutElement}. Entra en el modo interactivo."
 			},
 			"realm": {
-				"failedCreate": "Failed to create realm. Please try again later.",
-				"notFound": "Realm not found."
+				"failedCreate": "Error al crear el realm. Inténtalo de nuevo más tarde.",
+				"notFound": "Realm no encontrado."
 			}
 		},
 		"status": {
-			"drainedLevelActions": "Changes drained. ${bytes} bytes saved to level's VHS record.",
-			"playbackFinished": "Playback finished! Use &a/main&r to go back.",
-			"playbackTurnInformation": "${prompt} - Described by ${descriptionCreators} and built by ${buildCreators}"
+			"drainedLevelActions": "Cambios drenados. ${bytes} bytes guardados en el registro VHS del nivel.",
+			"playbackFinished": "¡Reproducción terminada! Usa &a/main&r para volver atrás.",
+			"playbackTurnInformation": "${prompt} - Descrito por ${descriptionCreators} y construido por ${buildCreators}"
 		},
 		"commandQuestion": {
-			"block": "Place a block to use for ${currentType}. Break for air.",
-			"position": "Place or break a block to mark the position for ${currentType}."
+			"block": "Coloca un bloque para usar por ${currentType}. Rompe por aire.",
+			"position": "Coloca o rompe un bloque para marcar la posición de ${currentType}."
 		},
 		"type": {
-			"realm": "Realm",
+			"realm": "Real",
 			"hub": "Hub",
-			"view": "View Gallery",
-			"playback": "Playback"
+			"view": "Ver galería",
+			"playback": "Reproducir"
 		},
 		"topPrintInformation": {
 			"viewPagination": "Noclip past level borders to view the next page.",
-			"hubReminder": "Go back to hub with &a/main&r."
+			"hubReminder": "Volver al hub con &a/main&r."
 		},
 		"realm": {
-			"attribution": "By: ${ownedBy}",
-			"realmCreateButton": "Double click icon to begin."
+			"attribution": "Por: ${ownedBy}",
+			"realmCreateButton": "Doble clic en el icono para comenzar."
 		}
 	},
 	"command": {
 		"error": {
-			"uncaught": "An error occured while running the command. ${err}",
-			"missingBuildPermission": "You don't have permission to build in this level.",
-			"missingPermission": "You don't have permission to use this command!",
-			"drainingVCR": "VCR is busy. Try again later?",
-			"levelLoading": "Level is busy seeking. Try again later?",
-			"controlRequiresVcr": "Level isn't in VCR mode. &a/vcr&r.",
+			"uncaught": "Se ha producido un error al ejecutar el comando. ${err}",
+			"missingBuildPermission": "No tienes permiso para construir en este nivel.",
+			"missingPermission": "¡No tienes permiso para usar este comando!",
+			"drainingVCR": "VCR está ocupado. ¿Intentar más tarde?",
+			"levelLoading": "El nivel está ocupado. ¿Intentar más tarde?",
+			"controlRequiresVcr": "El nivel no está en modo VCR &a/vcr&r.",
 			"unimplementedCommand": {
-				"unavailable": "This command is unavailable:",
-				"helpHint": "For help on existing commands and topics, use &a/help&r."
+				"unavailable": "Este comando no está disponible:",
+				"helpHint": "Para obtener ayuda sobre comandos y temas existentes, usa &a/help&r."
 			},
-			"noGameSelected": "No game is selected.",
-			"incompleteGame": "Game is not complete.",
+			"noGameSelected": "No se ha seleccionado ningún juego.",
+			"incompleteGame": "El juego no está completo.",
 			"license": {
-				"alreadyAdded": "License already exists.",
-				"noBuildSelected": "No build exists on selected game.",
-				"notOwner": "You are not the owner of this build.",
-				"unknownLicense": "Unknown license."
+				"alreadyAdded": "La licencia ya existe.",
+				"noBuildSelected": "No existe una versión en el juego seleccionado.",
+				"notOwner": "No eres el dueño de esta construcción.",
+				"unknownLicense": "Licencia desconocida."
 			},
 			"setting": {
-				"unknownSetting": "Unknown setting.",
-				"invalidValue": "Invalid setting value."
+				"unknownSetting": "Configuración desconocida.",
+				"invalidValue": "Valor de ajuste inválido."
 			},
 			"diverge": {
-				"cannotDivergeRoot": "Cannot diverge game at root."
+				"cannotDivergeRoot": "No puedes divergir el juego en la raíz."
 			},
 			"view": {
-				"unknownArgument": "Unknown view argument."
+				"unknownArgument": "Argumento de vista desconocido."
 			},
 			"template": {
-				"unknownTemplate": "Unknown template name."
+				"unknownTemplate": "Nombre de plantilla desconocido."
 			},
 			"vcr": {
-				"alreadyVcr": "The level is already in VCR mode."
+				"alreadyVcr": "El nivel ya está en modo VCR."
 			},
 			"help": {
-				"foundCommandDocumentationMissing": "Command exists but unable to find help document for it.",
-				"documentationMissing": "Unable to find help document for ${originalArgument}."
+				"foundCommandDocumentationMissing": "El comando existe pero no se puede encontrar el documento de ayuda.",
+				"documentationMissing": "No se ha podido encontrar el documento de ayuda para ${originalArgument}."
 			},
 			"abort": {
-				"nothingToAbort": "There is nothing to abort."
+				"nothingToAbort": "No hay nada que abortar."
 			}
 		},
 		"paint": {
-			"on": "Paint mode on.",
-			"off": "Paint mode off."
+			"on": "Modo de pintura activado.",
+			"off": "Modo de pintura apagado."
 		},
 		"repeat": {
-			"on": "Repeat mode on.",
-			"off": "Repeat mode off."
+			"on": "Modo de repetición activado.",
+			"off": "Modo de repetición apagado."
 		},
 		"finish": {
-			"vcrReminder": "Hold up! Did you mean to use &a/abort&r instead? Exit out of VCR if you intend to submit your game.",
-			"attemptFinishBuildEmpty": "There is nothing in the level. Build the prompt you are given!",
-			"attemptFinishDescriptionEmpty": "You currently have no description for this build. Write something in chat first!"
+			"vcrReminder": "¡Espera! ¿Querías usar &a/abort&r en su lugar? Salir de VCR si quieres enviar tu partida.",
+			"attemptFinishBuildEmpty": "No hay nada en el nivel. ¡Construye el prompt que te han dado!",
+			"attemptFinishDescriptionEmpty": "Actualmente no tienes ninguna descripción para esta compilación. ¡Escribe algo en el chat primero!"
 		},
 		"license": {
-			"added": "Added license ${licenseName} to ${prompt}.",
-			"noLicenses": "No licenses found.",
-			"listingCurrentLicenses": "Current licenses:"
+			"added": "Licencia añadida ${licenseName} a ${prompt}.",
+			"noLicenses": "No se encontraron licencias.",
+			"listingCurrentLicenses": "Licencias actuales:"
 		},
 		"setting": {
-			"updated": "Updated setting ${setting} to ${value}."
+			"updated": "Configuración actualizada ${setting} a ${value}."
 		},
 		"diverge": {
-			"success": "Game diverged."
+			"success": "Juego divergido."
 		},
 		"purge": {
-			"success": "Turn purged."
+			"success": "Giro purgado."
 		},
 		"removeallzones": {
-			"success": "All zones removed."
+			"success": "Todas las zonas eliminadas."
 		},
 		"vcrControls": {
-			"rewinded": "Rewinded. Current actions: ${actionCount}.",
-			"fastforwarded": "Fast-forwarded. Current actions: ${currentAction}/${maxActions}.",
-			"commitReminder": "To commit this state use &a/commit&r. Use &a/abort&r to exit VCR."
+			"rewinded": "Revivido. Acciones actuales: ${actionCount}.",
+			"fastforwarded": "Reenviado rápido. Acciones actuales: ${currentAction}/${maxActions}.",
+			"commitReminder": "Para confirmar este estado use &a/commit&r. Use &a/abort&r para salir de VCR."
 		},
 		"vcr": {
-			"listActionCount": "VCR has recorded ${actionCount} actions."
+			"listActionCount": "VCR ha grabado acciones ${actionCount}."
 		},
 		"commit": {
-			"success": "Changes commited. VCR mode off."
+			"success": "Cambios confirmados. Modo VCR desactivado."
 		},
 		"abort": {
-			"success": "Command aborted.",
-			"successVcr": "Aborted. VCR mode off."
+			"success": "Comando abortado.",
+			"successVcr": "Abortado. Modo VCR apagado."
 		},
 		"report": {
-			"gameReported": "Game reported with reason: \"${reason}\"."
+			"gameReported": "Juego reportado con razón: \"${reason}\"."
 		},
 		"help": {
 			"listing": {
-				"categories": "Categories&f: ${categories}",
+				"categories": "Categorías&f: ${categories}",
 				"category": "Category&f: ${name}"
 			},
-			"webReminder": "Help documentation is available on the web. ${baseURL}help"
+			"webReminder": "La documentación de ayuda está disponible en la web. Ayuda ${baseURL}"
 		}
 	},
 	"game": {
-		"welcome": "Welcome to Voxel Telephone. A multiplayer game where you build what you hear and describe what you see. Watch as creations transform through collaborative misinterpretation!",
-		"cefReminder": "Sounds and music via CEF is active. Use &a/setting music off&r to disable music.",
+		"welcome": "Bienvenido a Voxel Teléfono. Un juego multijugador en el que construyes lo que escuchas y describes lo que ves. ¡Observa cómo las creaciones se transforman a través de malas interpretaciones colaborativas!",
+		"cefReminder": "Los sonidos y música a través de CEF están activos. Usa &a/configurando música off&r para desactivar la música.",
 		"question": {
 			"description": {
-				"$self": "Description:",
-				"confirmReminder": "Use &a/finish&r to confirm your description for this build.",
-				"centerText": "Describe the build. Enter your description in chat.",
-				"reminder": "Enter your description in chat.",
-				"submitted": "Your description has been submitted!",
-				"createGame": "Enter a description in chat. It can be mundane or imaginative."
+				"$self": "Descripción:",
+				"confirmReminder": "Utilice &a/finish&r para confirmar su descripción de esta compilación.",
+				"centerText": "Describa la compilación. Introduzca su descripción en el chat.",
+				"reminder": "Introduce tu descripción en el chat.",
+				"submitted": "¡Su descripción ha sido enviada!",
+				"createGame": "Introduzca una descripción en el chat. Puede ser mundano o imaginativo."
 			},
 			"build": {
-				"finishReminder": "Once you are finished building, use &a/finish&r.",
-				"buildTheFollowing": "Build the following: ${prompt}"
+				"finishReminder": "Una vez que hayas terminado de construir, usa &a/terminar&r.",
+				"buildTheFollowing": "Construye lo siguiente: ${prompt}"
 			}
 		},
 		"outOfGames": {
-			"inspirationFeedUrl": "Not inspired? ${pickedFeed}"
+			"inspirationFeedUrl": "¿No está inspirado? ${pickedFeed}"
 		},
 		"gameModes": {
-			"casual": "Mode: Casual"
+			"casual": "Modo: Casual"
 		},
 		"finish": {
-			"game": "${username} finished a game! Check out the game that started as &a\"${firstDescription}\"&r and ended with &a\"${lastDescription}\"&r In the view gallery.",
-			"build": "${username} finished a build turn.",
-			"describe": "${username} finished a describe turn."
+			"game": "¡${username} ha terminado un juego! Mira el juego que comenzó como &a\"${firstDescription}\"&r y terminó con &a\"${lastDescription}\"&r en la galería de la vista.",
+			"build": "${username} terminó un turno de construcción.",
+			"describe": "${username} terminó un giro describir."
 		}
 	},
 	"announcements": {
 		"donation": {
-			"0": "Support the server and its development https://ko-fi.com/bunnynabbit",
-			"1": "If you like Voxel Telephone, give us a star! https://github.com/BunnyNabbit/voxel-telephone"
+			"0": "Apoya al servidor y su desarrollo https://ko-fi.com/bunnynabbit",
+			"1": "Si te gusta Voxel Teléfono, ¡danos una estrella! https://github.com/BunnyNabbit/voxel-telephone"
 		},
 		"openSource": {
-			"0": "Voxel Telephone is open source software https://github.com/BunnyNabbit/voxel-telephone",
-			"1": "Found an issue? Report it! https://github.com/BunnyNabbit/voxel-telephone/issues"
+			"0": "Voxel Teléfono es software de código abierto https://github.com/BunnyNabbit/voxel-telephone",
+			"1": "¿Has encontrado un problema? ¡Infórmalo! https://github.com/BunnyNabbit/voxel-deehone/issues"
 		},
 		"buildingCommands": {
-			"0": "Toggle paint mode by using the &a/paint&r command",
-			"1": "Place down a block at your position with the &a/place&r command",
-			"2": "Made a mistake? Enter the VCR with &a/vcr&r.",
-			"3": "Triangles are my favorite shape. &a/triangle&r.",
-			"4": "Need something round? Use the &a/sphere&r command!",
-			"5": "Is the palette getting in the way? Use &a/template empty&r to clear it! Or use &a/template builder&r to bring it back."
+			"0": "Cambiar el modo de pintura usando el comando &a/paint&r",
+			"1": "Coloca un bloque en tu posición con el comando &a/place&r",
+			"2": "¿Ha cometido un error? Introduzca el VCR con &a/vcr&r.",
+			"3": "Los triángulos son mi forma favorita. &a/triángulo&r.",
+			"4": "¿Necesitas algo redondo? ¡Usa el comando &a/sphere&r!",
+			"5": "¿La paleta se está poniendo en camino? ¡Usa &a/plantilla vacía&r para limpiarla! O usa &a/template builder&r para traerla."
 		},
 		"gameTips": {
-			"0": "An entire game consists of 16 turns. When a game is completed, you can see all of its turns in the view mode.",
-			"1": "Want to practice building? Try building in a &a/realm&r level.",
-			"2": "Voxel Telephone has a bunch of commands. Use &a/help&r or view the help documentation on the web. https://voxel-telephone.bunnynabbit.com/help"
+			"0": "Un juego completo consiste en 16 turnos. Cuando un juego se completa, puedes ver todos sus turnos en el modo de vista.",
+			"1": "¿Quieres practicar la construcción? Intenta construir en un nivel &a/realm&r.",
+			"2": "Voxel Teléfono tiene un montón de comandos. Utilice &a/help&r o vea la documentación de ayuda en la web. https://voxel-telephone.bunnynabbit.com/help"
 		},
 		"safety": {
-			"0": "See an inappropriate prompt or build? Use &a/report&r."
+			"0": "¿Ver un prompt o compilación inapropiada? Use &a/report&r."
 		}
 	},
 	"taglines": {
-		"0": "Where words become worlds, and back again.",
-		"1": "Build it, describe it, watch it evolve.",
-		"2": "Get creative, get building, get talking.",
-		"3": "From pixels to prose, and back again.",
-		"4": "Lost in translation, found in creation.",
-		"5": "Whispers of blocks, echoes of imagination.",
-		"6": "The classic game of telephone, now with 100% more blocks!"
+		"0": "Donde las palabras se convierten en mundos, y de vuelta atrás.",
+		"1": "Construirlo, describirlo, observarlo evolucionar.",
+		"2": "Hazte creativo, construye y habla.",
+		"3": "De píxeles a prose, y de nuevo atrás.",
+		"4": "Perdido en la traducción, encontrado en la creación.",
+		"5": "Susurros de bloques, ecos de imaginación.",
+		"6": "El clásico juego del teléfono, ahora con 100% más bloques!"
 	}
 }
