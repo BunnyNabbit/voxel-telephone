@@ -29,7 +29,7 @@ export class TutorialLevel extends Level {
 			if (!this.players.includes(player)) return
 			this.next(player, TutorialLevel.progressionReasons.completed)
 		}, 3000)
-		player.message(message)
+		if (message) player.message(message)
 		player.emit("playSound", this.universe.sounds.complete)
 		return true
 	}
