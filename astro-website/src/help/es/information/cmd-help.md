@@ -8,7 +8,7 @@ summary: "Lists help documentation and aliases (shortcuts) for a command, topic 
 
 Usage: `/help <a command, topic or category>`
 
-Lists help documentation and aliases (shortcuts) for a command, topic or category. Lists help documentation and aliases (shortcuts) for a command, topic or category.
+Lists help documentation and aliases (shortcuts) for a command, topic or category. If used without an argument provided, a list of command categories and topics is listed along with a few featured commands.
 
 For example, `/help vcr` will bring up the help documentation for the `/vcr` command.
 
