@@ -1,19 +1,19 @@
 ---
-title: "/animation"
+title: "/animación"
 contributors: [ "BunnyNabbit \"Aon\"" ]
-summary: "Provides a basic tool for exploiting a visual illusion of motion."
+summary: "Proporciona una herramienta básica para explotar una ilusión visual del movimiento."
 ---
 
-# /animation
+# /animación
 
-Usage: `/animation [traversal direction]`
+Uso: `/animation [dirección transversal]`
 
-When invoked with the directions `next` or `previous`, the player is teleported away from their position to a different area called a "frame".
+Cuando se invoca con las direcciones `siguiente` o `anterior`, el jugador se teletransporta lejos de su posición a un área diferente llamada "marco".
 
-This command can only be called in a realm.
+Este comando sólo puede ser llamado en un realm.
 
 ## Frames
 
-Each frame is a 64x64x64 volume and are arranged and stacked in a way which creates 64 frames in a 256x256x256 realm volume. This is better visualized with the `/template animation` command which is a template of hollow rooms optimized for this command.
+Cada fotograma es un volumen 64x64x64 y está organizado y apilado de una manera que crea 64 fotogramas en un volumen de reino 256x256x256. Esto se visualiza mejor con el comando `/template animation` que es una plantilla de salas vacías optimizadas para este comando.
 
-The frames which the player teleport to are ordered by XZY. If no more frames can be accessed, the last frame on the opposite traversal end will be used.
+Los marcos a los que el jugador se teletransporta son ordenados por XZY. Si no se puede acceder a más fotogramas, se utilizará el último fotograma en el extremo transversal opuesto.
