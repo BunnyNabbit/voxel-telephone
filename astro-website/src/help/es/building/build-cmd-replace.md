@@ -1,10 +1,10 @@
 ---
-title: "/Reemplazar"
+title: "/Replace"
 contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Reemplaza bloques en un cuboide por otro tipo de bloques."
 ---
 
-# /Reemplazar
+# /Replace
 
 Reemplaza bloques en un cuboide por otro tipo de bloques.
 
