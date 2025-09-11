@@ -1,29 +1,29 @@
 ---
 title: "/CourierTransform"
 contributors: [ "BunnyNabbit \"Aon\"" ]
-summary: "Simulates the result of rough handling during transit."
-image: "./couriertransform-result.webp"
-imageAlt: "A damaged cardboard box."
+summary: "Simula el resultado de la manipulación rugosa durante el tránsito."
+image: "./couriertransform-resultado.webp"
+imageAlt: "Una caja de cartón dañada."
 ---
 
 # /CourierTransform
 
-Transforms a selection of blocks in a way which looks like it was damaged during transit.
+Transforma una selección de bloques de una manera que parece dañada durante el transito.
 
-![A damaged cardboard box.](./couriertransform-result.webp)
+![Una caja dañada de cartón.](./couriertransform-result.webp)
 
-Aliases: `/courier`
+Alias: `/courier`
 
-## Behavior
+## Comportamiento
 
-Several steps are taken to simulate the result of roughly handling an object during transit.
+Se toman varios pasos para simular el resultado de la manipulación aproximada de un objeto durante la transacción.
 
-### Destroying and gravity
+### Destrucción y gravedad
 
-This step is first taken. Blocks within the selection have a chance to be damaged. When a block is damaged, it either falls to the lowest voxel available or get replaced by the held block.
+Este paso es el primero. Los bloques dentro de la selección tienen la posibilidad de ser dañados. Cuando un bloque es dañado, cae al vóxel más bajo disponible o sea reemplazado por el bloque sostenido.
 
-A block is only affected by gravity for 32 blocks. If a falling block cannot find a suitable block to land on, it may float.
+Un bloque solo se ve afectado por la gravedad de 32 bloques. Si un bloque que cae no puede encontrar un bloque adecuado en el que aterrizar puede flotar.
 
-### Imploding
+### Explotando
 
-This step is taken last. From each of the 8 corners, blocks have a chance to be brought closer to the selection's center.
+Este paso se ha dado el último. De cada uno de los 8 maíz, los bloques tienen la oportunidad de acercarse más al centro de la selección.
