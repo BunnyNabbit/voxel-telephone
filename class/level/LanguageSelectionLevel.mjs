@@ -18,7 +18,7 @@ class BaseLanguageDrone extends Drone {
 		this.radius = 2
 	}
 	/**Checks if a given position is within interaction range of the drone.
-	 * @param {Object} position - The position to check, with x, y, z properties.
+	 * @param {number[]} position - The position to check.
 	 * @returns {boolean} True if the position is within range, false otherwise.
 	 */
 	isTouching(position) {
