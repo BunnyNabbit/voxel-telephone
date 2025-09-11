@@ -1,15 +1,15 @@
 ---
-title: "/realm"
+title: "/reino"
 contributors: [ "BunnyNabbit \"Aon\"" ]
-summary: "Enters the personal realm view."
+summary: "Entra a la vista del reino personal."
 ---
 
-# /realm
+# /reino
 
-Enters the personal realm view. All created realms by the user will be displayed.
+Entra a la vista del reino personal. Se mostrarán todos los reinos creados por el usuario.
 
-This view initially starts off with a "Create a realm" icon. Double clicking this icon by breaking/placing a block twice will create a new realm.
+Esta vista comienza inicialmente con un icono de "Crear un realm". Hacer doble clic en este icono rompiendo o colocando un bloque dos veces creará un nuevo reino.
 
-Each realm is a 256x256x256 volume. Standard building commands and `/vcr` modes are supported. Existing realms can be joined by double clicking.
+Cada reino es un volumen de 256x256x256. Comandos estándar de construcción y modos `/vcr` son soportados. Los reinos existentes se pueden unir haciendo doble clic.
 
-Aliases: `/os`, `/myrealm`
+Alias: `/os`, `/myrealm`

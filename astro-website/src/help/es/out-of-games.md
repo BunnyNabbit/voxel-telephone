@@ -1,8 +1,8 @@
 ---
-title: "Out of games"
+title: "Fuera de juegos"
 noIndex: true
 ---
 
-Whoops. Looks like we ran out of games! How about this, you can create a new prompt from nothing. Go ahead, use `/create` to start the process of making a prompt.
+Ups. ¡Parece que nos quedamos sin juegos! ¿Qué hay de esto, puede crear un nuevo símbolo de espera de órdenes a partir de nada. Adelante, usa `/create` para iniciar el proceso de hacer una petición.
 
-Think of something mundane or imaginative. It is entirely up to you.
+Piense en algo mundano o imaginativo. Le corresponde enteramente a usted.

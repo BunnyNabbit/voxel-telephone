@@ -1,11 +1,11 @@
 ---
-title: "/main"
+title: "/principal"
 contributors: [ "BunnyNabbit \"Aon\"" ]
-summary: "Teleports the player to the hub level or their homebase."
+summary: "Teletransporta al jugador al nivel del hub o a su base."
 ---
 
-# /main
+# /principal
 
-Teleports the player to the hub level or their homebase.
+Teletransporta al jugador al nivel del hub o a su base.
 
-Aliases: `/hub`, `/spawn`, `/h`, `/wmain`, `/worldmain`
+Alias: `/hub`, `/spawn`, `/h`, `/wmain`, `/worldmain`

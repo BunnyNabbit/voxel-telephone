@@ -1,12 +1,12 @@
 ---
-title: "Rules"
+title: "Reglas"
 contributors: [ "BunnyNabbit \"Aon\"" ]
-summary: "The rules of Voxel Telephone."
+summary: "Las reglas de Voxel Teléfono."
 ---
 
-# Rules
+# Reglas
 
-The point of the game is to see how builds transform when users take turn describing and building.
+El objetivo del juego es ver cómo se transforman las construcciones cuando los usuarios toman el turno describiendo y construyendo.
 
-1. Do not intentionally derail the games. Build and describe as you genuinely see it.
-2. Builds and prompts must not be inappropriate.
+1. No descarriles intencionadamente los juegos. Construye y describe como lo ves de verdad.
+2. Los edificios y las señales no deben ser inadecuados.

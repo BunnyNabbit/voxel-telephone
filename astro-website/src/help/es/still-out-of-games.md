@@ -1,8 +1,8 @@
 ---
-title: "Still out of games"
+title: "Aún sin juegos"
 noIndex: true
 ---
 
-Voxel Telephone is out of games. Come back later!
+El Teléfono Voxel está fuera de juego. ¡Vuelve más tarde!
 
-If we are still out of games, you can submit another description a hour later.
+Si aún no tenemos juegos, puedes enviar otra descripción una hora más tarde.

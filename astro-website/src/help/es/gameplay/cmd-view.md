@@ -1,19 +1,19 @@
 ---
-title: "/view"
+title: "/ver"
 contributors: [ "BunnyNabbit \"Aon\"" ]
-summary: "Enters the view gallery of finished and ongoing games."
+summary: "Introduce la galería de vistas de los juegos terminados y en curso."
 ---
 
-# /view
+# /ver
 
-Usage: `/view <mode>`
+Uso: `/view <mode>`
 
-Enters the view gallery of finished and ongoing games.
+Introduce la galería de vistas de los juegos terminados y en curso.
 
-When issued without a mode (`/view`), each game will be represented by a column with pairs of turns in each grid. If a game has not been finished, only icons representing the state of a turn will be visualized. If a game has been finished then the entire game sequence with builds and descriptions are visible.
+Cuando se emite sin modo (`/view`), cada juego será representado por una columna con pares de turnos en cada cuadrícula. Si un juego no ha terminado, sólo se visualizarán los iconos que representan el estado de un turno. Si un juego ha terminado entonces toda la secuencia del juego con construcciones y descripciones son visibles.
 
-`/view user` shows you all of your own builds, even if the game it is associated with isn't completed.
+`/view user` te muestra todas tus propias compilaciones, incluso si el juego con el que está asociado no se completa.
 
-Players with moderation permission may use `/view mod` to enter a variant of the level to see builds for all games, even if they aren't complete.
+Los jugadores con permiso de moderación pueden usar `/view mod` para entrar en una variante del nivel para ver compilaciones de todos los juegos, incluso si no están completas.
 
-Aliases: `/museum`, `/gallery`
+Alias: `/museum`, `/gallery`

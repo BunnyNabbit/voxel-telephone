@@ -1,8 +1,8 @@
 ---
-title: "Building"
-summary: "Building is a fundamental aspect of Voxel Telephone. There are many commands and tools available to assist you in building."
+title: "Edificio"
+summary: "La construcción es un aspecto fundamental del Teléfono Voxel. Hay muchos comandos y herramientas disponibles para ayudarle a construir."
 ---
 
-# Building
+# Edificio
 
-Building is a fundamental aspect of Voxel Telephone. There are many commands and tools available to assist you in building.
+La construcción es un aspecto fundamental del Teléfono Voxel. Hay muchos comandos y herramientas disponibles para ayudarle a construir.

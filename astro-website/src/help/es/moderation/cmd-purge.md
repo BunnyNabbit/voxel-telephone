@@ -1,13 +1,13 @@
 ---
 title: "/purge"
 contributors: [ "BunnyNabbit \"Aon\"" ]
-summary: "Purges the latest turn of a highlighted game in the view gallery."
+summary: "Purga el último turno de un juego destacado en la galería de la vista."
 ---
 
 # /purge
 
-Usage: `/purge <reason>`
+Uso: `/purge <reason>`
 
-Purges the latest turn of a highlighted game in `/view`. `<reason>` is an optional reason for purging.
+Purga el último turno de un juego destacado en `/view`. `<reason>` es una razón opcional para purgar.
 
-This command is only available for moderators.
+Este comando sólo está disponible para moderadores.

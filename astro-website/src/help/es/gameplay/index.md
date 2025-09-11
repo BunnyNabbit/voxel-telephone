@@ -1,5 +1,5 @@
 ---
-title: "Gameplay"
+title: "Juego"
 ---
 
-# Gameplay
+# Juego

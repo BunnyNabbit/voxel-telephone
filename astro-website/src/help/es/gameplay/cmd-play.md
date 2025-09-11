@@ -1,11 +1,11 @@
 ---
 title: "/play"
 contributors: [ "BunnyNabbit \"Aon\"" ]
-summary: "Enters a new game."
+summary: "Introduce una nueva partida."
 ---
 
 # /play
 
-Enters a new game. Games are picked randomly. If a game cannot be found, the system will prompt for you to create a new game by initializing its prompt.
+Introduce una nueva partida. Los juegos se eligen al azar. Si no se puede encontrar un juego, el sistema te pedirá que crees un nuevo juego inicializando su indicación.
 
-If you abruptly leave a building turn, your game will be reserved for a hour. During the reservation period, you may re-enter the game by using the command. After that time has passed, the game will be released to other players.
+Si abandonas abruptamente un turno de construcción, tu juego estará reservado por una hora. Durante el periodo de reserva, puedes volver a entrar en el juego usando el comando. Una vez transcurrido ese tiempo, el juego será liberado a otros jugadores.
