@@ -1,10 +1,10 @@
 ---
-title: "/ver"
+title: "/view"
 contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Introduce la galería de vistas de los juegos terminados y en curso."
 ---
 
-# /ver
+# /view
 
 Uso: `/view <mode>`
 

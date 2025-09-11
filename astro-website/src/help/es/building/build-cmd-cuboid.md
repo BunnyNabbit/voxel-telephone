@@ -22,19 +22,19 @@ Cuboids puede crear con modificadores. Esto afecta a la apariencia del cuboide r
 
 Para usar un modo, el comando debe ser emitido con un bloque ID y el nombre del modo. i.e.e.: `/cuboid 9 hueco para hacer un cuboide hueco rojo. Si se da `hand\` para el bloque ID, el bloque a mano se usará en su lugar.
 
-### Hueco
+### Hollow (Hueco)
 
 Crea un cuboide hueco. El interior del cuboide estará vacío.
 
 ![Cubo hueco rojo](./cuboid-hollow.webp)
 
-### Muros
+### Walls (Muros)
 
 Crea un cuboide hueco sin suelo ni techo.
 
 ![Murallas rojas](./cuboid-walls.webp)
 
-### Agujeros
+### Holes (Agujeros)
 
 Crea un cuboide con un patrón de tablero.
 

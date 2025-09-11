@@ -8,19 +8,19 @@ imageAlt: "Un espacio con una paleta de colores ordenada en un cubo y líneas de
 
 # Plantillas
 
-## constructor
+## builder (Constructor)
 
 ![Un espacio con una paleta de colores ordenada en un cubo y rectas de eje apuntando desde una esquina.](./template-builder.webp)
 
 Utilizado como plantilla predeterminada para la construcción que incluye una paleta y líneas de ejes.
 
-## vacío
+## empty (Vacío)
 
 ![Un espacio vacío que solo tiene un piso.](./template-empty.webp)
 
 Una plantilla vacía. Utilizado por describir los giros y el nivel del centro.
 
-## animación
+## animation (Animación)
 
 ![Un espacio con salas transparentes organizadas y apiladas como un cubo.](./template-animation.webp)
 
