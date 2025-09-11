@@ -1,17 +1,17 @@
 ---
 title: "/SphereSlow"
 contributors: [ "BunnyNabbit \"Aon\"" ]
-summary: "Creates a sphere from a center point and a radius."
+summary: "Crea una esfera desde un punto central y un radio."
 image: "./sphereslow-output.webp"
-imageAlt: "Red sphere"
+imageAlt: "esfera roja"
 ---
 
 # /SphereSlow
 
-Makes a sphere from a center point and a radius.
+Hace una esfera desde un punto central y un radio.
 
-![Red sphere](./sphereslow-output.webp)
+![Esfera roja](./sphereslow-output.webp)
 
-If no arguments are added, block is inferred from your current hand and the server will ask for the block positions interactively.
+Si no se añaden argumentos, el bloque es inferior de la mano actual y el servidor pedirá las posiciones del bloque interactivamente.
 
-Aliases: `/sphere`, `/sp`
+Alias: `/sphere`, `/sp`
