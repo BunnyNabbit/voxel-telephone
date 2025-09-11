@@ -1,13 +1,13 @@
 ---
-title: "Game"
+title: "Juego"
 contributors: [ "BunnyNabbit \"Aon\"" ]
-summary: "Voxel Telephone is a game based on the \"telephone game\" which players build a given prompt and describe builds."
+summary: "Voxel Teléfono es un juego basado en el \"juego de teléfono\" que los jugadores construyen un determinado prompt y describen las construcciones."
 ---
 
-# Game
+# Juego
 
-Voxel Telephone is a game based on the "telephone game" which players build a given prompt and describe builds.
+Voxel Teléfono es un juego basado en el "juego de teléfono" que los jugadores construyen un determinado prompt y describen las construcciones.
 
-Each game begins with a prompt which players repeatedly build and describe until the 16th turn. When a game's 16th turn has been complete, the final sequence of descriptions and builds can be seen in the view level.
+Cada juego comienza con un prompt que los jugadores construyen repetidamente y describen hasta el 16 turno. Cuando el decimosexto turno de un juego ha sido completado, la secuencia final de descripciones y construcciones puede verse en el nivel de la vista.
 
-There is no time limit for games, and a player may take their time building or describing. If a player leaves while building, their game will be reserved for 1 hour before it is released back to other players.
+No hay límite de tiempo para los juegos, y un jugador puede tomar su tiempo de construcción o descripción. Si un jugador sale mientras se construye, su juego se reservará por 1 hora antes de que sea liberado a otros jugadores.
