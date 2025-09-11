@@ -1,13 +1,13 @@
 ---
 title: "/diverge"
 contributors: [ "BunnyNabbit \"Aon\"" ]
-summary: "Creates a new game timeline branching off from the highlighted turn in /view."
+summary: "Crea una nueva rama de tiempo del juego desde la vuelta resaltada en /view."
 ---
 
 # /diverge
 
-Creates a new game timeline branching off from the highlighted turn in `/view`.
+Crea una nueva rama de tiempo del juego desde la vuelta resaltada en `/view`.
 
-This command is only available for moderators.
+Este comando sólo está disponible para moderadores.
 
 Aliases: `/fork`
