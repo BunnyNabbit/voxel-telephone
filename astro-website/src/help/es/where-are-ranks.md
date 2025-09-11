@@ -1,9 +1,9 @@
 ---
-title: "Where are ranks?"
+title: "¿Dónde están los rangos?"
 contributors: [ "BunnyNabbit \"Aon\"" ]
 noIndex: true
 ---
 
-# Where are ranks?
+# ¿Dónde están los rangos?
 
-Voxel Telephone does not have a list of ranks
+El Teléfono Voxel no tiene una lista de rangos
