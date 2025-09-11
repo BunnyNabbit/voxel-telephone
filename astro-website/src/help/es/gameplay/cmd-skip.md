@@ -1,10 +1,10 @@
 ---
-title: "/saltar"
+title: "/skip"
 contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Salta el turno o el tutorial actual."
 ---
 
-# /saltar
+# /skip
 
 El comando `/skip` tiene diferentes comportamientos dependiendo del tipo de nivel en el que se encuentre un reproductor.
 
