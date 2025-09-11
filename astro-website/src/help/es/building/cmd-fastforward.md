@@ -1,15 +1,15 @@
 ---
 title: "/fastforward"
 contributors: [ "BunnyNabbit \"Aon\"" ]
-summary: "Restores actions reverted by /rewind."
+summary: "Restaura acciones revertidas por /rewind."
 ---
 
 # /fastforward
 
-Usage: `/fastforward <actions>`
+Uso: `/fastforward <actions>`
 
-Usable if VCR is currently enabled with `/vcr`.
+Utilizable si VCR está habilitado actualmente con `/vcr`.
 
-Restores a number of actions reverted by `/rewind`. If no argument is given, only one action will be restored.
+Restaura un número de acciones revertidas por `/rewind`. Si no se da ningún argumento, sólo se restaurará una acción.
 
 Aliases: `/ff`, `/redo`
