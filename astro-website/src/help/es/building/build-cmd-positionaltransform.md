@@ -1,12 +1,12 @@
 ---
-title: "/Transformación Posicional"
+title: "/PositionalTransform"
 contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Transforma una selección. Se puede utilizar para mover, copiar, voltear o girar una selección de bloques."
-image: "./positionaltransform-espejo-dragons.webp"
+image: "./positionaltransform-mirrored-dragons.webp"
 imageAlt: "Un dragón negro con ojos cian y vientre blanco está siendo reflejado horizontalmente por su mano. El dragón está en forma bípedal y tiene una mano levantada más cerca del centro que la otra."
 ---
 
-# /Transformación Posicional
+# /PositionalTransform
 
 Transforma una selección de bloques. Se puede utilizar para mover, copiar, voltear o girar una selección de bloques. Con los parámetros por defecto, moverá una selección de bloques sin transformaciones adicionales aplicadas.
 
