@@ -1,17 +1,17 @@
 ---
-title: "/Line"
+title: "/Línea"
 contributors: [ "BunnyNabbit \"Aon\"" ]
-summary: "Creates a line between two points."
-image: "./line-output.webp"
-imageAlt: "Red line"
+summary: "Crea una línea entre dos puntos."
+image: "./línea-salida.webp"
+imageAlt: "Línea roja"
 ---
 
-# /Line
+# /Línea
 
-Makes a line between two points.
+Hace una línea entre dos puntos.
 
-![Red line](./line-output.webp)
+![Línea roja](./line-output.webp)
 
-If no arguments are added, block is inferred from your current hand and the server will ask for the block positions interactively.
+Si no se añaden argumentos, el bloque es inferior de la mano actual y el servidor pedirá las posiciones del bloque interactivamente.
 
-Aliases: `l`, `/ln`
+Alias: `l`, `/ln`

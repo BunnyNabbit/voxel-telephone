@@ -1,12 +1,12 @@
 ---
-title: "Build your given description"
+title: "Construye tu descripción dada"
 noIndex: true
 ---
 
-# Build your given prompt
+# Construye tu prompt
 
-Build as you interpret the prompt. Do not intentionally derail games!
+Construye mientras interpretas el aviso. ¡No descarriles intencionalmente los juegos!
 
-- To skip, use `/skip`.
-- See building related commands by using `/help`.
-- Use `/report` if the prompt is inappropriate.
+- Para saltar, usa `/skip`.
+- Ver comandos relacionados con la construcción usando `/help`.
+- Usa `/report` si el prompt es inapropiado.

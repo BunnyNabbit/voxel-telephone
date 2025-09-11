@@ -1,41 +1,41 @@
 ---
 title: "/Cuboid"
 contributors: [ "BunnyNabbit \"Aon\"" ]
-summary: "Creates a cuboid from two points."
+summary: "Crea un cuboide a partir de dos puntos."
 image: "./cuboid-output.webp"
-imageAlt: "Red solid cuboid"
+imageAlt: "Cubo rojo sólido"
 ---
 
 # /Cuboid
 
-Makes a cuboid on two positions.
+Hace un cuboide en dos posiciones.
 
-![Red solid cuboid](./cuboid-output.webp)
+![Cubo sólido rojo](./cuboid-output.webp)
 
-If no arguments are added, block is inferred from your current hand and the server will ask for the block positions interactively.
+Si no se añaden argumentos, el bloque es inferior de la mano actual y el servidor pedirá las posiciones del bloque interactivamente.
 
-Aliases: `/z`
+Alias: `/z`
 
-## Modes
+## Modos
 
-Cuboids can created with modifiers. These affect how the resulting cuboid looks. `Solid` is the default mode.
+Cuboids puede crear con modificadores. Esto afecta a la apariencia del cuboide resultante. `Solid` es el modo por defecto.
 
-To use a mode, the command must be issued with a block ID and the mode's name. i.e.: `/cuboid 9 hollow` to make a red hollow cuboid. If `hand` is given for the block ID, the block on hand will be used instead.
+Para usar un modo, el comando debe ser emitido con un bloque ID y el nombre del modo. i.e.e.: `/cuboid 9 hueco para hacer un cuboide hueco rojo. Si se da `hand\` para el bloque ID, el bloque a mano se usará en su lugar.
 
-### Hollow
+### Hueco
 
-Creates a hollow cuboid. The inside of the cuboid will be empty.
+Crea un cuboide hueco. El interior del cuboide estará vacío.
 
-![Red hollow cuboid](./cuboid-hollow.webp)
+![Cubo hueco rojo](./cuboid-hollow.webp)
 
-### Walls
+### Muros
 
-Creates a hollow cuboid without a floor or roof.
+Crea un cuboide hueco sin suelo ni techo.
 
-![Red walls](./cuboid-walls.webp)
+![Murallas rojas](./cuboid-walls.webp)
 
-### Holes
+### Agujeros
 
-Creates a cuboid with a checkerboard pattern.
+Crea un cuboide con un patrón de tablero.
 
-![Red cuboid with holes resembling a checkerboard](./cuboid-holes.webp)
+![Cuboide rojo con agujeros que resinjan una placa de ajedrez](./cuboid-holes.webp)

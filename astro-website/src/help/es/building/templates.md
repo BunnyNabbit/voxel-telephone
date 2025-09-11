@@ -1,27 +1,27 @@
 ---
-title: "Templates"
+title: "Plantillas"
 contributors: [ "BunnyNabbit \"Aon\"" ]
-summary: "A list of various templates that can be used while building."
+summary: "Una lista de varias plantillas que se pueden utilizar durante la construcción."
 image: "./template-builder.webp"
-imageAlt: "A space with a color palette arranged in a cube and axis lines pointing out from a corner."
+imageAlt: "Un espacio con una paleta de colores ordenada en un cubo y líneas de eje que apuntan desde una esquina."
 ---
 
-# Templates
+# Plantillas
 
-## builder
+## constructor
 
-![A space with a color palette arranged in a cube and axis lines pointing out from a corner.](./template-builder.webp)
+![Un espacio con una paleta de colores ordenada en un cubo y rectas de eje apuntando desde una esquina.](./template-builder.webp)
 
-Used as the default template for building which includes a palette and axis lines.
+Utilizado como plantilla predeterminada para la construcción que incluye una paleta y líneas de ejes.
 
-## empty
+## vacío
 
-![An empty space which only features a floor.](./template-empty.webp)
+![Un espacio vacío que solo tiene un piso.](./template-empty.webp)
 
-An empty template. Used by describe turns and the hub level.
+Una plantilla vacía. Utilizado por describir los giros y el nivel del centro.
 
-## animation
+## animación
 
-![A space with transparent rooms arranged and stacked as a cube.](./template-animation.webp)
+![Un espacio con salas transparentes organizadas y apiladas como un cubo.](./template-animation.webp)
 
-A template used for creating animations. See `/help animation`.
+Una plantilla usada para crear animaciones. Vea `/help animation`.

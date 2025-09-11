@@ -1,23 +1,23 @@
 ---
-title: "Colors"
+title: "Colores"
 noIndex: true
 ---
 
-# Colors
+# Colores
 
-- 0: &0Black
-- 1: &1Navy
-- 2: &2Green
+- 0: &0Negro
+- 1: &1Naval
+- 2: &2Verde
 - 3: &3Teal
 - 4: &4Maroon
-- 5: &5Purple
-- 6: &6Gold
-- 7: &7Silver
-- 8: &8Gray
-- 9: &9Blue
+- 5: &5Morado
+- 6: &6Oro
+- 7: &7Plata
+- 8: &8Gris
+- 9: &9Azul
 - a: &aLime
 - b: &bAqua
-- c: &cRed
+- c: &cRojo
 - d: &dFuchsia
-- e: &eYellow
+- e: &eAmarillo
 - f: &fWhite

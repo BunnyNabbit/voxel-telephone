@@ -1,17 +1,17 @@
 ---
-title: "/template"
+title: "/plantilla"
 contributors: [ "BunnyNabbit \"Aon\"" ]
-summary: "Switches the level's template."
+summary: "Cambia la plantilla del nivel."
 image: "./template-builder.webp"
-imageAlt: "A space with a color palette arranged in a cube and axis lines pointing out from a corner."
+imageAlt: "Un espacio con una paleta de colores ordenada en un cubo y líneas de eje que apuntan desde una esquina."
 ---
 
-# /template
+# /plantilla
 
-Switches the level's template. For a list of templates, see `/help templates`.
+Cambia la plantilla del nivel. Para una lista de plantillas, vea `/help templates`.
 
-Because of how Voxel Telephone stores block changes of a level, it may be possible that the level will look different after switching to another template.
+Debido a los cambios de nivel en las tiendas de Teléfono Voxel puede ser posible que el nivel se vea diferente después de cambiar a otra plantilla.
 
-Issues may become apparent if commands which read the level's state are used. `/template empty` may be useful for seeing how a level looks in the perspective of a describer.
+Los problemas pueden hacerse evidentes si se utilizan comandos que leen el estado del nivel. `/template vacío` puede ser útil para ver cómo se ve un nivel en la perspectiva de un descriptor.
 
-Switching the template is a non-destructive action in terms of the block change timeline. Using this command does not affect how the level will look to a describer and will always be viewed with an empty template.
+Cambiar la plantilla es una acción no destructiva en términos de la línea de tiempo de cambio de bloque. Usar este comando no afecta cómo el nivel se verá a un descriptor y siempre será visto con una plantilla vacía.

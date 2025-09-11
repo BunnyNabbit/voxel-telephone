@@ -1,11 +1,11 @@
 ---
-title: "/paint"
+title: "/pintura"
 contributors: [ "BunnyNabbit \"Aon\"" ]
-summary: "Toggles paint mode."
+summary: "Activa el modo de pintura."
 ---
 
-# /paint
+# /pintura
 
-Toggles paint mode. Attempting to destroy blocks will instead replace that block with the block on hand
+Activa el modo de pintura. Intentar destruir bloques reemplazará ese bloque con el bloque a mano
 
-Aliases: `/p`
+Alias: `/p`

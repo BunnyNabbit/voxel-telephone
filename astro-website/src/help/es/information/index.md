@@ -1,5 +1,5 @@
 ---
-title: "Information"
+title: "Información"
 ---
 
-# Information
+# Información

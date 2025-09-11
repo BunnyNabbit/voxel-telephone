@@ -1,11 +1,11 @@
 ---
 title: "/abort"
 contributors: [ "BunnyNabbit \"Aon\"" ]
-summary: "Cancels interactive operations."
+summary: "Cancela operaciones interactivas."
 ---
 
 # /abort
 
-Used for canceling interactive operations, such as building commands or disabling VCR mode.
+Utilizado para cancelar operaciones interactivas, como construir comandos o desactivar el modo VCR.
 
-When used to cancel VCR, the level will revert to the state before VCR was enabled. No state will be committed in this case and may be used to safely check out a level's previous state.
+Cuando se utiliza para cancelar VCR, el nivel se revertirá al estado antes de activar VCR. Ningún estado se comprometerá en este caso y puede ser utilizado para revisar con seguridad el estado anterior de un nivel.

@@ -1,11 +1,11 @@
 ---
-title: "/finish"
+title: "/terminar"
 contributors: [ "BunnyNabbit \"Aon\"" ]
-summary: "Marks a turn as finished and exits back to hub."
+summary: "Marca un giro como terminado y sale hacia el hub."
 ---
 
-# /finish
+# /terminar
 
-Marks a turn as finished and exits back to hub. Turn assignment will also avoid from giving turns to you from its associated game.
+Marca un giro como terminado y sale hacia el hub. La asignación de giros también evitará darle vueltas de su juego asociado.
 
-To avoid submitting your work as final, use `/skip` to pass your turn.
+Para evitar presentar tu trabajo como final, usa `/skip` para pasar tu turno.

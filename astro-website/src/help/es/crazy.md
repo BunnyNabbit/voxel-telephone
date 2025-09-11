@@ -1,8 +1,8 @@
 ---
-title: Crazy
+title: Loco
 noIndex: true
 ---
 
-# Crazy
+# Loco
 
-Crazy? I was crazy once. They locked me in a room. A rubber room. A rubber room with rats. A rubber room with rubber rats. And rubber rats make me crazy
+¿Loco? Estuve loco una vez. Me cerraron en una habitación. Una sala de goma. Una sala de goma con ratas. Una sala de goma con ratas de goma. Y las ratas de goma me hacen loco

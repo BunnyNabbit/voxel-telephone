@@ -1,20 +1,20 @@
 ---
 title: "/vcr"
 contributors: [ "BunnyNabbit \"Aon\"" ]
-summary: "Enables VCR mode in a level."
+summary: "Activa el modo VCR en un nivel."
 ---
 
 # /vcr
 
-Enables VCR mode in a level, allowing for previous level states to be viewed and switched to.
+Activa el modo VCR en un nivel, permitiendo que los estados de nivel anterior sean vistos y cambiados.
 
-Block changes and commands are always saved and may be reverted if needed.
+Los cambios de bloque y los comandos siempre se guardan y pueden ser revertidos si es necesario.
 
-If VCR is enabled, the commands for rewinding (`/rewind <actions>`) and fast-forwarding (`/fastforward <actions>`) become usable. Rewinding and fast-forwarding only affects the preview and does not affect the level state until it has been committed with the `/commit` command.
+Si la VCR está habilitada, los comandos de rebobinado (`/rewind <actions>`) y de reenvío rápido (`/fastforward <actions>`) se vuelven utilizables. Rebobinar y reenviar rápidamente sólo afecta a la vista previa y no afecta al estado del nivel hasta que haya sido confirmado con el comando `/commit`.
 
-## Related commands
+## Comandos relacionados
 
-- `/rewind <actions>` - undos actions.
-- `/fastforward <actions>` - redos rewinded actions.
-- `/commit` - loads current state seen in the VCR preview. will override change record.
-- `/abort` - aborts VCR preview, loading state as it was before enabling VCR.
+- `/rewind <actions>` - deshace acciones.
+- `/fastforward <actions>` - redos acciones reventadas.
+- `/commit` - carga el estado actual visto en la vista previa de VCR. anulará el registro de cambios.
+- `/abort` - aborta la vista previa de VCR, cargando el estado tal y como estaba antes de habilitar VCR.

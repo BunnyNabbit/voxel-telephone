@@ -1,47 +1,47 @@
 ---
-title: "/PositionalTransform"
+title: "/Transformación Posicional"
 contributors: [ "BunnyNabbit \"Aon\"" ]
-summary: "Transforms a selection. It can be used for moving, copying, flipping or spinning a selection of blocks."
-image: "./positionaltransform-mirrored-dragons.webp"
-imageAlt: "A black dragon with cyan eyes and white underbelly is being mirrored horizontally by his hand. The dragon is in a bipedal form and has one hand lifted closer to the center than the other."
+summary: "Transforma una selección. Se puede utilizar para mover, copiar, voltear o girar una selección de bloques."
+image: "./positionaltransform-espejo-dragons.webp"
+imageAlt: "Un dragón negro con ojos cian y vientre blanco está siendo reflejado horizontalmente por su mano. El dragón está en forma bípedal y tiene una mano levantada más cerca del centro que la otra."
 ---
 
-# /PositionalTransform
+# /Transformación Posicional
 
-Transforms a selection of blocks. It can be used for moving, copying, flipping or spinning a selection of blocks. With default parameters, it will move a selection of blocks with no additional transformations applied.
+Transforma una selección de bloques. Se puede utilizar para mover, copiar, voltear o girar una selección de bloques. Con los parámetros por defecto, moverá una selección de bloques sin transformaciones adicionales aplicadas.
 
-Command layout: `/positionaltransform &enum:mode &enum:rotation &enum:flipAxis position:positionStart position:positionEnd position:offsetPosition position:pastePosition`
+Diseño del comando: `/positionaltransform &enum:mode &enum:rotation &enum:flipAxis position:positionStart position:positionEnd position:offsetPosition position:pastePosition`
 
-Aliases: `/move`
+Alias: `/move`
 
-## Modes
+## Modos
 
-The `&enum:mode` parameter is used as the base mode. It is `move` by default,
+El parámetro `&enum:mode` se utiliza como modo base. Es `move` por defecto,
 
-- `move` Moves the selection by clearing the selection with air.
-- `copy` Preserves the original selection.
-- `moveAir` Same as `move` but pastes air blocks over pasting area.
-- `copyAir` Same as `copy` but pastes air blocks over pasting area.
+- `move` Mueve la selección limpiando la selección con aire.
+- `copiar` reserva la selección original.
+- `moveAir` Igual que `move` pero pega bloques de aire sobre el área de pegado.
+- `copyAir` Igual que `copiar` pero pega bloques de aire sobre el área de pegado.
 
-## Spinning
+## Espinar
 
-A selection can be spun clockwise or counterclockwise using the `&enum:rotation` parameter.
+Una selección puede girar en sentido horario o en sentido contrario a las agujas del reloj usando el parámetro `&enum:rotation`.
 
-- `none` No rotation transformation applied.
+- `ninguno` Ninguna transformación de rotación aplicada.
 - `clockwise`
 - `counterclockwise`
 
-Example: `/positionaltransform move clockwise`. Spins the selection clockwise.
+Ejemplo: `/positionaltransform mueve en sentido horario`. Marca la selección en el sentido del reloj.
 
-![Two clocks are arranged side-by-side. The clock on the left has its red hand pointing to the right and the clock on the right is pointing down.](./positionaltransform-clocks.webp)
+![Dos relojes están dispuestos lado a lado. El reloj de la izquierda tiene su mano roja apuntando a la derecha y el reloj de la derecha apunta hacia abajo.](./positionaltransform-clocks.webp)
 
-## Flipping
+## Volteando
 
-Example: `/positionaltransform copy none x`. Copies and flips a selection by its X axis.
+Ejemplo: `/positionaltransform copy none x`. Copia y vuelca una selección por su eje X.
 
-![A black dragon with cyan eyes and white underbelly is being mirrored horizontally by his hand. The dragon is in a bipedal form and has one hand lifted closer to the center than the other.](./positionaltransform-mirrored-dragons.webp)
+![Un dragón negro con ojos cian y abrazo blanco está siendo reflejado horizontalmente por su mano. El dragón está en forma bípeda y tiene una mano más cerca del centro que la otra.](./positionaltransform-mirrored-dragons.webp)
 
-- `none` No flip transformation applied.
-- `x` Flip by x axis.
-- `y` Flip by y axis.
-- `z` Flip by z axis.
+- `ninguno` No se ha aplicado ninguna transformacin de vuelta.
+- `x` Voltear por x axis.
+- `y` Voltear por eje y.
+- `z` Voltear por z eje.

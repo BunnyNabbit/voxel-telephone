@@ -1,17 +1,17 @@
 ---
-title: "/skip"
+title: "/saltar"
 contributors: [ "BunnyNabbit \"Aon\"" ]
-summary: "Skips the current turn or tutorial."
+summary: "Salta el turno o el tutorial actual."
 ---
 
-# /skip
+# /saltar
 
-The `/skip` command has different behaviors depending on the level type a player is in.
+El comando `/skip` tiene diferentes comportamientos dependiendo del tipo de nivel en el que se encuentre un reproductor.
 
-## Build or describe turn
+## Construir o describir giro
 
-Skips the current turn. Turn assignment will avoid giving you that turn.
+Salta el turno actual. La asignación por turno evitará darte ese turno.
 
-## Tutorial level
+## Nivel Tutorial
 
-Skips the current tutorial level. Each tutorial level may handle skips differently from completing it.
+Salta el nivel de tutorial actual. Cada nivel de tutorial puede manejar saltos diferentes a completarlo.

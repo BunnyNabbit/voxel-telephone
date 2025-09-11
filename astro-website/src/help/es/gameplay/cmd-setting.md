@@ -1,19 +1,19 @@
 ---
-title: "/setting"
+title: "/ajuste"
 contributors: [ "BunnyNabbit \"Aon\"" ]
-summary: "Allows for setting preferences."
+summary: "Permite establecer preferencias."
 ---
 
-# /setting
+# /ajuste
 
-Usage: `/setting [setting name] [value]`
+Uso: `/setting [setting name] [value]`
 
-Allows for setting preferences.
+Permite establecer preferencias.
 
-- `music` `[on/off]`: Should music play?
-- `sounds` `[on/off]`: Should sounds play?
-- `language` `[language code]`: What language is used by system messages?
-  - `en`: English
-  - `en-zhing`: Zhing-like English
-  - `es`: Spanish
-  - `pt-br`: Brazilian Portuguese
+- `music` `[on/off]`: ¿Debería reproducirse música?
+- `sonidos` `[on/off]`: ¿deberían sonar los sonidos?
+- `language` `[código de idioma]`: ¿Qué idioma es usado por los mensajes del sistema?
+  - `es`: Inglés
+  - `en-zhing`: Inglés como Zhing-
+  - `es`: Español
+  - `pt-br`: Portugués brasileño

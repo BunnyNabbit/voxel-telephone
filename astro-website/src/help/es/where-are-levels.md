@@ -1,17 +1,17 @@
 ---
-title: "Where are levels?"
+title: "¿Dónde están los niveles?"
 contributors: [ "BunnyNabbit \"Aon\"" ]
 noIndex: true
 ---
 
-# Where are levels?
+# ¿Dónde están los niveles?
 
-Voxel Telephone does not have a list of levels. Instead, all game modes are in the `/main` level hub as portals.
+El Teléfono Voxel no tiene una lista de niveles. En su lugar, todos los modos de juego están en el nivel `/main` como portales.
 
-Walk into the portals located in the hub to enter its game mode.
+Camina por los portales ubicados en el hub para entrar en su modo de juego.
 
-Alternatively, use the following commands to enter a game mode.
+Alternativamente, utilice los siguientes comandos para entrar en modo de juego.
 
-- `/play`: Enter a random game.
-- `/view`: Enter the view gallery.
-- `/main`: Enter the hub.
+- `/play`: Introduce un juego aleatorio.
+- `/view`: Introduzca la galería de la vista.
+- `/main`: Introduzca el hub.
