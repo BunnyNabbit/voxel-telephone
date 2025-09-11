@@ -2,7 +2,7 @@
 title: "/CourierTransform"
 contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Simula el resultado de la manipulación rugosa durante el tránsito."
-image: "./couriertransform-resultado.webp"
+image: "./couriertransform-result.webp"
 imageAlt: "Una caja de cartón dañada."
 ---
 

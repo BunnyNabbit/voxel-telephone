@@ -1,10 +1,10 @@
 ---
-title: "/reino"
+title: "/realm"
 contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Entra a la vista del reino personal."
 ---
 
-# /reino
+# /realm
 
 Entra a la vista del reino personal. Se mostrarán todos los reinos creados por el usuario.
 

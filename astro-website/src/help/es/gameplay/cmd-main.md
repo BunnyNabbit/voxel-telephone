@@ -1,10 +1,10 @@
 ---
-title: "/principal"
+title: "/main"
 contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Teletransporta al jugador al nivel del hub o a su base."
 ---
 
-# /principal
+# /main
 
 Teletransporta al jugador al nivel del hub o a su base.
 

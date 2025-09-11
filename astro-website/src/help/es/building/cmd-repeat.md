@@ -1,10 +1,10 @@
 ---
-title: "/repetir"
+title: "/repeat"
 contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Cambia el modo repetición. El último comando de compilación se repetirá interactivamente."
 ---
 
-# /repetir
+# /repeat
 
 Cambia el modo repetición. Cuando el modo de repetición está activado, el último comando de compilación se repetirá de forma interactiva.
 

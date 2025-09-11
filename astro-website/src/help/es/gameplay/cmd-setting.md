@@ -1,10 +1,10 @@
 ---
-title: "/ajuste"
+title: "/setting"
 contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Permite establecer preferencias."
 ---
 
-# /ajuste
+# /setting
 
 Uso: `/setting [setting name] [value]`
 

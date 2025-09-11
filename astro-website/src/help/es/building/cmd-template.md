@@ -1,12 +1,12 @@
 ---
-title: "/plantilla"
+title: "/template"
 contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Cambia la plantilla del nivel."
 image: "./template-builder.webp"
 imageAlt: "Un espacio con una paleta de colores ordenada en un cubo y líneas de eje que apuntan desde una esquina."
 ---
 
-# /plantilla
+# /template
 
 Cambia la plantilla del nivel. Para una lista de plantillas, vea `/help templates`.
 

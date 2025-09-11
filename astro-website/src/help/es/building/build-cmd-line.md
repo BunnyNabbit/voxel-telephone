@@ -1,12 +1,12 @@
 ---
-title: "/Línea"
+title: "/Line"
 contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Crea una línea entre dos puntos."
-image: "./línea-salida.webp"
+image: "./line-output.webp"
 imageAlt: "Línea roja"
 ---
 
-# /Línea
+# /Line
 
 Hace una línea entre dos puntos.
 

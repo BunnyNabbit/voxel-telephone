@@ -2,7 +2,7 @@
 title: "/AbnormalTriangle"
 contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Crea un triángulo a partir de tres puntos."
-image: "./triángulo-salida.webp"
+image: "./triangle-output.webp"
 imageAlt: "Triángulo rojo"
 ---
 

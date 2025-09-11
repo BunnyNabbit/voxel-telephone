@@ -1,10 +1,10 @@
 ---
-title: "/animación"
+title: "/animation"
 contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Proporciona una herramienta básica para explotar una ilusión visual del movimiento."
 ---
 
-# /animación
+# /animation
 
 Uso: `/animation [dirección transversal]`
 

@@ -1,10 +1,10 @@
 ---
-title: "/licencia"
+title: "/license"
 contributors: [ "BunnyNabbit \"Aon\"" ]
 summary: "Añade una licencia a una versión y la publica como modelo."
 ---
 
-# /licencia
+# /license
 
 Uso: `/license <license name>`
 
