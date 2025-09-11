@@ -1,11 +1,11 @@
 ---
-title: "/repeat"
+title: "/repetir"
 contributors: [ "BunnyNabbit \"Aon\"" ]
-summary: "Toggles repeat mode. The last build command will be interactively repeated."
+summary: "Cambia el modo repetición. El último comando de compilación se repetirá interactivamente."
 ---
 
-# /repeat
+# /repetir
 
-Toggles repeat mode. When repeat mode is on, the last build command will be interactively repeated.
+Cambia el modo repetición. Cuando el modo de repetición está activado, el último comando de compilación se repetirá de forma interactiva.
 
-Aliases: `/static`, `/toggle`, `/t`
+Alias: `/static`, `/toggle`, `/t`
