@@ -1,13 +1,13 @@
 ---
 title: "/commit"
 contributors: [ "BunnyNabbit \"Aon\"" ]
-summary: "Saves the current VCR state as the level state."
+summary: "Guarda el estado actual de VCR como el estado de nivel."
 ---
 
 # /commit
 
-Usable if VCR is currently enabled with `/vcr`.
+Utilizable si VCR está habilitado actualmente con `/vcr`.
 
-Saves the state seen in VCR as the current level state and disables VCR mode, allowing for the level to be edited. Actions that were rewinded cannot be restored after a level state has been committed.
+Guarda el estado visto en VCR como estado de nivel actual y deshabilita el modo VCR, permitiendo que el nivel sea editado. Las acciones que se reintegraron no se pueden restablecer después de que se haya comprometido un estado de nivel.
 
-To cancel VCR without committing a state, use `/abort`.
+Para cancelar VCR sin comprometer un estado, use `/abort`.
