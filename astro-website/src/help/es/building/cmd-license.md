@@ -1,22 +1,22 @@
 ---
-title: "/license"
+title: "/licencia"
 contributors: [ "BunnyNabbit \"Aon\"" ]
-summary: "Adds a license to a build and publishes it as a model."
+summary: "Añade una licencia a una versión y la publica como modelo."
 ---
 
-# /license
+# /licencia
 
-Usage: `/license <license name>`
+Uso: `/license <license name>`
 
-Adds a license to the build selected in the view gallery. If invoked without the `<license name>` argument, the current licenses will be displayed for a build.
+Añade una licencia a la construcción seleccionada en la galería de vistas. Si se invoca sin el argumento `<license name>`, las licencias actuales se mostrarán para una compilación.
 
-Adding a license will enable downloads for your build in multiple voxel formats.
+Añadir una licencia habilitará las descargas para tu construcción en múltiples formatos de voxel.
 
-Multiple different licenses can be added to a build. You cannot revoke licenses that you have added to a build.
+Múltiples licencias diferentes pueden ser añadidas a una compilación. No puedes revocar las licencias que has añadido a una compilación.
 
-## Licenses
+## Licencias
 
 - `CC0`: CC0 1.0 Universal https://creativecommons.org/publicdomain/zero/1.0/
-- `CC BY`: Attribution 4.0 International https://creativecommons.org/licenses/by/4.0/
+- `CC BY`: Reconocimiento 4.0 Internacional https://creativecommons.org/licenses/by/4.0/
 - `CC BY-SA`: Attribution-ShareAlike 4.0 International https://creativecommons.org/licenses/by-sa/4.0/
-- `OGA BY`: OpenGameArt.org Attribution 4.0 https://opengameart.org/sites/default/files/archive/oga-by-40.txt
+- `OGA BY`: Atribución de OpenGameArt.org 4.0 https://opengameart.org/sites/default/files/archive/oga-by-40.txt
