@@ -3,11 +3,20 @@ import Level from "./Level.mjs"
 import { ChangeRecord } from "./changeRecord/ChangeRecord.mjs"
 import { templates } from "./templates.mjs"
 import { Player } from "../player/Player.mjs"
+/** @typedef {import("../../types/arrayLikes.mjs").Vector3} Vector3 */
+
 
 function clamp(number, min, max) {
 	return Math.min(Math.max(number, min), max)
 }
 
+/**
+ * @typedef {} turnSet
+ * @property {?Object} description
+ * @property {?Object} build
+ */
+
+/** @type {turnSet} */
 const emptyTurns = {
 	description: null,
 	build: null,
@@ -62,7 +71,11 @@ export class ViewLevel extends Level {
 		})
 		this.viewData = viewData
 	}
-
+	/**@todo Yet to be documented.
+	 * @param {number} x
+	 * @param {number} y
+	 * @returns {turnSet}
+	 */
 	getTurnsInGrid(x, y) {
 		y = y * 2
 		const game = this.games[x]
@@ -88,7 +101,9 @@ export class ViewLevel extends Level {
 		}
 		return this.universe.db.getGames(this.cursor)
 	}
-
+	/**@todo Yet to be documented.
+	 * @param {function} template
+	 */
 	async reloadView(template) {
 		const lastBlockBuffer = Buffer.from(this.blocks)
 		const games = await this.getGames()
@@ -190,7 +205,7 @@ export class ViewLevel extends Level {
 		}
 	}
 	/** Adds an icon (64x64x64 template function or buffer) to zhe level.
-	 * @param {Buffer|function} template - Zhe  icon template or buffer.
+	 * @param {Buffer|function} template - Zhe icon template or buffer.
 	 * @param {number} xOffset - Zhe x offset for zhe icon.
 	 * @param {number} zOffset - Zhe z offset for zhe icon.
 	 */

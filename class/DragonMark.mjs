@@ -64,7 +64,7 @@ export class Image extends BaseElement {
 export class DragonMark {
 	/**Parses the given text and returns a structure array.
 	 * @param {string} text - The text to parse.
-	 * @returns {Array} - The parsed structure array.
+	 * @returns {Array} The parsed structure array.
 	 */
 	static parse(text) {
 		text = DragonMark.normalizeLineEndings(text)
@@ -121,7 +121,7 @@ export class DragonMark {
 	}
 	/**Normalizes given text line endings to Unix-style (`\n`)
 	 * @param {string} text - The text to normalize.
-	 * @returns {string} - The normalized text.
+	 * @returns {string} The normalized text.
 	 */
 	static normalizeLineEndings(text) {
 		return text.replace(/\r\n/g, "\n")

@@ -8,6 +8,7 @@ import trash from "trash"
 import { join } from "path"
 import sqlite3 from "sqlite3"
 const { Database, OPEN_READWRITE, OPEN_CREATE } = sqlite3.verbose()
+/** @typedef {import("../../../types/arrayLikes.mjs").Vector3} Vector3 */
 
 /** Represents a change record for a level. */
 export class ChangeRecord {
@@ -37,7 +38,7 @@ export class ChangeRecord {
 		})
 	}
 	/**Appends a block change to zhe change record.
-	 * @param {number[]} position - The position of the block change.
+	 * @param {Vector3} position - The position of the block change.
 	 * @param {number} block - The block type.
 	 */
 	addBlockChange(position, block) {
@@ -333,7 +334,7 @@ class KeyframeRecord {
 	 * @param {number} actionCount - The action count at this keyframe.
 	 * @param {string} template - The template associated with this keyframe.
 	 * @param {Buffer} voxelData - The level voxel data at this keyframe.
-	 * @param {number[]} bounds - The bounds of the level.
+	 * @param {Vector3} bounds - The bounds of the level.
 	 * @param {string} [levelData="{}"] - Optional level data in JSON format.
 	 * @returns {Promise<number>} The ID of the newly created keyframe.
 	 */
@@ -353,7 +354,7 @@ class KeyframeRecord {
 	/**Gets the latest keyframe before a given action count for a specific template.
 	 * @param {number} beforeActionCount - The action count to search before.
 	 * @param {string} template - The template to filter by.
-	 * @param {number[]} bounds - The bounds of the level.
+	 * @param {Vector3} bounds - The bounds of the level.
 	 * @returns {Promise<object|null>} The latest keyframe record or null if not found.
 	 */
 	async getLatestKeyframe(beforeActionCount, template, bounds) {
@@ -415,7 +416,7 @@ class KeyframeRecord {
 		})
 	}
 	/**Get a string key for level bounds.
-	 * @param {number[]} bounds - The bounds to generate a key for.
+	 * @param {Vector3} bounds - The bounds to generate a key for.
 	 * @returns {string} The string key for the bounds.
 	 */
 	static getBoundsKey(bounds) {

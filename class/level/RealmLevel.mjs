@@ -7,7 +7,9 @@ class Count {
 	constructor() {
 		this.map = new Map()
 	}
-
+	/**@todo Yet to be documented.
+	 * @param {*} key
+	 */
 	increment(key) {
 		this.map.set(key, (this.map.get(key) || 0) + 1)
 	}
@@ -85,7 +87,10 @@ export class RealmLevel extends Level {
 		console.timeEnd("downsample")
 		return downsampled
 	}
-
+	/**@todo Yet to be documented.
+	 * @param {Player} player
+	 * @param {string} realmId
+	 */
 	static async teleportPlayer(player, realmId) {
 		if (super.teleportPlayer(player) === false) return
 		const { universe } = player

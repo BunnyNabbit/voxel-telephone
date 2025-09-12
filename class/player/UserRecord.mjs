@@ -1,6 +1,9 @@
-import { EventEmitter } from "node:events"
+import { TypedEmitter } from "tiny-typed-emitter"
 
-export class UserRecord extends EventEmitter {
+/**@todo Yet to be documented.
+ * @extends {TypedEmitter<{"configurationChange": (slug: string, value: any) => void}>}
+ */
+export class UserRecord extends TypedEmitter {
 	/** */
 	constructor(player, data) {
 		super()
