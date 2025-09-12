@@ -432,7 +432,7 @@ export class Database {
 	 * @param {ObjectId} turnId - The ID of a turn.
 	 * @param {Buffer} data - The download data.
 	 * @param {string} format - The download format.
-	 * @returns {Promise<void>} - A promise that resolves when the operation is complete.
+	 * @returns {Promise<void>} A promise that resolves when the operation is complete.
 	 */
 	async addDownload(turnId, data, format) {
 		const id = `${turnId}-${format}`
@@ -441,14 +441,14 @@ export class Database {
 	/**Add a license to a turn.
 	 * @param {ObjectId} turnId - The ID of the turn.
 	 * @param {string} licenseSlug - The license identifier.
-	 * @returns {Promise<void>} - A promise that resolves when the operation is complete.
+	 * @returns {Promise<void>} A promise that resolves when the operation is complete.
 	 */
 	async addTurnLicense(turnId, licenseSlug) {
 		await this.gameCollection.updateMany({ _id: turnId }, { $addToSet: { licenses: licenseSlug } })
 	}
 	/**Sets completion state for all turns in game
 	 * @param {ObjectId} gameId - The ID of the game.
-	 * @param {boolean} status - The status type.
+	 * @param {boolean} status The status type.
 	 */
 	async setGameCompletion(gameId, status) {
 		await this.gameCollection.updateMany({ root: gameId }, { $set: { gameStatus: status } })
@@ -456,7 +456,7 @@ export class Database {
 	/**Get the realm grid for a user.
 	 * @param {string} username - The username of the user.
 	 * @param {ObjectId} cursor - The cursor for pagination.
-	 * @returns {Promise<Array>} - A promise that resolves to an array of realms.
+	 * @returns {Promise<Array>} A promise that resolves to an array of realms.
 	 */
 	async getRealmGrid(username, cursor) {
 		const findDocument = { ownedBy: username }
@@ -498,7 +498,7 @@ export class Database {
 	}
 	/**Creates a new realm for a user.
 	 * @param {string} username - The username of the user.
-	 * @returns {Promise<Object>} - A promise that resolves to the created realm document or null if an error occurs.
+	 * @returns {Promise<Object>} A promise that resolves to the created realm document or null if an error occurs.
 	 */
 	async createNewRealm(username) {
 		const realmId = new ObjectId()
@@ -517,7 +517,7 @@ export class Database {
 	}
 	/**Fetches a realm by its ID.
 	 * @param {ObjectId} realmId - The ID of the realm to fetch.
-	 * @returns {Promise<Object>} - A promise that resolves to the realm document or null if not found.
+	 * @returns {Promise<Object>} A promise that resolves to the realm document or null if not found.
 	 */
 	async getRealm(realmId) {
 		try {
@@ -531,7 +531,7 @@ export class Database {
 	/**Saves a realm preview.
 	 * @param {ObjectId} realmId - The ID of the realm.
 	 * @param {Buffer} blocks - The blocks to save as a preview.
-	 * @returns {Promise<void>} - A promise that resolves when the operation is complete.
+	 * @returns {Promise<void>} A promise that resolves when the operation is complete.
 	 */
 	async saveRealmPreview(realmId, blocks) {
 		try {
@@ -542,7 +542,7 @@ export class Database {
 	}
 	/**Generates a random name consisting of three syllables.
 	 * @param {number} lengzh - The number of syllables to generate (default is 3).
-	 * @returns {string} - A randomly generated name.
+	 * @returns {string} A randomly generated name.
 	 */
 	static generateName(lengzh = 3) {
 		let name = ""

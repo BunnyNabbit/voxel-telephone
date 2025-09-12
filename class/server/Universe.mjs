@@ -11,11 +11,14 @@ import { Player } from "../player/Player.mjs"
 import { Drone } from "../level/drone/Drone.mjs"
 import { Ego } from "../level/drone/Ego.mjs"
 import { PushIntegration } from "../integrations/PushIntegration.mjs"
-import { EventEmitter } from "events"
+import { TypedEmitter } from "tiny-typed-emitter"
 import { invertPromptType, randomIntFromInterval } from "../../utils.mjs"
 import { FormattedString, stringSkeleton } from "../strings/FormattedString.mjs"
 
-export class Universe extends EventEmitter {
+/**@todo Yet to be documented.
+ * @extends {TypedEmitter<{"playerAdded": (player: Player) => void "playerRemoved": (player: Player) => void}>}
+ */
+export class Universe extends TypedEmitter {
 	/** */
 	constructor(serverConfiguration) {
 		super()
@@ -81,7 +84,9 @@ export class Universe extends EventEmitter {
 	async registerCommand(...args) {
 		this.commandRegistry.registerCommand(...args)
 	}
-
+	/**@todo Yet to be documented.
+	 * @param {Player} player 
+	 */
 	addPlayer(player) {
 		for (let i = 0; i < 127; i++) {
 			if (!this.server.players.some((player) => player.netId == i)) {
@@ -100,7 +105,9 @@ export class Universe extends EventEmitter {
 		}
 		throw "Unable to generate unique player ID"
 	}
-
+	/**@todo Yet to be documented.
+	 * @param {Player} player 
+	 */
 	removePlayer(player) {
 		const clientIndex = this.server.players.indexOf(player)
 		if (clientIndex !== -1) this.server.players.splice(clientIndex, 1)
@@ -119,7 +126,9 @@ export class Universe extends EventEmitter {
 		}
 		return false
 	}
-
+	/**@todo Yet to be documented.
+	 * @param {Player} player 
+	 */
 	async startGame(player) {
 		if (player.teleporting == true) return
 		player.teleporting = true

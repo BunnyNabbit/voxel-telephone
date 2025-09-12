@@ -2,7 +2,7 @@ import { levelCommands } from "./levelCommands.mjs"
 import { textSymbols } from "../../constants.mjs"
 import { Drone } from "./drone/Drone.mjs"
 import { Ego } from "./drone/Ego.mjs"
-import { EventEmitter } from "events"
+import { TypedEmitter } from "tiny-typed-emitter"
 import { componentToHex } from "../../utils.mjs"
 import { templates } from "../level/templates.mjs"
 import defaultBlockset from "../../6-8-5-rgb.json" with { type: "json" }
@@ -10,10 +10,20 @@ import { NullChangeRecord } from "../level/changeRecord/NullChangeRecord.mjs"
 import { ChangeRecord } from "./changeRecord/ChangeRecord.mjs"
 import { FormattedString, stringSkeleton } from "../strings/FormattedString.mjs"
 /** @typedef {import("../player/Player.mjs").Player} Player */
+/** @typedef {import("../../types/arrayLikes.mjs").Vector3} Vector3 */
+/** @typedef {import("../../types/arrayLikes.mjs").Vector2} Vector2 */
+/** @typedef {import("classicborne-server-protocol/class/Client.mjs").Client} Client */
+/** @typedef {import("./levelCommands.mjs").LevelCommand} LevelCommand */
 
-export class Level extends EventEmitter {
+/**@todo Yet to be documented.
+ * @extends {TypedEmitter<{"playerAdded": (player: Player) => void "playerRemoved": (player: Player) => void "loaded": () => void "unloaded": () => void "levelLoaded": () => void}>}
+ */
+export class Level extends TypedEmitter {
 	static commands = levelCommands
-	/** */
+	/**@todo Yet to be documented.
+	 * @param {Vector3} bounds
+	 * @param {Buffer} blocks
+	 */
 	constructor(bounds, blocks) {
 		super()
 		this.players = []
@@ -34,14 +44,19 @@ export class Level extends EventEmitter {
 			}
 		})
 	}
-
+	/**@todo Yet to be documented.
+	 * @param {string|FormattedString} message
+	 * @param {number[]} [types=[0]]
+	 */
 	messageAll(message, types = [0]) {
 		this.players.forEach((player) => {
 			player.message(message, types)
 		})
 		this.playSound("toggle")
 	}
-
+	/**@todo Yet to be documented.
+	 * @param {Player} player
+	 */
 	sendDrones(player) {
 		this.drones.forEach((drone) => {
 			player.droneTransmitter.addDrone(drone)
@@ -90,7 +105,11 @@ export class Level extends EventEmitter {
 		this.players.push(player)
 		player.teleporting = false
 	}
-
+	/**@todo Yet to be documented.
+	 * @param {Player} player
+	 * @param	{Vector3} [position=[0,0,0]]
+	 * @param	{Vector2} [orientation=[0,0]]
+	 */
 	loadPlayer(player, position = [0, 0, 0], orientation = [0, 0]) {
 		player.client.loadLevel(
 			this.blocks,
@@ -123,10 +142,14 @@ export class Level extends EventEmitter {
 			player.droneTransmitter.resendDrones()
 		})
 	}
-
+	/**@todo Yet to be documented.
+	 * @param {number} block
+	 * @param {Vector3} position
+	 * @param {Player[]} [excludePlayers=[]]
+	 * @param {boolean} [saveToRecord=true]
+	 */
 	setBlock(position, block, excludePlayers = [], saveToRecord = true) {
 		this.blocks.writeUInt8(block, position[0] + this.bounds[0] * (position[2] + this.bounds[2] * position[1]))
-		// callback(block, position[0], position[1], position[2])
 		this.players.forEach((player) => {
 			if (!excludePlayers.includes(player)) player.client.setBlock(block, ...position)
 		})
@@ -139,15 +162,25 @@ export class Level extends EventEmitter {
 			}
 		}
 	}
-
+	/**@todo Yet to be documented.
+	 * @param {Vector3} position
+	 * @param {number} block
+	 */
 	rawSetBlock(position, block) {
 		this.blocks.writeUInt8(block, position[0] + this.bounds[0] * (position[2] + this.bounds[2] * position[1]))
 	}
-
+	/**@todo Yet to be documented.
+	 * @param {Vector3} position
+	 * @returns {number}
+	 */
 	getBlock(position) {
 		return this.blocks.readUInt8(position[0] + this.bounds[0] * (position[2] + this.bounds[2] * position[1]))
 	}
-
+	/**@todo Yet to be documented.
+	 * @param {string} command
+	 * @param {?Player} player
+	 * @param {number[]} [actionBytes=[]]
+	 */
 	interpretCommand(command = "cuboid 1", player = null, actionBytes = []) {
 		// i.e: cuboid 1
 		// consider: if the block set has names, user could refer to blocks by name and not just id.
@@ -169,7 +202,12 @@ export class Level extends EventEmitter {
 			this.messageAll(new FormattedString(stringSkeleton.level.error.commandNotFound, { commandName, levelName: this.name }))
 		}
 	}
-
+	/**@todo Yet to be documented.
+	 * @param {?Object} providedData
+	 * @param {number} providedData.block
+	 * @param {Vector3} providedData.position
+	 * @param {?Player} player
+	 */
 	inferCurrentCommand(providedData = null, player = null) {
 		const currentType = this.currentCommand.layout[this.currentCommandLayoutIndex]
 		if (currentType == null) return this.commitAction(player)
@@ -207,7 +245,10 @@ export class Level extends EventEmitter {
 		}
 		this.messageAll(`Command needs ${currentType}, and it doesn't seem implemented :(`)
 	}
-
+	/**@todo Yet to be documented.
+	 * @param {string} command
+	 * @returns {typeof LevelCommand} The command class, or `null` if not found.
+	 */
 	static getCommandClassFromName(command) {
 		command = command.split(" ")
 		const commandName = command[0].toLowerCase()
@@ -215,14 +256,20 @@ export class Level extends EventEmitter {
 		if (!commandClass) commandClass = Level.commands.find((otherCommand) => otherCommand.aliases.includes(commandName))
 		return commandClass
 	}
-
+	/**@todo Yet to be documented.
+	 * @param {Vector3} position
+	 * @returns {boolean}
+	 */
 	withinLevelBounds(position) {
 		if (position.some((num) => isNaN(num))) return false
 		if (position[0] < 0 || position[1] < 0 || position[2] < 0) return false
 		if (position[0] >= this.bounds[0] || position[1] >= this.bounds[1] || position[2] >= this.bounds[2]) return false
 		return true
 	}
-
+	/**@todo Yet to be documented.
+	 * @param {string[]} splitCommand
+	 * @param {Player} player
+	 */
 	processCommandArguments(splitCommand, player) {
 		let currentIndex = 0
 		const incrementIndex = (commandIndex = 1) => {
@@ -293,7 +340,9 @@ export class Level extends EventEmitter {
 		}
 		this.inferCurrentCommand(null, player)
 	}
-
+	/**@todo Yet to be documented.
+	 * @param {?Player} player
+	 */
 	commitAction(player = null) {
 		const command = this.currentCommand
 		const { requiresRefreshing } = command.action(this.currentCommandActionBytes)
@@ -322,13 +371,18 @@ export class Level extends EventEmitter {
 		this.playSound("gameTrackDrone")
 		this.setBlinkText(textSymbols.pause)
 	}
-
+	/**@todo Yet to be documented.
+	 * @param {string} username
+	 * @returns {boolean}
+	 */
 	userHasPermission(username) {
 		if (this.allowList.length == 0) return true
 		if (this.allowList.includes(username)) return true
 		return false
 	}
-
+	/**@todo Yet to be documented.
+	 * @param {string} soundName
+	 */
 	playSound(soundName) {
 		this.players.forEach((player) => {
 			player.emit("playSound", player.universe.sounds[soundName])
@@ -336,7 +390,7 @@ export class Level extends EventEmitter {
 	}
 	/**Sets the text that will blink in the level, or stops blinking if `blinkText` is false.
 	 * @param {string|boolean} blinkText - The text to blink, or `false` to stop blinking.
-	 * @param {string} [subliminalText] - Optional subliminal text to display when blinking.
+	 * @param {?string} [subliminalText] - Optional subliminal text to display when blinking.
 	 */
 	setBlinkText(blinkText = false, subliminalText) {
 		clearInterval(this.blinkInterval)
@@ -360,7 +414,9 @@ export class Level extends EventEmitter {
 		this.blinkInterval = setInterval(blink, 500)
 		blink()
 	}
-	/** Destroys the level, releasing any resources used for it. */
+	/**Destroys the level, releasing any resources used for it.
+	 * @param {boolean} [saveChanges=true]
+	 */
 	async dispose(saveChanges = true) {
 		if (!this.changeRecord.draining && this.changeRecord.dirty && saveChanges) {
 			await this.changeRecord.flushChanges()
@@ -369,7 +425,10 @@ export class Level extends EventEmitter {
 		this.emit("unloaded")
 		this.removeAllListeners()
 	}
-
+	/**@todo Yet to be documented.
+	 * @param {Client} client
+	 * @param	{number[][]} blockset
+	 */
 	static sendBlockset(client, blockset) {
 		for (let i = 0; i < 255; i++) {
 			let walkSound = 5
@@ -435,7 +494,7 @@ export class Level extends EventEmitter {
 		universe.levels.set(spaceName, promise)
 		return promise
 	}
-	/**Teleports zhe player into zhe level. If level currently doesn't exist in universe, it'll be created.  
+	/**Teleports zhe player into zhe level. If level currently doesn't exist in universe, it'll be created.
 	 * Levels extending Level are expected to override zhis mezhod using zhis pattern:
 	 * ```js
 	 *  static async teleportPlayer(player, spaceName) {
@@ -448,7 +507,7 @@ export class Level extends EventEmitter {
 	 *  }
 	 * ```
 	 * @param {Player} player - Zhe player to teleport.
-	 * @param {string?} spaceName
+	 * @param {string?} [spaceName]
 	 * @param {{}?} [defaults={}]
 	 */
 	static async teleportPlayer(player, spaceName, defaults = {}) {
@@ -464,6 +523,7 @@ export class Level extends EventEmitter {
 			})
 		}
 	}
+	/** @type {Vector3} */
 	static bounds = [64, 64, 64]
 	static environment = {
 		sidesId: 7,

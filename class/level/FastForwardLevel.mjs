@@ -79,7 +79,7 @@ export class FastForwardLevel extends Level {
 		await changeRecord.dispose()
 		return count
 	}
-	/** Overrides Level.rawSetBlock to allow change record restores to be observed by clients */
+	/** Overrides `Level.rawSetBlock` to allow change record restores to be observed by clients */
 	rawSetBlock(position, block) {
 		if (this.sendChanges) {
 			this.setBlock(position, block) // not calling rawSetBlock was a good idea, somehow.

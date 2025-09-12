@@ -1,5 +1,9 @@
+/** @typedef {import("../player/Player.mjs").Player} Player */
+
 export class Watchdog {
-	/** */
+	/**@todo Yet to be documented.
+	 * @param {Player} player 
+	 */
 	constructor(player) {
 		this.interval = setInterval(() => {
 			this.currentRate = 0

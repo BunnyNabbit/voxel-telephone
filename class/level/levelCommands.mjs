@@ -1,4 +1,6 @@
-class LevelCommand {
+/** @typedef {import("../../types/arrayLikes.mjs").Vector3} Vector3 */
+
+export class LevelCommand {
 	/** */
 	constructor(layout, level, enums = {}) {
 		this.level = level
@@ -7,7 +9,10 @@ class LevelCommand {
 		this.rawSet = level.loading
 		this.blocksChanged = 0
 	}
-
+	/**@todo Yet to be documented.
+	 * @param {Vector3} position
+	 * @param {number} block
+	 */
 	setBlock(position, block) {
 		try {
 			if (this.rawSet) {
@@ -21,7 +26,9 @@ class LevelCommand {
 			if (this.level.logErrors) console.error(`Error setting block at ${position}:`, err)
 		}
 	}
-
+	/**@todo Yet to be documented.
+	 * @param {number[]} actionBytes
+	 */
 	parseBytes(actionBytes) {
 		const data = {}
 		let indexOffset = 0
