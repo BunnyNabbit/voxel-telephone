@@ -22,16 +22,16 @@ function traverseAndCreateTranslation(object, path = "") {
 				// empty
 			}
 			output += `**${pazh}**\n\n`
-			output += `- Source: ${escapeText(sourceString)}\n`
-			output += `- Translation: ${escapeText(translatedString)}\n\n`
+			output += `- Source: ${escapeMarkdownText(sourceString)}\n`
+			output += `- Translation: ${escapeMarkdownText(translatedString)}\n\n`
 		} else if (typeof value === "object") {
 			traverseAndCreateTranslation(value, path === "" ? key : path + "." + key)
 		}
 	}
 }
 
-function escapeText(str) {
-	return str.replace(/\n/g, "\\n").replace(/\r/g, "\\r").replace(/\t/g, "\\t").replace(/\*/g, "\\*").replace(/_/g, "\\_").replace(/`/g, "\\`").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\[/g, "\\[").replace(/\]/g, "\\]").replace(/\(/g, "\\(").replace(/\)/g, "\\)").replace(/#/g, "\\#").replace(/\+/g, "\\+").replace(/\|/g, "\\|").replace(/\\/g, "\\\\").replace(/\$/g, "\\$")
+function escapeMarkdownText(str) {
+	return str.replace(/\\/g, "\\\\").replace(/\n/g, "\\n").replace(/\r/g, "\\r").replace(/\t/g, "\\t").replace(/\*/g, "\\*").replace(/_/g, "\\_").replace(/`/g, "\\`").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\[/g, "\\[").replace(/\]/g, "\\]").replace(/\(/g, "\\(").replace(/\)/g, "\\)").replace(/#/g, "\\#").replace(/\+/g, "\\+").replace(/\|/g, "\\|").replace(/\$/g, "\\$")
 }
 
 setTimeout(() => {
