@@ -1,41 +1,27 @@
-import { Server } from "classicborne-server-protocol"
+import { BaseUniverse } from "./BaseUniverse.mjs"
 import { Level } from "../level/Level.mjs"
 import { HubLevel } from "../level/HubLevel.mjs"
 import { GlobalCommandRegistry } from "../GlobalCommandRegistry.mjs"
 import { Database } from "../Database.mjs"
-import { Heartbeat } from "./Heartbeat.mjs"
 import { templates } from "../level/templates.mjs"
 import { Commands } from "../player/Commands.mjs"
 import { CefSounds } from "../CefSounds.mjs"
-import { Player } from "../player/Player.mjs"
 import { Drone } from "../level/drone/Drone.mjs"
 import { Ego } from "../level/drone/Ego.mjs"
 import { PushIntegration } from "../integrations/PushIntegration.mjs"
-import { TypedEmitter } from "tiny-typed-emitter"
 import { invertPromptType, randomIntFromInterval } from "../../utils.mjs"
 import { FormattedString, stringSkeleton } from "../strings/FormattedString.mjs"
+import { Player } from "../player/Player.mjs"
 
-/**@todo Yet to be documented.
- * @extends {TypedEmitter<{"playerAdded": (player: Player) => void "playerRemoved": (player: Player) => void}>}
- */
-export class Universe extends TypedEmitter {
+/** @todo Yet to be documented. */
+export class Universe extends BaseUniverse {
+	static playerClass = Player
 	/** */
 	constructor(serverConfiguration) {
-		super()
-		console.log({ serverConfiguration })
-		this.serverConfiguration = serverConfiguration
-		this.server = new Server(serverConfiguration.port)
-		this.server.setupWebSocketServer()
-		this.server.universe = this
-		this.server.players = []
-		this.server.extensions.push({
-			name: "MessageTypes",
-			version: 1,
-		})
+		super(serverConfiguration)
 		this.db = new Database(this.serverConfiguration)
 		this.sounds = new CefSounds().sounds
 
-		if (this.serverConfiguration.postToMainServer) this.heartbeat = new Heartbeat(`https://www.classicube.net/server/heartbeat/`, this)
 		if (this.serverConfiguration.sounds.enabled) {
 			import(`./SoundServer.mjs`).then((SoundServer) => {
 				SoundServer = SoundServer.default
@@ -75,46 +61,11 @@ export class Universe extends TypedEmitter {
 
 		this.commandRegistry = new GlobalCommandRegistry()
 		Commands.register(this)
-		this.server.on("clientConnected", async (client, authInfo) => {
-			new Player(client, this, authInfo)
-		})
 		this.pushMessage(`Server started.`, PushIntegration.interestType.startServer)
 	}
 
 	async registerCommand(...args) {
 		this.commandRegistry.registerCommand(...args)
-	}
-	/**@todo Yet to be documented.
-	 * @param {Player} player 
-	 */
-	addPlayer(player) {
-		for (let i = 0; i < 127; i++) {
-			if (!this.server.players.some((player) => player.netId == i)) {
-				player.netId = i
-				this.server.players.forEach((otherPlayer) => {
-					player.client.addPlayerName(otherPlayer.netId, otherPlayer.username, `&7${otherPlayer.username}`, "Voxel Telephone", 1)
-				})
-				this.server.players.push(player)
-				player.client.addPlayerName(255, player.username, `&7${player.username}`, "Voxel Telephone", 1)
-				this.server.players.forEach((anyPlayer) => {
-					if (anyPlayer != player) anyPlayer.client.addPlayerName(i, player.username, `&7${player.username}`, "Voxel Telephone", 1)
-				})
-				this.emit("playerAdded", player)
-				return
-			}
-		}
-		throw "Unable to generate unique player ID"
-	}
-	/**@todo Yet to be documented.
-	 * @param {Player} player 
-	 */
-	removePlayer(player) {
-		const clientIndex = this.server.players.indexOf(player)
-		if (clientIndex !== -1) this.server.players.splice(clientIndex, 1)
-		this.server.players.forEach((ozherPlayer) => {
-			ozherPlayer.client.removePlayerName(player.netId)
-		})
-		this.emit("playerRemoved", player)
 	}
 
 	getHatchday() {
@@ -127,7 +78,7 @@ export class Universe extends TypedEmitter {
 		return false
 	}
 	/**@todo Yet to be documented.
-	 * @param {Player} player 
+	 * @param {Player} player
 	 */
 	async startGame(player) {
 		if (player.teleporting == true) return
