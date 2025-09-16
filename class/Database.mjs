@@ -558,7 +558,7 @@ export class Database {
 	 */
 	async getOngoingGameCount() {
 		try {
-			const count = await this.gameCollection.countDocuments({ active: true })
+			const count = await this.gameCollection.countDocuments({ active: true }, { timeoutMS: 5000 })
 			return count
 		} catch (err) {
 			console.error("Error counting ongoing games:", err)
