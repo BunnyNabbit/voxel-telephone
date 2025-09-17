@@ -186,6 +186,7 @@ export class Universe extends BaseUniverse {
 		template: templates.empty,
 		allowList: ["not a name"],
 	}
+	static heartbeatClass = import("./Heartbeat.mjs").then((module) => module.default)
 }
 
 export default Universe
