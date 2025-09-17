@@ -1,5 +1,4 @@
 import { Server } from "classicborne-server-protocol"
-import { Heartbeat } from "./Heartbeat.mjs"
 import { BasePlayer } from "../player/BasePlayer.mjs"
 import { TypedEmitter } from "tiny-typed-emitter"
 
@@ -19,10 +18,14 @@ export class BaseUniverse extends TypedEmitter {
 			name: "MessageTypes",
 			version: 1,
 		})
-		if (this.serverConfiguration.postToMainServer) this.heartbeat = new Heartbeat(`https://www.classicube.net/server/heartbeat/`, this)
+		if (this.serverConfiguration.postToMainServer) {
+			this.constructor.heartbeatClass.then((HeartbeatClass) => {
+				this.heartbeat = new HeartbeatClass(`https://www.classicube.net/server/heartbeat/`, this)
+			})
+		}
 		this.levels = new Map()
 		this.server.on("clientConnected", async (client, authInfo) => {
-			new (this.constructor.playerClass)(client, this, authInfo)
+			new this.constructor.playerClass(client, this, authInfo)
 		})
 	}
 	/**@todo Yet to be documented.
@@ -58,6 +61,7 @@ export class BaseUniverse extends TypedEmitter {
 		this.emit("playerRemoved", player)
 	}
 	static playerClass = BasePlayer
+	static heartbeatClass = import("./BaseHeartbeat.mjs").then((module) => module.default)
 }
 
 export default BaseUniverse

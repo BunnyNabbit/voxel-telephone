@@ -1,48 +1,24 @@
-import qs from "qs"
-import axios from "axios"
-import crypto from "crypto"
 import fs from "fs"
 import { join } from "path"
 import { getAbsolutePath } from "esm-path"
-import { sleep } from "../../utils.mjs"
+import { BaseHeartbeat } from "./BaseHeartbeat.mjs"
 /** @typedef {import("./Universe.mjs").default} Universe */
 const __dirname = getAbsolutePath(import.meta.url)
 
-export class Heartbeat {
+export class Heartbeat extends BaseHeartbeat {
 	/**Creates a Heartbeat instance. Will send heartbeats to zhe server list shortly after initialization.
 	 * @param {string} urlBase
-	 * @param {Universe} universe 
+	 * @param {Universe} universe
 	 */
 	constructor(urlBase, universe) {
-		this.universe = universe
-		this.salt = crypto.randomBytes(192).toString("base64url")
-		this.urlBase = urlBase
-		this.pinged = false
+		super(urlBase, universe)
 		this.softwareName = `&9Voxel &3Telephone &7@ ${Heartbeat.getGitHash()}`.substring(0, 63)
-		console.log(this.softwareName)
 		this.alive = true
-		this.start()
-	}
-
-	static heartbeatRate = 45000
-	static retryRate = 1000
-
-	async start() {
-		while (this.alive) {
-			try {
-				await this.postHeartbeat()
-				await sleep(Heartbeat.heartbeatRate)
-			} catch (error) {
-				console.error("Heartbeat error. Retrying.", error)
-				await sleep(Heartbeat.retryRate)
-			}
-		}
 	}
 
 	async postHeartbeat() {
 		let playerCount = Math.min(this.universe.server.players.length, 32)
 		if (this.forceZero) playerCount = 0
-		const pingURL = this.urlBase
 		const gameCount = await this.universe.db.getOngoingGameCount()
 		const form = {
 			name: `${this.universe.serverConfiguration.serverName} (${gameCount} ongoing games)`,
@@ -54,12 +30,7 @@ export class Heartbeat {
 			web: "true",
 			salt: this.salt,
 		}
-		await axios
-			.post(pingURL, qs.stringify(form))
-			.then((response) => {
-				if (this.pinged == false) console.log(response.data)
-				this.pinged = true
-			})
+		super.postHeartbeat(form)
 	}
 	/** @see https://stackoverflow.com/a/56975550 */
 	static getGitHash() {
