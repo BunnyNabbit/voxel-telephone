@@ -47,7 +47,7 @@ export class BaseUniverse extends TypedEmitter {
 				return
 			}
 		}
-		throw "Unable to generate unique player ID"
+		throw new Error("Unable to generate unique player ID.")
 	}
 	/**@todo Yet to be documented.
 	 * @param {Player} player
