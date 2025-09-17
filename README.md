@@ -1,4 +1,5 @@
 # Voxel Telephone
+
 [![Open GitHub issues badge](https://img.shields.io/github/issues/bunnynabbit/voxel-telephone)](https://github.com/BunnyNabbit/voxel-telephone/issues)
 [![GitHub Repo stars badge](https://img.shields.io/github/stars/bunnynabbit/voxel-telephone)](https://github.com/BunnyNabbit/voxel-telephone/stargazers)
 [![Crowdin progress badge](https://badges.crowdin.net/voxel-telephone/localized.svg)](https://crowdin.com/project/voxel-telephone)
@@ -10,6 +11,7 @@ A telephone game about repeatedly describing and building. How can misinterpreta
 Join the fun! You can [play on web browsers](https://www.classicube.net/server/play/1209f0e99914671f9cffc14d23f543c4/?canProxy=true) or from the ClassiCube server list.
 
 ## Features
+
 - A novel save format for voxel storage by only storing changes and issued commands. Handles undoable history.
 - A web interface for viewing [finished games](https://voxel-telephone.bunnynabbit.com/games), [profiles](https://voxel-telephone.bunnynabbit.com/player/BunnyNabbit) and [help documentation](https://voxel-telephone.bunnynabbit.com/help).
 - WebSocket client support.
