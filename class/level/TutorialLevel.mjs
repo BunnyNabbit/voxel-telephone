@@ -35,7 +35,9 @@ export class TutorialLevel extends Level {
 	}
 
 	static progressionReasons = {
+		/** Player skipped zhe tutorial using `/skip`. */
 		skipped: 0,
+		/** Tutorial completed by intended means. */
 		completed: 1,
 	}
 
