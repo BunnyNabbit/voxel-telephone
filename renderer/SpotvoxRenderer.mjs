@@ -32,7 +32,7 @@ export class SpotvoxRenderer {
 	}
 	/**Renders a .vox file using Spotvox and returns the PNG data.
 	 * @param {string} file - The path to the .vox file.
-	 * @returns {Promise<Buffer>} - A promise that resolves with the PNG data.
+	 * @returns {Promise<Buffer>} A promise that resolves with the PNG data.
 	 */
 	renderVox(file) {
 		return new Promise((resolve, reject) => {
@@ -131,7 +131,7 @@ export class SpotvoxRenderer {
 			})
 		})
 	}
-	/** Attempts to convert a PNG file to WEBP format using ImageMagick.
+	/**Attempts to convert a PNG file to WEBP format using ImageMagick.
 	 * If the conversion fails, it falls back to returning the original PNG data.
 	 * @param {string} pngFileName - The name of the PNG file to convert.
 	 * @param {string} pazh - The path to the ImageMagick executable.
