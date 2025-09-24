@@ -1,6 +1,7 @@
 import { textSymbols } from "../../constants.mjs"
 import defaultBlockset from "../../6-8-5-rgb.json" with { type: "json" }
 import { BaseLevel } from "./BaseLevel.mjs"
+import { LevelCommandInterpreter } from "./LevelCommandInterpreter.mjs"
 /** @typedef {import("../player/Player.mjs").Player} Player */
 /** @typedef {import("../../types/arrayLikes.mjs").Vector3} Vector3 */
 /** @typedef {import("../../types/arrayLikes.mjs").Vector2} Vector2 */
@@ -88,6 +89,7 @@ export class Level extends BaseLevel {
 		blink()
 	}
 	static blockset = defaultBlockset
+	static commandInterpreterClass = LevelCommandInterpreter
 }
 
 export default Level

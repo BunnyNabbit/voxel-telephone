@@ -104,7 +104,7 @@ export class Player extends BasePlayer {
 				if (!this.space) return
 				if (!this.space.userHasPermission(this.authInfo.username)) return this.message(new FormattedString(stringSkeleton.command.error.missingBuildPermission))
 				if (this.space.inVcr) return this.message(new FormattedString(stringSkeleton.level.error.buildCommandBlockingInVCR))
-				this.space.interpretCommand(message.replace("/", ""), this)
+				this.space.commandInterpreter.interpretCommand(message.replace("/", ""), this)
 			} else {
 				if (filter(message)) {
 					const filterMessages = universe.serverConfiguration.replacementMessages
@@ -186,9 +186,7 @@ export class Player extends BasePlayer {
 			}
 			if (this.space.blocking) {
 				this.client.setBlock(this.space.getBlock(operationPosition), ...operationPosition)
-				if (!this.space.inferCurrentCommand(this.getInferredData(operationPosition, block), this)) {
-					this.message(new FormattedString.stringSkeleton.level.error.blockBlockingCommand())
-				}
+				if (!this.space.commandInterpreter.inferCurrentCommand(this.getInferredData(operationPosition, block), this)) this.message(new FormattedString(stringSkeleton.level.error.blockBlockingCommand))
 				return
 			}
 			if (this.paintMode) {

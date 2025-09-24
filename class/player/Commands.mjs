@@ -114,9 +114,9 @@ export class Commands {
 						player.emit("playSound", universe.sounds.gameTrack)
 					})
 				} else {
-					if (player.space.currentCommand) {
+					if (player.space.commandInterpreter.currentCommand) {
 						player.space.blocking = false
-						player.space.currentCommand = null
+						player.space.commandInterpreter.currentCommand = null
 						player.message(new FormattedString(stringSkeleton.command.abort.success))
 						player.emit("playSound", universe.sounds.abort)
 					} else {
@@ -129,7 +129,7 @@ export class Commands {
 		universe.registerCommand(
 			["/mark"],
 			async (player) => {
-				player.space.inferCurrentCommand(player.getInferredData(), player)
+				player.space.commandInterpreter.inferCurrentCommand(player.getInferredData(), player)
 			},
 			[Commands.reasonHasLevelBuildPermission(false), Commands.reasonLevelBlocking(false, new FormattedString(stringSkeleton.level.error.noInteractiveCommands))]
 		)

@@ -145,9 +145,9 @@ export class ChangeRecord {
 					if (actions == 0) {
 						level.rawSetBlock([changes.readUInt8(), changes.readUInt8(), changes.readUInt8()], changes.readUInt8())
 					} else {
-						level.interpretCommand(commandName)
-						level.currentCommandActionBytes = actionBytes
-						level.commitAction()
+						level.commandInterpreter.interpretCommand(commandName)
+						level.commandInterpreter.currentCommandActionBytes = actionBytes
+						level.commandInterpreter.commitAction()
 					}
 				} else {
 					if (actions == 0) changes.readBuffer(4)
