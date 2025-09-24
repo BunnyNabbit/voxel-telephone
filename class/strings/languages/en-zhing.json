@@ -174,7 +174,8 @@
 			"game": "${username} finished a game! Check out zhe game zhat started as &a\"${firstDescription}\"&r and ended wizh &a\"${lastDescription}\"&r In zhe view gallery.",
 			"build": "${username} finished a build turn.",
 			"describe": "${username} finished a describe turn."
-		}
+		},
+		"returnedReservedGame": "Returned to this turn because it was reserved for you."
 	},
 	"announcements": {
 		"donation": {
