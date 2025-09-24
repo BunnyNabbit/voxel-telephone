@@ -3,7 +3,7 @@ import { Drone } from "./drone/Drone.mjs"
 import { Ego } from "./drone/Ego.mjs"
 import { TypedEmitter } from "tiny-typed-emitter"
 import { componentToHex } from "../../utils.mjs"
-import { templates } from "../level/templates.mjs"
+import { EmptyTemplate } from "./BaseTemplate.mjs"
 import { NullChangeRecord } from "../level/changeRecord/NullChangeRecord.mjs"
 import { ChangeRecord } from "./changeRecord/ChangeRecord.mjs"
 import { BaseLevelCommandInterpreter } from "./BaseLevelCommandInterpreter.mjs"
@@ -297,7 +297,7 @@ export class BaseLevel extends TypedEmitter {
 		cloudsHeight: 256,
 	}
 	static blockset = []
-	static template = templates.empty
+	static template = new EmptyTemplate()
 	/**
 	 * @see `Level.bounds`
 	 * @deprecated

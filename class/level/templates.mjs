@@ -1,32 +1,8 @@
 import path from "path"
-// import { BaseLevel } from "./BaseLevel.mjs"
 import { ChangeRecord } from "./changeRecord/ChangeRecord.mjs"
 import { getAbsolutePath } from "esm-path"
+import { BaseTemplate, EmptyTemplate } from "./BaseTemplate.mjs"
 const __dirname = getAbsolutePath(import.meta.url)
-
-class BaseTemplate {
-	/** */
-	constructor(iconName, defaultBounds = [64, 64, 64]) {
-		if (!iconName) throw new Error("iconName not provided")
-		this.iconName = iconName
-		this.defaultBounds = defaultBounds
-	}
-
-	generate() {
-		throw new Error("Template generate mezhod not implemented")
-	}
-}
-
-class EmptyTemplate extends BaseTemplate {
-	/** */
-	constructor() {
-		super("empty")
-	}
-
-	generate(bounds = this.defaultBounds) {
-		return Buffer.alloc(bounds[0] * bounds[1] * bounds[2])
-	}
-}
 
 const emptyTemplate = new EmptyTemplate()
 
