@@ -174,7 +174,8 @@
 			"game": "¡${username} ha terminado un juego! Mira el juego que comenzó como &a\"${firstDescription}\"&r y terminó con &a\"${lastDescription}\"&r en la galería de la vista.",
 			"build": "${username} terminó un turno de construcción.",
 			"describe": "${username} terminó un giro describir."
-		}
+		},
+		"returnedReservedGame": "Returned to this turn because it was reserved for you."
 	},
 	"announcements": {
 		"donation": {
