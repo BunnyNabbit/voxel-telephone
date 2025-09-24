@@ -2,7 +2,13 @@ import path from "path"
 import { ChangeRecord } from "./changeRecord/ChangeRecord.mjs"
 import { getAbsolutePath } from "esm-path"
 import { BaseTemplate, EmptyTemplate } from "./BaseTemplate.mjs"
+import { BaseLevel } from "./BaseLevel.mjs"
+import { levelCommands } from "./levelCommands.mjs"
 const __dirname = getAbsolutePath(import.meta.url)
+
+class BaseCommandLevel extends BaseLevel {
+	static commands = levelCommands
+}
 
 const emptyTemplate = new EmptyTemplate()
 
@@ -16,8 +22,7 @@ class VoxelRecordTemplate extends BaseTemplate {
 		const cacheKey = this.iconName + VoxelRecordTemplate.getBoundsKey(bounds)
 		const cached = VoxelRecordTemplate.cache.get(cacheKey)
 		if (cached) return cached
-		const { BaseLevel } = await import("./BaseLevel.mjs")
-		let tempLevel = new BaseLevel(bounds, emptyTemplate.generate(bounds))
+		let tempLevel = new BaseCommandLevel(bounds, emptyTemplate.generate(bounds))
 		const promise = new Promise((resolve) => {
 			tempLevel.changeRecord = new ChangeRecord(path.join(__dirname, "/templates/", this.iconName), async () => {
 				await tempLevel.changeRecord.restoreBlockChangesToLevel(tempLevel)

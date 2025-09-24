@@ -1,3 +1,4 @@
+import { levelCommands } from "./levelCommands.mjs"
 import { textSymbols } from "../../constants.mjs"
 import defaultBlockset from "../../6-8-5-rgb.json" with { type: "json" }
 import { BaseLevel } from "./BaseLevel.mjs"
@@ -90,6 +91,7 @@ export class Level extends BaseLevel {
 	}
 	static blockset = defaultBlockset
 	static commandInterpreterClass = LevelCommandInterpreter
+	static commands = levelCommands
 }
 
 export default Level
