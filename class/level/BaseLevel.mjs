@@ -6,8 +6,8 @@ import { componentToHex } from "../../utils.mjs"
 import { templates } from "../level/templates.mjs"
 import { NullChangeRecord } from "../level/changeRecord/NullChangeRecord.mjs"
 import { ChangeRecord } from "./changeRecord/ChangeRecord.mjs"
-import { FormattedString, stringSkeleton } from "../strings/FormattedString.mjs"
-/** @typedef {import("../player/Player.mjs").Player} Player */
+import { BaseLevelCommandInterpreter } from "./BaseLevelCommandInterpreter.mjs"
+/** @typedef {import("../player/BasePlayer.mjs").BasePlayer} BasePlayer */
 /** @typedef {import("../../types/arrayLikes.mjs").Vector3} Vector3 */
 /** @typedef {import("../../types/arrayLikes.mjs").Vector2} Vector2 */
 /** @typedef {import("classicborne-server-protocol/class/Client.mjs").Client} Client */
@@ -29,9 +29,10 @@ export class BaseLevel extends TypedEmitter {
 		this.allowList = []
 		this.drones = new Set()
 		this.clientDrones = new Map()
+		this.commandInterpreter = new this.constructor.commandInterpreterClass(this)
 	}
 	/**@todo Yet to be documented.
-	 * @param {Player} player
+	 * @param {BasePlayer} player
 	 */
 	sendDrones(player) {
 		this.drones.forEach((drone) => {
@@ -39,7 +40,7 @@ export class BaseLevel extends TypedEmitter {
 		})
 	}
 	/**Removes a player from the level.
-	 * @param {Player} player - The player to be removed.
+	 * @param {BasePlayer} player - The player to be removed.
 	 */
 	removePlayer(player) {
 		player.space = null
@@ -68,7 +69,7 @@ export class BaseLevel extends TypedEmitter {
 		this.drones.add(drone)
 	}
 	/**Adds a player to the level.
-	 * @param {Player} player - The player to be added.
+	 * @param {BasePlayer} player - The player to be added.
 	 */
 	addPlayer(player, position = [0, 0, 0], orientation = [0, 0]) {
 		this.emit("playerAdded", player)
@@ -82,9 +83,9 @@ export class BaseLevel extends TypedEmitter {
 		player.teleporting = false
 	}
 	/**@todo Yet to be documented.
-	 * @param {Player} player
-	 * @param	{Vector3} [position=[0,0,0]]
-	 * @param	{Vector2} [orientation=[0,0]]
+	 * @param {BasePlayer} player
+	 * @param {Vector3} [position=[0,0,0]]
+	 * @param {Vector2} [orientation=[0,0]]
 	 */
 	loadPlayer(player, position = [0, 0, 0], orientation = [0, 0]) {
 		player.client.loadLevel(
@@ -108,8 +109,6 @@ export class BaseLevel extends TypedEmitter {
 			}
 		)
 	}
-	/** @abstract */
-	messageAll() {}
 	reload() {
 		this.players.forEach((player) => {
 			const reloadedPosition = Array.from(player.position)
@@ -122,7 +121,7 @@ export class BaseLevel extends TypedEmitter {
 	/**@todo Yet to be documented.
 	 * @param {number} block
 	 * @param {Vector3} position
-	 * @param {Player[]} [excludePlayers=[]]
+	 * @param {BasePlayer[]} [excludePlayers=[]]
 	 * @param {boolean} [saveToRecord=true]
 	 */
 	setBlock(position, block, excludePlayers = [], saveToRecord = true) {
@@ -160,185 +159,6 @@ export class BaseLevel extends TypedEmitter {
 		return true
 	}
 	/**@todo Yet to be documented.
-	 * @param {string} command
-	 * @param {?Player} player
-	 * @param {number[]} [actionBytes=[]]
-	 */
-	interpretCommand(command = "cuboid 1", player = null, actionBytes = []) {
-		// i.e: cuboid 1
-		// consider: if the block set has names, user could refer to blocks by name and not just id.
-		const commandClass = this.constructor.getCommandClassFromName(command)
-		if (commandClass) {
-			this.blocking = true
-			this.currentCommand = new commandClass(this)
-			this.currentCommandLayoutIndex = 0
-			this.currentCommandActionBytes = actionBytes
-			// parse command for bytes
-			const splitCommand = command.split(" ").slice(1)
-			if (splitCommand.length) {
-				this.processCommandArguments(splitCommand, player)
-			} else {
-				this.inferCurrentCommand(player?.getInferredData(), player)
-			}
-		} else if (command) {
-			const commandName = command.toLowerCase()
-			this?.messageAll(new FormattedString(stringSkeleton.level.error.commandNotFound, { commandName, levelName: this.name }))
-		}
-	}
-	/**@todo Yet to be documented.
-	 * @param {?Object} providedData
-	 * @param {number} providedData.block
-	 * @param {Vector3} providedData.position
-	 * @param {?Player} player
-	 */
-	inferCurrentCommand(providedData = null, player = null) {
-		const currentType = this.currentCommand.layout[this.currentCommandLayoutIndex]
-		if (currentType == null) return this.commitAction(player)
-		if (currentType.startsWith("&")) {
-			// TODO: infer byte type size: i.e: the zero element is a position, and would need three action bytes.
-			this.currentCommandLayoutIndex++
-			this.currentCommandActionBytes.push(0)
-			return this.inferCurrentCommand(null, player)
-		}
-		const type = currentType.split(":")[0]
-
-		if (type == "block") {
-			if (providedData?.block != null) {
-				this.currentCommandActionBytes.push(providedData.block)
-				this.currentCommandLayoutIndex++
-				this.inferCurrentCommand(null, player)
-				return true
-			} else {
-				if (!this.loading) this?.messageAll(new FormattedString(stringSkeleton.level.commandQuestion.block, { currentType }))
-				return
-			}
-		}
-		if (type == "position") {
-			if (Array.isArray(providedData?.position) && providedData.position.length == 3) {
-				this.currentCommandActionBytes.push(providedData.position[0])
-				this.currentCommandActionBytes.push(providedData.position[1])
-				this.currentCommandActionBytes.push(providedData.position[2])
-				this.currentCommandLayoutIndex++
-				this.inferCurrentCommand(null, player)
-				return true
-			} else {
-				if (!this.loading) this?.messageAll(new FormattedString(stringSkeleton.level.commandQuestion.position, { currentType }))
-				return
-			}
-		}
-		this?.messageAll(`Command needs ${currentType}, and it doesn't seem implemented :(`)
-	}
-	/**@todo Yet to be documented.
-	 * @param {string} command
-	 * @returns {typeof LevelCommand} The command class, or `null` if not found.
-	 */
-	static getCommandClassFromName(command) {
-		command = command.split(" ")
-		const commandName = command[0].toLowerCase()
-		let commandClass = this.commands.find((otherCommand) => otherCommand.name.toLowerCase() == commandName)
-		if (!commandClass) commandClass = this.commands.find((otherCommand) => otherCommand.aliases.includes(commandName))
-		return commandClass
-	}
-	/**@todo Yet to be documented.
-	 * @param {string[]} splitCommand
-	 * @param {Player} player
-	 */
-	processCommandArguments(splitCommand, player) {
-		let currentIndex = 0
-		const incrementIndex = (commandIndex = 1) => {
-			this.currentCommandLayoutIndex++
-			currentIndex += commandIndex
-		}
-		const validateByte = (num) => {
-			if (isNaN(num)) return false
-			if (num < 0) return false
-			if (num > 255) return false
-			return true
-		}
-		while (true) {
-			const layoutElement = this.currentCommand.layout[this.currentCommandLayoutIndex]
-			if (!layoutElement) break
-			if (splitCommand[currentIndex] == null) break
-			const type = layoutElement.split(":")[0].replace("&", "")
-			if (type == "block") {
-				let block
-				if (splitCommand[currentIndex] == "hand") {
-					block = player.heldBlock
-					this.currentCommandActionBytes.push(block)
-					incrementIndex()
-					continue
-				}
-				block = parseInt(splitCommand[currentIndex])
-				if (!validateByte(block)) {
-					player.message(new FormattedString(stringSkeleton.level.error.parsing.invalidBlockId))
-					break
-				}
-				this.currentCommandActionBytes.push(block)
-				incrementIndex()
-				continue
-			} else if (type == "position") {
-				let position = [0, 1, 2].map((index) => parseInt(splitCommand[currentIndex + index]))
-				if (position.some((num) => !validateByte(num))) {
-					player.message(new FormattedString(stringSkeleton.level.error.parsing.invalidPosition))
-					break
-				}
-				if (!this.withinLevelBounds(position)) {
-					player.message(new FormattedString(stringSkeleton.level.error.parsing.positionOutBounds))
-					break
-				}
-				this.currentCommandActionBytes.push(...position)
-				incrementIndex(3)
-				continue
-			} else if (type == "enum") {
-				const enumName = layoutElement.split(":")[1]
-				const enumValue = splitCommand[currentIndex]
-				const attemptByte = parseInt(enumValue)
-				if (validateByte(attemptByte) && this.currentCommand.enums[enumName][attemptByte]) {
-					// input is an index
-					this.currentCommandActionBytes.push(attemptByte)
-					incrementIndex()
-					continue
-				}
-				const index = this.currentCommand.enums[enumName].findIndex((value) => {
-					// find index by enum name
-					return value == enumValue
-				})
-				if (index == -1) break
-				this.currentCommandActionBytes.push(index)
-				incrementIndex()
-				continue
-			}
-			player.message(new FormattedString(stringSkeleton.level.error.parsing.layoutInvalidArgument, { splitCommand: splitCommand[currentIndex], layoutElement }))
-			break
-		}
-		this.inferCurrentCommand(null, player)
-	}
-	/**@todo Yet to be documented.
-	 * @param {?Player} player
-	 */
-	commitAction(player = null) {
-		const command = this.currentCommand
-		const { requiresRefreshing } = command.action(this.currentCommandActionBytes)
-		if (this.loading == false) {
-			this.changeRecord.appendAction(true, this.currentCommandActionBytes, command.name)
-			this?.playSound("poof") // TODO: it doesn't seem too elegant to leave it in base class.
-			if (requiresRefreshing) this.reload()
-		}
-		if (!this.changeRecord.draining && this.changeRecord.currentActionCount > 1024) {
-			this.changeRecord.flushChanges().then((bytes) => {
-				this?.messageAll(new FormattedString(stringSkeleton.level.status.drainedLevelActions, { bytes }))
-			})
-		}
-		if (player && player.repeatMode) {
-			this.currentCommandLayoutIndex = 0
-			this.currentCommandActionBytes = []
-			this.inferCurrentCommand(player.getInferredData(), player) // FIXME: possible infinite loop if no command layout exists. check for &
-		} else {
-			this.currentCommand = null
-			this.blocking = false
-		}
-	}
-	/**@todo Yet to be documented.
 	 * @param {string} username
 	 * @returns {boolean}
 	 */
@@ -346,6 +166,17 @@ export class BaseLevel extends TypedEmitter {
 		if (this.allowList.length == 0) return true
 		if (this.allowList.includes(username)) return true
 		return false
+	}
+	/**@todo Yet to be documented.
+	 * @param {string} command
+	 * @returns {LevelCommand} The command class, or `null` if not found.
+	 */
+	static getCommandClassFromName(command) {
+		command = command.split(" ")
+		const commandName = command[0].toLowerCase()
+		let commandClass = this.commands.find((otherCommand) => otherCommand.name.toLowerCase() == commandName)
+		if (!commandClass) commandClass = this.commands.find((otherCommand) => otherCommand.aliases.includes(commandName))
+		return commandClass
 	}
 	/**Destroys the level, releasing any resources used for it.
 	 * @param {boolean} [saveChanges=true]
@@ -357,6 +188,7 @@ export class BaseLevel extends TypedEmitter {
 		await this.changeRecord.dispose()
 		this.emit("unloaded")
 		this.removeAllListeners()
+		this.commandInterpreter.dispose()
 	}
 	/**@todo Yet to be documented.
 	 * @param {Client} client
@@ -439,7 +271,7 @@ export class BaseLevel extends TypedEmitter {
 	 *  	})
 	 *  }
 	 * ```
-	 * @param {Player} player - Zhe player to teleport.
+	 * @param {BasePlayer} player - Zhe player to teleport.
 	 * @param {string?} [spaceName]
 	 * @param {{}?} [defaults={}]
 	 */
@@ -472,6 +304,7 @@ export class BaseLevel extends TypedEmitter {
 	 */
 	static standardBounds = this.bounds
 	static commands = levelCommands
+	static commandInterpreterClass = BaseLevelCommandInterpreter
 }
 
 // export default BaseLevel
