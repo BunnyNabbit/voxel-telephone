@@ -1,4 +1,3 @@
-import { levelCommands } from "./levelCommands.mjs"
 import { Drone } from "./drone/Drone.mjs"
 import { Ego } from "./drone/Ego.mjs"
 import { TypedEmitter } from "tiny-typed-emitter"
@@ -303,7 +302,7 @@ export class BaseLevel extends TypedEmitter {
 	 * @deprecated
 	 */
 	static standardBounds = this.bounds
-	static commands = levelCommands
+	static commands = []
 	static commandInterpreterClass = BaseLevelCommandInterpreter
 }
 
