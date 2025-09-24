@@ -174,7 +174,8 @@
    "game": "game.finish.game",
    "build": "game.finish.build",
    "describe": "game.finish.describe"
-  }
+  },
+  "returnedReservedGame": "game.returnedReservedGame"
  },
  "announcements": {
   "donation": {
