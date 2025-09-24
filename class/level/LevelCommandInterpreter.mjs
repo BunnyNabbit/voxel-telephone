@@ -1,4 +1,4 @@
-import { BaseLevelCommandInterpreter } from "./BaseLevelCommandInterpreter.mjs"
+import { BaseLevelCommandInterpreter } from "classicborne/class/level/BaseLevelCommandInterpreter.mjs"
 import { FormattedString, stringSkeleton } from "../strings/FormattedString.mjs"
 /** @typedef {import("./BaseLevel.mjs").BaseLevel} BaseLevel */
 

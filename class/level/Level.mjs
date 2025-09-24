@@ -1,7 +1,7 @@
 import { levelCommands } from "./levelCommands.mjs"
 import { textSymbols } from "../../constants.mjs"
 import defaultBlockset from "../../6-8-5-rgb.json" with { type: "json" }
-import { BaseLevel } from "./BaseLevel.mjs"
+import { BaseLevel } from "classicborne/class/level/BaseLevel.mjs"
 import { LevelCommandInterpreter } from "./LevelCommandInterpreter.mjs"
 /** @typedef {import("../player/Player.mjs").Player} Player */
 /** @typedef {import("../../types/arrayLikes.mjs").Vector3} Vector3 */

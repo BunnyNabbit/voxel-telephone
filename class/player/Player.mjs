@@ -7,7 +7,7 @@ import { randomIntFromInterval, sleep } from "../../utils.mjs"
 import { HubLevel } from "../level/HubLevel.mjs"
 import { FormattedString, defaultLanguage, stringSkeleton } from "../strings/FormattedString.mjs"
 import { TeleportBehavior } from "classicborne-server-protocol/class/TeleportBehavior.mjs"
-import { BasePlayer } from "./BasePlayer.mjs"
+import { BasePlayer } from "classicborne/class/player/BasePlayer.mjs"
 
 export class Player extends BasePlayer {
 	/** */
