@@ -14,11 +14,6 @@ export function invertPromptType(promptType) {
 export function randomIntFromInterval(min, max) {
 	return Math.floor(Math.random() * (max - min + 1) + min)
 }
-
-export function componentToHex(component) {
-	const hex = component.toString(16).toUpperCase()
-	return hex.length == 1 ? "0" + hex : hex
-}
 /**
  * @param {number} time 
  * @returns {Promise<void>}

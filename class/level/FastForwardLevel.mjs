@@ -1,5 +1,5 @@
 import { Level } from "./Level.mjs"
-import { ChangeRecord } from "./changeRecord/ChangeRecord.mjs"
+import { ChangeRecord } from "classicborne/class/level/changeRecord/ChangeRecord.mjs"
 import { FormattedString, stringSkeleton } from "../strings/FormattedString.mjs"
 import { sleep } from "../../utils.mjs"
 

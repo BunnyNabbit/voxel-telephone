@@ -1,7 +1,7 @@
 import fs from "fs"
 import { join } from "path"
 import { getAbsolutePath } from "esm-path"
-import { BaseHeartbeat } from "./BaseHeartbeat.mjs"
+import { BaseHeartbeat } from "classicborne/class/server/BaseHeartbeat.mjs"
 /** @typedef {import("./Universe.mjs").default} Universe */
 const __dirname = getAbsolutePath(import.meta.url)
 

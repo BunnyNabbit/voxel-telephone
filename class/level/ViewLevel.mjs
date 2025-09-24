@@ -1,6 +1,6 @@
 import { FormattedString, stringSkeleton } from "../strings/FormattedString.mjs"
 import Level from "./Level.mjs"
-import { ChangeRecord } from "./changeRecord/ChangeRecord.mjs"
+import { ChangeRecord } from "classicborne/class/level/changeRecord/ChangeRecord.mjs"
 import { templates } from "./templates.mjs"
 import { Player } from "../player/Player.mjs"
 /** @typedef {import("../../types/arrayLikes.mjs").Vector3} Vector3 */
