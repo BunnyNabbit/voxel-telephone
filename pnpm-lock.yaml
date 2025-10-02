@@ -41,9 +41,6 @@ importers:
       socket.io:
         specifier: ^4.8.1
         version: 4.8.1
-      sqlite3:
-        specifier: ^5.1.7
-        version: 5.1.7
       tiny-typed-emitter:
         specifier: ^2.1.0
         version: 2.1.0
