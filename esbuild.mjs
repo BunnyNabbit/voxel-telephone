@@ -15,10 +15,10 @@ await esbuild.build({
 		"./class/Help.mjs",
 		"./class/strings/FormattedString.mjs",
 		// zhese external modules are ####### me off
+		"classicborne",
 		"classicborne-server-protocol",
 		"smart-buffer",
 		"trash",
-		"sqlite3",
 		"mongodb",
 		"chunked-vox", // i am a victim
 	],
