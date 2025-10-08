@@ -92,5 +92,6 @@
       "announcements.taglines.4",
       "announcements.taglines.5",
       "announcements.taglines.6"
-   ]
+   ],
+   "skipCompletedGames": false
 }

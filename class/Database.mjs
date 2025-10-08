@@ -19,6 +19,7 @@ export class Database {
 		this.purgedCollection = this.db.collection("voxelTelephonePurged")
 		this.realmCollection = this.db.collection("voxelTelephoneRealms")
 		this.playerReserved = new Map()
+		this.serverConfiguration = serverConfiguration
 	}
 
 	async findActiveGames(username, levels) {
@@ -31,15 +32,20 @@ export class Database {
 			.toArray()
 			.then(async (docs) => {
 				for (let i = 0; i < docs.length; i++) {
-					const game = docs[i]
+					const activeTurn = docs[i]
 					// check if game id is already active as a level
-					if (levels.has(`game-${game.next}`) || levels.has(`game-${game._id}`)) continue
+					if (levels.has(`game-${activeTurn.next}`) || levels.has(`game-${activeTurn._id}`)) continue
 					// check if user has skipped the current ID, or already completed the root ID.
-					const completeInteraction = await this.getInteraction(username, game.root, "complete")
-					if (completeInteraction) continue
-					const skipInteraction = await this.getInteraction(username, game._id, "skip")
+					if (this.serverConfiguration.skipCompletedGames) {
+						const completeInteraction = await this.getInteraction(username, activeTurn.root, "complete")
+						if (completeInteraction) continue
+					} else {
+						// check if active turn was played by player instead.
+						if (activeTurn.creators.includes(username)) continue
+					}
+					const skipInteraction = await this.getInteraction(username, activeTurn._id, "skip")
 					if (skipInteraction) continue
-					games.push(game)
+					games.push(activeTurn)
 				}
 				return games
 			})
