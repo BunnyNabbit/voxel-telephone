@@ -1,5 +1,5 @@
-import { Drone } from "./drone/Drone.mjs"
-import { Ego } from "./drone/Ego.mjs"
+import { Drone } from "classicborne/class/level/drone/Drone.mjs"
+import { Ego } from "classicborne/class/level/drone/Ego.mjs"
 import { TutorialLevel } from "./TutorialLevel.mjs"
 import { templates } from "./templates.mjs"
 import { FormattedString, stringSkeleton, defaultLanguage } from "../strings/FormattedString.mjs"
