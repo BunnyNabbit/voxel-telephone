@@ -4,7 +4,7 @@ import fs from "fs"
 import path from "path"
 import { exportLevelAsVox } from "../exportVox.mjs"
 import { Level } from "../class/level/Level.mjs"
-import { ChangeRecord } from "../class/level/changeRecord/ChangeRecord.mjs"
+import { ChangeRecord } from "classicborne/class/level/changeRecord/ChangeRecord.mjs"
 import { templates } from "../class/level/templates.mjs"
 import defaultBlockset from "../6-8-5-rgb.json" with { type: "json" }
 import { Jimp } from "jimp"
