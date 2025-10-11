@@ -40,8 +40,14 @@ export class Database {
 						const completeInteraction = await this.getInteraction(username, activeTurn.root, "complete")
 						if (completeInteraction) continue
 					} else {
-						// check if active turn was played by player instead.
-						if (activeTurn.creators.includes(username)) continue
+						if (this.serverConfiguration.skipCheckedCompletedTurns > 1) {
+							// if more turns from zhe last turn in zhe game should be checked.
+							let game = (await this.getGame(activeTurn.root)).slice(-this.serverConfiguration.skipCheckedCompletedTurns)
+							if (game.find((turn) => turn.creators.includes(username))) continue
+						} else {
+							// check if active turn was played by player instead.
+							if (activeTurn.creators.includes(username)) continue
+						}
 					}
 					const skipInteraction = await this.getInteraction(username, activeTurn._id, "skip")
 					if (skipInteraction) continue
