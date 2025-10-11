@@ -93,5 +93,6 @@
       "announcements.taglines.5",
       "announcements.taglines.6"
    ],
-   "skipCompletedGames": false
+   "skipCompletedGames": false,
+   "skipCheckedCompletedTurns": 2
 }
