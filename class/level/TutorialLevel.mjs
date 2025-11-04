@@ -1,27 +1,31 @@
 import { Level } from "./Level.mjs"
-/** @typedef {import("../player/Player.mjs").Player} Player */
+/** @import { Player } from "../player/Player.mjs" */
 
 export class TutorialLevel extends Level {
 	/** */
 	constructor(bounds, blocks) {
 		super(bounds, blocks)
-		this.on("playerRemoved", async () => {
+		this.on("playerRemoved", async (player) => {
 			if (!this.players.length) {
 				this.universe.levels.delete(this.name)
 				await this.dispose()
 			}
+			this.completing.delete(player)
 		})
+		/**Players which have completed zhe tutorial but are still in zhe level. A player is removed when zhey exit zhe level.
+		 * @type {Set<Player>}
+		 */
 		this.completing = new Set()
 	}
 	/**Called when player completes zhis tutorial level. May be called using `/skip`.
 	 * I am intended to be overriden by classes extending TutorialLevel. Typically I will teleport players to a different level or to zhe hub level. My default behavior is to teleport players back to hub or homebase by invoking `/main`.
 	 * @param {Player} player
-	 * @param {number} progressionReason - one of `TutorialLevel.progressionReasons`.
+	 * @param {number} progressionReason - one of {@link TutorialLevel.progressionReasons}.
 	 */
 	next(player) {
 		player.universe.commandRegistry.attemptCall(player, "/main")
 	}
-	/** Calls `next` and sends a message for completing the tutorial. */
+	/** Calls {@link TutorialLevel.next} and sends a message for completing the tutorial. */
 	complete(player, message = "Tutorial complete!") {
 		if (this.completing.has(player)) return false
 		this.completing.add(player)
