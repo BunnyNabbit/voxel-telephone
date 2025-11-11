@@ -90,6 +90,7 @@ export class LanguageSelectionLevel extends TutorialLevel {
 			drone.setPosition({ x, y, z }, { yaw: 0, pitch: 0 })
 			drone.on("interact", async (player) => {
 				if (drone.spinning) return
+				if (this.completing.has(player)) return // Exclude players who have already selected a language,
 				clearInterval(this.interval)
 				player.message(" ", [Player.messageTypes.center]) // clear center
 				drone.spinning = true
