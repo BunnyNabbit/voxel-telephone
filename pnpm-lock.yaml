@@ -12,8 +12,8 @@ importers:
         specifier: ^7.10.0
         version: 7.10.0
       chunked-vox:
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^1.1.0
+        version: 1.1.0
       classicborne:
         specifier: ^0.0.0
         version: 0.0.0
@@ -692,8 +692,9 @@ packages:
     resolution: {integrity: sha512-bIomtDF5KGpdogkLd9VspvFzk9KfpyyGlS8YFVZl7TGPBHL5snIOnxeshwVgPteQ9b4Eydl+pVbIyE1DcvCWgQ==}
     engines: {node: '>=10'}
 
-  chunked-vox@1.0.0:
-    resolution: {integrity: sha512-y51p00p/FB60fHmamaGi+mWy4PrTenvH2N7P9J1aOmjgcvUDEYsNGeAWKjmd/tJUFpITFD+bpENLjptAodfzvw==}
+  chunked-vox@1.1.0:
+    resolution: {integrity: sha512-K+4pFCGgGJXOIxznc522i+xlsujP7e+z3zMq9Ah4EwnVspfKsdT3Y5ECYrRGhexiq6/l/TzFsZU+ccYQJVDUYQ==}
+    engines: {node: '>=18'}
 
   classicborne-server-protocol@0.5.1:
     resolution: {integrity: sha512-0KYdNKkIdB+UfShc041JbJQllziLhsDJ7c+Rz5kbymDnr/d/Zw/19jaoT0PCE/F9ypdBd4VBQ8M38HLuYFD1Bg==}
@@ -2704,7 +2705,7 @@ snapshots:
 
   chownr@2.0.0: {}
 
-  chunked-vox@1.0.0:
+  chunked-vox@1.1.0:
     dependencies:
       ndarray: 1.0.19
       smart-buffer: 4.2.0
