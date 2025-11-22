@@ -21,6 +21,7 @@ await esbuild.build({
 		"trash",
 		"mongodb",
 		"chunked-vox", // i am a victim
+		"tiny-typed-emitter",
 	],
 	treeShaking: true,
 	format: "esm",
