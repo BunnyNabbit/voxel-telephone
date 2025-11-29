@@ -8,7 +8,7 @@ summary: "Proporciona una herramienta básica para explotar una ilusión visual 
 
 Uso: `/animation [dirección transversal]`
 
-Cuando se invoca con las direcciones `siguiente` o `anterior`, el jugador se teletransporta lejos de su posición a un área diferente llamada "marco".
+Cuando se invoca con las direcciones `next` o `previous`, el jugador se teletransporta lejos de su posición a un área diferente llamada "marco".
 
 Este comando sólo puede ser llamado en un realm.
 
