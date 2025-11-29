@@ -12,6 +12,6 @@ Cambia la plantilla del nivel. Para una lista de plantillas, vea `/help template
 
 Debido a los cambios de nivel en las tiendas de Teléfono Voxel puede ser posible que el nivel se vea diferente después de cambiar a otra plantilla.
 
-Los problemas pueden hacerse evidentes si se utilizan comandos que leen el estado del nivel. `/template vacío` puede ser útil para ver cómo se ve un nivel en la perspectiva de un descriptor.
+Los problemas pueden hacerse evidentes si se utilizan comandos que leen el estado del nivel. `/template empty` puede ser útil para ver cómo se ve un nivel en la perspectiva de un descriptor.
 
 Cambiar la plantilla es una acción no destructiva en términos de la línea de tiempo de cambio de bloque. Usar este comando no afecta cómo el nivel se verá a un descriptor y siempre será visto con una plantilla vacía.

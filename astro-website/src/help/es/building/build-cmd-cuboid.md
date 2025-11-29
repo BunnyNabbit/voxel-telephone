@@ -20,7 +20,7 @@ Alias: `/z`
 
 Cuboids puede crear con modificadores. Esto afecta a la apariencia del cuboide resultante. `Solid` es el modo por defecto.
 
-Para usar un modo, el comando debe ser emitido con un bloque ID y el nombre del modo. i.e.e.: `/cuboid 9 hueco para hacer un cuboide hueco rojo. Si se da `hand\` para el bloque ID, el bloque a mano se usará en su lugar.
+Para usar un modo, el comando debe ser emitido con un bloque ID y el nombre del modo. i.e.e.: `/cuboid 9 hollow` para hacer un cuboide hueco rojo. Si se da `hand` para el bloque ID, el bloque a mano se usará en su lugar.
 
 ### Hollow (Hueco)
 
