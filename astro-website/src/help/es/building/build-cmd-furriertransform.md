@@ -18,6 +18,6 @@ Alias: `/furrier`, `/fur`
 
 ## Parámetros
 
-### &bloquear:bloque
+### &block:block
 
 El parámetro `&block:block` es el tipo de bloque creado cuando el pelaje crece. Si es aire entonces el bloque será derivado del bloque usado para cultivar pieles.
