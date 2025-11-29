@@ -27,7 +27,7 @@ El parámetro `&enum:mode` se utiliza como modo base. Es `move` por defecto,
 
 Una selección puede girar en sentido horario o en sentido contrario a las agujas del reloj usando el parámetro `&enum:rotation`.
 
-- `ninguno` Ninguna transformación de rotación aplicada.
+- `none` Ninguna transformación de rotación aplicada.
 - `clockwise`
 - `counterclockwise`
 
@@ -41,7 +41,7 @@ Ejemplo: `/positionaltransform copy none x`. Copia y vuelca una selección por s
 
 ![Un dragón negro con ojos cian y abrazo blanco está siendo reflejado horizontalmente por su mano. El dragón está en forma bípeda y tiene una mano más cerca del centro que la otra.](./positionaltransform-mirrored-dragons.webp)
 
-- `ninguno` No se ha aplicado ninguna transformacin de vuelta.
+- `none` No se ha aplicado ninguna transformacin de vuelta.
 - `x` Voltear por x axis.
 - `y` Voltear por eje y.
 - `z` Voltear por z eje.
