@@ -12,7 +12,13 @@ export class Heartbeat extends BaseHeartbeat {
 	 */
 	constructor(urlBase, universe) {
 		super(urlBase, universe)
-		this.softwareName = `&9Voxel &3Telephone &7@ ${Heartbeat.getGitHash()}`.substring(0, 63)
+		let hash = "unknown"
+		try {
+			hash = Heartbeat.getGitHash()
+		} catch (error) {
+			console.error("Error while attempting to get git hash.", error)
+		}
+		this.softwareName = `&9Voxel &3Telephone &7@ ${hash}`.substring(0, 63)
 		this.alive = true
 	}
 
