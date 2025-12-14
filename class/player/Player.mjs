@@ -8,6 +8,7 @@ import { HubLevel } from "../level/HubLevel.mjs"
 import { FormattedString, defaultLanguage, stringSkeleton } from "../strings/FormattedString.mjs"
 import { TeleportBehavior } from "classicborne-server-protocol/class/TeleportBehavior.mjs"
 import { BasePlayer } from "classicborne/class/player/BasePlayer.mjs"
+/** @import { defaultExtensions } from "classicborne-server-protocol/class/extensions/extensionTypes.mts" */
 
 export class Player extends BasePlayer {
 	/** */
@@ -33,7 +34,14 @@ export class Player extends BasePlayer {
 			return "Authorization failed. Please check chat logs."
 		}
 		if (!authInfo.extensions) return "Enable ClassiCube enhanced mode or use other supported client"
-		if (!authInfo.extensions.some((extension) => extension.name == "BlockDefinitions")) return "Please enable Custom Blocks in Nostalgia options > Functionality"
+		if (!client.extensions.has("BlockDefinitions")) return "Please enable Custom Blocks in Nostalgia options > Functionality"
+		/** @type {Array<keyof defaultExtensions>} */
+		const checkExtensions = ["SetHotbar", "LevelEnvironment", "FullCodePage437", "BlockDefinitionsExtended", "ClickDistance", "EntityProperty", "ExtendedEntityTeleport", "ExtendedPlayerList"]
+		let extensionsMissing = 0
+		checkExtensions.forEach((extensionName) => {
+			if (!client.extensions.has(extensionName)) extensionsMissing += 1
+		})
+		if (extensionsMissing > 0) return `Your client is missing ${extensionsMissing} extensions.`
 		if (UserRecord.orphans.has(authInfo.username)) return "Orphaned. Rejoin in a few minutes."
 		return true
 	}
@@ -249,7 +257,7 @@ export class Player extends BasePlayer {
 	 * @param {number[]} deltaPosition - Zhe relative position.
 	 */
 	relativeTeleport(deltaPosition) {
-		this.client.extendedPositionUpdate(-1, ...deltaPosition, 0, 0, Player.relativeTeleportBehavior)
+		this.client.extensions.get("ExtendedEntityTeleport").extendedPositionUpdate(-1, ...deltaPosition, 0, 0, Player.relativeTeleportBehavior)
 	}
 	static relativeTeleportBehavior = new TeleportBehavior().setMoveMode(TeleportBehavior.moveMode.relativeInstant).setAffectsPosition(true)
 

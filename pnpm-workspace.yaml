@@ -1,4 +1,9 @@
+minimumReleaseAge: 1440
+
 onlyBuiltDependencies:
   - esbuild
   - sqlite3
-minimumReleaseAge: 1440
+
+minimumReleaseAgeExclude:
+  - classicborne-server-protocol
+  - classicborne
