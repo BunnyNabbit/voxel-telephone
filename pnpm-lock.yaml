@@ -15,11 +15,11 @@ importers:
         specifier: ^1.1.0
         version: 1.1.0
       classicborne:
-        specifier: ^0.0.0
-        version: 0.0.0
+        specifier: ^0.1.0
+        version: 0.1.0
       classicborne-server-protocol:
-        specifier: ^0.5.1
-        version: 0.5.1
+        specifier: ^0.6.0
+        version: 0.6.0
       esm-path:
         specifier: ^1.0.1
         version: 1.0.1
@@ -474,11 +474,6 @@ packages:
     resolution: {integrity: sha512-YJOcVaEasXWcttXetXn0jd6Gtm9wFHQ1gViTPcxhESwkMCOoA4kwFsNr9EGcmsARGx7jXQZWmOR4zQotRcI9hw==}
     engines: {node: '>=18'}
 
-  '@sindresorhus/chunkify@2.0.0':
-    resolution: {integrity: sha512-srajPSoMTC98FETCJIeXJhJqB77IRPJSu8g907jLuuioLORHZJ3YAOY2DsP5ebrZrjOrAwjqf+Cgkg/I8TGPpw==}
-    engines: {node: '>=18'}
-    deprecated: 'Renamed to chunkify: https://www.npmjs.com/package/chunkify'
-
   '@sindresorhus/df@1.0.1':
     resolution: {integrity: sha512-1Hyp7NQnD/u4DSxR2DGW78TF9k7R0wZ8ev0BpMAIzA6yTQSHqNb5wTuvtcPYf4FWbVse2rW7RgDsyL8ua2vXHw==}
     engines: {node: '>=0.10.0'}
@@ -696,11 +691,15 @@ packages:
     resolution: {integrity: sha512-K+4pFCGgGJXOIxznc522i+xlsujP7e+z3zMq9Ah4EwnVspfKsdT3Y5ECYrRGhexiq6/l/TzFsZU+ccYQJVDUYQ==}
     engines: {node: '>=18'}
 
-  classicborne-server-protocol@0.5.1:
-    resolution: {integrity: sha512-0KYdNKkIdB+UfShc041JbJQllziLhsDJ7c+Rz5kbymDnr/d/Zw/19jaoT0PCE/F9ypdBd4VBQ8M38HLuYFD1Bg==}
+  chunkify@5.0.0:
+    resolution: {integrity: sha512-G8dj/3/Gm+1yL4oWSdwIxihZWFlgC4V2zYtIApacI0iPIRKBHlBGOGAiDUBZgrj4H8MBA8g8fPFwnJrWF3wl7Q==}
+    engines: {node: '>=18'}
 
-  classicborne@0.0.0:
-    resolution: {integrity: sha512-F2OdnibRNzqEvRaCD2oxeF+nA7CEhPXMkTHvOpCDhyyZt/EIyoUlDVxgzyFf758IMD6Lv3rgQQ7tejhhwhXbXw==}
+  classicborne-server-protocol@0.6.0:
+    resolution: {integrity: sha512-Cgkzf58blLfofp/qBbu5Ld6xj2sPOptNB56Nv5hPHWJoFMqBUxwNWNXc48FLcBrlIB+rIju7dh4MBRp8RGgEJQ==}
+
+  classicborne@0.1.0:
+    resolution: {integrity: sha512-2QkM57bXmmblSfFUSEe9oK8MuO13jQ+H5H2kDqKEI4EKuN/WYEzuYpsakcboX9TM+zt1NIXKpWo5dP3jw5I69g==}
 
   clean-stack@2.2.0:
     resolution: {integrity: sha512-4diC9HaTE+KRAMWhDhrGOECgWZxoevMc5TlkObMqNSsVU62PYzXZ/SMTjzyGAFF1YusgxGcSWTEXBhp0CPwQ1A==}
@@ -1423,10 +1422,6 @@ packages:
     resolution: {integrity: sha512-+EUsqGPLsM+j/zdChZjsnX51g4XrHFOIXwfnCVPGlQk/k5giakcKsuxCObBRu6DSm9opw/O6slWbJdghQM4bBg==}
     engines: {node: '>= 0.6'}
 
-  negotiator@0.6.4:
-    resolution: {integrity: sha512-myRT3DiWPHqho5PrJaIRyaMv2kgYf0mUVgBNOYMuCH5Ki1yEiQaf/ZJuQ62nvpc44wL5WDbTX7yGJi1Neevw8w==}
-    engines: {node: '>= 0.6'}
-
   negotiator@1.0.0:
     resolution: {integrity: sha512-8Ofs/AUQh8MaEcrlq5xOX0CQ9ypTF5dl78mjlMNfOK08fzpgTHQRQPBxcPlEtIw0yRpws+Zo/3r+5WRby7u3Gg==}
     engines: {node: '>= 0.6'}
@@ -1902,8 +1897,8 @@ packages:
     resolution: {integrity: sha512-hdF5ZgjTqgAntKkklYw0R03MG2x/bSzTtkxmIRw/sTNV8YXsCJ1tfLAX23lhxhHJlEf3CRCOCGGWw3vI3GaSPw==}
     engines: {node: '>=18'}
 
-  trash@10.0.0:
-    resolution: {integrity: sha512-nyHQPJ7F4dYCfj1xN95DAkLkf9qlyRLDpT9yYwcR5SH16q+f7VA1L5VwsdEqWFUuGNpKwgLnbOS1QBvXMYnLfA==}
+  trash@10.0.1:
+    resolution: {integrity: sha512-WSh7WXBRkudzQMXRh61vyT/f3mjVnn+3conu5DdvMGzRPsc3mtviPLIwCK1OtwfgR2gr4+9+EE/eWwPlDj5NcA==}
     engines: {node: '>=20'}
 
   trash@9.0.0:
@@ -2453,8 +2448,6 @@ snapshots:
 
   '@sindresorhus/chunkify@1.0.0': {}
 
-  '@sindresorhus/chunkify@2.0.0': {}
-
   '@sindresorhus/df@1.0.1': {}
 
   '@sindresorhus/df@3.1.1':
@@ -2708,23 +2701,26 @@ snapshots:
       ndarray: 1.0.19
       smart-buffer: 4.2.0
 
-  classicborne-server-protocol@0.5.1:
+  chunkify@5.0.0: {}
+
+  classicborne-server-protocol@0.6.0:
     dependencies:
       smart-buffer: 4.2.0
+      tiny-typed-emitter: 2.1.0
       ws: 8.18.3
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  classicborne@0.0.0:
+  classicborne@0.1.0:
     dependencies:
       axios: 1.13.2
-      classicborne-server-protocol: 0.5.1
+      classicborne-server-protocol: 0.6.0
       qs: 6.14.0
       smart-buffer: 4.2.0
       sqlite3: 5.1.7
       tiny-typed-emitter: 2.1.0
-      trash: 10.0.0
+      trash: 10.0.1
     transitivePeerDependencies:
       - bluebird
       - bufferutil
@@ -3392,7 +3388,7 @@ snapshots:
       minipass-fetch: 1.4.1
       minipass-flush: 1.0.5
       minipass-pipeline: 1.2.4
-      negotiator: 0.6.4
+      negotiator: 0.6.3
       promise-retry: 2.0.1
       socks-proxy-agent: 6.2.1
       ssri: 8.0.1
@@ -3523,9 +3519,6 @@ snapshots:
       is-buffer: 1.1.6
 
   negotiator@0.6.3: {}
-
-  negotiator@0.6.4:
-    optional: true
 
   negotiator@1.0.0: {}
 
@@ -4057,10 +4050,10 @@ snapshots:
     dependencies:
       punycode: 2.3.1
 
-  trash@10.0.0:
+  trash@10.0.1:
     dependencies:
-      '@sindresorhus/chunkify': 2.0.0
       '@stroncium/procfs': 1.2.1
+      chunkify: 5.0.0
       globby: 14.1.0
       is-path-inside: 4.0.0
       move-file: 3.1.0

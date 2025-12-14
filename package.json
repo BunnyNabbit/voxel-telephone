@@ -14,8 +14,8 @@
   "dependencies": {
     "@slack/web-api": "^7.13.0",
     "chunked-vox": "^1.1.0",
-    "classicborne": "^0.0.0",
-    "classicborne-server-protocol": "^0.5.1",
+    "classicborne": "^0.1.0",
+    "classicborne-server-protocol": "^0.6.0",
     "esm-path": "^1.0.1",
     "express": "^5.2.1",
     "jimp": "^1.6.0",
