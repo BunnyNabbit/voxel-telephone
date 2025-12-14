@@ -36,7 +36,7 @@ export class Heartbeat extends BaseHeartbeat {
 			web: "true",
 			salt: this.salt,
 		}
-		super.postHeartbeat(form)
+		return super.postHeartbeat(form)
 	}
 	/** @see https://stackoverflow.com/a/56975550 */
 	static getGitHash() {
