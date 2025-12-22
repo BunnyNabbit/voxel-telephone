@@ -11,7 +11,8 @@
          "skipFiles": [
             "<node_internals>/**"
          ],
-         "program": "${workspaceFolder}\\voxelTelephone.mjs"
+         "program": "${workspaceFolder}\\voxelTelephone.mjs",
+         "runtimeArgs": ["--import", "dynohot", "--enable-source-maps"]
       }
    ]
 }

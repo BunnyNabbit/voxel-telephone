@@ -118,3 +118,9 @@ export class RealmLevel extends Level {
 }
 
 export default RealmLevel
+
+if (import.meta.hot) {
+	import("../HotModuleReplacementHelper.mjs").then((module) => {
+		module.HotModuleReplacementHelper.handleClassModuleReplacement(import.meta, RealmLevel)
+	})
+}

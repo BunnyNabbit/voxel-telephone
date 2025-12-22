@@ -154,3 +154,9 @@ export class SoundServer extends EventEmitter {
 }
 
 export default SoundServer
+
+if (import.meta.hot) {
+	import("../HotModuleReplacementHelper.mjs").then((module) => {
+		module.HotModuleReplacementHelper.handleClassModuleReplacement(import.meta, SoundServer)
+	})
+}

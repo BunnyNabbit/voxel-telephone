@@ -253,3 +253,11 @@ export class ViewLevel extends Level {
 
 	static bounds = [576, 64, 512]
 }
+
+export default ViewLevel
+
+if (import.meta.hot) {
+	import("../HotModuleReplacementHelper.mjs").then((module) => {
+		module.HotModuleReplacementHelper.handleClassModuleReplacement(import.meta, ViewLevel)
+	})
+}
