@@ -190,3 +190,9 @@ export class Universe extends BaseUniverse {
 }
 
 export default Universe
+
+if (import.meta.hot) {
+	import("../HotModuleReplacementHelper.mjs").then((module) => {
+		module.HotModuleReplacementHelper.handleClassModuleReplacement(import.meta, Universe)
+	})
+}

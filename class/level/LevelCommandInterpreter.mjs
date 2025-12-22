@@ -37,3 +37,9 @@ export class LevelCommandInterpreter extends BaseLevelCommandInterpreter {
 }
 
 export default LevelCommandInterpreter
+
+if (import.meta.hot) {
+	import("../HotModuleReplacementHelper.mjs").then((module) => {
+		module.HotModuleReplacementHelper.handleClassModuleReplacement(import.meta, LevelCommandInterpreter)
+	})
+}

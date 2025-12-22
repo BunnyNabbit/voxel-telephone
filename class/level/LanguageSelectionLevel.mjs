@@ -148,3 +148,9 @@ export class LanguageSelectionLevel extends TutorialLevel {
 }
 
 export default LanguageSelectionLevel
+
+if (import.meta.hot) {
+	import("../HotModuleReplacementHelper.mjs").then((module) => {
+		module.HotModuleReplacementHelper.handleClassModuleReplacement(import.meta, LanguageSelectionLevel)
+	})
+}

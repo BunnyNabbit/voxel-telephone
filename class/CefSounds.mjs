@@ -19,6 +19,7 @@ export class CefSounds {
 			leave: this.sfxrSound("34T6PktTUDAmJbCDoG4ZpNf1dUxfN4tkxPxnYkKQZWzNxssWrEzepcSwfgvdcdKmxF1a2EnN5C5RHHCviY45PniXkeZJTFbLfuZe8f4ohaAfVyoEpk5deUYEj"),
 			complete: this.sfxrSound("11111111111112aaZzEw4qaJHroZtt2yNQ4UQx6f1G4MVUaDbsoD82uzouwBhgc5L9PHGzD6YzCMyVGdFQ7Yofmhn77awmsyZXXTsz7GfaM9YcgKNaYas"),
 			click: this.sfxrSound("4c8kYesB1sLJNvM2jN6czU38FAzEyd1Cz4djAqfou7Wx4SXgSpc5JXFPb4BtHc6qtmz3qHqH2LjRUZGx4eDJC7ZfJcaBogVVvWk7H2UAULhgsHCSmrtHwft5S"),
+			hmrReload: this.sfxrSound("5DRiScXa54NjyyzVU9TCgmwPXcjuArLanTcEjHVVkKYKeTrjekLvhFGQAnYfzMuPMvjgqV6j5JxwtUW5UoRbkAqtoRqDgXi21EJiVq5QkSV2GEMenzer9gahG"),
 			gameTrack: this.attributedTrack("instructor-of-zhings.ogg", "Instructor of Zhings - BunnyNabbit - CC0"),
 			gameTrackDrone: this.attributedTrack("instructor-of-zhings-drone.ogg", "Instructor of Zhings (Drone) - BunnyNabbit - CC0"),
 			viewTrack: this.attributedTrack("gawking.ogg", "Gawking - BunnyNabbit - CC0"),
