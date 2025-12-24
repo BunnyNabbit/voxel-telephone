@@ -117,7 +117,7 @@ export class Player extends BasePlayer {
 			} else {
 				if (filter(message)) {
 					const filterMessages = universe.serverConfiguration.replacementMessages
-					universe.server.players.forEach((otherClient) => otherClient.message(`&7${this.authInfo.username}: &f${filterMessages[randomIntFromInterval(0, filterMessages.length - 1)]}`))
+					universe.pushMessage(`&7${this.authInfo.username}: &f${filterMessages[randomIntFromInterval(0, filterMessages.length - 1)]}`, PushIntegration.interestType.chatMessage)
 					return
 				}
 				if (this.space?.game?.promptType == "build") {
