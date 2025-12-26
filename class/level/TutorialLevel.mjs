@@ -67,3 +67,9 @@ export class TutorialLevel extends Level {
 }
 
 export default TutorialLevel
+
+if (import.meta.hot) {
+	import("../HotModuleReplacementHelper.mjs").then((module) => {
+		module.HotModuleReplacementHelper.handleClassModuleReplacement(import.meta, TutorialLevel)
+	})
+}

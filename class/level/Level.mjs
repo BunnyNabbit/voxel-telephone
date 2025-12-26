@@ -95,3 +95,9 @@ export class Level extends BaseLevel {
 }
 
 export default Level
+
+if (import.meta.hot) {
+	import("../HotModuleReplacementHelper.mjs").then((module) => {
+		module.HotModuleReplacementHelper.handleClassModuleReplacement(import.meta, Level)
+	})
+}

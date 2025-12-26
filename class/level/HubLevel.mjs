@@ -75,3 +75,9 @@ export class HubLevel extends Level {
 }
 
 export default HubLevel
+
+if (import.meta.hot) {
+	import("../HotModuleReplacementHelper.mjs").then((module) => {
+		module.HotModuleReplacementHelper.handleClassModuleReplacement(import.meta, HubLevel)
+	})
+}
