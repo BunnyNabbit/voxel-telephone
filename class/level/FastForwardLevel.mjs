@@ -108,3 +108,9 @@ export class FastForwardLevel extends Level {
 }
 
 export default FastForwardLevel
+
+if (import.meta.hot) {
+	import("../HotModuleReplacementHelper.mjs").then((module) => {
+		module.HotModuleReplacementHelper.handleClassModuleReplacement(import.meta, FastForwardLevel)
+	})
+}

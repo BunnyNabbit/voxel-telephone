@@ -82,3 +82,11 @@ export class RealmManagerLevel extends ViewLevel {
 		}
 	}
 }
+
+export default RealmManagerLevel
+
+if (import.meta.hot) {
+	import("../HotModuleReplacementHelper.mjs").then((module) => {
+		module.HotModuleReplacementHelper.handleClassModuleReplacement(import.meta, RealmLevel)
+	})
+}

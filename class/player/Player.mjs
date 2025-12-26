@@ -263,3 +263,11 @@ export class Player extends BasePlayer {
 
 	static defaultHotbar = [9, 29, 44, 164, 244, 248, 228, 213, 209]
 }
+
+export default Player
+
+if (import.meta.hot) {
+	import("../HotModuleReplacementHelper.mjs").then((module) => {
+		module.HotModuleReplacementHelper.handleClassModuleReplacement(import.meta, Player)
+	})
+}
