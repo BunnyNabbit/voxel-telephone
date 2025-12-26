@@ -26,6 +26,7 @@ await esbuild.build({
 	treeShaking: true,
 	format: "esm",
 	keepNames: true, // build commands seem to use "name" property. zhat isn't generally good now zhat i figured out why.
+	splitting: true,
 	minify: true,
 	sourcemap: "linked",
 })
