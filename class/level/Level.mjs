@@ -3,11 +3,8 @@ import { textSymbols } from "../../constants.mjs"
 import defaultBlockset from "../../6-8-5-rgb.json" with { type: "json" }
 import { BaseLevel } from "classicborne/class/level/BaseLevel.mjs"
 import { LevelCommandInterpreter } from "./LevelCommandInterpreter.mjs"
-/** @typedef {import("../player/Player.mjs").Player} Player */
-/** @typedef {import("../../types/arrayLikes.mjs").Vector3} Vector3 */
-/** @typedef {import("../../types/arrayLikes.mjs").Vector2} Vector2 */
-/** @typedef {import("classicborne-server-protocol/class/Client.mjs").Client} Client */
-/** @typedef {import("./levelCommands.mjs").LevelCommand} LevelCommand */
+/** @import { Player } from "../player/Player.mjs").Player} Player */
+/** @import { Vector3 } from "../../types/arrayLikes.mjs" */
 /** @import { clickData } from "../../types/eventData.mts" */
 
 /**@todo Yet to be documented.
