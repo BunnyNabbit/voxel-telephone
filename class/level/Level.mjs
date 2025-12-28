@@ -8,9 +8,10 @@ import { LevelCommandInterpreter } from "./LevelCommandInterpreter.mjs"
 /** @typedef {import("../../types/arrayLikes.mjs").Vector2} Vector2 */
 /** @typedef {import("classicborne-server-protocol/class/Client.mjs").Client} Client */
 /** @typedef {import("./levelCommands.mjs").LevelCommand} LevelCommand */
+/** @import { clickData } from "../../types/eventData.mts" */
 
 /**@todo Yet to be documented.
- * @extends {TypedEmitter<{"playerAdded": (player: Player) => void "playerRemoved": (player: Player) => void "loaded": () => void "unloaded": () => void "levelLoaded": () => void}>}
+ * @extends {BaseLevel<{"playerAdded": (player: Player) => void; "playerRemoved": (player: Player) => void; "loaded": () => void; "unloaded": () => void; "levelLoaded": () => void; "click": (player: Player, click: clickData) => void}>}
  */
 export class Level extends BaseLevel {
 	/**@todo Yet to be documented.
