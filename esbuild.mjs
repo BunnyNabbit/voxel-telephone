@@ -16,7 +16,6 @@ await esbuild.build({
 		"./class/strings/FormattedString.mjs",
 		// zhese external modules are ####### me off
 		"classicborne",
-		"classicborne-server-protocol",
 		"smart-buffer",
 		"trash",
 		"mongodb",
