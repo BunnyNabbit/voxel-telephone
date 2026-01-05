@@ -20,15 +20,12 @@ if (cursor && licensedGrid.length > 0) {
 	const firstBuildTurn = licensedGrid.find(turn => turn && turn.promptType === "build");
 	if (firstBuildTurn) {
 		const firstItemId = firstBuildTurn._id;
-		// Query for items with _id > firstItemId to check if previous page exists
+		// Query for items with _id > firstItemId to find the previous page cursor
 		const findDocument = { promptType: "build", licenses: { $exists: true }, _id: { $gt: firstItemId } };
-		const previousCheck = await database.gameCollection.find(findDocument).sort({ _id: 1 }).limit(1).toArray();
-		if (previousCheck.length > 0) {
-			// Fetch items going backwards to find the right cursor
-			const prevPageItems = await database.gameCollection.find(findDocument).sort({ _id: 1 }).limit(65).toArray();
-			if (prevPageItems.length > 0) {
-				prevCursor = prevPageItems[prevPageItems.length - 1]._id;
-			}
+		// Fetch items going backwards to find the right cursor - we need one full page (65 items)
+		const prevPageItems = await database.gameCollection.find(findDocument).sort({ _id: 1 }).limit(65).toArray();
+		if (prevPageItems.length > 0) {
+			prevCursor = prevPageItems[prevPageItems.length - 1]._id;
 		}
 	}
 }

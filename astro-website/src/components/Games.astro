@@ -18,19 +18,14 @@ if (doPagination && games.length == gamesPerPage) {
 // Check if there's a previous page by looking for one item before the current cursor
 if (doPagination && cursor && games.length > 0) {
 	const firstItemId = games[0][0]._id
-	// Query for items with _id > firstItemId (going backwards in time) to check if previous page exists
+	// Query for items with _id > firstItemId (going backwards in time) to find the previous page cursor
 	const findDocument = { depth: 0 }
 	if (onlyCompleted) findDocument.depth = 15
 	findDocument._id = { $gt: firstItemId }
-	const previousCheck = await database.gameCollection.find(findDocument).sort({ _id: 1 }).limit(1).toArray()
-	if (previousCheck.length > 0) {
-		// If there are items after the first item (earlier in time), we can go back
-		// The previous page cursor should be the ID that's approximately one page back
-		// We fetch items going backwards to find the right cursor
-		const prevPageItems = await database.gameCollection.find(findDocument).sort({ _id: 1 }).limit(gamesPerPage).toArray()
-		if (prevPageItems.length > 0) {
-			prevCursor = prevPageItems[prevPageItems.length - 1]._id
-		}
+	// Fetch items going backwards to find the right cursor - we need one full page
+	const prevPageItems = await database.gameCollection.find(findDocument).sort({ _id: 1 }).limit(gamesPerPage).toArray()
+	if (prevPageItems.length > 0) {
+		prevCursor = prevPageItems[prevPageItems.length - 1]._id
 	}
 }
 ---
