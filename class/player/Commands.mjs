@@ -4,6 +4,7 @@ import { Zone } from "../level/Zone.mjs"
 import PushIntegration from "../integrations/PushIntegration.mjs"
 import { Help } from "../Help.mjs"
 import { RealmManagerLevel } from "../level/RealmManagerLevel.mjs"
+import { RealmLevel } from "../level/RealmLevel.mjs"
 import { invertPromptType } from "../../utils.mjs"
 import { textSymbols } from "../../constants.mjs"
 import { ViewLevel } from "../level/ViewLevel.mjs"
@@ -197,16 +198,20 @@ export class Commands {
 			["/template"],
 			async (player, message) => {
 				let template
+				let templateName
 				switch (message) {
 					case "builder":
 						template = templates.builder
+						templateName = "builder"
 						break
 					case "empty":
 						template = templates.empty
+						templateName = "empty"
 						break
 					case "animation":
 						if (player.space.bounds[0] !== 256) return
 						template = templates.animation
+						templateName = "animation"
 						break
 					default:
 						player.message(new FormattedString(stringSkeleton.command.error.template.unknownTemplate))
@@ -220,6 +225,10 @@ export class Commands {
 				await player.space.changeRecord.restoreBlockChangesToLevel(player.space, Math.max(player.space.changeRecord.actionCount, 1))
 				player.space.reload()
 				player.emit("playSound", universe.sounds.deactivateVCR)
+				// If the player is in a RealmLevel, persist the template choice
+				if (player.space instanceof RealmLevel && player.space.realmDocument) {
+					await universe.db.saveRealmTemplate(player.space.realmDocument._id, templateName)
+				}
 			},
 			[Commands.reasonHasLevelBuildPermission(false), Commands.reasonVcrDraining(true), Commands.reasonVcr(true, new FormattedString(stringSkeleton.level.error.blockBlockingCommand))]
 		)
