@@ -6,7 +6,7 @@ import Turn from "../../../components/Turn.astro";
 import Timestamp from "../../../components/Timestamp.astro";
 import { ObjectId } from "mongodb";
 const username = Astro.params.username;
-let cursor, nextCursor
+let cursor, nextCursor, prevCursor
 if (Astro.params.cursor) cursor = ObjectId.createFromHexString(Astro.params.cursor);
 const userRecord = await database.getUserRecordDocument(username, true);
 let title = username;
@@ -24,6 +24,24 @@ if (!userRecord) {
 		nextCursor = userGrid[userGrid.length - 3]._id;
 		userGrid.pop();
 		userGrid.pop();
+	}
+	// Check if there's a previous page
+	if (cursor && userGrid.length > 0) {
+		// Find the first build turn in the grid
+		const firstBuildTurn = userGrid.find(turn => turn && turn.promptType === "build");
+		if (firstBuildTurn) {
+			const firstItemId = firstBuildTurn._id;
+			// Query for items with _id > firstItemId to check if previous page exists
+			const findDocument = { promptType: "build", creators: username, _id: { $gt: firstItemId } };
+			const previousCheck = await database.gameCollection.find(findDocument).sort({ _id: 1 }).limit(1).toArray();
+			if (previousCheck.length > 0) {
+				// Fetch items going backwards to find the right cursor
+				const prevPageItems = await database.gameCollection.find(findDocument).sort({ _id: 1 }).limit(65).toArray();
+				if (prevPageItems.length > 0) {
+					prevCursor = prevPageItems[prevPageItems.length - 1]._id;
+				}
+			}
+		}
 	}
 }
 ---
@@ -56,11 +74,20 @@ if (!userRecord) {
 			<p></p>
 		)
 	}
-	{
-		nextCursor && (
-			<a href={`/player/${username}/${nextCursor}`} class="pagination-button">
-				Next Page
-			</a>
-		)
-	}
+	<div class="flex-container">
+		{
+			prevCursor && (
+				<a href={`/player/${username}/${prevCursor}`} class="pagination-button">
+					Previous Page
+				</a>
+			)
+		}
+		{
+			nextCursor && (
+				<a href={`/player/${username}/${nextCursor}`} class="pagination-button">
+					Next Page
+				</a>
+			)
+		}
+	</div>
 </ContentPage>
