@@ -106,13 +106,7 @@ export class RealmLevel extends Level {
 		// Determine template from realm document, default to empty if not set
 		let template = templates.empty
 		if (realmDocument.template) {
-			// Map iconName to template object
-			const templateMap = {
-				[templates.builder.iconName]: templates.builder,
-				[templates.animation.iconName]: templates.animation,
-				empty: templates.empty,
-			}
-			template = templateMap[realmDocument.template] || templates.empty
+			template = RealmLevel.templateMap[realmDocument.template] || templates.empty
 		}
 
 		this.loadIntoUniverse(universe, levelName, {
@@ -128,6 +122,12 @@ export class RealmLevel extends Level {
 
 	static bounds = [256, 256, 256]
 	static template = templates.empty
+	// Template mapping for loading persisted templates from realm documents
+	static templateMap = {
+		[templates.builder.iconName]: templates.builder,
+		[templates.animation.iconName]: templates.animation,
+		empty: templates.empty,
+	}
 }
 
 export default RealmLevel
