@@ -1,43 +1,39 @@
 ---
-import { database } from "../../../shared/db.mjs";
-import ContentPage from "../../../layouts/ContentPage.astro";
-import { Image } from "astro:assets";
-import Turn from "../../../components/Turn.astro";
-import Timestamp from "../../../components/Timestamp.astro";
-import { ObjectId } from "mongodb";
-const username = Astro.params.username;
-let cursor, nextCursor, prevCursor
-if (Astro.params.cursor) cursor = ObjectId.createFromHexString(Astro.params.cursor);
-const userRecord = await database.getUserRecordDocument(username, true);
-let title = username;
-let userGrid = [];
+import { database } from "../../../shared/db.mjs"
+import ContentPage from "../../../layouts/ContentPage.astro"
+import { Image } from "astro:assets"
+import Turn from "../../../components/Turn.astro"
+import Timestamp from "../../../components/Timestamp.astro"
+import { ObjectId } from "mongodb"
+const username = Astro.params.username
+let cursor, nextCursor, previousCursor
+if (Astro.params.cursor) cursor = ObjectId.createFromHexString(Astro.params.cursor)
+const userRecord = await database.getUserRecordDocument(username, true)
+let title = username
+let userGrid = []
 if (!userRecord) {
-	title = "Player not found";
-	Astro.response.status = 404;
+	title = "Player not found"
+	Astro.response.status = 404
 } else {
-	if (userRecord.displayName) {
-		title = userRecord.displayName;
-	}
-	userGrid = await database.getUserGrid(username, cursor);
+	if (userRecord.displayName) title = userRecord.displayName
+	userGrid = await database.getUserGrid(username, cursor)
 	userGrid = userGrid.flat(1)
 	if (userGrid.length == 65 * 2) {
-		nextCursor = userGrid[userGrid.length - 3]._id;
-		userGrid.pop();
-		userGrid.pop();
+		nextCursor = userGrid[userGrid.length - 3]._id
+		userGrid.pop()
+		userGrid.pop()
 	}
 	// Check if there's a previous page
 	if (cursor && userGrid.length > 0) {
 		// Find the first build turn in the grid
-		const firstBuildTurn = userGrid.find(turn => turn && turn.promptType === "build");
+		const firstBuildTurn = userGrid.find(turn => turn && turn.promptType === "build")
 		if (firstBuildTurn) {
-			const firstItemId = firstBuildTurn._id;
+			const firstItemId = firstBuildTurn._id
 			// Query for items with _id > firstItemId to find the previous page cursor
-			const findDocument = { promptType: "build", creators: username, _id: { $gt: firstItemId } };
+			const findDocument = { promptType: "build", creators: username, _id: { $gt: firstItemId } }
 			// Fetch items going backwards to find the right cursor - we need one full page (65 items)
-			const prevPageItems = await database.gameCollection.find(findDocument).sort({ _id: 1 }).limit(65).toArray();
-			if (prevPageItems.length > 0) {
-				prevCursor = prevPageItems[prevPageItems.length - 1]._id;
-			}
+			const previousPageItems = await database.gameCollection.find(findDocument).sort({ _id: 1 }).limit(65).toArray()
+			if (previousPageItems.length > 0) previousCursor = previousPageItems[previousPageItems.length - 1]._id
 		}
 	}
 }
@@ -58,12 +54,10 @@ if (!userRecord) {
 			<div class="flex-container ">
 				{
 					userGrid.map((turn: any, index: number) => {
-						if (turn.promptType === "description") {
-							return null;
-						}
+						if (turn.promptType === "description") return null
 						return (
 							<Turn description={userGrid[index - 1]} build={turn} rootId={turn.root} anchor={`#${turn.depth}`} />
-						);
+						)
 					})
 				}
 			</div>
@@ -73,8 +67,8 @@ if (!userRecord) {
 	}
 	<div class="flex-container">
 		{
-			prevCursor && (
-				<a href={`/player/${username}/${prevCursor}`} class="pagination-button">
+			previousCursor && (
+				<a href={`/player/${username}/${previousCursor}`} class="pagination-button">
 					Previous Page
 				</a>
 			)

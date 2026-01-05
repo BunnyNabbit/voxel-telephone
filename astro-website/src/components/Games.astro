@@ -7,7 +7,7 @@ const doPagination = Astro.props.pagination ?? false
 const gamesPerPage = Astro.props.games ?? 5
 const onlyCompleted = Astro.props.onlyCompleted ?? false
 let nextCursor = null
-let prevCursor = null
+let previousCursor = null
 let cursorObjectId = null
 if (cursor) cursorObjectId = ObjectId.createFromHexString(cursor)
 const games = await database.getGames(cursorObjectId, gamesPerPage, onlyCompleted)
@@ -23,10 +23,8 @@ if (doPagination && cursor && games.length > 0) {
 	if (onlyCompleted) findDocument.depth = 15
 	findDocument._id = { $gt: firstItemId }
 	// Fetch items going backwards to find the right cursor - we need one full page
-	const prevPageItems = await database.gameCollection.find(findDocument).sort({ _id: 1 }).limit(gamesPerPage).toArray()
-	if (prevPageItems.length > 0) {
-		prevCursor = prevPageItems[prevPageItems.length - 1]._id
-	}
+	const previousPageItems = await database.gameCollection.find(findDocument).sort({ _id: 1 }).limit(gamesPerPage).toArray()
+	if (previousPageItems.length > 0) previousCursor = previousPageItems[previousPageItems.length - 1]._id
 }
 ---
 
@@ -39,8 +37,8 @@ if (doPagination && cursor && games.length > 0) {
 </div>
 <div class="flex-container">
 	{
-		prevCursor && (
-			<a href={`/games/${prevCursor}`} class="pagination-button">
+		previousCursor && (
+			<a href={`/games/${previousCursor}`} class="pagination-button">
 				Previous Page
 			</a>
 		)

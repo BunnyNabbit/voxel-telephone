@@ -4,7 +4,7 @@ import Turn from "../../components/Turn.astro"
 import { database } from "../../shared/db.mjs"
 // @ts-ignore
 import { ObjectId } from "mongodb"
-let cursor, nextCursor, prevCursor
+let cursor, nextCursor, previousCursor
 if (Astro.params.cursor) cursor = ObjectId.createFromHexString(Astro.params.cursor)
 let licensedGrid = []
 licensedGrid = await database.getLicensedGrid(cursor)
@@ -17,16 +17,14 @@ if (licensedGrid.length == 65 * 2) {
 // Check if there's a previous page
 if (cursor && licensedGrid.length > 0) {
 	// Find the first build turn in the grid
-	const firstBuildTurn = licensedGrid.find(turn => turn && turn.promptType === "build");
+	const firstBuildTurn = licensedGrid.find((turn) => turn && turn.promptType === "build")
 	if (firstBuildTurn) {
-		const firstItemId = firstBuildTurn._id;
+		const firstItemId = firstBuildTurn._id
 		// Query for items with _id > firstItemId to find the previous page cursor
-		const findDocument = { promptType: "build", licenses: { $exists: true }, _id: { $gt: firstItemId } };
+		const findDocument = { promptType: "build", licenses: { $exists: true }, _id: { $gt: firstItemId } }
 		// Fetch items going backwards to find the right cursor - we need one full page (65 items)
-		const prevPageItems = await database.gameCollection.find(findDocument).sort({ _id: 1 }).limit(65).toArray();
-		if (prevPageItems.length > 0) {
-			prevCursor = prevPageItems[prevPageItems.length - 1]._id;
-		}
+		const previousPageItems = await database.gameCollection.find(findDocument).sort({ _id: 1 }).limit(65).toArray()
+		if (previousPageItems.length > 0) previousCursor = previousPageItems[previousPageItems.length - 1]._id
 	}
 }
 ---
@@ -45,8 +43,8 @@ if (cursor && licensedGrid.length > 0) {
 	</div>
 	<div class="flex-container">
 		{
-			prevCursor && (
-				<a href={`/models/${prevCursor}`} class="pagination-button">
+			previousCursor && (
+				<a href={`/models/${previousCursor}`} class="pagination-button">
 					Previous Page
 				</a>
 			)
