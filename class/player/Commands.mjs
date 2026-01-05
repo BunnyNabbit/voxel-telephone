@@ -198,20 +198,16 @@ export class Commands {
 			["/template"],
 			async (player, message) => {
 				let template
-				let templateName
 				switch (message) {
 					case "builder":
 						template = templates.builder
-						templateName = "builder"
 						break
 					case "empty":
 						template = templates.empty
-						templateName = "empty"
 						break
 					case "animation":
 						if (player.space.bounds[0] !== 256) return
 						template = templates.animation
-						templateName = "animation"
 						break
 					default:
 						player.message(new FormattedString(stringSkeleton.command.error.template.unknownTemplate))
@@ -227,6 +223,8 @@ export class Commands {
 				player.emit("playSound", universe.sounds.deactivateVCR)
 				// If the player is in a RealmLevel, persist the template choice
 				if (player.space instanceof RealmLevel && player.space.realmDocument) {
+					// Use iconName property from VoxelRecordTemplate instances, fallback to "empty" for EmptyTemplate
+					const templateName = template.iconName || "empty"
 					await universe.db.saveRealmTemplate(player.space.realmDocument._id, templateName)
 				}
 			},

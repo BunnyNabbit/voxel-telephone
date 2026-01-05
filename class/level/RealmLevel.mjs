@@ -106,17 +106,13 @@ export class RealmLevel extends Level {
 		// Determine template from realm document, default to empty if not set
 		let template = templates.empty
 		if (realmDocument.template) {
-			switch (realmDocument.template) {
-				case "builder":
-					template = templates.builder
-					break
-				case "animation":
-					template = templates.animation
-					break
-				case "empty":
-				default:
-					template = templates.empty
-					break
+			// Match against iconName property for VoxelRecordTemplate instances
+			if (realmDocument.template === "voxel-telephone-64") {
+				template = templates.builder
+			} else if (realmDocument.template === "animation") {
+				template = templates.animation
+			} else if (realmDocument.template === "empty") {
+				template = templates.empty
 			}
 		}
 
