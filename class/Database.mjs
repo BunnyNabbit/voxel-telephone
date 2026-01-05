@@ -548,7 +548,7 @@ export class Database {
 	 */
 	async saveRealmPreview(realmId, blocks) {
 		try {
-			return await this.realmCollection.updateMany({ _id: realmId }, { $set: { preview: blocks } })
+			return await this.realmCollection.updateOne({ _id: realmId }, { $set: { preview: blocks } })
 		} catch (err) {
 			console.error("Error saving realm preview:", err)
 		}
@@ -560,7 +560,7 @@ export class Database {
 	 */
 	async saveRealmTemplate(realmId, templateName) {
 		try {
-			return await this.realmCollection.updateMany({ _id: realmId }, { $set: { template: templateName } })
+			return await this.realmCollection.updateOne({ _id: realmId }, { $set: { template: templateName } })
 		} catch (err) {
 			console.error("Error saving realm template:", err)
 		}
