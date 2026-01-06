@@ -518,6 +518,7 @@ export class Database {
 			_id: realmId,
 			ownedBy: username,
 			realmName: Database.generateName(),
+			template: "empty",
 		}
 		try {
 			await this.realmCollection.insertOne(document)
@@ -547,9 +548,21 @@ export class Database {
 	 */
 	async saveRealmPreview(realmId, blocks) {
 		try {
-			return await this.realmCollection.updateMany({ _id: realmId }, { $set: { preview: blocks } })
+			return await this.realmCollection.updateOne({ _id: realmId }, { $set: { preview: blocks } })
 		} catch (err) {
 			console.error("Error saving realm preview:", err)
+		}
+	}
+	/**Saves a realm template.
+	 * @param {ObjectId} realmId - The ID of the realm.
+	 * @param {string} templateName - The name of the template to save.
+	 * @returns {Promise<void>} A promise that resolves when the operation is complete.
+	 */
+	async saveRealmTemplate(realmId, templateName) {
+		try {
+			return await this.realmCollection.updateOne({ _id: realmId }, { $set: { template: templateName } })
+		} catch (err) {
+			console.error("Error saving realm template:", err)
 		}
 	}
 	/**Generates a random name consisting of three syllables.
