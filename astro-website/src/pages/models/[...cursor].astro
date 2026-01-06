@@ -4,7 +4,7 @@ import Turn from "../../components/Turn.astro"
 import { database } from "../../shared/db.mjs"
 // @ts-ignore
 import { ObjectId } from "mongodb"
-let cursor, nextCursor
+let cursor, nextCursor, previousCursor
 if (Astro.params.cursor) cursor = ObjectId.createFromHexString(Astro.params.cursor)
 let licensedGrid = []
 licensedGrid = await database.getLicensedGrid(cursor)
@@ -13,6 +13,28 @@ if (licensedGrid.length == 65 * 2) {
 	nextCursor = licensedGrid[licensedGrid.length - 3]._id
 	licensedGrid.pop()
 	licensedGrid.pop()
+}
+// Check if there's a previous page
+if (cursor && licensedGrid.length > 0) {
+	// Find the first build turn in the grid
+	const firstBuildTurn = licensedGrid.find((turn) => turn && turn.promptType === "build")
+	if (firstBuildTurn) {
+		const firstItemId = firstBuildTurn._id
+		// Query for items with _id > firstItemId to find the previous page cursor
+		const findDocument = { promptType: "build", licenses: { $exists: true }, _id: { $gt: firstItemId } }
+		// Fetch items going backwards to find the right cursor - we need one full page (65 items)
+		const previousPageItems = await database.gameCollection.find(findDocument).sort({ _id: 1 }).limit(65).toArray()
+		if (previousPageItems.length > 0) {
+			// If we have a full page or more, use the last item as cursor for previous page
+			// If we have less than a full page, we should go to the first page (no cursor)
+			if (previousPageItems.length >= 65) {
+				previousCursor = previousPageItems[previousPageItems.length - 1]._id
+			} else {
+				// Use empty string to indicate first page (no cursor)
+				previousCursor = ""
+			}
+		}
+	}
 }
 ---
 
@@ -28,11 +50,20 @@ if (licensedGrid.length == 65 * 2) {
 			})
 		}
 	</div>
-	{
-		nextCursor && (
-			<a href={`/models/${nextCursor}`} class="pagination-button">
-				Next Page
-			</a>
-		)
-	}
+	<div class="flex-container">
+		{
+			previousCursor != null && (
+				<a href={previousCursor === "" ? `/models` : `/models/${previousCursor}`} class="pagination-button">
+					Previous Page
+				</a>
+			)
+		}
+		{
+			nextCursor && (
+				<a href={`/models/${nextCursor}`} class="pagination-button">
+					Next Page
+				</a>
+			)
+		}
+	</div>
 </ContentPage>

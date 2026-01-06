@@ -4,6 +4,7 @@ import { Zone } from "../level/Zone.mjs"
 import PushIntegration from "../integrations/PushIntegration.mjs"
 import { Help } from "../Help.mjs"
 import { RealmManagerLevel } from "../level/RealmManagerLevel.mjs"
+import { RealmLevel } from "../level/RealmLevel.mjs"
 import { invertPromptType } from "../../utils.mjs"
 import { textSymbols } from "../../constants.mjs"
 import { ViewLevel } from "../level/ViewLevel.mjs"
@@ -220,6 +221,12 @@ export class Commands {
 				await player.space.changeRecord.restoreBlockChangesToLevel(player.space, Math.max(player.space.changeRecord.actionCount, 1))
 				player.space.reload()
 				player.emit("playSound", universe.sounds.deactivateVCR)
+				// If the player is in a RealmLevel, persist the template choice
+				if (player.space instanceof RealmLevel && player.space.realmDocument) {
+					// Use iconName property from VoxelRecordTemplate instances, fallback to "empty" for EmptyTemplate
+					const templateName = template.iconName || "empty"
+					await universe.db.saveRealmTemplate(player.space.realmDocument._id, templateName)
+				}
 			},
 			[Commands.reasonHasLevelBuildPermission(false), Commands.reasonVcrDraining(true), Commands.reasonVcr(true, new FormattedString(stringSkeleton.level.error.blockBlockingCommand))]
 		)

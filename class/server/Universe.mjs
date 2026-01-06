@@ -117,9 +117,7 @@ export class Universe extends BaseUniverse {
 							// reserve game for player
 							this.playerReserved.set(player.authInfo.username, level.game)
 							console.log("reserved game")
-							if (!level.changeRecord.draining) {
-								level.changeRecord.flushChanges()
-							}
+							if (!level.changeRecord.draining) level.changeRecord.flushChanges()
 							const timeout = setTimeout(async () => {
 								await level.dispose()
 								this.levels.delete(level.name)

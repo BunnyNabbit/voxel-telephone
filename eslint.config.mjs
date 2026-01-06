@@ -1,11 +1,19 @@
 import globals from "globals"
 import pluginJs from "@eslint/js"
+import { defineConfig } from "eslint/config"
+import { includeIgnoreFile } from "@eslint/compat"
+import { fileURLToPath } from "node:url"
 
-export default [
+const gitignorePath = fileURLToPath(new URL(".gitignore", import.meta.url))
+
+export default defineConfig([
+	includeIgnoreFile(gitignorePath, "Imported .gitignore patterns"),
 	{ files: ["**/*.js"], languageOptions: { sourceType: "commonjs" } },
 	{ languageOptions: { globals: globals.node } },
 	pluginJs.configs.recommended,
 	{
-		rules: {},
+		rules: {
+			curly: ["error", "multi-line", "consistent"]
+		},
 	},
-]
+])

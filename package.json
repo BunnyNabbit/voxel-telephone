@@ -13,8 +13,8 @@
   "repository": "github:BunnyNabbit/voxel-telephone",
   "dependencies": {
     "@slack/web-api": "^7.13.0",
-    "chunked-vox": "^1.1.0",
-    "classicborne": "^0.1.0",
+    "chunked-vox": "^1.1.1",
+    "classicborne": "^0.1.1",
     "classicborne-server-protocol": "^0.6.0",
     "dynohot": "^2.1.1",
     "esm-path": "^1.0.1",
@@ -23,14 +23,15 @@
     "mongodb": "^6.21.0",
     "nbt": "^0.8.1",
     "smart-buffer": "^4.2.0",
-    "socket.io": "^4.8.1",
+    "socket.io": "^4.8.3",
     "tiny-typed-emitter": "^2.1.0",
     "trash": "^9.0.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.1",
+    "@eslint/compat": "^2.0.0",
+    "@eslint/js": "^9.39.2",
     "esbuild": "0.25.9",
-    "eslint": "^9.39.1",
+    "eslint": "^9.39.2",
     "globals": "^16.5.0",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-drone-class": "^0.1.0"
