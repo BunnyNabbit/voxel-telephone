@@ -25,7 +25,7 @@ jobs:
             pnpm-lock.yaml
             tests/pnpm-lock.yaml
 
-      - name: Install pnpm
+      - name: Enable corepack for pnpm
         run: corepack enable
 
       - name: Install dependencies in root
