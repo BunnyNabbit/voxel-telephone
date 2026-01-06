@@ -46,7 +46,7 @@ if (doPagination && cursor && games.length > 0) {
 </div>
 <div class="flex-container">
 	{
-		previousCursor !== null && (
+		previousCursor != null && (
 			<a href={previousCursor === "" ? `/games` : `/games/${previousCursor}`} class="pagination-button">
 				Previous Page
 			</a>

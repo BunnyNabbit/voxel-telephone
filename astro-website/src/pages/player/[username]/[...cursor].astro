@@ -76,7 +76,7 @@ if (!userRecord) {
 	}
 	<div class="flex-container">
 		{
-			previousCursor !== null && (
+			previousCursor != null && (
 				<a href={previousCursor === "" ? `/player/${username}` : `/player/${username}/${previousCursor}`} class="pagination-button">
 					Previous Page
 				</a>
