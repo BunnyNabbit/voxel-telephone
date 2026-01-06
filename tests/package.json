@@ -1,0 +1,20 @@
+{
+  "name": "voxel-telephone-tests",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest"
+  },
+  "author": "BunnyNabbit \"Aon Langton\"",
+  "license": "MIT",
+  "description": "",
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "jest": "^30.0.4",
+    "prettier": "^3.6.2",
+    "prettier-plugin-drone-class": "^0.1.0"
+  },
+  "dependencies": {
+    "esm-path": "^1.0.1"
+  }
+}

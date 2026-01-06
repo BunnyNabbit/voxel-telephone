@@ -4,7 +4,7 @@
   "description": "Server for CPE clients. Telephone game about describing and building repeatedly.",
   "main": "voxelTelephone.mjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "echo \"Error: Run tests in /tests\" && exit 1",
     "build": "node esbuild.mjs"
   },
   "author": "BunnyNabbit",
