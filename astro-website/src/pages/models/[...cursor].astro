@@ -43,8 +43,8 @@ if (cursor && licensedGrid.length > 0) {
 	</div>
 	<div class="flex-container">
 		{
-			previousCursor && (
-				<a href={`/models/${previousCursor}`} class="pagination-button">
+			previousCursor != null && (
+				<a href={previousCursor === "" ? `/models` : `/models/${previousCursor}`} class="pagination-button">
 					Previous Page
 				</a>
 			)
