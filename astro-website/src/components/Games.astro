@@ -24,7 +24,16 @@ if (doPagination && cursor && games.length > 0) {
 	findDocument._id = { $gt: firstItemId }
 	// Fetch items going backwards to find the right cursor - we need one full page
 	const previousPageItems = await database.gameCollection.find(findDocument).sort({ _id: 1 }).limit(gamesPerPage).toArray()
-	if (previousPageItems.length > 0) previousCursor = previousPageItems[previousPageItems.length - 1]._id
+	if (previousPageItems.length > 0) {
+		// If we have a full page or more, use the last item as cursor for previous page
+		// If we have less than a full page, we should go to the first page (no cursor)
+		if (previousPageItems.length >= gamesPerPage) {
+			previousCursor = previousPageItems[previousPageItems.length - 1]._id
+		} else {
+			// Use empty string to indicate first page (no cursor)
+			previousCursor = ""
+		}
+	}
 }
 ---
 
@@ -37,8 +46,8 @@ if (doPagination && cursor && games.length > 0) {
 </div>
 <div class="flex-container">
 	{
-		previousCursor && (
-			<a href={`/games/${previousCursor}`} class="pagination-button">
+		previousCursor !== null && (
+			<a href={previousCursor === "" ? `/games` : `/games/${previousCursor}`} class="pagination-button">
 				Previous Page
 			</a>
 		)

@@ -33,7 +33,16 @@ if (!userRecord) {
 			const findDocument = { promptType: "build", creators: username, _id: { $gt: firstItemId } }
 			// Fetch items going backwards to find the right cursor - we need one full page (65 items)
 			const previousPageItems = await database.gameCollection.find(findDocument).sort({ _id: 1 }).limit(65).toArray()
-			if (previousPageItems.length > 0) previousCursor = previousPageItems[previousPageItems.length - 1]._id
+			if (previousPageItems.length > 0) {
+				// If we have a full page or more, use the last item as cursor for previous page
+				// If we have less than a full page, we should go to the first page (no cursor)
+				if (previousPageItems.length >= 65) {
+					previousCursor = previousPageItems[previousPageItems.length - 1]._id
+				} else {
+					// Use empty string to indicate first page (no cursor)
+					previousCursor = ""
+				}
+			}
 		}
 	}
 }
@@ -67,8 +76,8 @@ if (!userRecord) {
 	}
 	<div class="flex-container">
 		{
-			previousCursor && (
-				<a href={`/player/${username}/${previousCursor}`} class="pagination-button">
+			previousCursor !== null && (
+				<a href={previousCursor === "" ? `/player/${username}` : `/player/${username}/${previousCursor}`} class="pagination-button">
 					Previous Page
 				</a>
 			)
