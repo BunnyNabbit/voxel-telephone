@@ -38,3 +38,6 @@ jobs:
       - name: Run tests
         run: pnpm test
         working-directory: ./tests
+
+      - name: Coveralls
+        uses: coverallsapp/github-action@v2
