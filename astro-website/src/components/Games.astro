@@ -7,12 +7,33 @@ const doPagination = Astro.props.pagination ?? false
 const gamesPerPage = Astro.props.games ?? 5
 const onlyCompleted = Astro.props.onlyCompleted ?? false
 let nextCursor = null
+let previousCursor = null
 let cursorObjectId = null
 if (cursor) cursorObjectId = ObjectId.createFromHexString(cursor)
 const games = await database.getGames(cursorObjectId, gamesPerPage, onlyCompleted)
 if (doPagination && games.length == gamesPerPage) {
 	nextCursor = games[games.length - 2][0]._id
 	games.pop()
+}
+// Check if there's a previous page by looking for one item before the current cursor
+if (doPagination && cursor && games.length > 0) {
+	const firstItemId = games[0][0]._id
+	// Query for items with _id > firstItemId (going backwards in time) to find the previous page cursor
+	const findDocument = { depth: 0 }
+	if (onlyCompleted) findDocument.depth = 15
+	findDocument._id = { $gt: firstItemId }
+	// Fetch items going backwards to find the right cursor - we need one full page
+	const previousPageItems = await database.gameCollection.find(findDocument).sort({ _id: 1 }).limit(gamesPerPage).toArray()
+	if (previousPageItems.length > 0) {
+		// If we have a full page or more, use the last item as cursor for previous page
+		// If we have less than a full page, we should go to the first page (no cursor)
+		if (previousPageItems.length >= gamesPerPage) {
+			previousCursor = previousPageItems[previousPageItems.length - 1]._id
+		} else {
+			// Use empty string to indicate first page (no cursor)
+			previousCursor = ""
+		}
+	}
 }
 ---
 
@@ -23,10 +44,19 @@ if (doPagination && games.length == gamesPerPage) {
 		})
 	}
 </div>
-{
-	nextCursor && (
-		<a href={`/games/${nextCursor}`} class="pagination-button">
-			Next Page
-		</a>
-	)
-}
+<div class="flex-container">
+	{
+		previousCursor !== null && (
+			<a href={previousCursor === "" ? `/games` : `/games/${previousCursor}`} class="pagination-button">
+				Previous Page
+			</a>
+		)
+	}
+	{
+		nextCursor && (
+			<a href={`/games/${nextCursor}`} class="pagination-button">
+				Next Page
+			</a>
+		)
+	}
+</div>
