@@ -101,12 +101,13 @@ export class Help {
 
 			if (commandHelp) {
 				commandHelp.displayHelpToPlayer(player)
-				if (displayLink)
+				if (displayLink) {
 					player.message(
 						new FormattedString(stringSkeleton.command.help.webReminder, {
 							baseURL: universe.serverConfiguration.website.baseURL,
 						})
 					)
+				}
 				return
 			} else if (!commandHelp && languageOverride) {
 				player.message(new FormattedString(stringSkeleton.command.error.help.foundCommandDocumentationMissing))
