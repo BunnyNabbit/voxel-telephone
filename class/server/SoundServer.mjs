@@ -106,9 +106,7 @@ class SoundTransmitter extends EventEmitter {
 		this.eventQueue.forEach((event) => {
 			console.log(event.cursor, cursor, event.cursor > cursor)
 			if (this.canPlay(event.data) && (event.cursor > cursor || event.data.loop)) {
-				if (event.data.startTime) {
-					event.data.playTime = Date.now() - event.data.startTime
-				}
+				if (event.data.startTime) event.data.playTime = Date.now() - event.data.startTime
 				socket.emit("playSound", event)
 			}
 		})
