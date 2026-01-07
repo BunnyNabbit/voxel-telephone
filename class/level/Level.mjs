@@ -3,15 +3,17 @@ import { textSymbols } from "../../constants.mjs"
 import defaultBlockset from "../../6-8-5-rgb.json" with { type: "json" }
 import { BaseLevel } from "classicborne/class/level/BaseLevel.mjs"
 import { LevelCommandInterpreter } from "./LevelCommandInterpreter.mjs"
-/** @import { Player } from "../player/Player.mjs").Player} Player */
-/** @import { Vector3 } from "../../types/arrayLikes.mjs" */
-/** @import { clickData } from "../../types/eventData.mts" */
+/** @import {Player} from "../player/Player.mjs" */
+/** @import {Vector3} from "../../types/arrayLikes.mjs" */
+/** @import {clickData} from "../../types/eventData.mts" */
 
 /**@todo Yet to be documented.
- * @extends {BaseLevel<{"playerAdded": (player: Player) => void; "playerRemoved": (player: Player) => void; "loaded": () => void; "unloaded": () => void; "levelLoaded": () => void; "click": (player: Player, click: clickData) => void}>}
+ *
+ * @extends {BaseLevel<{ playerAdded: (player: Player) => void; playerRemoved: (player: Player) => void; loaded: () => void; unloaded: () => void; levelLoaded: () => void; click: (player: Player, click: clickData) => void }>}
  */
 export class Level extends BaseLevel {
 	/**@todo Yet to be documented.
+	 *
 	 * @param {Vector3} bounds
 	 * @param {Buffer} blocks
 	 */
@@ -30,8 +32,9 @@ export class Level extends BaseLevel {
 		})
 	}
 	/**@todo Yet to be documented.
-	 * @param {string|FormattedString} message
-	 * @param {number[]} [types=[0]]
+	 *
+	 * @param {string | FormattedString} message
+	 * @param {number[]} [types=[0]] Default is `[0]`
 	 */
 	messageAll(message, types = [0]) {
 		this.players.forEach((player) => {
@@ -39,12 +42,14 @@ export class Level extends BaseLevel {
 		})
 		this.playSound("toggle")
 	}
+
 	toggleVcr() {
 		this.inVcr = true
 		this.playSound("gameTrackDrone")
 		this.setBlinkText(textSymbols.pause)
 	}
 	/**@todo Yet to be documented.
+	 *
 	 * @param {string} username
 	 * @returns {boolean}
 	 */
@@ -54,6 +59,7 @@ export class Level extends BaseLevel {
 		return false
 	}
 	/**@todo Yet to be documented.
+	 *
 	 * @param {string} soundName
 	 */
 	playSound(soundName) {
@@ -62,8 +68,9 @@ export class Level extends BaseLevel {
 		})
 	}
 	/**Sets the text that will blink in the level, or stops blinking if `blinkText` is false.
-	 * @param {string|boolean} blinkText - The text to blink, or `false` to stop blinking.
-	 * @param {?string} [subliminalText] - Optional subliminal text to display when blinking.
+	 *
+	 * @param {string | boolean} blinkText - The text to blink, or `false` to stop blinking.
+	 * @param {string | null} [subliminalText] - Optional subliminal text to display when blinking.
 	 */
 	setBlinkText(blinkText = false, subliminalText) {
 		clearInterval(this.blinkInterval)

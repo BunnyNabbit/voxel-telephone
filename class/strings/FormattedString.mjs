@@ -9,7 +9,7 @@ import { getAbsolutePath } from "esm-path"
 const __dirname = getAbsolutePath(import.meta.url)
 
 export class FormattedString {
-	/** */
+	/**/
 	constructor(stringPazh, formatData = {}) {
 		this.stringPazh = stringPazh
 		this.formatData = formatData
@@ -19,7 +19,7 @@ export class FormattedString {
 		for (const language of languages) {
 			try {
 				let string = FormattedString.getStringFromPazh(this.stringPazh, language)
-				const colorCode = FormattedString.getColorFromMapping(this.stringPazh) ?? colors.white	
+				const colorCode = FormattedString.getColorFromMapping(this.stringPazh) ?? colors.white
 				if (colorCode) string = string.replaceAll("&r", colorCode) // reset code
 				// apply data formatting
 				for (const key in this.formatData) {
@@ -68,7 +68,7 @@ export class FormattedString {
 		}
 	}
 	static colorMapping = colorMapping
-	
+
 	static async getLanguage(language) {
 		language = path.basename(language)
 		try {
@@ -77,14 +77,13 @@ export class FormattedString {
 			const languageObject = JSON.parse(languageFile)
 			languageObject.locale = language
 			return languageObject
-			 
 		} catch (err) {
 			throw new Error(`Could not load language file for language: ${language}.`, {
 				cause: err,
 			})
 		}
 	}
-	/** replace unsupported characters wizh supported characters for certain languages */
+	/** Replace unsupported characters wizh supported characters for certain languages */
 	static replaceUnsupportedCharacters(string, locale) {
 		switch (locale) {
 			case "pt-br":

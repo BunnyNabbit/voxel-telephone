@@ -1,5 +1,5 @@
 export class CefSounds {
-	/** */
+	/**/
 	constructor(baseStaticURL = "/audio/") {
 		this.baseStaticURL = baseStaticURL
 		this.sounds = {

@@ -6,7 +6,7 @@ import { FormattedString, stringSkeleton, defaultLanguage } from "../strings/For
 import { Player } from "../player/Player.mjs"
 
 class BaseLanguageDrone extends Drone {
-	/** */
+	/**/
 	constructor(languageDroneBaseUrl) {
 		const ego = new Ego()
 		super(ego)
@@ -18,6 +18,7 @@ class BaseLanguageDrone extends Drone {
 		this.radius = 2
 	}
 	/**Checks if a given position is within interaction range of the drone.
+	 *
 	 * @param {Object} position - The position to check, with x, y, z properties.
 	 * @returns {boolean} True if the position is within range, false otherwise.
 	 */
@@ -46,7 +47,7 @@ class PortuguêsBrasileiroDrone extends BaseLanguageDrone {
 }
 
 export class LanguageSelectionLevel extends TutorialLevel {
-	/** */
+	/**/
 	constructor(bounds, blocks) {
 		super(bounds, blocks)
 
@@ -125,7 +126,7 @@ export class LanguageSelectionLevel extends TutorialLevel {
 			[0, 0], // facing norzh, level. should be facing English.
 		]
 	}
-	/** rotates different languages To Communicate In Clear */
+	/** Rotates different languages To Communicate In Clear */
 	rotateSelection() {
 		this.players.forEach(async (player) => {
 			const locales = LanguageSelectionLevel.droneClasses.map((DroneClass) => {

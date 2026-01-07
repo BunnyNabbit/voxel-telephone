@@ -7,7 +7,7 @@ import { FormattedString, defaultLanguage, stringSkeleton } from "./strings/Form
 const __dirname = getAbsolutePath(import.meta.url)
 
 export class Category {
-	/** */
+	/**/
 	constructor(name) {
 		this.name = name
 		this.documents = []
@@ -24,7 +24,7 @@ export class Category {
 }
 
 export class TopicHelp {
-	/** */
+	/**/
 	constructor(name, title, help, category) {
 		this.type = "topic"
 		this.name = name
@@ -41,7 +41,7 @@ export class TopicHelp {
 }
 
 export class CommandHelp extends TopicHelp {
-	/** */
+	/**/
 	constructor(name, title, help, category) {
 		super(name, title, help, category)
 		this.type = "command"
@@ -50,6 +50,7 @@ export class CommandHelp extends TopicHelp {
 
 export class Help {
 	/**Creates an instance of the Help class.
+	 *
 	 * @param {Universe} universe - The universe object to interact with.
 	 */
 	constructor(universe) {
@@ -59,9 +60,10 @@ export class Help {
 		})
 	}
 	/**Displays help information to the player based on the provided argument.
+	 *
 	 * @param {Player} player - The player to display help information to.
 	 * @param {String} argument - The argument provided by the player.
-	 * @param {String?} [languageOverride] - Optional language override.
+	 * @param {String | null} [languageOverride] - Optional language override.
 	 */
 	async callPlayer(player, argument, languageOverride) {
 		await this.data
@@ -119,6 +121,7 @@ export class Help {
 		player.message(new FormattedString(stringSkeleton.command.error.help.documentationMissing, { originalArgument }))
 	}
 	/**Parses the markdown content into Minecraft classic text format.
+	 *
 	 * @param {String} markdown - The markdown content to parse.
 	 * @returns {Object} - An object containing the parsed text and heading.
 	 */
@@ -131,6 +134,7 @@ export class Help {
 		}
 	}
 	/**Loads the help documents from the specified directory.
+	 *
 	 * @param {String} directory - The directory to load help documents from.
 	 * @returns {Promise<Object>} - A promise that resolves to an object containing topics, commands, and categories.
 	 */
@@ -200,6 +204,7 @@ export class Help {
 		return { topics, commands, categories }
 	}
 	/**Converts the given parsed DragonMark structure to Minecraft classic text format.
+	 *
 	 * @param {Array} structure - The structure to convert.
 	 * @param {string} defaultColorCode - The default color code to use.
 	 * @returns {string} - The converted text.
@@ -228,10 +233,11 @@ export class Help {
 		return output
 	}
 	/**Explores recursively a directory and returns all the file paths and folder paths.
-	 * @see http://stackoverflow.com/a/5827895/4241030
+	 *
 	 * @param {String} dir - The directory to explore
 	 * @param {Number} [limit] - The maximum depth to explore
 	 * @returns {Promise<string[]>} - A promise that resolves to an array of file paths and folder paths
+	 * @see http://stackoverflow.com/a/5827895/4241030
 	 */
 	static async fileWalker(dir, limit = Infinity) {
 		if (limit && limit <= 0) return []
@@ -256,6 +262,7 @@ export class Help {
 		}
 	}
 	/**Registers the help command with the universe.
+	 *
 	 * @param {Universe} universe - The universe instance to register the command with.
 	 */
 	static register(universe) {

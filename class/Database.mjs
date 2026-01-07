@@ -4,7 +4,7 @@ import { randomIntFromInterval } from "../utils.mjs"
 import { MongoClient, ObjectId } from "mongodb"
 
 export class Database {
-	/** */
+	/**/
 	constructor(serverConfiguration) {
 		this.client = new MongoClient(serverConfiguration.dbConnectionString ?? "mongodb://localhost:27017")
 		this.db = this.client.db(serverConfiguration.dbName)
@@ -441,6 +441,7 @@ export class Database {
 		return this.downloadsCollection.findOne({ forId: turnId, format })
 	}
 	/**Add a download entry.
+	 *
 	 * @param {ObjectId} turnId - The ID of a turn.
 	 * @param {Buffer} data - The download data.
 	 * @param {string} format - The download format.
@@ -451,6 +452,7 @@ export class Database {
 		await this.downloadsCollection.replaceOne({ _id: id }, { _id: id, forId: turnId, data, format }, { upsert: true })
 	}
 	/**Add a license to a turn.
+	 *
 	 * @param {ObjectId} turnId - The ID of the turn.
 	 * @param {string} licenseSlug - The license identifier.
 	 * @returns {Promise<void>} A promise that resolves when the operation is complete.
@@ -459,6 +461,7 @@ export class Database {
 		await this.gameCollection.updateMany({ _id: turnId }, { $addToSet: { licenses: licenseSlug } })
 	}
 	/**Sets completion state for all turns in game
+	 *
 	 * @param {ObjectId} gameId - The ID of the game.
 	 * @param {boolean} status The status type.
 	 */
@@ -466,6 +469,7 @@ export class Database {
 		await this.gameCollection.updateMany({ root: gameId }, { $set: { gameStatus: status } })
 	}
 	/**Get the realm grid for a user.
+	 *
 	 * @param {string} username - The username of the user.
 	 * @param {ObjectId} cursor - The cursor for pagination.
 	 * @returns {Promise<Array>} A promise that resolves to an array of realms.
@@ -509,6 +513,7 @@ export class Database {
 		return grid
 	}
 	/**Creates a new realm for a user.
+	 *
 	 * @param {string} username - The username of the user.
 	 * @returns {Promise<Object>} A promise that resolves to the created realm document or null if an error occurs.
 	 */
@@ -529,6 +534,7 @@ export class Database {
 		}
 	}
 	/**Fetches a realm by its ID.
+	 *
 	 * @param {ObjectId} realmId - The ID of the realm to fetch.
 	 * @returns {Promise<Object>} A promise that resolves to the realm document or null if not found.
 	 */
@@ -542,6 +548,7 @@ export class Database {
 		}
 	}
 	/**Saves a realm preview.
+	 *
 	 * @param {ObjectId} realmId - The ID of the realm.
 	 * @param {Buffer} blocks - The blocks to save as a preview.
 	 * @returns {Promise<void>} A promise that resolves when the operation is complete.
@@ -554,6 +561,7 @@ export class Database {
 		}
 	}
 	/**Saves a realm template.
+	 *
 	 * @param {ObjectId} realmId - The ID of the realm.
 	 * @param {string} templateName - The name of the template to save.
 	 * @returns {Promise<void>} A promise that resolves when the operation is complete.
@@ -566,6 +574,7 @@ export class Database {
 		}
 	}
 	/**Generates a random name consisting of three syllables.
+	 *
 	 * @param {number} lengzh - The number of syllables to generate (default is 3).
 	 * @returns {string} A randomly generated name.
 	 */
@@ -579,6 +588,7 @@ export class Database {
 	}
 	static zhreeTypes = ["tou", "hoo", "oh", "xow", "hy", "th", "we", "to"]
 	/**Counts the number of ongoing games in the database.
+	 *
 	 * @returns {Promise<number>} A promise that resolves to the count of ongoing games.
 	 */
 	async getOngoingGameCount() {

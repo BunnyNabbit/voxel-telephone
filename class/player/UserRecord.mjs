@@ -1,10 +1,11 @@
 import { TypedEmitter } from "tiny-typed-emitter"
 
 /**@todo Yet to be documented.
- * @extends {TypedEmitter<{"configurationChange": (slug: string, value: any) => void}>}
+ *
+ * @extends {TypedEmitter<{ configurationChange: (slug: string, value: any) => void }>}
  */
 export class UserRecord extends TypedEmitter {
-	/** */
+	/**/
 	constructor(player, data) {
 		super()
 		this.player = player
