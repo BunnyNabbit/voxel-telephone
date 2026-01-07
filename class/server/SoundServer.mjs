@@ -9,7 +9,7 @@ import { FormattedString, stringSkeleton } from "../strings/FormattedString.mjs"
 const __dirname = getAbsolutePath(import.meta.url)
 
 class SoundEvent {
-	/** */
+	/**/
 	constructor(soundData, cursor) {
 		this.data = soundData
 		this.cursor = cursor
@@ -17,7 +17,7 @@ class SoundEvent {
 }
 
 class SoundTransmitter extends EventEmitter {
-	/** */
+	/**/
 	constructor(player) {
 		super()
 		this.currentTrack = null
@@ -118,7 +118,7 @@ class SoundTransmitter extends EventEmitter {
 }
 
 export class SoundServer extends EventEmitter {
-	/** */
+	/**/
 	constructor(universe) {
 		super()
 		this.keySoundTransmitters = new Map()

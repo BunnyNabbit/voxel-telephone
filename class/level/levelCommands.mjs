@@ -1,7 +1,7 @@
 /** @typedef {import("../../types/arrayLikes.mjs").Vector3} Vector3 */
 
 export class LevelCommand {
-	/** */
+	/**/
 	constructor(layout, level, enums = {}) {
 		this.level = level
 		this.layout = layout
@@ -10,6 +10,7 @@ export class LevelCommand {
 		this.blocksChanged = 0
 	}
 	/**@todo Yet to be documented.
+	 *
 	 * @param {Vector3} position
 	 * @param {number} block
 	 */
@@ -27,6 +28,7 @@ export class LevelCommand {
 		}
 	}
 	/**@todo Yet to be documented.
+	 *
 	 * @param {number[]} actionBytes
 	 */
 	parseBytes(actionBytes) {
@@ -69,7 +71,7 @@ class Cuboid extends LevelCommand {
 	name = "cuboid"
 	static help = ["Makes a cuboid on two positions.", "If no arguments are added, block is inferred from your current hand and the server will ask for the block positions interactively."]
 	static aliases = ["z"]
-	/** */
+	/**/
 	constructor(level) {
 		super(["block:block", "&enum:mode", "position:position1", "position:position2"], level, {
 			mode: ["solid", "hollow", "walls", "holes"],
@@ -110,7 +112,7 @@ class Line extends LevelCommand {
 	name = "Line"
 	static help = ["Makes a line between two points.", "If no arguments are added, block is inferred from your current hand and the server will ask for the block positions interactively."]
 	static aliases = ["l", "ln"]
-	/** */
+	/**/
 	constructor(level) {
 		super(["block:block", "position:start", "position:end"], level)
 	}
@@ -150,7 +152,7 @@ class AbnormalTriangle extends LevelCommand {
 	name = "AbnormalTriangle"
 	static help = ["Makes a triangle from three points. The resulting triangle may have holes", "If no arguments are added, block is inferred from your current hand and the server will ask for the block positions interactively."]
 	static aliases = ["triangle", "tri"]
-	/** */
+	/**/
 	constructor(level) {
 		super(["block:block", "position:position1", "position:position2", "position:position3"], level)
 	}
@@ -186,7 +188,7 @@ class SphereSlow extends LevelCommand {
 	name = "SphereSlow"
 	static help = ["Makes a sphere from a center point and a radius.", "If no arguments are added, block is inferred from your current hand and the server will ask for the block positions interactively."]
 	static aliases = ["sphere", "sp"]
-	/** */
+	/**/
 	constructor(level) {
 		super(["block:block", "&enum:mode", "position:center", "position:offset"], level, {
 			mode: ["solid"],
@@ -214,7 +216,7 @@ class SphereSlow extends LevelCommand {
 class Replace extends LevelCommand {
 	name = "Replace"
 	static aliases = ["r"]
-	/** */
+	/**/
 	constructor(level) {
 		super(["block:findBlock", "position:position1", "position:position2", "block:replacementBlock"], level)
 	}
@@ -239,7 +241,7 @@ class Replace extends LevelCommand {
 class PositionalTransform extends LevelCommand {
 	name = "PositionalTransform "
 	static aliases = ["move"]
-	/** */
+	/**/
 	constructor(level) {
 		super(["&enum:mode", "&enum:rotation", "&enum:flipAxis", "position:positionStart", "position:positionEnd", "position:offsetPosition", "position:pastePosition"], level, {
 			mode: ["move", "copy", "moveAir", "copyAir"],
@@ -308,7 +310,7 @@ class PositionalTransform extends LevelCommand {
 class CourierTransform extends LevelCommand {
 	name = "CourierTransform"
 	static aliases = ["courier"]
-	/** */
+	/**/
 	constructor(level) {
 		super(["block:setBlock", "position:position1", "position:position2"], level)
 	}
@@ -422,10 +424,11 @@ class CourierTransform extends LevelCommand {
 class FurrierTransform extends LevelCommand {
 	name = "FurrierTransform"
 	static aliases = ["furrier", "fur"]
-	/** */
+	/**/
 	constructor(level) {
 		super(["block:setBlock", "position:position1", "position:position2"], level)
 	}
+
 	action(data) {
 		const { position1, position2, setBlock } = this.parseBytes(data)
 		const min = [0, 1, 2].map((index) => Math.min(position1[index], position2[index]))

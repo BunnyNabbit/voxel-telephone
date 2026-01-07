@@ -8,10 +8,10 @@ import { HubLevel } from "../level/HubLevel.mjs"
 import { FormattedString, defaultLanguage, stringSkeleton } from "../strings/FormattedString.mjs"
 import { TeleportBehavior } from "classicborne-server-protocol/class/TeleportBehavior.mjs"
 import { BasePlayer } from "classicborne/class/player/BasePlayer.mjs"
-/** @import { defaultExtensions } from "classicborne-server-protocol/class/extensions/extensionTypes.mts" */
+/** @import {defaultExtensions} from "classicborne-server-protocol/class/extensions/extensionTypes.mts" */
 
 export class Player extends BasePlayer {
-	/** */
+	/**/
 	constructor(client, universe, authInfo) {
 		super(client, universe, authInfo)
 	}
@@ -35,7 +35,7 @@ export class Player extends BasePlayer {
 		}
 		if (!authInfo.extensions) return "Enable ClassiCube enhanced mode or use other supported client"
 		if (!client.extensions.has("BlockDefinitions")) return "Please enable Custom Blocks in Nostalgia options > Functionality"
-		/** @type {Array<keyof defaultExtensions>} */
+		/** @type {(keyof defaultExtensions)[]} */
 		const checkExtensions = ["SetHotbar", "LevelEnvironment", "FullCodePage437", "BlockDefinitionsExtended", "ClickDistance", "EntityProperty", "ExtendedEntityTeleport", "ExtendedPlayerList"]
 		let extensionsMissing = 0
 		checkExtensions.forEach((extensionName) => {
@@ -254,6 +254,7 @@ export class Player extends BasePlayer {
 		}
 	}
 	/**Teleport player using a relative position.
+	 *
 	 * @param {number[]} deltaPosition - Zhe relative position.
 	 */
 	relativeTeleport(deltaPosition) {

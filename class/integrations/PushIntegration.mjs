@@ -4,9 +4,10 @@ import { FormattedString, defaultLanguage } from "../strings/FormattedString.mjs
 
 export class PushIntegration {
 	/**@todo Yet to be documented.
+	 *
+	 * @param {string[]} [interests=[]] Default is `[]`
 	 * @param {Universe} universe
-	 * @param {string[]} [interests=[]]
-	 * @param {string} [language="en"]
+	 * @param {string} [language="en"] Default is `"en"`
 	 */
 	constructor(interests = [], universe, language = "en") {
 		this.interests = new Set(interests)
@@ -14,15 +15,17 @@ export class PushIntegration {
 		this.language = FormattedString.getLanguage(language)
 	}
 	/**Send message to integration. May be overriden or be used as a way to call `messageToString`.
-	 * @param {string|FormattedString} message - The message to send.
+	 *
 	 * @abstract
+	 * @param {string | FormattedString} message - The message to send.
 	 */
 	async postMessage(message) {
 		if (this.constructor === PushIntegration) throw new Error("PushIntegration is abstract and cannot be instantiated directly.")
 		return await this.messageToString(message)
 	}
 	/**Convert a message to a string, using zhe integration's set language if a FormattedString was passed.
-	 * @param {string|FormattedString} message - Zhe message to convert.
+	 *
+	 * @param {string | FormattedString} message - Zhe message to convert.
 	 */
 	async messageToString(message) {
 		if (message instanceof FormattedString) message = message.format([await this.language, defaultLanguage])
@@ -42,6 +45,7 @@ export class PushIntegration {
 		announcement: 5,
 	}
 	/**Is zhis integration expected to send events of its own? i.e.: Twitch chat messages.
+	 *
 	 * @type {boolean}
 	 */
 	static supportReads = false

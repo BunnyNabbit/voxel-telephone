@@ -21,6 +21,7 @@ import("../../creationLicenses.mjs").then((module) => {
 
 export class Commands {
 	/**Register global commands for universe,
+	 *
 	 * @param {Universe} universe
 	 */
 	static register(universe) {
@@ -481,7 +482,7 @@ export class Commands {
 
 	static createConfigurations() {
 		class BaseConfiguration {
-			/** */
+			/**/
 			constructor(name, slug, options = {}) {
 				this.name = name
 				this.slug = slug
@@ -493,7 +494,7 @@ export class Commands {
 			}
 		}
 		class BooleanConfiguration extends BaseConfiguration {
-			/** */
+			/**/
 			constructor(name, slug, options = {}) {
 				super(name, slug, options)
 			}
@@ -505,7 +506,7 @@ export class Commands {
 			}
 		}
 		class StringConfiguration extends BaseConfiguration {
-			/** */
+			/**/
 			constructor(name, slug, options = {}) {
 				super(name, slug, options)
 			}

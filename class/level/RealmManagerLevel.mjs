@@ -5,7 +5,7 @@ import { Player } from "../player/Player.mjs"
 import { FormattedString, stringSkeleton } from "../strings/FormattedString.mjs"
 
 export class RealmManagerLevel extends ViewLevel {
-	/** */
+	/**/
 	constructor(bounds, blocks, viewData = {}, cursor) {
 		super(bounds, blocks, viewData, cursor)
 		this.on("click", async (player, click) => {

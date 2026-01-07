@@ -2,6 +2,7 @@
 
 export class Zone {
 	/**@todo Yet to be documented.
+	 *
 	 * @param {Vector3} position1
 	 * @param {Vector3} position2
 	 */
@@ -16,15 +17,17 @@ export class Zone {
 		return output
 	}
 	/**@todo Yet to be documented.
+	 *
 	 * @param {Vector3} position
 	 */
 	intersects(position) {
 		return !position.some((value, index) => (this.min[index] <= value && this.max[index] + 1 >= value) == false)
 	}
 	/**@todo Yet to be documented.
+	 *
 	 * @param {Object} data
-	 * @param	{Vector3} data.min
-	 * @param	{Vector3} data.max
+	 * @param {Vector3} data.min
+	 * @param {Vector3} data.max
 	 */
 	static deserialize(data) {
 		const zone = new Zone(data.min, data.max)

@@ -1,5 +1,5 @@
 class License {
-	/** */
+	/**/
 	constructor(name = "Null License", revocable = false, licenseData = {}) {
 		this.name = name
 		this.revocable = revocable
@@ -16,7 +16,7 @@ class License {
 }
 
 class CreativeCommonsLicense extends License {
-	/** */
+	/**/
 	constructor(name, shortName, licenseData) {
 		super(name, false, licenseData)
 		this.shortName = shortName
@@ -24,7 +24,7 @@ class CreativeCommonsLicense extends License {
 }
 
 class OpenGameArtLicense extends License {
-	/** */
+	/**/
 	constructor(name, shortName, licenseData) {
 		super(name, false, licenseData)
 		this.shortName = shortName

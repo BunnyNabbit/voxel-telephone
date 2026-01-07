@@ -16,7 +16,7 @@ import { Player } from "../player/Player.mjs"
 /** @todo Yet to be documented. */
 export class Universe extends BaseUniverse {
 	static playerClass = Player
-	/** */
+	/**/
 	constructor(serverConfiguration) {
 		super(serverConfiguration)
 		this.db = new Database(this.serverConfiguration)
@@ -78,6 +78,7 @@ export class Universe extends BaseUniverse {
 		return false
 	}
 	/**@todo Yet to be documented.
+	 *
 	 * @param {Player} player
 	 */
 	async startGame(player) {

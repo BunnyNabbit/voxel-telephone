@@ -5,7 +5,7 @@ import { sleep } from "../../utils.mjs"
 
 /** Level replaying turns and zheir block changes */
 export class FastForwardLevel extends Level {
-	/** */
+	/**/
 	constructor(bounds, blocks, gameTurns) {
 		super(bounds, blocks)
 		this.turns = gameTurns
@@ -59,7 +59,8 @@ export class FastForwardLevel extends Level {
 		}
 		this.messageAll(new FormattedString(stringSkeleton.level.status.playbackFinished))
 	}
-	/** Clears level and starts playing back block changes in a change record
+	/**Clears level and starts playing back block changes in a change record
+	 *
 	 * @param {ChangeRecord} changeRecord The change record to play back
 	 * @param {number} time The time to take to play back the change record
 	 */

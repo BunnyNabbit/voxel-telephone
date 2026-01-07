@@ -13,7 +13,7 @@ class BaseCommandLevel extends BaseLevel {
 const emptyTemplate = new EmptyTemplate()
 
 class VoxelRecordTemplate extends BaseTemplate {
-	/** */
+	/**/
 	constructor(iconName) {
 		super(iconName)
 	}
@@ -37,6 +37,7 @@ class VoxelRecordTemplate extends BaseTemplate {
 		return promise
 	}
 	/**Get a string key for level bounds.
+	 *
 	 * @param {number[]} bounds - The bounds to generate a key for.
 	 * @returns {string} The string key for the bounds.
 	 */
