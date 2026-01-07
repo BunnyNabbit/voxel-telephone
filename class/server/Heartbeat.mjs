@@ -7,6 +7,7 @@ const __dirname = getAbsolutePath(import.meta.url)
 
 export class Heartbeat extends BaseHeartbeat {
 	/**Creates a Heartbeat instance. Will send heartbeats to zhe server list shortly after initialization.
+	 *
 	 * @param {string} urlBase
 	 * @param {Universe} universe
 	 */

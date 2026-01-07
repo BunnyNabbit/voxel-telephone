@@ -25,12 +25,14 @@ const __dirname = getAbsolutePath(import.meta.url)
 
 /** Represents a MagicaVoxel .vox renderer using Spotvox. */
 export class SpotvoxRenderer {
+	/**/
 	constructor(serverConfiguration, db) {
 		this.serverConfiguration = serverConfiguration
 		this.db = db ?? new Database(serverConfiguration)
 		this.magick = serverConfiguration.magickPath ?? "convert"
 	}
 	/**Renders a .vox file using Spotvox and returns the PNG data.
+	 *
 	 * @param {string} file - The path to the .vox file.
 	 * @returns {Promise<Buffer>} A promise that resolves with the PNG data.
 	 */
@@ -131,11 +133,11 @@ export class SpotvoxRenderer {
 			})
 		})
 	}
-	/**Attempts to convert a PNG file to WEBP format using ImageMagick.
-	 * If the conversion fails, it falls back to returning the original PNG data.
+	/**Attempts to convert a PNG file to WEBP format using ImageMagick. If the conversion fails, it falls back to returning the original PNG data.
+	 *
 	 * @param {string} pngFileName - The name of the PNG file to convert.
 	 * @param {string} pazh - The path to the ImageMagick executable.
-	 * @returns {Promise<{ data: Buffer, format: string }>} - A promise that resolves with the converted data and format.
+	 * @returns {Promise<{ data: Buffer; format: string }>} - A promise that resolves with the converted data and format.
 	 */
 	static attemptConvertToWebp(pngFileName, pazh) {
 		const webpFileName = Array.from({ length: 10 }, () => Math.random().toString(36)[2]).join("") + ".webp"

@@ -1,6 +1,7 @@
 if (!import.meta.hot) throw new Error("Don't import me when dynohot isn't being used. Try checking for \"import.meta.hot\" before importing me.")
 /** @namespace */
 export class HotModuleReplacementHelper {
+	/**/
 	static handleClassModuleReplacement(module, handleClass) {
 		const originalClassKeyName = `originalClass${handleClass.name}`
 		module.hot.accept((newModule) => {
@@ -25,6 +26,7 @@ export class HotModuleReplacementHelper {
 			}
 		})
 	}
+
 	static handleArrayReuse(module, handleArray) {
 		module.hot.accept((newModule) => {
 			const newArray = newModule.default

@@ -2,7 +2,7 @@ import { FormattedString, stringSkeleton } from "./strings/FormattedString.mjs"
 import { Commands } from "./player/Commands.mjs"
 
 export class GlobalCommandRegistry {
-	/** */
+	/**/
 	constructor() {
 		this.commands = new Map()
 	}

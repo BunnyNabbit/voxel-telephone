@@ -1,7 +1,7 @@
 import { PushIntegration } from "./PushIntegration.mjs"
 
 export class DiscordWebhook extends PushIntegration {
-	/** */
+	/**/
 	constructor(interests, authData, universe, language) {
 		super(interests, universe, language)
 		this.webhookUrl = authData.webhookUrl

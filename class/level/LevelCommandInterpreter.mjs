@@ -3,9 +3,7 @@ import { FormattedString, stringSkeleton } from "../strings/FormattedString.mjs"
 /** @typedef {import("./BaseLevel.mjs").BaseLevel} BaseLevel */
 
 export class LevelCommandInterpreter extends BaseLevelCommandInterpreter {
-	/**
-	 * @param {Level} level
-	 */
+	/** @param {Level} level */
 	constructor(level) {
 		super(level)
 		this.on("playerError", (player, errorType) => {

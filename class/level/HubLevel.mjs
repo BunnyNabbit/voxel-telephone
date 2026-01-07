@@ -4,7 +4,7 @@ import { templates } from "./templates.mjs"
 import { FormattedString, stringSkeleton } from "../strings/FormattedString.mjs"
 
 export class HubLevel extends Level {
-	/** */
+	/**/
 	constructor(bounds, blocks, name, db) {
 		super(bounds, blocks)
 		this.on("playerRemoved", async () => {

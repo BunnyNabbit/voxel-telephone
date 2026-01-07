@@ -5,7 +5,8 @@ import serverConfiguration from "./config.json" with { type: "json" }
 const universe = new Universe(serverConfiguration)
 
 if (import.meta.hot) {
-	import.meta.hot.accept("./class/level/levelCommands.mjs", async (newModule) => { // TODO: use type annotation
+	import.meta.hot.accept("./class/level/levelCommands.mjs", async (newModule) => {
+		// TODO: use type annotation
 		const ChangeRecord = (await import("classicborne")).ChangeRecord
 		const levels = universe.levels.values()
 		for (let level of levels) {

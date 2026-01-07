@@ -2,7 +2,7 @@ import { WebClient } from "@slack/web-api"
 import { PushIntegration } from "./PushIntegration.mjs"
 
 export class Slack extends PushIntegration {
-	/** */
+	/**/
 	constructor(interests, authData, universe, language) {
 		super(interests, universe, language)
 		this.client = new WebClient(authData.token)

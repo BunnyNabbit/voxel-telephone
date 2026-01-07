@@ -1,5 +1,5 @@
 export class BaseElement {
-	/** */
+	/**/
 	constructor() {
 		this.type = "base"
 		this.content = []
@@ -15,7 +15,7 @@ export class BaseElement {
 }
 
 export class Paragraph extends BaseElement {
-	/** */
+	/**/
 	constructor() {
 		super()
 		this.type = "paragraph"
@@ -23,7 +23,7 @@ export class Paragraph extends BaseElement {
 }
 
 export class Heading extends BaseElement {
-	/** */
+	/**/
 	constructor(level) {
 		super()
 		this.type = "heading"
@@ -32,7 +32,7 @@ export class Heading extends BaseElement {
 }
 
 export class Text extends BaseElement {
-	/** */
+	/**/
 	constructor(text = "") {
 		super()
 		this.type = "text"
@@ -41,7 +41,7 @@ export class Text extends BaseElement {
 }
 
 export class InlineCode extends BaseElement {
-	/** */
+	/**/
 	constructor() {
 		super()
 		this.type = "inlineCode"
@@ -49,7 +49,7 @@ export class InlineCode extends BaseElement {
 }
 
 export class Image extends BaseElement {
-	/** */
+	/**/
 	constructor() {
 		super()
 		this.type = "image"
@@ -63,6 +63,7 @@ export class Image extends BaseElement {
 /** Basic Markdown parser namespace */
 export class DragonMark {
 	/**Parses the given text and returns a structure array.
+	 *
 	 * @param {string} text - The text to parse.
 	 * @returns {Array} The parsed structure array.
 	 */
@@ -120,6 +121,7 @@ export class DragonMark {
 		return structure
 	}
 	/**Normalizes given text line endings to Unix-style (`\n`)
+	 *
 	 * @param {string} text - The text to normalize.
 	 * @returns {string} The normalized text.
 	 */

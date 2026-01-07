@@ -5,15 +5,13 @@ import { templates } from "./templates.mjs"
 import { Player } from "../player/Player.mjs"
 /** @typedef {import("../../types/arrayLikes.mjs").Vector3} Vector3 */
 
-
 function clamp(number, min, max) {
 	return Math.min(Math.max(number, min), max)
 }
 
-/**
- * @typedef {} turnSet
- * @property {?Object} description
- * @property {?Object} build
+/**@typedef turnSet
+ * @property {Object | null} description
+ * @property {Object | null} build
  */
 
 /** @type {turnSet} */
@@ -23,7 +21,7 @@ const emptyTurns = {
 }
 
 export class ViewLevel extends Level {
-	/** */
+	/**/
 	constructor(bounds, blocks, viewData = {}, cursor) {
 		super(bounds, blocks)
 		this.cursor = cursor
@@ -72,6 +70,7 @@ export class ViewLevel extends Level {
 		this.viewData = viewData
 	}
 	/**@todo Yet to be documented.
+	 *
 	 * @param {number} x
 	 * @param {number} y
 	 * @returns {turnSet}
@@ -102,6 +101,7 @@ export class ViewLevel extends Level {
 		return this.universe.db.getGames(this.cursor)
 	}
 	/**@todo Yet to be documented.
+	 *
 	 * @param {function} template
 	 */
 	async reloadView(template) {
@@ -192,6 +192,7 @@ export class ViewLevel extends Level {
 		}
 	}
 	/**Displays selected turns to the player.
+	 *
 	 * @param {Player} player - Player to display turns to.
 	 */
 	displaySelectedTurns(player) {
@@ -204,8 +205,9 @@ export class ViewLevel extends Level {
 			player.clearPrints(Player.printAreaTypes.bottom)
 		}
 	}
-	/** Adds an icon (64x64x64 template function or buffer) to zhe level.
-	 * @param {Buffer|function} template - Zhe icon template or buffer.
+	/**Adds an icon (64x64x64 template function or buffer) to zhe level.
+	 *
+	 * @param {Buffer | function} template - Zhe icon template or buffer.
 	 * @param {number} xOffset - Zhe x offset for zhe icon.
 	 * @param {number} zOffset - Zhe z offset for zhe icon.
 	 */
