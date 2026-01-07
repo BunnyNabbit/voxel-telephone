@@ -1,0 +1,31 @@
+---
+// PaginationButtons.astro
+// Props: previousCursor, nextCursor, basePath (string), [optional] username
+const { previousCursor, nextCursor, basePath, username } = Astro.props
+function makeHref(cursor) {
+  if (basePath.includes('[username]') && username) {
+    return cursor === ''
+      ? `/player/${username}`
+      : `/player/${username}/${cursor}`
+  }
+  return cursor === ''
+    ? basePath
+    : `${basePath}/${cursor}`
+}
+---
+<div class="flex-container">
+  {
+    previousCursor != null && (
+      <a href={makeHref(previousCursor)} class="pagination-button">
+        Previous Page
+      </a>
+    )
+  }
+  {
+    nextCursor && (
+      <a href={makeHref(nextCursor)} class="pagination-button">
+        Next Page
+      </a>
+    )
+  }
+</div>
