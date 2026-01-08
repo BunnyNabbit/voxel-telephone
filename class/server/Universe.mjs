@@ -45,6 +45,7 @@ export class Universe extends BaseUniverse {
 			Promise.all(integrationPromises)
 				.then(() => {
 					this.integrationsReady = true
+					console.log(`Loaded ${this.integrations.length} integration(s)`)
 					// Flush queued messages by sending them directly to integrations
 					this.messageQueue.forEach(({ message, interest }) => {
 						this.integrations
