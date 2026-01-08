@@ -42,14 +42,27 @@ export class Universe extends BaseUniverse {
 					console.error(error)
 				}
 			})
-			Promise.all(integrationPromises).then(() => {
-				this.integrationsReady = true
-				// Flush queued messages
-				this.messageQueue.forEach(({ message, interest }) => {
-					this.pushMessage(message, interest)
+			Promise.all(integrationPromises)
+				.then(() => {
+					this.integrationsReady = true
+					// Flush queued messages by sending them directly to integrations
+					this.messageQueue.forEach(({ message, interest }) => {
+						this.integrations
+							.filter((integration) => integration.interests.has(interest))
+							.forEach((integration) => {
+								integration.postMessage(message).catch((err) => {
+									console.warn("Failed to post queued message", err)
+								})
+							})
+					})
+					this.messageQueue = []
 				})
-				this.messageQueue = []
-			})
+				.catch((err) => {
+					console.error("Failed to load integrations:", err)
+					// Still mark as ready to prevent messages from being queued indefinitely
+					this.integrationsReady = true
+					this.messageQueue = []
+				})
 		} else {
 			this.integrationsReady = true
 		}
