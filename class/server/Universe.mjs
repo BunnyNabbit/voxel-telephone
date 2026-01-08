@@ -29,8 +29,10 @@ export class Universe extends BaseUniverse {
 			})
 		}
 		this.integrations = []
+		this.messageQueue = []
+		this.integrationsReady = false
 		if (this.serverConfiguration.integrations) {
-			this.serverConfiguration.integrations.forEach(async (integrationData) => {
+			const integrationPromises = this.serverConfiguration.integrations.map(async (integrationData) => {
 				try {
 					const integrationClass = (await import(`../integrations/${integrationData.class}.mjs`)).default
 					const interests = integrationData.interests.map((interest) => PushIntegration.interestType[interest])
@@ -40,6 +42,16 @@ export class Universe extends BaseUniverse {
 					console.error(error)
 				}
 			})
+			Promise.all(integrationPromises).then(() => {
+				this.integrationsReady = true
+				// Flush queued messages
+				this.messageQueue.forEach(({ message, interest }) => {
+					this.pushMessage(message, interest)
+				})
+				this.messageQueue = []
+			})
+		} else {
+			this.integrationsReady = true
 		}
 		setInterval(() => {
 			const weightedIndex = []
@@ -170,6 +182,11 @@ export class Universe extends BaseUniverse {
 	}
 
 	pushMessage(message, interest) {
+		if (!this.integrationsReady) {
+			// Queue the message until integrations are loaded
+			this.messageQueue.push({ message, interest })
+			return
+		}
 		this.integrations
 			.filter((integration) => integration.interests.has(interest))
 			.forEach((integration) => {
