@@ -29,18 +29,22 @@ export class Universe extends BaseUniverse {
 			})
 		}
 		this.integrations = []
-		if (this.serverConfiguration.integrations) {
-			this.serverConfiguration.integrations.forEach(async (integrationData) => {
-				try {
-					const integrationClass = (await import(`../integrations/${integrationData.class}.mjs`)).default
-					const interests = integrationData.interests.map((interest) => PushIntegration.interestType[interest])
-					const integration = new integrationClass(interests, integrationData.authData, this, integrationData.language)
-					this.integrations.push(integration)
-				} catch (error) {
-					console.error(error)
-				}
-			})
-		}
+		this.integrationsReady = new Promise(async (resolve) => {
+			if (this.serverConfiguration.integrations) {
+				const promises = this.serverConfiguration.integrations.map(async (integrationData) => {
+					try {
+						const integrationClass = (await import(`../integrations/${integrationData.class}.mjs`)).default
+						const interests = integrationData.interests.map((interest) => PushIntegration.interestType[interest])
+						const integration = new integrationClass(interests, integrationData.authData, this, integrationData.language)
+						this.integrations.push(integration)
+					} catch (error) {
+						console.error(error)
+					}
+				})
+				await Promise.all(promises)
+			}
+			resolve()
+		})
 		setInterval(() => {
 			const weightedIndex = []
 			for (const [key, value] of Object.entries(this.serverConfiguration.announcements.categoryWeight)) {
@@ -169,7 +173,8 @@ export class Universe extends BaseUniverse {
 		}
 	}
 
-	pushMessage(message, interest) {
+	async pushMessage(message, interest) {
+		await this.integrationsReady // ensure integrations are loaded
 		this.integrations
 			.filter((integration) => integration.interests.has(interest))
 			.forEach((integration) => {
