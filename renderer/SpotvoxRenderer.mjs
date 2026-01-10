@@ -146,7 +146,7 @@ export class SpotvoxRenderer {
 				if (convertError) {
 					console.error(`Error converting PNG to WEBP: ${convertError}`)
 					console.warn("Falling back to PNG format.")
-					SpotvoxRenderer.readFile(pngFileName)
+					SpotvoxRenderer.readFile(path.join(__dirname, pngFileName))
 						.then((pngData) => {
 							resolve({
 								data: pngData,
