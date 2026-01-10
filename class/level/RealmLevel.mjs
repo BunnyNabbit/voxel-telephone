@@ -106,21 +106,25 @@ export class RealmLevel extends Level {
 		}
 		const levelName = `realm-${realmDocument._id}`
 
+		this.loadIntoUniverse(universe, levelName, this.getLoadConfiguration(realmDocument)).then((level) => {
+			level.addPlayer(player, [40, 10, 31])
+		})
+	}
+
+	static getLoadConfiguration(realmDocument) {
 		// Determine template from realm document, default to empty if not set
 		let template = templates.empty
 		if (realmDocument.template) {
 			template = RealmLevel.templateMap[realmDocument.template] || templates.empty
 		}
 
-		this.loadIntoUniverse(universe, levelName, {
+		return {
 			useNullChangeRecord: false,
-			levelClass: RealmLevel,
+			levelClass: this,
 			arguments: [realmDocument],
 			allowList: [realmDocument.ownedBy],
 			template: template,
-		}).then((level) => {
-			level.addPlayer(player, [40, 10, 31])
-		})
+		}
 	}
 
 	static bounds = [256, 256, 256]
