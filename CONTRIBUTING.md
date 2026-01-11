@@ -7,7 +7,7 @@ Voxel Telephone uses the following dependencies:
 - MongoDB
 - Node.js (Known to work at v20+)
 - [Spotvox](https://github.com/tommyettinger/spotvox/) (Place .jar file at project root)
-- ImageMagick
+- [ImageMagick](https://imagemagick.org/) (Optional)
 
 ## Project structure
 
