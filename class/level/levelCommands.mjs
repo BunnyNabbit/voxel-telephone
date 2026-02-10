@@ -1,4 +1,16 @@
-/** @typedef {import("../../types/arrayLikes.mjs").Vector3} Vector3 */
+/**@file I define {@link levelCommands | voxel-based operations} for {@link Level | levels} to use.
+ *
+ *   My commands are classes extended from {@link LevelCommand}. The layout of the commands is used for both the interactive questions and data storage. Layouts are fixed-length and should not exceed 255 bytes.
+ *
+ *   My commands have documentation intended for end-users in `astro-website/help/[language code]/building/`. They are available in different languages and can be accessed in-game or in the website.
+ *
+ *   Because changes are often restored from a {@link ChangeRecord}, my commands shouldn't be too taxing to compute. However, since the addition of KeyframeRecord in _classicborne_ which is paired with {@link ChangeRecord}, the save format is no longer bound to this restriction. Instead, the issue becomes more of a cache space issue, as more keyframes would need to be stored should a command take ~250ms to complete.
+ *
+ *   As a file, I am hot-reloadable. Run Voxel Telephone with Dynohot to live edit me. When I am saved, applicable levels are reloaded, forcing their changes to be restored from the {@link Level | level's} {@link ChangeRecord} with the new command classes.
+ */
+/** @import {ChangeRecord} from "classicborne" */
+/** @import {Level} from "./Level.mjs" */
+/** @import {Vector3} from "../../types/arrayLikes.mjs" */
 
 export class LevelCommand {
 	/**/
