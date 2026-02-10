@@ -69,7 +69,6 @@ export class LevelCommand {
 
 class Cuboid extends LevelCommand {
 	name = "cuboid"
-	static help = ["Makes a cuboid on two positions.", "If no arguments are added, block is inferred from your current hand and the server will ask for the block positions interactively."]
 	static aliases = ["z"]
 	/**/
 	constructor(level) {
@@ -110,7 +109,6 @@ class Cuboid extends LevelCommand {
 
 class Line extends LevelCommand {
 	name = "Line"
-	static help = ["Makes a line between two points.", "If no arguments are added, block is inferred from your current hand and the server will ask for the block positions interactively."]
 	static aliases = ["l", "ln"]
 	/**/
 	constructor(level) {
@@ -150,7 +148,6 @@ class Line extends LevelCommand {
 
 class AbnormalTriangle extends LevelCommand {
 	name = "AbnormalTriangle"
-	static help = ["Makes a triangle from three points. The resulting triangle may have holes", "If no arguments are added, block is inferred from your current hand and the server will ask for the block positions interactively."]
 	static aliases = ["triangle", "tri"]
 	/**/
 	constructor(level) {
@@ -186,7 +183,6 @@ class AbnormalTriangle extends LevelCommand {
 
 class SphereSlow extends LevelCommand {
 	name = "SphereSlow"
-	static help = ["Makes a sphere from a center point and a radius.", "If no arguments are added, block is inferred from your current hand and the server will ask for the block positions interactively."]
 	static aliases = ["sphere", "sp"]
 	/**/
 	constructor(level) {
