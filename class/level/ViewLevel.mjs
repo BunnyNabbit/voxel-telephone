@@ -92,12 +92,8 @@ export class ViewLevel extends Level {
 	}
 
 	getGames() {
-		if (this.viewData.mode == "user") {
-			return this.universe.db.getUserGrid(this.viewData.username, this.cursor)
-		}
-		if (this.viewData.mode == "purged") {
-			return this.universe.db.getPurgedGrid(this.cursor)
-		}
+		if (this.viewData.mode == "user") return this.universe.db.getUserGrid(this.viewData.username, this.cursor)
+		if (this.viewData.mode == "purged") return this.universe.db.getPurgedGrid(this.cursor)
 		return this.universe.db.getGames(this.cursor)
 	}
 	/**@todo Yet to be documented.
