@@ -28,10 +28,10 @@
     "trash": "^9.0.0"
   },
   "devDependencies": {
-    "@eslint/compat": "^2.0.0",
-    "@eslint/js": "^9.39.2",
+    "@eslint/compat": "^2.0.2",
+    "@eslint/js": "^9.39.3",
     "esbuild": "0.25.9",
-    "eslint": "^9.39.2",
+    "eslint": "^9.39.3",
     "globals": "^16.5.0",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-drone-class": "^0.1.0",
