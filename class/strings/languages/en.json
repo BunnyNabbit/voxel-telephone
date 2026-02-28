@@ -49,7 +49,7 @@
 	},
 	"command": {
 		"error": {
-			"uncaught": "An error occured while running the command. ${err}",
+			"uncaught": "An error occurred while running the command. ${err}",
 			"missingBuildPermission": "You don't have permission to build in this level.",
 			"missingPermission": "You don't have permission to use this command!",
 			"drainingVCR": "VCR is busy. Try again later?",
@@ -130,7 +130,7 @@
 			"listActionCount": "VCR has recorded ${actionCount} actions."
 		},
 		"commit": {
-			"success": "Changes commited. VCR mode off."
+			"success": "Changes committed. VCR mode off."
 		},
 		"abort": {
 			"success": "Command aborted.",
