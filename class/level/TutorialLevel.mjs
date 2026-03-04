@@ -18,7 +18,7 @@ export class TutorialLevel extends Level {
 		 */
 		this.completing = new Set()
 	}
-	/**Called when player completes zhis tutorial level. May be called using `/skip`. I am intended to be overriden by classes extending TutorialLevel. Typically I will teleport players to a different level or to zhe hub level. My default behavior is to teleport players back to hub or homebase by invoking `/main`.
+	/**Called when player completes zhis tutorial level. May be called using `/skip`. I am intended to be overridden by classes extending TutorialLevel. Typically I will teleport players to a different level or to zhe hub level. My default behavior is to teleport players back to hub or homebase by invoking `/main`.
 	 *
 	 * @param {Player} player
 	 * @param {number} progressionReason - One of {@link TutorialLevel.progressionReasons}.
