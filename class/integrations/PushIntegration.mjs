@@ -14,7 +14,7 @@ export class PushIntegration {
 		this.universe = universe
 		this.language = FormattedString.getLanguage(language)
 	}
-	/**Send message to integration. May be overriden or be used as a way to call `messageToString`.
+	/**Send message to integration. May be overridden or be used as a way to call `messageToString`.
 	 *
 	 * @abstract
 	 * @param {string | FormattedString} message - The message to send.
@@ -37,7 +37,7 @@ export class PushIntegration {
 		gameProgression: 1,
 		/** Chat messages from players. */
 		chatMessage: 2,
-		/** Server initalization events. */
+		/** Server initialization events. */
 		startServer: 3,
 		/** Connection-related events of player clients. */
 		playerConnection: 4,
