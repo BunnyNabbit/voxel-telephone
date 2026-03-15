@@ -47,7 +47,7 @@ Strings may make use of ClassiCube color codes. These are identified by two char
 
 ## DragonMark
 
-DragonMark is a Markdown subset used by help documentation in `/astro-website/src/help`. Markdown is partially parsed with some syntax being left as-is. While some unspported syntax such as unordered/ordered lists are fine, there are some syntax which doesn't look well under DragonMark.
+DragonMark is a Markdown subset used by help documentation in `/astro-website/src/help`. Markdown is partially parsed with some syntax being left as-is. While some unsupported syntax such as unordered/ordered lists are fine, there are some syntax which doesn't look well under DragonMark.
 
 ### Images
 
@@ -67,7 +67,7 @@ Icons and templates use the so-called "VHS" file format, a novel voxel save form
 
 These files can be difficult to author, as it is not a standardized format like ClassicWorld. To author a vhs.bin, it may be simpler to start a server and edit the hub level.
 
-`dvr.db` files may be created when accessing saves. These should not be commited into the repository as they are optional cache files storing keyframes of a `vhs.bin` file.
+`dvr.db` files may be created when accessing saves. These should not be committed into the repository as they are optional cache files storing keyframes of a `vhs.bin` file.
 
 ## Drone style guide
 
