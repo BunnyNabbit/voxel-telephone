@@ -1,4 +1,7 @@
+// @ts-check
 import { TypedEmitter } from "tiny-typed-emitter"
+/** @import Player from "./Player.mjs" */
+/** @import {UserRecordDocument} from "../../types/documents.mjs" */
 
 /**@todo Yet to be documented.
  *
@@ -6,6 +9,9 @@ import { TypedEmitter } from "tiny-typed-emitter"
  */
 export class UserRecord extends TypedEmitter {
 	/**/
+	/**@param {Player} player
+	 * @param {UserRecordDocument} data
+	 */
 	constructor(player, data) {
 		super()
 		this.player = player
@@ -18,7 +24,9 @@ export class UserRecord extends TypedEmitter {
 			this.removeAllListeners()
 		})
 	}
-
+	/**@param {string} username
+	 * @returns {UserRecordDocument}
+	 */
 	static getDefaultRecord(username) {
 		return {
 			_id: username,
@@ -38,7 +46,7 @@ export class UserRecord extends TypedEmitter {
 			firstJoin: new Date(),
 		}
 	}
-
+	/** @param {UserRecordDocument} data */
 	static updateData(data) {
 		if (data.dataVersion == 1) {
 			// adds configuration
@@ -64,13 +72,20 @@ export class UserRecord extends TypedEmitter {
 		this.draining = true
 		UserRecord.orphans.delete(this.player.username)
 	}
-
+	/**@todo Yet to be documented.
+	 *
+	 * @param {string} slug
+	 * @param {any} value
+	 */
 	async setConfiguration(slug, value) {
 		const record = await this.get()
 		record.configuration[slug] = value
 		this.emit("configurationChange", slug, value)
 	}
-
+	/**
+	 * @param {string} configurationName
+	 * @param {(arg0: string) => void} callback
+	 */
 	onConfigurationChange(configurationName, callback) {
 		return this.on(`configurationChange`, (changedConfigurationName, value) => {
 			if (changedConfigurationName === configurationName) callback(value)
