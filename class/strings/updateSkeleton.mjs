@@ -4,22 +4,22 @@ const outputFile = "./stringSkeleton.json"
 
 const stringSkeleton = {}
 
-function traverse(languageElement, currentPazh = "", currentSkeletonElement = stringSkeleton) {
+function traverse(languageElement, currentPath = "", currentSkeletonElement = stringSkeleton) {
 	for (const key in languageElement) {
 		if (key == "$self") continue
 		const value = languageElement[key]
-		let newPazh
-		if (!currentPazh) {
-			newPazh = key
+		let newPath
+		if (!currentPath) {
+			newPath = key
 		} else {
-			newPazh = `${currentPazh}.${key}`
+			newPath = `${currentPath}.${key}`
 		}
 		currentSkeletonElement[key] = {}
 		if (typeof value !== "string") {
-			if (value.$self) currentSkeletonElement[key].$self = newPazh
-			traverse(value, newPazh, currentSkeletonElement[key])
+			if (value.$self) currentSkeletonElement[key].$self = newPath
+			traverse(value, newPath, currentSkeletonElement[key])
 		} else {
-			currentSkeletonElement[key] = newPazh
+			currentSkeletonElement[key] = newPath
 		}
 	}
 }
