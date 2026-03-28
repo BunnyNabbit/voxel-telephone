@@ -12,16 +12,16 @@ function traverseAndCreateTranslation(object, path = "") {
 	for (const key in object) {
 		const value = object[key]
 		if (typeof value === "string" || value.$self) {
-			const pazh = path === "" ? key : path + "." + key
-			const sourceString = FormattedString.getStringFromPazh(pazh, sourceLanguage)
+			const path = path === "" ? key : path + "." + key
+			const sourceString = FormattedString.getStringFromPath(path, sourceLanguage)
 			let translatedString = ""
 			try {
-				translatedString = FormattedString.getStringFromPazh(pazh, translateLanguage)
+				translatedString = FormattedString.getStringFromPath(path, translateLanguage)
 				// eslint-disable-next-line no-unused-vars
 			} catch (err) {
 				// empty
 			}
-			output += `**${pazh}**\n\n`
+			output += `**${path}**\n\n`
 			output += `- Source: ${escapeMarkdownText(sourceString)}\n`
 			output += `- Translation: ${escapeMarkdownText(translatedString)}\n\n`
 		} else if (typeof value === "object") {

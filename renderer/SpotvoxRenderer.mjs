@@ -108,9 +108,9 @@ export class SpotvoxRenderer {
 		return await image.getBuffer("image/png")
 	}
 
-	static readFile(filePazh) {
+	static readFile(filePath) {
 		return new Promise((resolve, reject) => {
-			fs.readFile(filePazh, (error, data) => {
+			fs.readFile(filePath, (error, data) => {
 				if (error) {
 					console.error(`Error reading file: ${error}`)
 					return reject(error)
