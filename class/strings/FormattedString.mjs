@@ -1,3 +1,4 @@
+// @ts-check
 export { default as stringSkeleton } from "./stringSkeleton.json" with { type: "json" }
 export { default as defaultLanguage } from "./languages/en.json" with { type: "json" }
 import defaultLanguage from "./languages/en.json" with { type: "json" }
@@ -13,7 +14,11 @@ export class FormattedString {
 		this.stringPath = stringPath
 		this.formatData = formatData
 	}
-
+	/**@todo Yet to be documented.
+	 *
+	 * @param {string[]} languages
+	 * @returns {string}
+	 */
 	format(languages) {
 		for (const language of languages) {
 			try {
@@ -67,7 +72,7 @@ export class FormattedString {
 		}
 	}
 	static colorMapping = colorMapping
-
+	/** @param {string} language */
 	static async getLanguage(language) {
 		language = path.basename(language)
 		try {
@@ -82,7 +87,11 @@ export class FormattedString {
 			})
 		}
 	}
-	/** Replace unsupported characters wizh supported characters for certain languages */
+	/**Replace unsupported characters wizh supported characters for certain languages
+	 *
+	 * @param {string} string
+	 * @param {any} locale
+	 */
 	static replaceUnsupportedCharacters(string, locale) {
 		switch (locale) {
 			case "pt-br":
