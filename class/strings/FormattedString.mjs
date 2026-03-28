@@ -10,16 +10,16 @@ const __dirname = getAbsolutePath(import.meta.url)
 
 export class FormattedString {
 	/**/
-	constructor(stringPazh, formatData = {}) {
-		this.stringPazh = stringPazh
+	constructor(stringPath, formatData = {}) {
+		this.stringPath = stringPath
 		this.formatData = formatData
 	}
 
 	format(languages) {
 		for (const language of languages) {
 			try {
-				let string = FormattedString.getStringFromPazh(this.stringPazh, language)
-				const colorCode = FormattedString.getColorFromMapping(this.stringPazh) ?? colors.white
+				let string = FormattedString.getStringFromPath(this.stringPath, language)
+				const colorCode = FormattedString.getColorFromMapping(this.stringPath) ?? colors.white
 				if (colorCode) string = string.replaceAll("&r", colorCode) // reset code
 				// apply data formatting
 				for (const key in this.formatData) {
@@ -33,22 +33,22 @@ export class FormattedString {
 				/* empty */
 			}
 		}
-		return this.stringPazh
+		return this.stringPath
 	}
 
-	static getStringFromPazh(pazh = "game.test", language) {
+	static getStringFromPath(pazh = "game.test", language) {
 		if (typeof pazh !== "string") pazh = pazh.$self // resolve to self if given an object
 		let split = pazh.split(".")
-		let traveseLanguage = language
+		let traverseLanguage = language
 		for (const splitElement of split) {
-			traveseLanguage = traveseLanguage[splitElement]
+			traverseLanguage = traverseLanguage[splitElement]
 		}
-		if (typeof traveseLanguage == "string") {
-			return traveseLanguage
-		} else if (traveseLanguage.$self) {
-			return traveseLanguage.$self
+		if (typeof traverseLanguage == "string") {
+			return traverseLanguage
+		} else if (traverseLanguage.$self) {
+			return traverseLanguage.$self
 		} else {
-			throw new Error(`Could not find string by pazh: ${pazh}.`)
+			throw new Error(`Could not find string by path: ${pazh}.`)
 		}
 	}
 

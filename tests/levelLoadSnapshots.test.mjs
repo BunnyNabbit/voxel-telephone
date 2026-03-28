@@ -17,17 +17,17 @@ fs.readdirSync(path.join(__dirname, "./snapshots")).forEach((entry) => {
 describe("Level load", () => {
 	test.each(entries)("%s", (entry) => {
 		return new Promise((resolve) => {
-			const levelPazh = path.join(__dirname, "./snapshots", entry)
-			const levelMetadataPazh = path.join(levelPazh, "snapshot.json")
-			const snapshotPazh = path.join(levelPazh, "snapshot.bin")
-			const levelMetadata = JSON.parse(fs.readFileSync(levelMetadataPazh, "utf8"))
+			const levelPath = path.join(__dirname, "./snapshots", entry)
+			const levelMetadataPath = path.join(levelPath, "snapshot.json")
+			const snapshotPath = path.join(levelPath, "snapshot.bin")
+			const levelMetadata = JSON.parse(fs.readFileSync(levelMetadataPath, "utf8"))
 			const level = new Level(levelMetadata.bounds, Buffer.alloc(levelMetadata.bounds[0] * levelMetadata.bounds[1] * levelMetadata.bounds[2]))
 			const changeRecord = new ChangeRecord(
-				levelPazh,
+				levelPath,
 				async () => {
 					await changeRecord.restoreBlockChangesToLevel(level)
 					level.dispose()
-					brotliDecompress(fs.readFileSync(snapshotPazh), (err, decompressed) => {
+					brotliDecompress(fs.readFileSync(snapshotPath), (err, decompressed) => {
 						if (err) throw err
 						expect(decompressed).toEqual(level.blocks)
 						resolve()
