@@ -15,6 +15,6 @@ If VCR is enabled, the commands for rewinding (`/rewind <actions>`) and fast-for
 ## Related commands
 
 - `/rewind <actions>` - undos actions.
-- `/fastforward <actions>` - redos rewinded actions.
+- `/fastforward <actions>` - redos rewound actions.
 - `/commit` - loads current state seen in the VCR preview. will override change record.
 - `/abort` - aborts VCR preview, loading state as it was before enabling VCR.
