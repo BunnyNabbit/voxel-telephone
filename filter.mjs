@@ -1,12 +1,10 @@
 import { join } from "path"
 import fs from "fs/promises"
-import { getAbsolutePath } from "esm-path"
-const __dirname = getAbsolutePath(import.meta.url)
 
 let filterWords = []
 let blockedWords = new RegExp(filterWords.join("|"), "i")
 
-fs.readFile(join(__dirname, "filterWords.json"), "utf-8")
+fs.readFile(join(import.meta.dirname, "filterWords.json"), "utf-8")
 	.then((data) => {
 		filterWords = JSON.parse(data)
 		blockedWords = new RegExp(filterWords.join("|"), "i")

@@ -5,8 +5,7 @@ defaultLanguage.locale = "en"
 import { colorMapping, colors } from "./colorMapping.mjs"
 import { readFile } from "fs/promises"
 import path, { join } from "path"
-import { getAbsolutePath } from "esm-path"
-const __dirname = getAbsolutePath(import.meta.url)
+const __dirname = import.meta.dirname
 
 export class FormattedString {
 	/**/

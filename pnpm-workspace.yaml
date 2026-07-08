@@ -8,3 +8,6 @@ minimumReleaseAgeExclude:
   - classicborne-server-protocol
   - classicborne
   - prettier-plugin-drone-jsdoc
+
+packages:
+  - "tests/"

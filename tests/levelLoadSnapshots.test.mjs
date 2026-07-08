@@ -2,9 +2,8 @@ import { Level } from "../class/level/Level.mjs"
 import { ChangeRecord } from "classicborne/class/level/changeRecord/ChangeRecord.mjs"
 import path from "path"
 import fs from "node:fs"
-import { getAbsolutePath } from "esm-path"
 import { brotliDecompress } from "node:zlib"
-const __dirname = getAbsolutePath(import.meta.url)
+const __dirname = import.meta.dirname
 
 const entries = []
 fs.readdirSync(path.join(__dirname, "./snapshots")).forEach((entry) => {
