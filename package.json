@@ -20,7 +20,7 @@
     "dynohot": "^2.1.1",
     "express": "^5.2.1",
     "jimp": "^1.6.0",
-    "mongodb": "^6.21.0",
+    "mongodb": "^7.5.0",
     "nbt": "^0.8.1",
     "smart-buffer": "^4.2.0",
     "socket.io": "^4.8.3",
