@@ -1,0 +1,14 @@
+{
+  "name": "voxel-telephone-scripts",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "BunnyNabbit \"Aon Langton\"",
+  "license": "MIT",
+  "packageManager": "pnpm@10.30.3",
+  "dependencies": {
+    "nbt": "0.8.1"
+  }
+}
