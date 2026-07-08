@@ -18,7 +18,6 @@
     "classicborne": "^0.1.1",
     "classicborne-server-protocol": "^0.6.0",
     "dynohot": "^2.1.1",
-    "esm-path": "^1.0.1",
     "express": "^5.2.1",
     "jimp": "^1.6.0",
     "mongodb": "^6.21.0",

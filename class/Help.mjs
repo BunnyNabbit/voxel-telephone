@@ -2,9 +2,8 @@ import fs from "fs"
 import path from "path"
 import { DragonMark, Heading, Paragraph, Text, InlineCode, Image } from "./DragonMark.mjs"
 import { Level } from "./level/Level.mjs"
-import { getAbsolutePath } from "esm-path"
 import { FormattedString, defaultLanguage, stringSkeleton } from "./strings/FormattedString.mjs"
-const __dirname = getAbsolutePath(import.meta.url)
+const __dirname = import.meta.dirname
 
 export class Category {
 	/**/
