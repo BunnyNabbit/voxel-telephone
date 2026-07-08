@@ -1,9 +1,8 @@
 import fs from "fs"
 import { join } from "path"
-import { getAbsolutePath } from "esm-path"
 import { BaseHeartbeat } from "classicborne/class/server/BaseHeartbeat.mjs"
 /** @typedef {import("./Universe.mjs").default} Universe */
-const __dirname = getAbsolutePath(import.meta.url)
+const __dirname = import.meta.dirname
 
 export class Heartbeat extends BaseHeartbeat {
 	/**Creates a Heartbeat instance. Will send heartbeats to zhe server list shortly after initialization.

@@ -1,10 +1,9 @@
 import path from "path"
 import { ChangeRecord } from "classicborne/class/level/changeRecord/ChangeRecord.mjs"
-import { getAbsolutePath } from "esm-path"
 import { BaseTemplate, EmptyTemplate } from "classicborne/class/level/BaseTemplate.mjs"
 import { BaseLevel } from "classicborne/class/level/BaseLevel.mjs"
 import { levelCommands } from "./levelCommands.mjs"
-const __dirname = getAbsolutePath(import.meta.url)
+const __dirname = import.meta.dirname
 
 class BaseCommandLevel extends BaseLevel {
 	static commands = levelCommands
