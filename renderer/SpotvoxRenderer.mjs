@@ -8,8 +8,7 @@ import { ChangeRecord } from "classicborne/class/level/changeRecord/ChangeRecord
 import { templates } from "../class/level/templates.mjs"
 import defaultBlockset from "../6-8-5-rgb.json" with { type: "json" }
 import { Jimp } from "jimp"
-import { getAbsolutePath } from "esm-path"
-const __dirname = getAbsolutePath(import.meta.url)
+const __dirname = import.meta.dirname
 // java -jar ../spotvox.jar ./Copter.vox --multiple=-4 --rotations=1
 // this generates a folder in the current working directory named after the input file.
 // the folder structure looks like this

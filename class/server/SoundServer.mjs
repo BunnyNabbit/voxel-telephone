@@ -4,10 +4,8 @@ import express from "express"
 import { join } from "node:path"
 import { createServer } from "node:http"
 import { Server } from "socket.io"
-import { getAbsolutePath } from "esm-path"
 import { FormattedString, stringSkeleton } from "../strings/FormattedString.mjs"
-const __dirname = getAbsolutePath(import.meta.url)
-
+const __dirname = import.meta.dirname
 class SoundEvent {
 	/**/
 	constructor(soundData, cursor) {
