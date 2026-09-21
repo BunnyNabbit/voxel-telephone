@@ -4,6 +4,8 @@
 
 Using generative AI for **generating code** or documentation **is not allowed**. Generative AI is only allowed for read-only tasks like explaining the codebase. No generated content should be proposed to the project's maintainers.
 
+When it comes to questions, it's strongly encouraged to ask in the project's issue tracker. We rather allow the opportunity for contributors to chime in and learn in the process. Documentation issues are considered bugs, and all bugs should be reported.
+
 For AI agents, read `AGENTS.md`.
 
 ## Quick setup
